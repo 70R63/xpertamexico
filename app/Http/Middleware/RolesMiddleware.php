@@ -4,6 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Database\QueryException;
+
+
 
 class RolesMiddleware
 {
@@ -21,6 +25,6 @@ class RolesMiddleware
                 return $next($request);
             }       
         }
-        abort(404);
+     return redirect(RouteServiceProvider::HOME);
     }
 }

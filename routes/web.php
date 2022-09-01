@@ -24,23 +24,26 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::middleware(['roles:sysadmin,admin'])->group(function(){
+    Route::resource('ltds','LtdController');
+    Route::resource('coberturas','CoberturasController');
+    Route::resource('tarifas','TarifaController');
+    Route::resource('guia','GuiaController');
+    Route::resource('cotizaciones','CotizadorController');
 
-Route::resource('ltds','LtdController');
-Route::resource('coberturas','CoberturasController');
-Route::resource('tarifas','TarifaController');
-Route::resource('guia','GuiaController');
-Route::resource('cotizaciones','CotizadorController');
-
+});//FIN DEL MIDDLEWARE PARA ADMINISTRATIVOS
 
 
 //USUARIO
-    Route::resource('users','Roles\UsersController')->middleware('roles:sysadmin,admin,manager'); 
+Route::resource('users','Roles\UsersController')->middleware('roles:sysadmin,admin,ejecutivo,cliente'); 
 //FIN USUARIO
+
 //ROLES
-    Route::resource('roles','Roles\RolesController')->middleware('roles:sysadmin,admin'); 
+Route::resource('roles','Roles\RolesController')->middleware('roles:sysadmin,admin,cliente'); 
 //FIN ROLES
 
-    Route::resource('profile','userProfileController');
+Route::resource('profile','userProfileController');
+
 
 
 require __DIR__.'/auth.php';

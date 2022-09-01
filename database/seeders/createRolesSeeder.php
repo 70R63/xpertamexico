@@ -16,7 +16,7 @@ class createRolesSeeder extends Seeder
      */
     public function run()
     {
-         //ROL ADMIN 
+    //ROL ADMIN 
 
          $rolAdmin = Roles::create(['name' => 'Admin','slug' => 'admin',]);
 
@@ -53,7 +53,7 @@ class createRolesSeeder extends Seeder
           $rolAdmin->save();
         }
 
-      // ROL CLIENTE
+// ROL CLIENTE
 
         $rolCliente = Roles::create(['name' => 'Cliente','slug' => 'cliente',]);
 
@@ -93,7 +93,46 @@ class createRolesSeeder extends Seeder
         }
 
 
-               // ROL USUARIO
+// ROL EJECUTIVO
+
+        $rolEjecutivo = Roles::create(['name' => 'Ejecutivo','slug' => 'ejecutivo',]);
+
+        //CREAR PERMISOS
+
+        $permisos_ejecutivo = [];
+
+        $permisos_e = Permisos::create([
+            'name' => 'Crear',
+            'slug' => 'crear'
+        ]);
+        $permisos_ejecutivo[] = $permisos_e ->id;
+
+        $permisos_e = Permisos::create([
+            'name' => 'Editar',
+            'slug' => 'editar'
+        ]);
+        $permisos_ejecutivo[] = $permisos_e ->id;
+
+        $permisos_e = Permisos::create([
+            'name' => 'Leer',
+            'slug' => 'leer'
+        ]);
+        $permisos_ejecutivo[] = $permisos_e ->id;
+
+        $permisos_e = Permisos::create([
+            'name' => 'Borrar',
+            'slug' => 'borrar'
+        ]);
+        $permisos_ejecutivo[] = $permisos_e ->id;
+
+       foreach ($permisos_ejecutivo as $permisoej) {
+          //$usuarioSysAdmin->permisos()->attach($permiso);
+          //$usuarioSysAdmin->save();
+          $rolEjecutivo->permisos()->attach($permisoej);
+          $rolEjecutivo->save();
+        }
+
+// ROL USUARIO
         $rolUsuario = Roles::create(['name' => 'Usuario','slug' => 'usuario',]);
 
         //CREAR PERMISOS

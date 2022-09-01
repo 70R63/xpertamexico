@@ -13,10 +13,12 @@ class AdminTestSeeder extends Seeder
      */
     public function run()
     {
-         User::create([
+       /*  
+        User::create([
             'name' => 'TestUser',
             'email' => 'testuser@gmail.com',
             'password' => bcrypt('123456789'),
         ]);
+        */
     }
 }

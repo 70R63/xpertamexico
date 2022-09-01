@@ -61,7 +61,7 @@
 
                 <div class="sidemenu-logo">
                     <a class="main-logo" href="index.html">
-                        <img src="{{ url('spruha/img/brand/xpertaLogoHorNegro.png') }}" class="header-brand-img desktop-logo" alt="logo">
+                        <img src="{{ url('spruha/img/brand/xpertaLogoTrans-138x142.png') }}" class="header-brand-img desktop-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/xperta-50x56.png') }}" class="header-brand-img icon-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img desktop-logo theme-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img icon-logo theme-logo" alt="logo">
@@ -74,12 +74,21 @@
                         <li class="nav-item ">
                             <a class="nav-link" href="{{ route('dashboard') }}"><span class="shape1"></span><span class="shape2"></span><i class="ti-home sidemenu-icon"></i><span class="sidemenu-label">DASHBOARD</span></a>
                         </li>
-                        @canany(['isAdmin','isSysAdmin'])                       
+                        @canany(['isSysAdmin','isAdmin'])  
+                         {{--   @include('menu.configuracion') 
+                            @include('menu.cliente')  --}}
+                            @include('menu.guia')
+                         {{--    @include('menu.envio')  --}}
+                            @include('menu.ltd')    
                             @include('menu.roles')  
-                            @include('menu.ltd')
-                            @include('menu.guia')               
+                            @include('menu.usuario')               
                         @endcanany
-                        @canany(['isAdmin','isSysAdmin','isManager'])
+
+                        @canany(['isEjecutivo'])
+                            @include('menu.usuario')
+                        @endcanany
+
+                        @canany(['isUsuario'])
                             @include('menu.usuario')
                         @endcanany
                       

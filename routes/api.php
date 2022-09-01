@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\GuiaController;
+use App\Http\Controllers\API\CotizacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,19 @@ Route::middleware('auth:sanctum')->group(function(){
 
 });
 
+Route::group(array('domain' => env('APP_URL')), function() {
+    Route::middleware(['throttle:100,1','auth'])->group(function () {
+        //Route::resource('cotizacion','CotizacionController'); 
+        Route::controller(CotizacionController::class)->group(function(){
+           
+            Route::get('create', 'create');
+
+        });
+
+    });
+    //Fin Middileware
+}); 
+//Fin Domain
+
+
     
-
-

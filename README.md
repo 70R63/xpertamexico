@@ -75,3 +75,14 @@ Optimizar y Migrar
 php artisan migrate
 php artisan optimize
 
+
+## SEEDERS DE USUARIOS Y ROLES
+
+
+Para crear el usuario administador ejecutar los siguientes commandos.
+
+
+php artisan db:seed --class=rolesPermisosSeeder
+php artisan db:seed --class=createRolesSeeder
+
+
