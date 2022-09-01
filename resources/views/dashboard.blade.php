@@ -61,7 +61,7 @@
 
                 <div class="sidemenu-logo">
                     <a class="main-logo" href="index.html">
-                        <img src="{{ url('spruha/img/brand/xpertaLogoTrans-138x142.png') }}" class="header-brand-img desktop-logo" alt="logo">
+                        <img src="{{ url('spruha/img/brand/xpertaLogoTrans-110x91.png') }}" class="header-brand-img desktop-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/xperta-50x56.png') }}" class="header-brand-img icon-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img desktop-logo theme-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img icon-logo theme-logo" alt="logo">
@@ -70,6 +70,7 @@
 
                 <div class="main-sidebar-body">
                     <ul class="nav">
+                        <li class="nav-header"><span class="nav-label"><br></span></li>
                         <li class="nav-header"><span class="nav-label">MENU</span></li>
                         <li class="nav-item ">
                             <a class="nav-link" href="{{ route('dashboard') }}"><span class="shape1"></span><span class="shape2"></span><i class="ti-home sidemenu-icon"></i><span class="sidemenu-label">DASHBOARD</span></a>
