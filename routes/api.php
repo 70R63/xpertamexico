@@ -23,11 +23,11 @@ Route::controller(LoginController::class)->group(function(){
 
 });
 
-Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
     
     return response()->json([
             'status' => true,
-            'message' => "Post Deleted successfully!",
+            'message' => "Ping successfully!",
         ], 200);
 });
 
@@ -39,4 +39,7 @@ Route::middleware('auth:sanctum')->group(function(){
     });
 
 });
+
+    
+
 

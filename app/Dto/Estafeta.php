@@ -9,6 +9,7 @@ use App\Dto\Estafeta\OriginInfo;
 use App\Dto\Estafeta\DestinationInfo;
 use App\Dto\Estafeta\DrAlternativeInfo;
 
+use Spatie\DataTransferObject\DataTransferObjectError;
 
 /**
  * 
@@ -21,46 +22,51 @@ class Estafeta
 		// code...
 	}
 
-	function init(){
+	function init( $request ){
 
 		Log::info(__CLASS__." ".__FUNCTION__); 
 
-		$originInfo = new OriginInfo();
-		$destinationInfo = new DestinationInfo();
-		$Dralternativeinfo = new DrAlternativeInfo();
+        
+		//$originInfo = new OriginInfo();
+		//$destinationInfo = new DestinationInfo();
+        /*No se porque debo de inicializar esta clase*/
+		$Dralternativeinfo = new DrAlternativeInfo();  
 
-		$tmp = array("originInfo" => $originInfo
-					,"destinationInfo"	=> $destinationInfo
-					,"Dralternativeinfo"=> $Dralternativeinfo	
-					);
-
-		$labelDescriptionList = new LabelDescriptionList($tmp);
-        $data = array("labelDescriptionList" => $labelDescriptionList);//$request->all();
-
-       
+        $data = $request->all();
+        /*
+        son los datos de cada cliente
+            $data['suscriberId'] = $this->mensajeria->suscriberId;
+            $data['customerNumber'] = $this->mensajeria->customerNumber ;
+            $data['password'] = $this->mensajeria->ws_pass ;
+            $data['login'] = $this->mensajeria->login ;
+        */
         try{
 
             /* Se inicializa el WS para DEV*/
             $wsdl = config('ltd.estafeta');
             $path_to_wsdl = sprintf("%s%s",resource_path(), $wsdl );
             Log::debug($path_to_wsdl);
-            $client = new \SoapClient($path_to_wsdl, array('trace' => 1));
-            ini_set("soap.wsdl_cache_enabled", "0");
 
+            Log::debug($data);
             $labelDTO = new Label($data);
 			 
+            $client = new \SoapClient($path_to_wsdl, array('trace' => 1));
+            ini_set("soap.wsdl_cache_enabled", "0");
             $response =$client->createLabel($labelDTO);
+
             Log::info(__CLASS__." ".__FUNCTION__." ".$response->globalResult->resultDescription);
+            Log::info(__CLASS__." ".__FUNCTION__." Fin Try");
             return response()->json([
                 'codigo' => $response->globalResult->resultCode,
                 'descripcion' => $response->globalResult->resultDescription
                 ,'pdf'  => base64_encode($response->labelPDF)
             ]);
                  
-            Log::info(__CLASS__." ".__FUNCTION__." Fin Try");
+        
         } catch (DataTransferObjectError $exception) {
-            Log::info(__CLASS__." ".__FUNCTION__."DataTransferObjectError "); 
-             return response()->json([
+            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError "); 
+            
+            return response()->json([
                 'codigo' => "11",
                 'descripcion' => $exception->getMessage()
                 ,'pdf'  => null
