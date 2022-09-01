@@ -17,10 +17,12 @@ class GuiaController extends Controller
     public function Creacion(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
+
+        //Log::info($request);
         $guia = new Estafeta();
 
-        $request->user()->currentAccessToken()->delete();
-        return $guia -> init();
+        //$request->user()->currentAccessToken()->delete();
+        return $guia -> init( $request );
 
         
     }

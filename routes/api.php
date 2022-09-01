@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\GuiaController;
+use App\Http\Controllers\API\CotizacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +24,11 @@ Route::controller(LoginController::class)->group(function(){
 
 });
 
-Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
     
     return response()->json([
             'status' => true,
-            'message' => "Post Deleted successfully!",
+            'message' => "Ping successfully!",
         ], 200);
 });
 
@@ -40,3 +41,17 @@ Route::middleware('auth:sanctum')->group(function(){
 
 });
 
+
+Route::group(array('domain' => env('APP_URL')), function() {
+    Route::middleware(['throttle:100,1','auth'])->group(function () {
+        Route::name('api.')->group(function () {
+            Route::apiResource('cotizaciones', CotizacionController::class);
+        });
+
+    });
+    //Fin Middileware
+}); 
+//Fin Domain
+
+
+    

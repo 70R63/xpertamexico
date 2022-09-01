@@ -24,13 +24,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
- Route::middleware(['roles:sysadmin,admin'])->group(function(){
-        Route::resource('ltds','LtdController');
-        Route::resource('coberturas','CoberturasController');
-        Route::resource('tarifas','TarifaController');
-        Route::resource('guia','GuiaController');
+Route::middleware(['roles:sysadmin,admin'])->group(function(){
+    Route::resource('ltds','LtdController');
+    Route::resource('coberturas','CoberturasController');
+    Route::resource('tarifas','TarifaController');
+    Route::resource('guia','GuiaController');
+    Route::resource('cotizaciones','CotizadorController');
 
-    });//FIN DEL MIDDLEWARE PARA ADMINISTRATIVOS
+});//FIN DEL MIDDLEWARE PARA ADMINISTRATIVOS
 
 
 //USUARIO

@@ -9,6 +9,7 @@ use App\Dto\Estafeta\Dralternativeinfo;
 
 class LabelDescriptionList extends DataTransferObject 
 {
+
     public string $aditionalInfo = "28";
     public string $content ="string";
     public string $contentDescription = "string";
@@ -28,8 +29,8 @@ class LabelDescriptionList extends DataTransferObject
     public $valid = true;
     public float $weight = 1.1;
 
+    public Dralternativeinfo $Dralternativeinfo ;
     public OriginInfo $originInfo ;
     public DestinationInfo $destinationInfo ;
-    public Dralternativeinfo $Dralternativeinfo;
-
+   
 }

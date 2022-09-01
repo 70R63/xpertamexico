@@ -219,6 +219,7 @@
         <script src="{{ asset('js/submitModal.js') }}" ></script>
         <script src="{{ asset('js/guia.multipieza.js') }}" ></script>
         <script src="{{ asset('js/preSubmit.js') }}" ></script>
+        <script src="{{ asset('js/cotizar.js') }}" ></script>
         <!-- Personalizacion de validicon con parley -->
         <script src="{{ asset('js/form-validation.js') }}" ></script>
 
