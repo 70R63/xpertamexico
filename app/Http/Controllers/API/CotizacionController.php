@@ -14,7 +14,7 @@ class CotizacionController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function index(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
 
@@ -22,5 +22,12 @@ class CotizacionController extends BaseController
         
         return $this->sendResponse($success, 'User login successfully.');
         
+    }
+
+    public function store(Request $request)
+    {
+        $success['name'] = "nombre";
+        
+        return $this->sendResponse($success, 'User login successfully.');
     }
 }

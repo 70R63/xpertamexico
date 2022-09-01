@@ -41,13 +41,11 @@ Route::middleware('auth:sanctum')->group(function(){
 
 });
 
+
 Route::group(array('domain' => env('APP_URL')), function() {
     Route::middleware(['throttle:100,1','auth'])->group(function () {
-        //Route::resource('cotizacion','CotizacionController'); 
-        Route::controller(CotizacionController::class)->group(function(){
-           
-            Route::get('create', 'create');
-
+        Route::name('api.')->group(function () {
+            Route::apiResource('cotizaciones', CotizacionController::class);
         });
 
     });

@@ -23,16 +23,17 @@
 <div class="row row-sm">
     <div class="col-lg-12 col-xl-8  col-md-12">
         <div class="card custom-card ">
-            {!! Form::open([ 'route' => 'cotizaciones.create', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'cotizacionesForm' ]) !!}
+            {!! Form::open([ 'route' => 'api.cotizaciones.index', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'cotizacionesForm' ]) !!}
             <div class="row row-sm">
                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
                     <div class="card-body">
                         <div class="col-sm-5 ">
                             <div>
+
                                 <span class="tx-18 mb-3">ORIGIEN</span> 
                             </div>
                         </div>
-                        @include('cotizaciones.dashboard.forma')
+                        @include('cotizaciones.dashboard.forma.origen')
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -42,7 +43,7 @@
                                 <span class="tx-18 mb-3">DESTINO</span> 
                             </div>
                         </div>
-                        @include('cotizaciones.dashboard.forma')
+                        @include('cotizaciones.dashboard.forma.destino')
                     </div>
                 </div>
 
@@ -66,7 +67,7 @@
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
                     
                 </div>
-                tabla    
+                @include('cotizaciones.dashboard.tabla')    
             </div>
         </div>
 

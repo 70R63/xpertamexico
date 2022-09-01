@@ -14,34 +14,10 @@
 				<th>ACCIONES</th>
 			</tr>
 		</thead>
-		<tbody>
-
-			@foreach( $tabla  as $objeto)
-				<tr>
-					<td>{{ $objeto->id }}</td>
-					<td>{{ $pluckLtd[$objeto->ltds_id] }}</td>
-					<td>{{ $pluckServicio[$objeto->servicio_id] }}</td>
-					<td>{{ $objeto->kg_ini }}</td>
-					<td>{{ $objeto->kg_fin }}</td>
-					<td>$ {{ $objeto->kg_extra }}</td>
-					<td>$ {{ $objeto->extendida }}</td>
-					<td>{{ $objeto->fecha }}</td>
-					<td>
-						<a href=" {{ route('cotizaciones.edit', $objeto->id) }} " class="text-info tx-20 ">
-							<i class="fe fe-edit" alt="Editar"></i>
-						</a>
-						<a href="" class="remove-list text-danger tx-20 remove-button" data-toggle="modal" data-target="#modal{{ $objeto['id'] }}" >
-							<i class="fa fa-trash" alt="Eliminar"></i>
-						</a>
-					</td>
-				</tr>
-					
-			@endforeach
-
-		</tbody>
+		<tbody></tbody>
 		<tfoot>
 		    <tr>
-		      <td colspan="7">Los datos son responsabilidad del cliente</td>
+		      <td colspan="9">Los datos son responsabilidad del cliente</td>
 		    </tr>
 		</tfoot>
 		
