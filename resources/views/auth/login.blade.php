@@ -22,7 +22,7 @@
                   <div class="container-fluid">
                      <div class="row row-sm">
                         <div class="card-body mt-2 mb-2">
-                           <img src="{{ url('spruha/img/brand/ulalaPurpureLogo-134x49.png') }}" class=" d-lg-none header-brand-img text-center float-center mb-4" alt="logo">
+                           <img src="{{ url('spruha/img/brand/xpertaLogoHor.png') }}" class=" d-lg-none header-brand-img text-center float-center mb-4" alt="logo">
                            <div class="clearfix"></div>
                            <form method="POST" action="{{ route('login') }}">
                            	@csrf

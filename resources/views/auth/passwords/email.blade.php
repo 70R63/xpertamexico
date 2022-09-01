@@ -13,7 +13,7 @@
 						<div class="row row-sm">
 							<div class="col-lg-6 col-xl-5 d-none d-lg-block text-center bg-primary details">
 								<div class="mt-3 pt-3 p-2 pos-absolute">
-									<img src="{{ url('spruha/img/brand/ulalaPurpureLogo-134x49.png') }}" class="header-brand-img mb-4" alt="logo">{{ config('app.env', 'Ambiente') }}
+									<img src="{{ url('spruha/img/brand/xpertaLogoHor.png') }}" class="header-brand-img mb-4" alt="logo">{{ config('app.env', 'Ambiente') }}
 									<div class="clearfix"></div>
 									<img src="{{ url('spruha/img/svgs/user.svg') }}" class="ht-100 mb-0" alt="user">
 									<h5 class="mt-4 text-white">Reset Your Password</h5>
