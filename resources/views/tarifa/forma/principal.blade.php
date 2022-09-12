@@ -39,6 +39,22 @@
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">COSTO de ENVIO
+						</span>
+					</div>
+
+					{!! Form::text('costo'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'costo'
+							,'data-parsley-type'		=> 'number'
+							,'required'	=>	'true'
+						])
+					!!}
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">Kg Inicial <span class="tx-danger">*</span></span>
 					</div>
 					<div class="handle-counter" id="handleCounterMax100_ini">

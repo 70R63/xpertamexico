@@ -24,9 +24,11 @@ return new class extends Migration
             $table->unsignedInteger('kg_fin')->default(1);
             $table->unsignedInteger('kg_extra')->default(1);
             $table->unsignedInteger('extendida')->default(1);
+            $table->unsignedInteger('costo')->default(1);
             $table->timestamp('fecha')->useCurrent(); 
 
         });
+
     }
 
     /**

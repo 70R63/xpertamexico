@@ -10,8 +10,8 @@
 		,['class' 		=> 'form-control'
 			,'placeholder'	=> 'Seleccionar'
 			,'required'	=> ''
-			,'name'		=> 'pais'
-			,'id'		=> 'pais'
+			,'name'		=> 'pais_d'
+			,'id'		=> 'pais_d'
 		]);
 	!!}
 </div>
@@ -21,21 +21,26 @@
 	</div>
 	{!! Form::text('cp_d', null,
 		['class' 		=> 'form-control'
-		,'placeholder'	=> 'Codigo Postal'
-		,'required'	=> ''
-		,'pattern'	=> '\d{5}'
+			,'id'		=> 'cp_d'
+			,'placeholder'	=> 'Codigo Postal'
+			,'required'	=> ''
+			,'pattern'	=> '\d{5}'
 		])
 	!!}
 	
 </div>
 <div class="input-group mb-3">
 	<div class="input-group-prepend">
-		<span class="input-group-text" id="basic-addon1"> Peso <span class="tx-danger">*</span></span>
+		<span class="input-group-text" id="basic-addon1"> Piezas <span class="tx-danger">*</span></span>
 	</div>
-	{!! Form::text('peso_d', null,
+	{!! Form::text('piezas', null,
 		['class' 		=> 'form-control'
-		,'placeholder'	=> 'Peso aproximado'
-		,'required'	=> ''
+			,'data-parsley-type' => 'number'
+			,'data-parsley-type' =>'integer'
+			,'min'	=>	'1'
+			,'placeholder'	=> 'Peso aproximado'
+			,'id'		=> 'piezas'
+			,'required'	=> ''
 		])
 	!!}
 	

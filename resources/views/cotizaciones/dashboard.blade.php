@@ -52,7 +52,7 @@
                         <div>
                             <a id="cotizar" class="btn btn-primary" >Cotizar</a>    
                             <a id="limpiar" class="btn badge-dark" >Limpiar</a>
-                            <input type="reset" class="btn badge-dark" value="Borrar información">
+                            
                         </div>   
                     </div>  
                 </div>

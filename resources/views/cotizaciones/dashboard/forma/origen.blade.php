@@ -21,9 +21,10 @@
 		</div>
 		{!! Form::text('cp', null,
 			['class' 		=> 'form-control'
-			,'placeholder'	=> 'Codigo Postal'
-			,'required'	=> ''
-			,'pattern'	=> '\d{5}'
+				,'id'		=> 'cp'
+				,'placeholder'	=> 'Codigo Postal'
+				,'required'	=> ''
+				,'pattern'	=> '\d{5}'
 			])
 		!!}
 		
@@ -33,9 +34,11 @@
 			<span class="input-group-text" id="basic-addon1"> Peso <span class="tx-danger">*</span></span>
 		</div>
 		{!! Form::text('peso', null,
-			['class' 		=> 'form-control'
-			,'placeholder'	=> 'Peso aproximado'
-			,'required'	=> ''
+			['class' 		=> 'form-control',
+				'data-parsley-type' => 'number'
+				,'min'	=>	'0.1'
+				,'placeholder'	=> 'Peso aproximado'
+				,'required'	=> ''
 			])
 		!!}
 		

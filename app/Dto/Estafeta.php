@@ -49,12 +49,14 @@ class Estafeta
 
             Log::debug($data);
             $labelDTO = new Label($data);
-			 
+			Log::debug(serialize($labelDTO));
             $client = new \SoapClient($path_to_wsdl, array('trace' => 1));
             ini_set("soap.wsdl_cache_enabled", "0");
             $response =$client->createLabel($labelDTO);
 
-            Log::info(__CLASS__." ".__FUNCTION__." ".$response->globalResult->resultDescription);
+            Log::debug(__CLASS__." ".__FUNCTION__." ");
+            Log::debug(print_r($response->globalResult,true));
+            Log::debug(print_r($response->labelResultList,true));
             Log::info(__CLASS__." ".__FUNCTION__." Fin Try");
             return response()->json([
                 'codigo' => $response->globalResult->resultCode,

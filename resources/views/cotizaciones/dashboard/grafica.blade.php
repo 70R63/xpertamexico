@@ -1,5 +1,5 @@
 <div>
-                    <canvas id="myChart" width="100" height="100"></canvas>
+                    <canvas id="myChart" width="400" height="400"></canvas>
 <script>
 const ctx = document.getElementById('myChart').getContext('2d');
 const myChart = new Chart(ctx, {

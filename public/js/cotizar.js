@@ -2,20 +2,18 @@ $("#limpiar").click(function() {
     $('#cotizacionesForm').trigger('reset');
 });
 
+var table;
+
 $("#cotizar").click(function(e) {
     console.log("cotizar")
     e.preventDefault();
+
     var form = $('#cotizacionesForm').parsley().refresh();
     var action = $('#cotizacionesForm').attr("action"); 
-    //var url = "{{ route('postSubmit') }}"
-    //var url = !{ route("api.cotizaciones.index") }! 
-
+    
     console.log( action );
 
     if ( form.validate() ){
-        console.log($('.tipo_envio').val() )
-
-        
         $.ajax({
             /* Usar el route  */
             url: action,
@@ -25,26 +23,32 @@ $("#cotizar").click(function(e) {
             data: $('#cotizacionesForm').serialize()
             
             /* remind that 'data' is the response of the AjaxController */
-            }).done(function( data) {
+            }).done(function( response) {
                 console.log("done");
-                console.log(data);
-                 $('#exportGeneral tbody').empty();
-                var tr_str = "<tr>" +
-                 "<td align='center'> id </td>" +
-                 "<td align='center'>ltd</td>" +
-                 "<td align='center'> servicio </td>" +
-                 "<td align='center'> inicial</td>" +
-                 "<td align='center'> final </td>" +
-                 "<td align='center'> extendida</td>" +
-                 "<td align='center'> otro</td>" +
-                 "<td align='center'> extendida</td>" +
-                 "<td align='center'> otro</td>" +
-               "</tr>";
-
-               $("#exportGeneral tbody").append(tr_str);
                 
-                //$("#modalEnviar").modal("show");
-
+                table = $('#cotizacionAjax').DataTable({
+                    "processing": true,
+                    "bDestroy": true,
+                    "data": response.data.data,
+                    "columns": [
+                        { "data": "nombre" },
+                        { "data": "kg_ini" },
+                        { "data": "kg_fin" },
+                        { "data": "costo" },
+                        { "data": "kg_extra" },
+                        { "data": "extendida" },
+                        { "data": "costo_total"
+                            ,render: function (data, type, row, meta) {
+                                var piezas = $('#piezas').val();
+                                console.log(piezas);    
+                                var costo = data* piezas;
+                                return '<a href="#">$ '+costo+'</a>';
+                            } 
+                        }
+                    ],
+                    "autoWidth": false,
+                });
+                
             }).fail( function( data,jqXHR, textStatus, errorThrown ) {
                 console.log( "fail" );
                 console.log(textStatus);
@@ -54,9 +58,27 @@ $("#cotizar").click(function(e) {
             }).always(function() {
                 console.log( "complete" );
             });
- 
+        
     } else {
         console.log( "enviosForm con errores" );
         return false;
     }
+});
+
+
+
+table = $('#cotizacionAjax').DataTable();
+$('#cotizacionAjax tbody').on('click', 'tr', function () {
+    console.log(table.row(this).data());
+    var piezas = $('#piezas').val();
+    var cp = $('#cp').val();
+    var cp_d = $('#cp_d').val();
+    
+    $("#spanPrecio").text(table.row(this).data()['costo_total']*piezas);
+    $("#spanMensajeria").text(table.row(this).data()['nombre']);
+    $("#spanRemitente").text(cp);
+    $("#spanDestinatario").text(cp_d);
+    $("#spanPieza").text(piezas);
+    
+    $("#myModal").modal("show");
 });

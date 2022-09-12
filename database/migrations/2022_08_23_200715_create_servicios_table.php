@@ -23,6 +23,11 @@ return new class extends Migration
             $table->unsignedInteger('prioridad')->default('1');
 
         });
+
+        Artisan::call('db:seed', [
+            '--class' => 'ServicioSeeder',
+            '--force' => true 
+        ]);
     }
 
     /**

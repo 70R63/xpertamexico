@@ -6,6 +6,7 @@
 				<th>LTD</th>
 				<th>SERVICIO</th>
 				<th>KG. INICIAL</th>
+				<th>Costo Base</th>
 				<th>KG. FINAL</th>
 				<th>KG. EXTRA</th>
 				<th>AREA EXTENDIDA</th>
@@ -22,6 +23,7 @@
 					<td>{{ $pluckServicio[$objeto->servicio_id] }}</td>
 					<td>{{ $objeto->kg_ini }}</td>
 					<td>{{ $objeto->kg_fin }}</td>
+					<td>{{ $objeto->costo }}</td>
 					<td>$ {{ $objeto->kg_extra }}</td>
 					<td>$ {{ $objeto->extendida }}</td>
 					<td>{{ $objeto->fecha }}</td>
@@ -41,7 +43,7 @@
 		</tbody>
 		<tfoot>
 		    <tr>
-		      <td colspan="7">Los datos son responsabilidad del cliente</td>
+		      <td colspan="8">Los datos son responsabilidad del cliente</td>
 		    </tr>
 		</tfoot>
 		

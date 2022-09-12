@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::controller(GuiaController::class)->group(function(){
         Route::get('ltds', 'creacion');
+        Route::post('fedex', 'fedex');
     });
 
 });

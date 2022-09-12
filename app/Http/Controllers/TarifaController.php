@@ -30,8 +30,7 @@ class TarifaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = Tarifa::where('estatus',1)
-                    ->get();
+            $tabla = Tarifa::get();
 
             $pluckLtd = Ltd::where('estatus',1)
                                 ->pluck('nombre','id');
