@@ -310,7 +310,7 @@
 /******   BARRA DE LINK ACTIVO  ******************/
 
 .main-sidebar-body li.nav-item.active .nav-link {
-  background-color: #EDF2F9;
+  background-color: #096fe6;
   position: relative;
   z-index: 1;
   margin: 10px auto;
@@ -327,7 +327,7 @@
 }
 
 .main-sidebar-body .nav-item.active .nav-link .shape1, .main-sidebar-body .nav-item.active .nav-link .shape2 {
-  background: #EDF2F9;
+  background: #096fe6;
 }
 
 /******   BARRA DE LINK ACTIVO  ******************/
