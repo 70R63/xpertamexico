@@ -60,9 +60,9 @@
             <div class="main-sidebar main-sidebar-sticky side-menu">
 
                 <div class="sidemenu-logo">
-                    <a class="main-logo" href="index.html">
+                    <a class="main-logo" href="{{ route('dashboard') }}"">
                         <img src="{{ url('spruha/img/brand/xpertaLogoTrans-110x91.png') }}" class="header-brand-img desktop-logo" alt="logo">
-                        <img src="{{ url('spruha/img/brand/xperta-50x56.png') }}" class="header-brand-img icon-logo" alt="logo">
+                        <img src="{{ url('spruha/img/brand/xperta-50x56-removebg-preview.png') }}" class="header-brand-img icon-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img desktop-logo theme-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img icon-logo theme-logo" alt="logo">
                     </a>
