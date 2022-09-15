@@ -12,16 +12,16 @@ class Label extends DataTransferObject
     public string $apiToken ="md5"
     ;    
     /** @var string */
-    public $suscriberId = "28";
+    public $suscriberId = "1";
     
     /** @var string */
     public $customerNumber = "0000000";
 
      /** @var string */
-    public $password = "lAbeL_K_11";
+    public $password = ",1,B(vVi";
 
      /** @var string */
-    public $login = "prueba1";
+    public $login = "AdminUser";
 
      /** @var boolean */
     public $valid = true;

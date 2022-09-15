@@ -30,6 +30,7 @@
 </div>
 
 <!-- Modal -->
+{!! Form::open([ 'route' => 'guia.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
 <div class="modal" id="myModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-content-demo">
@@ -54,17 +55,43 @@
                     <div class="pricingContent2">
                         <ul>
                             <li><b>Mensajeria:</b> <span id="spanMensajeria"> </span></li>
-                            <li><b>Remitente Postal:</b> <span id="spanRemitente"> </span></li>
+                            <li><b>Remitente Postal:</b> <span id="spanRemitente"> </span>
+                                <div class="input-group mb-3">
+                                    {!! Form::select('ltd'
+                                        , $pluckLtd
+                                        ,'MEX'
+                                        ,['class'       => 'form-control'
+                                            ,'placeholder'  => 'Seleccionar'
+                                            ,'required' => ''
+                                            ,'id'       => 'ltd'
+                                        ]);
+                                    !!}
+                                </div>
+                            </li>
                             <li><b>Destinatorio Postal:</b> <span id="spanDestinatario"> </span></li>
-                            <li><b>Piezas:</b> <span id="spanPieza"></span></li>
+                            <li><b>Piezas:</b> <span id="spanPieza"></span>
+                                <div class="input-group mb-3">
+                                    {!! Form::select('ltd'
+                                        , $pluckLtd
+                                        ,'MEX'
+                                        ,['class'       => 'form-control'
+                                            ,'placeholder'  => 'Seleccionar'
+                                            ,'required' => ''
+                                            ,'id'       => 'ltd'
+                                        ]);
+                                    !!}
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="" class="btn btn-primary" >Continuar</a>
+                    <button type="submit" class="btn btn-primary ml-3" >Enviar</button>
                     <a class="btn badge-dark" data-dismiss="modal" type="button">Cerrar</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{!! Form::close() !!} 

@@ -9,6 +9,14 @@ use Log;
 
 class GuiaController extends Controller
 {
+
+    const INDEX_r = "guia.index";
+
+    const DASH_v = "guia.dashboard";
+    const CREAR_v = "guia.crear";
+    const EDITAR_v = "guia.editar";
+    const SHOW_v = "guia.show";
+
     /**
      * Display a listing of the resource.
      *
@@ -55,7 +63,26 @@ class GuiaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Log::info(__CLASS__." ".__FUNCTION__);
+        try {
+            
+            Log::info($request);
+            $tmp = sprintf("El registro de la guia '%s', fue exitoso","escibir un valor");
+            $notices = array($tmp);
+  
+            return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            return \Redirect::back()
+                ->withErrors(array($ex->errorInfo[2]))
+                ->withInput();
+
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::debug( $e->getMessage() );
+        }
     }
 
     /**
