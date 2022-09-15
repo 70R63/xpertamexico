@@ -35,7 +35,7 @@ Route::middleware(['roles:sysadmin,admin'])->group(function(){
 
 
 //USUARIO
-Route::resource('users','Roles\UsersController')->middleware('roles:sysadmin,admin,ejecutivo,cliente'); 
+Route::resource('users','Roles\UsersController')->middleware('roles:sysadmin,admin,ejecutivo,cliente,usuario'); 
 //FIN USUARIO
 
 //ROLES
