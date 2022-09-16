@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 
-
+@include('coberturas.show.header')
 
 <!--Row-->
 <div class="row row-sm">

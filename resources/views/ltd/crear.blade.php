@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 
-@include('ltd.dashboard.header')
+@include('ltd.crear.header')
 
 <!-- Row -->
 <div class="col-xl-12">

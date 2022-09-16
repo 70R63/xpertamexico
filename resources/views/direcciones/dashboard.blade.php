@@ -1,7 +1,8 @@
 @extends('dashboard')
 @section('content')
 
-@include('tarifa.dashboard.header')
+
+@include('direcciones.dashboard.header')
 <!--Row-->
 <div class="row row-sm">
     <div class="col-lg-12">
@@ -27,7 +28,7 @@
                     
                 </div>
                 <div>
-                    @include('tarifa.dashboard.tabla')
+                    @include('direcciones.dashboard.tabla')
                 </div>    
             </div>
         </div>
@@ -39,7 +40,7 @@
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
                     <label class="main-content-label mb-4">GRAFICAS</label>
                 </div>
-                @include('tarifa.dashboard.grafica') 
+                @include('direcciones.dashboard.grafica') 
             </div>
         </div>
     </div>

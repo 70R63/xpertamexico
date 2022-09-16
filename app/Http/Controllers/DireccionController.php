@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTarifaRequest;
-use App\Http\Requests\UpdateTarifaRequest;
-use App\Models\Tarifa;
+use App\Http\Requests\StoreDireccionRequest;
+use App\Http\Requests\UpdateDireccionRequest;
+use App\Models\Direccion;
 use App\Models\Ltd;
 use App\Models\Servicio;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class TarifaController extends Controller
+class DireccionController extends Controller
 {
+     const INDEX_r = "direcciones.index";
 
-    const INDEX_r = "tarifas.index";
-
-    const DASH_v = "tarifa.dashboard";
-    const CREAR_v = "tarifa.crear";
-    const EDITAR_v = "tarifa.editar";
-    const SHOW_v = "tarifa.show";
-
+    const DASH_v = "direcciones.dashboard";
+    const CREAR_v = "direcciones.crear";
+    const EDITAR_v = "direcciones.editar";
+    const SHOW_v = "direcciones.show";
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +28,7 @@ class TarifaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = Tarifa::get();
+            $tabla = Direccion::get();
 
             $pluckLtd = Ltd::where('estatus',1)
                                 ->pluck('nombre','id');
@@ -39,10 +37,9 @@ class TarifaController extends Controller
                     ->pluck('nombre','id');
 
             $registros = $tabla->count();
-            $row = ceil($registros/3);
 
             return view(self::DASH_v 
-                    ,compact("tabla", "pluckLtd", "pluckServicio", "row", "registros")
+                    ,compact("tabla", "pluckLtd", "pluckServicio", "registros")
                 );
 
         } catch (Exception $e) {
@@ -78,43 +75,44 @@ class TarifaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTarifaRequest  $request
+     * @param  \App\Http\Requests\StoreDireccionRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTarifaRequest $request)
+    public function store(StoreDireccionRequest $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
+        $mensaje = "";
         try {
             
-            Tarifa::create($request->except('_token'));
+            Direccion::create($request->except('_token'));
 
-            $tmp = sprintf("El registro de la nueva TARIFA '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("El registro de la nueva DIRECCION '%s', fue exitoso",$request->get('nombre'));
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
 
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $e){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
-            Log::debug($ex->getMessage()); 
-    
+            Log::debug($e->getMessage()); 
+            $mensaje= $e->getMessage();
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
             Log::debug( $e->getMessage() );
-
+            $mensaje= $e->getMessage();
         }
 
         return \Redirect::back()
-                ->withErrors(array($ex->errorInfo[2]))
+                ->withErrors(array($mensaje))
                 ->withInput();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tarifa  $tarifa
+     * @param  \App\Models\Direccion  $direccion
      * @return \Illuminate\Http\Response
      */
-    public function show(Tarifa $tarifa)
+    public function show(Direccion $direccion)
     {
         //
     }
@@ -122,98 +120,105 @@ class TarifaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tarifa  $tarifa
+     * @param  \App\Models\Direccion  $direccion
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tarifa $tarifa)
+    public function edit(int $id)
     {
+        $mensaje = "";
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);    
-            $tarifa = Tarifa::findOrFail($tarifa->id);
-            
-            $pluckLtd = Ltd::where('estatus',1)
-                                ->pluck('nombre','id');
-
-            $pluckServicio = Servicio::where('estatus',1)
-                                ->pluck('nombre','id');
-
-            return view(self::EDITAR_v 
-                    ,compact("tarifa","pluckLtd", "pluckServicio")
-                );
+            Log::debug($id);
+            Log::info(__CLASS__." ".__FUNCTION__."");
+            $objeto = Direccion::findOrFail($id);
+               
+            Log::debug($objeto);
+            return view(self::EDITAR_v
+                , compact('objeto') 
+            );
+       
         } catch (ModelNotFoundException $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ModelNotFoundException");
-            return \Redirect::back()
-                ->withErrors(array($e->getMessage()))
-                ->withInput();
-
+            $mensaje = $e->getMessage();
         } catch (Exception $e) {
-            Log::info(__CLASS__." ".__FUNCTION__);
-            Log::info("Error general ");       
+            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::debug( $e->getMessage() );
+            $mensaje = $e->getMessage();    
         }
+
+        return \Redirect::back()
+                ->withErrors(array($mensaje))
+                ->withInput();
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTarifaRequest  $request
-     * @param  \App\Models\Tarifa  $tarifa
+     * @param  \App\Http\Requests\UpdateDireccionRequest  $request
+     * @param  \App\Models\Direccion  $direccion
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTarifaRequest $request, Tarifa $tarifa)
+    public function update(UpdateDireccionRequest $request, Direccion $direccion)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
+        $mensaje = "";
         try {
             
-            $tarifa->fill($request->post())->save();
+            $direccion->fill($request->post())->save();
   
-            $tmp = sprintf("Actualizacion de la TARIFA '%s', fue exitoso",$tarifa->id);
+            $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$direccion->id);
             $notices = array($tmp);
 
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
 
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $e){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
-            Log::debug($ex->getMessage()); 
-            return \Redirect::back()
-                ->withErrors(array($ex->errorInfo[2]))
-                ->withInput();
-
+            Log::debug($e->getMessage()); 
+            $mensaje =  $e->getMessage();
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
             Log::debug( $e->getMessage() );
+            $mensaje =  $ex->getMessage();
         }
+
+        return \Redirect::back()
+                ->withErrors(array($mensaje))
+                ->withInput();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tarifa  $tarifa
+     * @param  \App\Models\Direccion  $direccion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tarifa $tarifa)
+    public function destroy(Direccion $direccion)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
+        $mensaje = "";
         try {
-
-            Log::info("Registro a Eliminar ". $tarifa->id);
-            $tmp = sprintf("El Registro de la Tarifa '%s', fue eliminado exitosamente",$tarifa->id);
+            Log::debug(print_r($direccion,true));
+            Log::info("Registro a Eliminar ". $direccion->id);
+            $tmp = sprintf("El Registro de la Direccion '%s', fue eliminado exitosamente",$direccion->id);
             $notices = array($tmp);
 
-            $tarifa->estatus = 0;
-            $tarifa->save();
+            $direccion->estatus = 0;
+            $direccion->save();
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
 
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $e){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
-            Log::debug($ex->getMessage()); 
-            return \Redirect::back()
-                ->withErrors(array($ex->errorInfo[2]))
-                ->withInput();
+            Log::debug($e->getMessage()); 
+            $mensaje = $e->getMessage();
 
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
             Log::debug( $e->getMessage() );
+            $mensaje = $e->getMessage();
         }
+
+        return \Redirect::back()
+                ->withErrors(array($mensaje))
+                ->withInput();
     }
 }

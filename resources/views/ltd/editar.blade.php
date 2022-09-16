@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 
-
+@include('ltd.editar.header')
 
 <!-- Row -->
 <div class="row">
@@ -13,16 +13,16 @@
                 </div>
             </div>
         </div>
-        {!! Form::model($tarifa,['route' => ['tarifas.update',$tarifa], 'method' => 'PUT' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+        {!! Form::model($ltd,['route' => ['ltds.update',$ltd], 'method' => 'PUT' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
             <div class="row row-sm">
                 <div class="col-xl-12">
                     <div class="card custom-card">
                         <div class="card-header bg-transparent border-bottom-0">
-                            @include('tarifa.forma.principal')
+                            @include('ltd.forma.principal')
                         </div>
                     </div>
                     <div>
-                        <a href="{{ route('tarifas.index') }}" class="btn badge-dark" >Cancelar</a>
+                        <a href="{{ route('ltds.index') }}" class="btn badge-dark" >Cancelar</a>
                         <button type="submit" class="btn btn-primary ml-3" >Guardar</button>
                     </div>
                 </div>

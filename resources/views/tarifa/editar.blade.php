@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 
-
+@include('tarifa.editar.header')
 
 <!-- Row -->
 <div class="row">

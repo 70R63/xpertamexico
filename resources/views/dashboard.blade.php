@@ -82,7 +82,8 @@
                          {{--    @include('menu.envio')  --}}
                             @include('menu.ltd')    
                             @include('menu.roles')  
-                            @include('menu.usuario')               
+                            @include('menu.usuario')
+                            @include('menu.direcciones')
                         @endcanany
 
                         @canany(['isEjecutivo'])

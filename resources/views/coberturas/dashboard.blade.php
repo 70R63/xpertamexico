@@ -3,6 +3,7 @@
 
 
 @include('coberturas.dashboard.header')
+@include('coberturas.modals.cargamasiva')
 <!--Row-->
 <div class="row row-sm">
     <div class="col-lg-12">

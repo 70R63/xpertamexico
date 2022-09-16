@@ -19,8 +19,6 @@ class GuiaController extends Controller
     public function Creacion(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
-
-        //Log::info($request);
         $guia = new Estafeta();
 
 

@@ -27,7 +27,10 @@ $("#cotizar").click(function(e) {
                 console.log("done");
                 
                 table = $('#cotizacionAjax').DataTable({
-                    "processing": true,
+                    "oLanguage": {
+                        "sEmptyTable": "No exiten tarifas con los datos para cotizar"
+                    }
+                    ,"processing": true,
                     "bDestroy": true,
                     "data": response.data.data,
                     "columns": [
@@ -67,7 +70,11 @@ $("#cotizar").click(function(e) {
 
 
 
-table = $('#cotizacionAjax').DataTable();
+table = $('#cotizacionAjax').DataTable({
+    "oLanguage": {
+        "sEmptyTable": "Ingresa los datos para cotizar"
+    }
+});
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
     console.log(table.row(this).data());
     var piezas = $('#piezas').val();
