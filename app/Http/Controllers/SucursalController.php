@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreDireccionRequest;
-use App\Http\Requests\UpdateDireccionRequest;
-use App\Models\Direccion;
-use App\Models\Ltd;
-use App\Models\Servicio;
+use App\Http\Requests\StoresucursalRequest;
+use App\Http\Requests\UpdatesucursalRequest;
+use App\Models\Sucursal;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DireccionController extends Controller
+class SucursalController extends Controller
 {
-    const INDEX_r = "direcciones.index";
 
-    const DASH_v = "direcciones.dashboard";
-    const CREAR_v = "direcciones.crear";
-    const EDITAR_v = "direcciones.editar";
-    const SHOW_v = "direcciones.show";
+    const INDEX_r = "sucursales.index";
+
+    const DASH_v = "sucursales.dashboard";
+    const CREAR_v = "sucursales.crear";
+    const EDITAR_v = "sucursales.editar";
+    const SHOW_v = "sucursales.show";
     /**
      * Display a listing of the resource.
      *
@@ -26,9 +25,10 @@ class DireccionController extends Controller
      */
     public function index()
     {
+
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = Direccion::get();
+            $tabla = Sucursal::get();
 
             
             return view(self::DASH_v 
@@ -49,11 +49,8 @@ class DireccionController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = array();
-
-            return view(self::CREAR_v 
-                    ,compact("tabla")
-                );
+           
+            return view(self::CREAR_v);
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
             Log::info("Error general ");       
@@ -63,18 +60,18 @@ class DireccionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreDireccionRequest  $request
+     * @param  \App\Http\Requests\StoresucursalRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDireccionRequest $request)
+    public function store(StoresucursalRequest $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         $mensaje = "";
         try {
             
-            Direccion::create($request->except('_token'));
+            Sucursal::create($request->except('_token'));
 
-            $tmp = sprintf("El registro de la nueva DIRECCION '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("El registro de la nueva SUCURSAL '%s', fue exitoso",$request->get('nombre'));
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
@@ -97,10 +94,10 @@ class DireccionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
-    public function show(Direccion $direccion)
+    public function show(sucursal $sucursal)
     {
         abort(403, 'Unauthorized action.');
     }
@@ -108,7 +105,7 @@ class DireccionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -118,7 +115,7 @@ class DireccionController extends Controller
 
             Log::debug($id);
             Log::info(__CLASS__." ".__FUNCTION__."");
-            $objeto = Direccion::findOrFail($id);
+            $objeto = Sucursal::findOrFail($id);
                
             Log::debug($objeto);
             return view(self::EDITAR_v
@@ -142,19 +139,19 @@ class DireccionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateDireccionRequest  $request
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Http\Requests\UpdatesucursalRequest  $request
+     * @param  \App\Models\sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDireccionRequest $request, int $id)
+    public function update(UpdatesucursalRequest $request, int $id)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         $mensaje = "";
         try {
-            $objeto = Direccion::findOrFail($id);
+            $objeto = Sucursal::findOrFail($id);
             $objeto->fill($request->post())->save();
   
-            $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$objeto->id);
+            $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$id);
             $notices = array($tmp);
 
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
@@ -177,7 +174,7 @@ class DireccionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\sucursal  $sucursal
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -188,11 +185,11 @@ class DireccionController extends Controller
             
             Log::info("Registro a Eliminar ". $id);
 
-            $objeto = Direccion::findOrFail($id);
+            $objeto = Sucursal::findOrFail($id);
             $objeto->estatus = 0;
             $objeto->save();
 
-            $tmp = sprintf("El Registro '%s' de la Empresa '%s', fue eliminado exitosamente",$id,$objeto->empresa);
+            $tmp = sprintf("El Registro '%s' de la Sucursal '%s', fue eliminado exitosamente",$id,$objeto->nombre);
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

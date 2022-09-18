@@ -8,7 +8,12 @@
 	</a>
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('direcciones.index') }}">Dashboard</a>
+			<a class="nav-sub-link" href="{{ route('direcciones.index') }}">Cliente</a>
+		</li>	
+	</ul>
+	<ul class="nav-sub">
+		<li class="nav-sub-item">
+			<a class="nav-sub-link" href="{{ route('sucursales.index') }}">Sucursal</a>
 		</li>	
 	</ul>
 </li>

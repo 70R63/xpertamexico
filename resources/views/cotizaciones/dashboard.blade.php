@@ -86,6 +86,4 @@
 </div>
 <!-- Row end -->
 
-
-
 @endsection

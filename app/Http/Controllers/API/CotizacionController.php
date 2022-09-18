@@ -8,6 +8,9 @@ use Log;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Tarifa;
+use App\Models\Sucursal;
+
+
 
 class CotizacionController extends BaseController
 {
@@ -29,6 +32,25 @@ class CotizacionController extends BaseController
                         ,\DB::raw('(tarifas.kg_extra+tarifas.extendida+tarifas.costo) as costo_total'))
                     ->get()->toArray();
         $success['data'] = $tabla;
+        Log::info($success);
+        return $this->sendResponse($success, 'User login successfully.');
+        
+    }
+
+    /**
+     * Login api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cp(Request $request)
+    {
+        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info($request);
+
+        $datos = Sucursal::where("id",$request->id)
+                ->get()
+                ->toArray();
+        $success = $datos;
         Log::info($success);
         return $this->sendResponse($success, 'User login successfully.');
         

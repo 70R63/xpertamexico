@@ -34,6 +34,7 @@ $("#cotizar").click(function(e) {
                     "bDestroy": true,
                     "data": response.data.data,
                     "columns": [
+                        { "data": "id" },
                         { "data": "nombre" },
                         { "data": "kg_ini" },
                         { "data": "kg_fin" },
@@ -80,12 +81,47 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var piezas = $('#piezas').val();
     var cp = $('#cp').val();
     var cp_d = $('#cp_d').val();
-    
-    $("#spanPrecio").text(table.row(this).data()['costo_total']*piezas);
+    var precio = table.row(this).data()['costo_total']*piezas;
+    var tarifa_id = table.row(this).data()['id'];
+
+    $("#spanPrecio").text(precio);
     $("#spanMensajeria").text(table.row(this).data()['nombre']);
     $("#spanRemitente").text(cp);
     $("#spanDestinatario").text(cp_d);
     $("#spanPieza").text(piezas);
     
+    //valores para request
+    $("#precio").val(precio);
+    $("#tarifa_id").val(tarifa_id);
+    
+
     $("#myModal").modal("show");
 });
+
+$("#sucursal").change(function() {
+    var id = $('#sucursal').val();
+
+    $.ajax({
+        /* Usar el route  */
+        url: "api/cp",
+        type: 'GET',
+        /* send the csrf-token and the input to the controller */
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: "id="+id
+        
+        /* remind that 'data' is the response of the AjaxController */
+        }).done(function( response) {
+            console.log("done");
+            console.log(response.data[0].cp)
+            $("#cp").val(response.data[0].cp);
+        
+        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+            console.log( "fail" );
+            console.log(textStatus);
+            
+            alert( data.responseJSON.message);
+
+        }).always(function() {
+            console.log( "complete" );
+        });
+}); 

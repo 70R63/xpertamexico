@@ -1,17 +1,16 @@
 
 <div class="input-group mb-3">
 	<div class="input-group-prepend">
-		<span class="input-group-text" id="basic-addon1"> Pais D<span class="tx-danger">*</span></span>
+		<span class="input-group-text" id="basic-addon1"> Cliente<span class="tx-danger">*</span></span>
 	</div>
-	{!! Form::select('pais_d', array(
-	    'MEX' 	=> 'Mexico'
-	    )
+	{!! Form::select('cliente'
+		, $cliente
 		,'MEX'
 		,['class' 		=> 'form-control'
 			,'placeholder'	=> 'Seleccionar'
 			,'required'	=> ''
-			,'name'		=> 'pais_d'
-			,'id'		=> 'pais_d'
+			,'name'		=> 'cliente'
+			,'id'		=> 'cliente'
 		]);
 	!!}
 </div>

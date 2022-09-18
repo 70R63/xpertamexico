@@ -6,8 +6,8 @@ use App\Http\Requests\StoreCotizadorRequest;
 use App\Http\Requests\UpdateCotizadorRequest;
 use App\Models\Cotizador;
 
-use App\Models\Ltd;
-use App\Models\Servicio;
+use App\Models\Sucursal;
+use App\Models\Direccion;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -31,14 +31,12 @@ class CotizadorController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
             
-            $pluckLtd = Ltd::where('estatus',1)
-                                ->pluck('nombre','id');
+            $sucursal = Sucursal::pluck('nombre','id','cp');
 
-            $pluckServicio = Servicio::where('estatus',1)
-                    ->pluck('nombre','id');
+            $cliente = Direccion::pluck('empresa','id');
 
             return view(self::DASH_v 
-                    ,compact( "pluckLtd", "pluckServicio")
+                    ,compact( "sucursal", "cliente")
                 );
 
         } catch (Exception $e) {
@@ -64,7 +62,29 @@ class CotizadorController extends Controller
      */
     public function store(StoreCotizadorRequest $request)
     {
-        //
+        Log::info(__CLASS__." ".__FUNCTION__);
+        try {
+            
+            #Tarifa::create($request->except('_token'));
+            dd($request);
+            $tmp = sprintf("El registro de la nueva TARIFA '%s', fue exitoso",$request->get('nombre'));
+            $notices = array($tmp);
+  
+            return \Redirect::route(self::CREAR_v) -> withSuccess ($notices);
+
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+    
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::debug( $e->getMessage() );
+
+        }
+
+        return \Redirect::back()
+                ->withErrors(array($ex->errorInfo[2]))
+                ->withInput();
     }
 
     /**
@@ -73,7 +93,7 @@ class CotizadorController extends Controller
      * @param  \App\Models\Cotizador  $cotizador
      * @return \Illuminate\Http\Response
      */
-    public function show(Cotizador $cotizador)
+    public function show(StoreCotizadorRequest $request)
     {
         //
     }
