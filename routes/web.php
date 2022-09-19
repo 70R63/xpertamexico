@@ -30,7 +30,7 @@ Route::middleware(['roles:sysadmin,admin'])->group(function(){
     Route::resource('tarifas','TarifaController');
     Route::resource('guia','GuiaController');
     Route::resource('cotizaciones','CotizadorController');
-    Route::resource('direcciones','DireccionController');
+    Route::resource('clientes','ClienteController');
     Route::resource('sucursales','SucursalController');
 
 });//FIN DEL MIDDLEWARE PARA ADMINISTRATIVOS

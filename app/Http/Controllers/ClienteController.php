@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreDireccionRequest;
-use App\Http\Requests\UpdateDireccionRequest;
-use App\Models\Direccion;
+use App\Http\Requests\StoreClienteRequest;
+use App\Http\Requests\UpdateClienteRequest;
+use App\Models\Cliente;
 use App\Models\Ltd;
 use App\Models\Servicio;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DireccionController extends Controller
+class ClienteController extends Controller
 {
-    const INDEX_r = "direcciones.index";
+    const INDEX_r = "clientes.index";
 
-    const DASH_v = "direcciones.dashboard";
-    const CREAR_v = "direcciones.crear";
-    const EDITAR_v = "direcciones.editar";
-    const SHOW_v = "direcciones.show";
+    const DASH_v = "clientes.dashboard";
+    const CREAR_v = "clientes.crear";
+    const EDITAR_v = "clientes.editar";
+    const SHOW_v = "clientes.show";
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +28,7 @@ class DireccionController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = Direccion::get();
+            $tabla = Cliente::get();
 
             
             return view(self::DASH_v 
@@ -66,13 +66,13 @@ class DireccionController extends Controller
      * @param  \App\Http\Requests\StoreDireccionRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreDireccionRequest $request)
+    public function store(StoreClienteRequest $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         $mensaje = "";
         try {
             
-            Direccion::create($request->except('_token'));
+            Cliente::create($request->except('_token'));
 
             $tmp = sprintf("El registro de la nueva DIRECCION '%s', fue exitoso",$request->get('nombre'));
             $notices = array($tmp);
@@ -97,10 +97,10 @@ class DireccionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function show(Direccion $direccion)
+    public function show(Cliente $cliente)
     {
         abort(403, 'Unauthorized action.');
     }
@@ -108,7 +108,7 @@ class DireccionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -118,7 +118,7 @@ class DireccionController extends Controller
 
             Log::debug($id);
             Log::info(__CLASS__." ".__FUNCTION__."");
-            $objeto = Direccion::findOrFail($id);
+            $objeto = Cliente::findOrFail($id);
                
             Log::debug($objeto);
             return view(self::EDITAR_v
@@ -143,15 +143,15 @@ class DireccionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateDireccionRequest  $request
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDireccionRequest $request, int $id)
+    public function update(UpdateClienteRequest $request, int $id)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         $mensaje = "";
         try {
-            $objeto = Direccion::findOrFail($id);
+            $objeto = Cliente::findOrFail($id);
             $objeto->fill($request->post())->save();
   
             $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$objeto->id);
@@ -177,7 +177,7 @@ class DireccionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Direccion  $direccion
+     * @param  \App\Models\Cliente  $cliente
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -188,7 +188,7 @@ class DireccionController extends Controller
             
             Log::info("Registro a Eliminar ". $id);
 
-            $objeto = Direccion::findOrFail($id);
+            $objeto = Cliente::findOrFail($id);
             $objeto->estatus = 0;
             $objeto->save();
 

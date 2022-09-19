@@ -3,7 +3,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>EMPRESA</th>
+				<th>NOMBRE</th>
 				<th>CONTACTO</th>
 				<th>DIRECCION</th>
 				<th>COLONIA</th>
@@ -18,7 +18,7 @@
 			@foreach( $tabla  as $objeto)
 				<tr>
 					<td>{{ $objeto->id }}</td>
-					<td>{{ $objeto->empresa }}</td>
+					<td>{{ $objeto->nombre }}</td>
 					<td>{{ $objeto->contacto }}</td>
 					<td>{{ $objeto->direccion }}</td>
 					<td>{{ $objeto->colonia }}</td>
@@ -26,13 +26,13 @@
 					<td>{{ $objeto->cp }}</td>
 					<td>{{ $objeto->entidad_federativa }}</td>
 					<td>
-						<a href=" {{ route('direcciones.edit', $objeto->id) }} " class="text-info tx-20 ">
+						<a href=" {{ route('clientes.edit', $objeto->id) }} " class="text-info tx-20 ">
 							<i class="fe fe-edit" alt="Editar"></i>
 						</a>
 						<a href="" class="remove-list text-danger tx-20 remove-button" data-toggle="modal" data-target="#modal{{ $objeto->id }}" >
 	<i class="fa fa-trash" alt="Eliminar"></i>
 </a>
-						@include('direcciones.modals.eliminar')		
+						@include('clientes.modals.eliminar')		
 					</td>
 				</tr>
 					

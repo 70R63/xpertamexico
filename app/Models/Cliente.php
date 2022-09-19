@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 use Log;
 
-class Direccion extends Model
+class Cliente extends Model
 {
     use HasFactory;
 
-    protected $table = 'direcciones';
+    protected $table = 'clientes';
     protected $guarded = []; 
 
     /**
@@ -26,7 +26,7 @@ class Direccion extends Model
         Log::info("funcion boot");
         parent::boot();        
         static::addGlobalScope('estatus', function (Builder $builder) {
-            $builder->where('direcciones.estatus', '1');
+            $builder->where('clientes.estatus', '1');
         });
     }
 }

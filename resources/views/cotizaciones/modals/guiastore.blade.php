@@ -52,14 +52,14 @@
     </div>
 </div>
 
-{!! Form::text('precio'
+{!! Form::hidden('precio'
     , null
     ,['class'       => 'form-control'
         ,'id'       => 'precio'
         
     ])
 !!}
-{!! Form::text('tarifa_id'
+{!! Form::hidden('tarifa_id'
     , null
     ,['class'       => 'form-control'
         ,'id'       => 'tarifa_id'

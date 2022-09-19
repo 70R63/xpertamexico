@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateCotizadorRequest;
 use App\Models\Cotizador;
 
 use App\Models\Sucursal;
-use App\Models\Direccion;
+use App\Models\Cliente;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -33,7 +33,7 @@ class CotizadorController extends Controller
             
             $sucursal = Sucursal::pluck('nombre','id','cp');
 
-            $cliente = Direccion::pluck('empresa','id');
+            $cliente = Cliente::pluck('nombre','id');
 
             return view(self::DASH_v 
                     ,compact( "sucursal", "cliente")

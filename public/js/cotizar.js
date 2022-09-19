@@ -98,8 +98,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#myModal").modal("show");
 });
 
-$("#sucursal").change(function() {
-    var id = $('#sucursal').val();
+function obtenerCP(id, modelo) {
 
     $.ajax({
         /* Usar el route  */
@@ -107,13 +106,30 @@ $("#sucursal").change(function() {
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        data: "id="+id
+        data: "id="+id+"&modelo="+modelo
         
         /* remind that 'data' is the response of the AjaxController */
         }).done(function( response) {
             console.log("done");
-            console.log(response.data[0].cp)
-            $("#cp").val(response.data[0].cp);
+            var contador = response.data.length
+            console.log(contador)
+
+
+            if ("Sucursal" == modelo) {
+                if (contador == 1) {
+                    $("#cp").val(response.data[0].cp);    
+                } else {
+                    $("#cp").val("00000");
+                }
+                
+            } else {
+                if (contador == 1) {
+                    $("#cp_d").val(response.data[0].cp);    
+                } else {
+                    $("#cp_d").val("00000");
+                }
+            }
+            
         
         }).fail( function( data,jqXHR, textStatus, errorThrown ) {
             console.log( "fail" );
@@ -124,4 +140,15 @@ $("#sucursal").change(function() {
         }).always(function() {
             console.log( "complete" );
         });
+
+}
+
+$("#sucursal").change(function() {
+    var idSucursal = $('#sucursal').val();
+    obtenerCP(idSucursal, "Sucursal");
 }); 
+
+$("#cliente").change(function() {
+    var idCliente = $('#cliente').val();
+    obtenerCP(idCliente, "Cliente");
+});

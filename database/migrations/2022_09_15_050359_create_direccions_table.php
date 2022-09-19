@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('direcciones', function (Blueprint $table) {
+        Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->boolean('estatus')->default(1);
 
             $table->string('contacto', 50)->nullable(false)->default('contactName');
-            $table->string('empresa', 50)->nullable(false)->default('corporateName');
+            $table->string('nombre', 50)->nullable(false)->default('corporateName');
             $table->string('direccion', 100)->nullable(false)->default('address1');
             $table->string('direccion2', 100)->nullable(false)->default('address2');
             $table->string('cp', 5)->nullable(false)->default('00000');
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('direcciones');
+        Schema::dropIfExists('clientes');
     }
 };

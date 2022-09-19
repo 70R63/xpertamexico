@@ -8,10 +8,10 @@
 						</span>
 					</div>
 
-					{!! Form::text('empresa'
+					{!! Form::text('nombre'
 						, null
 						,['class' 		=> 'form-control'
-							,'id'		=> 'empresa'
+							,'id'		=> 'nombre'
 							,'required'	=>	'true'
 						])
 					!!}

@@ -9,6 +9,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Tarifa;
 use App\Models\Sucursal;
+use App\Models\Cliente;
+
 
 
 
@@ -46,13 +48,18 @@ class CotizacionController extends BaseController
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         Log::info($request);
+        $modelo = $request->get('modelo');
 
-        $datos = Sucursal::where("id",$request->id)
-                ->get()
+        if ("Sucursal" == $modelo) {
+            $datos = Sucursal::where("id",$request->id);
+        } else {
+            $datos = Cliente::where("id",$request->id);
+        }
+        $resultado = $datos->get()
                 ->toArray();
-        $success = $datos;
-        Log::info($success);
-        return $this->sendResponse($success, 'User login successfully.');
+
+        
+        return $this->sendResponse($resultado, 'User login successfully.');
         
     }
 
