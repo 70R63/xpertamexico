@@ -63,10 +63,10 @@ class GuiaController extends Controller
 
             
             $body = array('grant_type' => 'client_credentials',
-                    'client_id' => 'hDMICPKUl2jbCcTv' ,
-                    'client_secret' => 'jKSruOWyMi1i2Q0KLjMcUtub0', );
+                    'client_id' => 'l7640a59a8ce1c4dfea7bb2d302febc882' ,
+                    'client_secret' => '2bc10d1d2f3b4b6ab55a0e63518c306e', );
             
-            $body="grant_type=csp_credentials&client_id=hDMICPKUl2jbCcTv&client_secret=jKSruOWyMi1i2Q0KLjMcUtub0";
+            
 
             $response = $client->request('POST', 'oauth/token', [
                 'headers'   => $headers

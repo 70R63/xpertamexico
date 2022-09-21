@@ -23,6 +23,7 @@
 				,'id'		=> 'cp'
 				,'placeholder'	=> 'Codigo Postal'
 				,'required'	=> ''
+				,'readonly' =>	'true'
 				,'pattern'	=> '\d{5}'
 			])
 		!!}
