@@ -10,8 +10,6 @@ $("#cotizar").click(function(e) {
 
     var form = $('#cotizacionesForm').parsley().refresh();
     var action = $('#cotizacionesForm').attr("action"); 
-    
-    console.log( action );
 
     if ( form.validate() ){
         $.ajax({
@@ -44,7 +42,6 @@ $("#cotizar").click(function(e) {
                         { "data": "costo_total"
                             ,render: function (data, type, row, meta) {
                                 var piezas = $('#piezas').val();
-                                console.log(piezas);    
                                 var costo = data* piezas;
                                 return '<a href="#">$ '+costo+'</a>';
                             } 
@@ -77,23 +74,33 @@ table = $('#cotizacionAjax').DataTable({
     }
 });
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
-    console.log(table.row(this).data());
+    
     var piezas = $('#piezas').val();
+    var sucursal_id = $('#sucursal').val();
+    var cliente_id = $('#cliente').val();
     var cp = $('#cp').val();
     var cp_d = $('#cp_d').val();
+
     var precio = table.row(this).data()['costo_total']*piezas;
     var tarifa_id = table.row(this).data()['id'];
+    var ltd_nombre = table.row(this).data()['nombre'];
 
     $("#spanPrecio").text(precio);
-    $("#spanMensajeria").text(table.row(this).data()['nombre']);
+    $("#spanMensajeria").text(ltd_nombre);
     $("#spanRemitente").text(cp);
     $("#spanDestinatario").text(cp_d);
     $("#spanPieza").text(piezas);
     
-    //valores para request
+    //valores para request, campos ocultos
     $("#precio").val(precio);
     $("#tarifa_id").val(tarifa_id);
+    $("#sucursal_id").val(sucursal_id);
+    $("#cliente_id").val(cliente_id);
+    $("#ltd_nombre").val(ltd_nombre);
+    $("#piezas_guia").val(piezas);
     
+    console.log(cliente_id);
+    console.log(sucursal_id);
 
     $("#myModal").modal("show");
 });

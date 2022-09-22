@@ -33,7 +33,7 @@
                                 <span class="tx-18 mb-3">ORIGIEN</span> 
                             </div>
                         </div>
-                        @include('cotizaciones.dashboard.forma.origen')
+                        @include('cotizaciones.forma.origen')
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -43,7 +43,7 @@
                                 <span class="tx-18 mb-3">DESTINO</span> 
                             </div>
                         </div>
-                        @include('cotizaciones.dashboard.forma.destino')
+                        @include('cotizaciones.forma.destino')
                     </div>
                 </div>
 

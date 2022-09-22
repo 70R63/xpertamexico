@@ -6,6 +6,7 @@ use App\Models\Guia;
 use Illuminate\Http\Request;
 
 use Log;
+use App\Dto\Estafeta;
 
 class GuiaController extends Controller
 {
@@ -66,7 +67,11 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__);
         try {
             
-            Log::info($request);
+            Log::debug($request);
+
+            $guia = new Estafeta();
+            $guia -> init( $request ); 
+
             $tmp = sprintf("El registro de la guia '%s', fue exitoso","escibir un valor");
             $notices = array($tmp);
   

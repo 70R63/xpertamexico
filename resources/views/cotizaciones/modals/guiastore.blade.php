@@ -1,5 +1,5 @@
 <!-- Modal -->
-{!! Form::open([ 'route' => 'cotizaciones.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+{!! Form::open([ 'route' => 'cotizaciones.create', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
 <div class="modal" id="myModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-content-demo">
@@ -34,7 +34,7 @@
                                 <li>
                                     <b>Piezas:</b> <span id="spanPieza"></span>
                                 </li>
-                            </h2>
+                            </h4>
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">
@@ -52,18 +52,6 @@
     </div>
 </div>
 
-{!! Form::hidden('precio'
-    , null
-    ,['class'       => 'form-control'
-        ,'id'       => 'precio'
-        
-    ])
-!!}
-{!! Form::hidden('tarifa_id'
-    , null
-    ,['class'       => 'form-control'
-        ,'id'       => 'tarifa_id'
-        
-    ])
-!!}
+
+    @include('cotizaciones.forma.guiastore_ocultos')
 {!! Form::close() !!} 

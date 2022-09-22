@@ -10,6 +10,7 @@ use App\Models\Sucursal;
 use App\Models\Cliente;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 
 class CotizadorController extends Controller
 {
@@ -49,28 +50,21 @@ class CotizadorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreCotizadorRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreCotizadorRequest $request)
+    public function create(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         try {
             
-            #Tarifa::create($request->except('_token'));
-            dd($request);
-            $tmp = sprintf("El registro de la nueva TARIFA '%s', fue exitoso",$request->get('nombre'));
-            $notices = array($tmp);
+            Log::info($request);
+            $cliente = Cliente::findOrFail($request->get("cliente_id"));
+            $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
+            $precio = $request->get("precio");
+            $ltd_nombre = $request->get("ltd_nombre");
+            $piezas = $request->get("piezas_guia");
   
-            return \Redirect::route(self::CREAR_v) -> withSuccess ($notices);
+            return view(self::CREAR_v
+                , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre') 
+            );
 
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
@@ -85,6 +79,17 @@ class CotizadorController extends Controller
         return \Redirect::back()
                 ->withErrors(array($ex->errorInfo[2]))
                 ->withInput();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreCotizadorRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreCotizadorRequest $request)
+    {
+        
     }
 
     /**
