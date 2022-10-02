@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Database\QueryException;
 
-
+use Log;
 
 class RolesMiddleware
 {
@@ -20,7 +20,10 @@ class RolesMiddleware
      */
     public function handle(Request $request, Closure $next,...$roles)
     {
+        Log::info("roles----------------");
+        Log::info($roles);
         foreach($roles as $rol){
+            Log::info($rol);
             if(auth()->user()->hasRol($rol)){
                 return $next($request);
             }       

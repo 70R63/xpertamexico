@@ -24,25 +24,41 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::middleware(['roles:sysadmin,admin'])->group(function(){
+//ACCESO A TODO LOS ROLES DISPONIBLES
+Route::middleware(['roles:sysadmin,admin,ejecutivo,cliente,usuario'])->group(function(){
+    Route::resource('guia','GuiaController');
+});
+//FIN USUARIO
+
+//
+Route::middleware(['roles:sysadmin,admin,ejecutivo,cliente'])->group(function(){
+    Route::resource('users','Roles\UsersController');
+});
+//FIN 
+
+//
+Route::middleware(['roles:sysadmin,admin,ejecutivo'])->group(function(){
+    
     Route::resource('ltds','LtdController');
+});
+//FIN 
+
+Route::middleware(['roles:sysadmin,admin'])->group(function(){
+    Route::resource('roles','Roles\RolesController');
+});
+//FIN 
+
+Route::middleware(['roles:sysadmin,admin'])->group(function(){
     Route::resource('coberturas','CoberturasController');
     Route::resource('tarifas','TarifaController');
-    Route::resource('guia','GuiaController');
     Route::resource('cotizaciones','CotizadorController');
     Route::resource('clientes','ClienteController');
     Route::resource('sucursales','SucursalController');
+    Route::resource('empresas','EmpresaController');
 
 });//FIN DEL MIDDLEWARE PARA ADMINISTRATIVOS
 
 
-//USUARIO
-Route::resource('users','Roles\UsersController')->middleware('roles:sysadmin,admin,ejecutivo,cliente,usuario'); 
-//FIN USUARIO
-
-//ROLES
-Route::resource('roles','Roles\RolesController')->middleware('roles:sysadmin,admin,cliente'); 
-//FIN ROLES
 
 Route::resource('profile','userProfileController');
 

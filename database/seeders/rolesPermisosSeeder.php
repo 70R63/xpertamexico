@@ -36,6 +36,7 @@ class rolesPermisosSeeder extends Seeder
             'name'      => 'SysAdminUser',
             'email'     => 'sysadminuser@gmail.com',
             'password'  => Hash::make('123456789'),
+            'empresa_id'=> '1'
         ]);
 
 // CREAR ROL SYSADMIN
@@ -86,6 +87,7 @@ class rolesPermisosSeeder extends Seeder
             'name'      => 'AdminUser',
             'email'     => 'adminuser@gmail.com',
             'password'  => Hash::make('AdminTemp01'),
+            'empresa_id'=> '1'
         ]);
 
 //CREAR ROL ADMIN 
@@ -140,6 +142,7 @@ class rolesPermisosSeeder extends Seeder
             'name'      => 'EjecutivoUser',
             'email'     => 'ejecutivouser@gmail.com',
             'password'  => Hash::make('EjecutivoTemp01'),
+            'empresa_id'=> '1'
         ]);
 
 
@@ -193,6 +196,7 @@ class rolesPermisosSeeder extends Seeder
             'name'      => 'ClienteUser',
             'email'     => 'clienteuser@gmail.com',
             'password'  => Hash::make('ClienteTemp01'),
+            'empresa_id'=> '1'
         ]);
 
 // CREAR ROL CLIENTE
@@ -245,6 +249,7 @@ class rolesPermisosSeeder extends Seeder
             'name'      => 'Usuario',
             'email'     => 'usuario@gmail.com',
             'password'  => Hash::make('UsuarioTemp01'),
+            'empresa_id'=> '1'
         ]);
 
 // CREAR ROL USUARIO

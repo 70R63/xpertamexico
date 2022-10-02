@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\GuiaController;
 use App\Http\Controllers\API\CotizacionController;
+use App\Http\Controllers\API\EmpresaLtdController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,9 +49,10 @@ Route::group(array('domain' => env('APP_URL')), function() {
             Route::apiResource('cotizaciones', CotizacionController::class);
 
             Route::controller(CotizacionController::class)->group(function(){
-                Route::get('cp', 'cp');
-                
+                Route::get('cp', 'cp');    
             });
+
+            Route::apiResource('empresaltd', EmpresaLtdController::class);
 
         });
 

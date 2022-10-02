@@ -23,7 +23,6 @@ class Cliente extends Model
 
     protected static function boot()
     {
-        Log::info("funcion boot");
         parent::boot();        
         static::addGlobalScope('estatus', function (Builder $builder) {
             $builder->where('clientes.estatus', '1');

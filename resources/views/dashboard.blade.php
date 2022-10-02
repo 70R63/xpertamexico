@@ -75,23 +75,32 @@
                         <li class="nav-item ">
                             <a class="nav-link" href="{{ route('dashboard') }}"><span class="shape1"></span><span class="shape2"></span><i class="ti-home sidemenu-icon"></i><span class="sidemenu-label">DASHBOARD</span></a>
                         </li>
-                        @canany(['isSysAdmin','isAdmin'])  
+                        @canany(['isSysAdmin'])  
                          {{--   @include('menu.configuracion') 
                             @include('menu.cliente')  --}}
-                            @include('menu.guia')
                          {{--    @include('menu.envio')  --}}
-                            @include('menu.ltd')    
+                              
                             @include('menu.roles')  
-                            @include('menu.usuario')
+                        @endcanany
+
+                        @canany(['isSysAdmin','isAdmin'])
+                            @include('menu.empresas')
                             @include('menu.direcciones')
+                            @include('menu.ltd')
                         @endcanany
 
-                        @canany(['isEjecutivo'])
-                            @include('menu.usuario')
+                        @canany(['isSysAdmin','isAdmin','isEjecutivo'])
+                            
+                           
                         @endcanany
 
-                        @canany(['isUsuario'])
+                        @canany(['isSysAdmin','isAdmin','isEjecutivo','isCliente'])
                             @include('menu.usuario')
+                            
+                        @endcanany
+
+                        @canany(['isSysAdmin','isAdmin','isEjecutivo','isCliente','isUsuario'])
+                            @include('menu.guia')
                         @endcanany
                       
                         
@@ -222,6 +231,7 @@
         <script src="{{ asset('js/guia.multipieza.js') }}" ></script>
         <script src="{{ asset('js/preSubmit.js') }}" ></script>
         <script src="{{ asset('js/cotizar.js') }}" ></script>
+        <script src="{{ asset('js/empresa.js') }}" ></script>
         <!-- Personalizacion de validicon con parley -->
         <script src="{{ asset('js/form-validation.js') }}" ></script>
 

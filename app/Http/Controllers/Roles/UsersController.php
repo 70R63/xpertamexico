@@ -9,20 +9,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use App\Models\Empresa;
 
 //USO GENERAL
 use Log;
 use Redirect;
 use Exception;
+use DB;
 
 
 class UsersController extends Controller
 {
 
+
     public function index()
     {
-        $users = User::orderBy('id','asc')->get();
-        return view('usuario.index',['users' => $users]);
+        $users = User::where('empresa_id',auth()->user()->empresa_id)
+            ->orderBy('id','asc')->get();
+        
+        return view('usuario.index', compact("users") );
     }
 
     public function create(Request $request)
@@ -34,8 +39,15 @@ class UsersController extends Controller
             return $permisos;  
         }
 
-        $roles = Roles::all();
-        return view('usuario.crear',['roles'=>$roles]);
+        $resultset = DB::table('users_roles')
+                ->where('user_id', auth()->user()->id )
+                ->get();
+        $roles = Roles::where('id','>=',$resultset[0]->roles_id)->get();
+        
+
+        $pluckEmpresa = Empresa::pluck('nombre','id');
+
+        return view('usuario.crear',compact('roles','pluckEmpresa'));
     }
 
  
@@ -48,12 +60,12 @@ class UsersController extends Controller
                 'password' => 'required|between:8,12|confirmed',
                 'password_confirmation' => 'required'
             ]);
-              //  dd($request);
 
                 $user = new User;
                 $user->name = $request->name;
                 $user->email = $request->email;
                 $user->password = Hash::make($request->password);
+                $user->empresa_id = $request->empresa_id;
                 $user->save();
 
                 if($request->role != null){

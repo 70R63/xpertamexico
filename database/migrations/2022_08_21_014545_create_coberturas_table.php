@@ -52,6 +52,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('coberturas');
-        Schema::dropIfExists('coberturas_lista');
+        Schema::dropIfExists('coberturas_listas');
     }
 };

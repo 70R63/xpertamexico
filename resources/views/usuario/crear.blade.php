@@ -50,6 +50,24 @@
                      @endforeach
                   </select>
                </div>
+
+               <div class="input-group mb-3">
+               <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">
+                     Empresa
+                     <span class="tx-danger">*</span>
+                  </span>
+               </div>
+               {!! Form::select('empresa_id'
+                  ,$pluckEmpresa
+                  ,$pluckEmpresa['empresa_id'] ?? '0'
+                  ,['class'      => 'form-control'
+                     ,'placeholder' => 'Seleccionar'
+                     ,'required' => 'true'
+                  ]);
+               !!}
+                  
+            </div>
                <div class="form-group mb-3">
                   <div id="permissions_box" >
                      <div class="input-group-prepend">
