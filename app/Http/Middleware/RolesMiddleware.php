@@ -18,9 +18,9 @@ class RolesMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next,...$roles)
+  public function handle(Request $request, Closure $next,...$roles)
     {
-        Log::info("roles----------------");
+       /* Log::info("roles----------------");
         Log::info($roles);
         foreach($roles as $rol){
             Log::info($rol);
@@ -28,6 +28,19 @@ class RolesMiddleware
                 return $next($request);
             }       
         }
-     return redirect(RouteServiceProvider::HOME);
+     return redirect(RouteServiceProvider::HOME);*/
+
+     if(auth()->user() == null){
+        Log::info("nulo");
+        return redirect('login');
+     }
+     else
+         foreach($roles as $rol){
+            Log::info($rol);
+            if(auth()->user()->hasRol($rol)){
+                return $next($request);
+            }       
+        }
+        return redirect(RouteServiceProvider::HOME);
     }
 }
