@@ -4,7 +4,7 @@
 	</div>
 
 	{!! Form::select('1'
-		,  array("uno", "dos") 
+		, $ltdActivo 
 		, null
 		,['class' 		=> 'form-control'
 			,'placeholder'	=> 'Seleccionar'

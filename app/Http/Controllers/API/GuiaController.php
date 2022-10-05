@@ -20,9 +20,9 @@ class GuiaController extends Controller
     {
         Log::info(__CLASS__." ".__FUNCTION__);
         $guia = new Estafeta();
+        $guia->parser($request,"API");
 
-
-        return $guia -> init( $request );        
+        return $guia -> init();        
     }
 
 

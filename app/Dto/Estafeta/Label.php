@@ -9,8 +9,6 @@ use App\Dto\Estafeta\LabelDescriptionList;
 class Label extends DataTransferObject 
 {
 
-    public string $apiToken ="md5"
-    ;    
     /** @var string */
     public $suscriberId = "28";
     

@@ -1,12 +1,12 @@
 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
     <h4>TIPO DE ENVIO </h4>
     <div class="card custom-card">
-        {!! Form::text('tipo_envio', 1 ?? 0,
+        {!! Form::hidden('tipo_envio', 1 ?? 0,
             ['class'        => 'form-control'
             ,'style'        =>  'display:visible;'
             ])
         !!}
-        {!! Form::text('clave', $clave ?? 0,
+        {!! Form::hidden('clave', $clave ?? 0,
             ['class'        => 'form-control'
                 ,'id'   => 'clave'  
                 ,'style'        =>  'display:visible;'

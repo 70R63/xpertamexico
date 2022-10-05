@@ -29,7 +29,7 @@
 							<i class="fa fa-trash" alt="Eliminar"></i>
 						</a>
 
-						<a href="" class="remove-list text-nowrap tx-20" data-toggle="modal" data-target="#asigarLtd{{ $objeto->id }}" >
+						<a href="{{ $objeto->id }}" class="remove-list text-nowrap tx-20" data-toggle="modal" data-target="#asignarLtd{{ $objeto->id }}" >
 							<i title="Asignar LTD" class="fa fa-handshake-o"> </i>
 						</a>
 

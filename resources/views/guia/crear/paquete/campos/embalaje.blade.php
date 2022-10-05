@@ -8,13 +8,16 @@
 			['class' 		=> 'form-control'
 			,'placeholder'	=> 'Ejemplos 0.1, 1, 10, 12.5'
 			,'id'		=> 'peso'
+			,'required'	=> 'true'
 			])
 		!!}
+		<!--
 		@if(3 == 3)
 			<button id="addRow" type="button" class="btn btn-info">
 		    	<i class="fe fe-plus wd-20 ht-20 text-center tx-18"></i>
 		    </button>
 		@endif
+		-->
 	</div>
 
 	<div class="input-group mb-3">
@@ -25,7 +28,7 @@
 			['class' 		=> 'form-control'
 			,'id'			=> 'largo'
 			,'placeholder'	=> 'Largo '
-			
+			,'required'	=> 'true'
 			])
 		!!}
 
@@ -33,7 +36,7 @@
 			['class' 		=> 'form-control'
 			,'id'			=> 'ancho'
 			,'placeholder'	=> 'Ancho  '
-			
+			,'required'	=> 'true'
 			])
 		!!}
 
@@ -41,7 +44,7 @@
 			['class' 		=> 'form-control'
 			,'id'			=> 'alto'
 			,'placeholder'	=> 'Alto '
-			
+			,'required'	=> 'true'
 			])
 		!!}
 	</div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guia;
+use App\Models\EmpresaLtd;
 use Illuminate\Http\Request;
 
 use Log;
@@ -45,10 +46,14 @@ class GuiaController extends Controller
     public function create()
     {
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);    
+            Log::info(__CLASS__." ".__FUNCTION__);   
+            $ltdActivo = EmpresaLtd::LtdEmpresa()
+                    ->where('empresa_id', auth()->user()->empresa_id)
+                    ->pluck("nombre","id");
+            
             $tabla = array();
             return view('guia.crear' 
-                    ,compact("tabla")
+                    ,compact("tabla", "ltdActivo")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -70,7 +75,10 @@ class GuiaController extends Controller
             Log::debug($request);
 
             $guia = new Estafeta();
-            $guia -> init( $request ); 
+            $guia->parser($request);
+            $result = $guia -> init(); 
+
+            Log::info($result);
 
             $tmp = sprintf("El registro de la guia '%s', fue exitoso","escibir un valor");
             $notices = array($tmp);

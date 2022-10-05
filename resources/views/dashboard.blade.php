@@ -41,12 +41,12 @@
         <!-- Sidemenu css-->
         <link href="{{ url('spruha/css/sidemenu/sidemenu.css') }}"  rel="stylesheet">
         
-
         <!-- Internal DataTables css-->
         <link href="{{ url('spruha/plugins/datatable/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
         <link href="{{ url('spruha/plugins/datatable/responsivebootstrap4.min.css') }}" rel="stylesheet" />
         <link href="{{ url('spruha/plugins/datatable/fileexport/buttons.bootstrap4.min.css') }}" rel="stylesheet" />
 
+        <link href="{{ url('spruha/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
         @yield('css_rol_page')
 
@@ -223,7 +223,8 @@
 
         <script src="{{url('spruha/plugins/darggable/jquery-ui-darggable.min.js') }}"></script>
         <script src="{{url('spruha/plugins/darggable/darggable.js') }}"></script>
-
+        <script src="{{url('spruha/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+        
         <!-- Personalizacion -->
         <script src="{{ asset('js/guardar.js') }}" ></script> 
         <script src="{{ asset('js/tipoEnvio.js') }}" ></script>

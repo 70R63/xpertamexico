@@ -6,6 +6,8 @@ namespace App\Traits;
 use App\Models\Roles\Roles;
 use App\Models\Roles\Permisos;
 
+use Log;
+
 trait HasRolesAndPermisos
 {
 /*
@@ -30,13 +32,13 @@ trait HasRolesAndPermisos
 
 	 public function hasRol($role)
     {        
+        Log::info($role);
         if( strpos($role, ',') !== false ){//check if this is an list of roles
 
             $listOfRoles = explode(',',$role);
 
             foreach ($listOfRoles as $role) {                    
                 if ($this->roles->contains('slug', $role)) {
-                   // dump($role);
                     return true;
                 }
             }

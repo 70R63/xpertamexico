@@ -7,6 +7,7 @@ $(function() {
 	});
 	
 	$('#generalForm').parsley();
+	$('#enviosForm').parsley();
 	
 	
 

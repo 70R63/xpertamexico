@@ -1,13 +1,50 @@
 
 
-$("#btnAsignarLtd").click(function(e) {
+$(".btnAsignarLtd").click(function(e) {
     console.log("btnAsignarLtd")
     e.preventDefault();
-
+    
+    var idModal = "#asignarLtd"+$(this).attr('id');
+    
+    var data = $(idModal).find('Form').serialize();
+    var accion = $(idModal).find('Form').attr("action");
     var form = $('#generalForm').parsley().refresh();
-    var action = $('#generalForm').attr("action");
 
+    $(".modalAsignarLtd").modal('hide');
+   
     if ( form.validate() ){ 
+
+         $.ajax({
+            /* Usar el route  */
+            url: accion,
+            type: 'POST',
+            /* send the csrf-token and the input to the controller */
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            data: data
+            
+            /* remind that 'data' is the response of the AjaxController */
+            }).done(function( response) {
+
+                swal(
+                    "Exito!",
+                    "Asignacion correcta!",
+                    "success"
+                  )
+
+            }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+                console.log( "fail" );
+                console.log(textStatus);
+                
+                swal(
+                    "Exito!",
+                    "Asignacion incorrecta!",
+                    "error"
+                  )
+                alert( data.responseJSON.message);
+
+            }).always(function() {
+                console.log( "complete" );
+            });
 
     } else {
         console.log( "enviosForm con errores" );

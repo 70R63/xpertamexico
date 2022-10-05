@@ -16,13 +16,14 @@ use Spatie\DataTransferObject\DataTransferObjectError;
  */
 class Estafeta 
 {
+    public $data = null;
 	
 	function __construct()
 	{
 		// code...
 	}
 
-	function init( $request ){
+	function init( ){
 
 		Log::info(__CLASS__." ".__FUNCTION__); 
 
@@ -32,7 +33,6 @@ class Estafeta
         /*No se porque debo de inicializar esta clase*/
 		$Dralternativeinfo = new DrAlternativeInfo();  
 
-        $data = $request->all();
         /*
         son los datos de cada cliente
             $data['suscriberId'] = $this->mensajeria->suscriberId;
@@ -47,9 +47,10 @@ class Estafeta
             $path_to_wsdl = sprintf("%s%s",resource_path(), $wsdl );
             Log::debug($path_to_wsdl);
 
-            Log::debug($data);
-            $labelDTO = new Label($data);
+            Log::debug($this->data);
+            $labelDTO = new Label($this->data);
 			Log::debug(serialize($labelDTO));
+
             $client = new \SoapClient($path_to_wsdl, array('trace' => 1));
             ini_set("soap.wsdl_cache_enabled", "0");
             $response =$client->createLabel($labelDTO);
@@ -85,6 +86,22 @@ class Estafeta
 
 
 	}
+
+    public function parser($data,$tipo = "FORMA"){
+        if ("API" === $tipo) {
+            $this->data = $data->all();
+        } else {
+            $this->parserForma($data);
+        }
+    }//fin public function parser
+
+
+    private function parserForma($data){
+
+        dd($data);
+        $this->data;
+    }
+
 }
 
 ?>
