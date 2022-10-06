@@ -41,6 +41,6 @@ class RolesMiddleware
                 return $next($request);
             }       
         }
-        return redirect(RouteServiceProvider::HOME);
+    return redirect(RouteServiceProvider::HOME);
     }
 }

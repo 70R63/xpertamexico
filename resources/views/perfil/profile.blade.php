@@ -93,15 +93,21 @@
                                                     @method('PATCH') @csrf
                                                     <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon1">Contraseña actual</span>
+                                                        </div>
+                                                        <input type="password" name="old_password" class="form-control" id="old_password" placeholder="Password actual" minlength="8" required />
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">Nueva contraseña</span>
                                                         </div>
-                                                        <input type="password" name="password" class="form-control" id="password" placeholder="Password..." minlength="8" />
+                                                        <input type="password" name="password" class="form-control" id="password" placeholder="Password..." minlength="8" required/>
                                                     </div>
                                                     <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text" id="basic-addon1">Confirmar contraseña</span>
                                                         </div>
-                                                        <input type="password" name="password_confirmation" class="form-control" placeholder="Password..." id="password_confirmation" />
+                                                        <input type="password" name="password_confirmation" class="form-control" placeholder="Password..." id="password_confirmation" required/>
                                                     </div>
                                                     <input type="hidden" id="user_id" name="user_id" value="{{$users->id}}" />
                                                     <input type="hidden" id="name" name="name" value="{{$users->name}}" />
@@ -126,6 +132,7 @@
 
 	@section('js_user_page')
 	<script>
+
 	    $("#cambiarPassModal").on("show.bs.modal", function (event) {
 	        var button = $(event.relatedTarget);
 	        var user_id = button.data("userid");

@@ -84,15 +84,25 @@ class userProfileController extends Controller
         //dd($user,$request);
        
        $this->validate(request(), [
+            'old_password' => 'required',
             'password' => 'required|min:6|confirmed'
         ]);
-        $request->password = Hash::make(request('password'));
-        $query = DB::table('users')
-            ->where('id', $request->user_id)
-            ->update(['password' => $request->password]);
-        $tmp = sprintf("El usuario '%s' se actualizó correctamente", $request->name);
-        $notices = array($tmp);
-        return \Redirect::route('profile.index')-> withSuccess ($notices);
+
+       #VERIFICAR PASSWORD ACTUAL
+        if(!Hash::check($request->old_password, auth()->user()->password)){
+            $tmp = sprintf("El password actual no coincide");
+            $notices = array($tmp);
+            return \Redirect::route('profile.index')-> withErrors ($notices);      
+        }
+        else{
+            $request->password = Hash::make(request('password'));
+            $query = DB::table('users')
+                ->where('id', $request->user_id)
+                ->update(['password' => $request->password]);
+            $tmp = sprintf("El usuario '%s' se actualizó correctamente", $request->name);
+            $notices = array($tmp);
+            return \Redirect::route('profile.index')-> withSuccess ($notices);
+        }
     }
 
     /**
