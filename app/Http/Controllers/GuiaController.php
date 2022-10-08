@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Guia;
 use App\Models\EmpresaLtd;
-use Illuminate\Http\Request;
-
-use Log;
+use App\Mail\GuiaCreada;
 use App\Dto\Estafeta;
+use App\Dto\Guia as GuiaDTO;
+use GuzzleHttp\Client;
+
+use Illuminate\Http\Request;
+use Log;
+use Mail;
 
 class GuiaController extends Controller
 {
@@ -27,10 +31,13 @@ class GuiaController extends Controller
     public function index()
     {
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = array();
+            Log::info(__CLASS__." ".__FUNCTION__); 
+            $ltdActivo = EmpresaLtd::LtdEmpresa()->pluck("nombre","ltd_id");
+            
+            $tabla = Guia::get(); 
+            
             return view('guia.dashboard' 
-                    ,compact("tabla")
+                    ,compact("tabla", "ltdActivo")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -73,14 +80,21 @@ class GuiaController extends Controller
         try {
             
             Log::debug($request);
-
+            /*
             $guia = new Estafeta();
             $guia->parser($request);
             $result = $guia -> init(); 
-
             Log::info($result);
+            */
+            $guiaDTO = new GuiaDTO();
+            $guiaDTO->parser($request);
 
-            $tmp = sprintf("El registro de la guia '%s', fue exitoso","escibir un valor");
+            $id = Guia::create($guiaDTO->insert)->id;
+            Mail::to($request->email)
+                ->cc(\Config("mail.cc"))
+                ->send(new GuiaCreada($request, $id));
+           
+            $tmp = sprintf("El registro de la guia '%s', fue exitoso",$id);
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

@@ -3,13 +3,13 @@
 		<span class="input-group-text" id="basic-addon1">Mensajeria <span class="tx-danger">*</span></span>
 	</div>
 
-	{!! Form::select('1'
+	{!! Form::select('ltd_id'
 		, $ltdActivo 
 		, null
 		,['class' 		=> 'form-control'
 			,'placeholder'	=> 'Seleccionar'
 			,'required'	=> ''
-			,'id'		=> 'id_mensajeria'
+			,'id'		=> 'ltd_id'
 		]);
 	!!}
 </div>
