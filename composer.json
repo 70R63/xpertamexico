@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravelcollective/html": "^6.3",
+        "laraveles/spanish": "^1.5",
         "spatie/data-transfer-object": "2.*"
     },
     "require-dev": {
