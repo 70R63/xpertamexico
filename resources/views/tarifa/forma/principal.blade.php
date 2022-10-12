@@ -35,6 +35,21 @@
 							,'required'	=> 'true'
 						]);
 					!!}
+
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">
+							EMPRESA <span class="tx-danger">*</span>
+						</span>
+					</div>
+					
+					{!! Form::select('empresa_id'
+						,$pluckEmpresa
+						,null
+						,['class' 		=> 'form-control'
+							,'placeholder'	=> 'Seleccionar'
+							,'required'	=> 'true'
+						]);
+					!!}
 				</div>
 
 				<div class="input-group mb-3">

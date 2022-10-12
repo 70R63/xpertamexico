@@ -3,7 +3,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>SUCURSAL</th>
+				<th>REMITENTE</th>
 				<th>CONTACTO</th>
 				<th>DIRECCION</th>
 				<th>COLONIA</th>

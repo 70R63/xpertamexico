@@ -23,7 +23,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">
-							RESPONSABLE LEGAL <span class="tx-danger">*</span>
+							EJECUTIVO COMERCIAL <span class="tx-danger">*</span>
 						</span>
 					</div>
 					{!! Form::text('responsable_legal'
@@ -67,26 +67,6 @@
 
 						<text class="counter-plus btn btn-light">+</text>
 					</div>
-				</div>
-				
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">TIPO DE LICENCIA <span class="tx-danger">*</span></span>
-					</div>
-
-					{!! Form::select('LICENCIA'
-						, array(
-					    	'1' 	=> 'ESTANDAR'
-					    	,'2' 	=> 'ESTANDAR+'
-					    	,'3'	=>	'EMPRESARIAL')
-						,$cliente['licencia'] ?? '1'
-						,['class' 		=> 'form-control'
-							,'placeholder'	=> 'Seleccionar'
-							,'required'	=> 'true'
-							,'name'		=> 'licencia'
-							,'id'		=> 'licencia'
-						]);
-					!!}
 				</div>
 			</div>
 		</div>

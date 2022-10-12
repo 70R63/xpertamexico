@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTarifaRequest;
 use App\Models\Tarifa;
 use App\Models\Ltd;
 use App\Models\Servicio;
+use App\Models\Empresa;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -61,13 +62,15 @@ class TarifaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__);    
             $tabla = array();
 
+            $pluckEmpresa = Empresa::pluck('nombre','id');
+            
             $pluckLtd = Ltd::where('estatus',1)
                                 ->pluck('nombre','id');
 
             $pluckServicio = Servicio::where('estatus',1)
                                 ->pluck('nombre','id');
             return view(self::CREAR_v 
-                    ,compact("tabla","pluckLtd", "pluckServicio")
+                    ,compact("tabla","pluckLtd", "pluckServicio","pluckEmpresa")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -130,6 +133,7 @@ class TarifaController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
             $tarifa = Tarifa::findOrFail($tarifa->id);
+            $pluckEmpresa = Empresa::pluck('nombre','id');
             
             $pluckLtd = Ltd::where('estatus',1)
                                 ->pluck('nombre','id');
@@ -138,7 +142,7 @@ class TarifaController extends Controller
                                 ->pluck('nombre','id');
 
             return view(self::EDITAR_v 
-                    ,compact("tarifa","pluckLtd", "pluckServicio")
+                    ,compact("tarifa","pluckLtd", "pluckServicio","pluckEmpresa")
                 );
         } catch (ModelNotFoundException $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ModelNotFoundException");

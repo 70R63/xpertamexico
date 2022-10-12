@@ -10,7 +10,7 @@
             <div class="card custom-card">
                 <div class="card-header bg-transparent border-bottom-0">
                     <div>
-                        <label class="main-content-label mb-2">Creacion de una direccion</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para agregar las clientes</span>
+                        <label class="main-content-label mb-2">Creacion de una direccion</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para agregar los destinatarios</span>
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ class Tarifa extends Model
 {
     use HasFactory;
 
-    protected $fillable =['id','ltds_id','servicio_id','kg_ini','kg_fin','kg_extra','extendida', 'costo'];
+    protected $fillable =['id','ltds_id','servicio_id','kg_ini','kg_fin','kg_extra','extendida', 'costo', 'empresa_id'];
 
     /**
      * Agraga a la consulta los casos de negocio.
@@ -24,6 +24,7 @@ class Tarifa extends Model
         parent::boot();        
         static::addGlobalScope('status', function (Builder $builder) {
             $builder->where('tarifas.estatus', '1');
+            $builder->where('tarifas.empresa_id', auth()->user()->empresa_id);
         });
     }
 }

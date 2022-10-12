@@ -9,7 +9,7 @@
         <div class="card custom-card">
             <div class="card-header bg-transparent border-bottom-0">
                 <div>
-                    <label class="main-content-label mb-2">Creacion de LTD</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para crear un proveedor de mensajeria</span>
+                    <label class="main-content-label mb-2">Editar PROVEEDOR</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para editar un proveedor de mensajeria</span>
                 </div>
             </div>
         </div>

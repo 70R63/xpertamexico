@@ -8,12 +8,12 @@
 	</a>
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('clientes.index') }}">Cliente</a>
+			<a class="nav-sub-link" href="{{ route('clientes.index') }}">Destinatario</a>
 		</li>	
 	</ul>
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('sucursales.index') }}">Sucursal</a>
+			<a class="nav-sub-link" href="{{ route('sucursales.index') }}">Remitente</a>
 		</li>	
 	</ul>
 </li>

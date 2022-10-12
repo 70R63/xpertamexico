@@ -9,7 +9,7 @@
         <div class="card custom-card">
             <div class="card-header bg-transparent border-bottom-0">
                 <div>
-                    <label class="main-content-label mb-2">Edicion de las clientes</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para crear un proveedor de mensajeria</span>
+                    <label class="main-content-label mb-2">Edicion de los remitentes</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para editar el remitente</span>
                 </div>
             </div>
         </div>
