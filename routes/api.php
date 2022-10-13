@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function(){
 });
 
 
-Route::group(array('domain' => env('APP_URL')), function() {
+//Route::group(array('domain' => env('APP_URL')), function() {
     Route::middleware(['throttle:100,1','auth'])->group(function () {
         Route::name('api.')->group(function () {
             Route::apiResource('cotizaciones', CotizacionController::class);
@@ -58,7 +58,7 @@ Route::group(array('domain' => env('APP_URL')), function() {
 
     });
     //Fin Middileware
-}); 
+//}); 
 //Fin Domain
 
 

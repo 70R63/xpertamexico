@@ -11,7 +11,7 @@ $(".btnAsignarLtd").click(function(e) {
     var form = $('#generalForm').parsley().refresh();
 
     $(".modalAsignarLtd").modal('hide');
-   
+    console.log(accion)
     if ( form.validate() ){ 
 
          $.ajax({
@@ -36,11 +36,10 @@ $(".btnAsignarLtd").click(function(e) {
                 console.log(textStatus);
                 
                 swal(
-                    "Exito!",
+                    "Error!",
                     "Asignacion incorrecta!",
                     "error"
                   )
-                alert( data.responseJSON.message);
 
             }).always(function() {
                 console.log( "complete" );
