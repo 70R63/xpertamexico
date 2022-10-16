@@ -5,8 +5,8 @@
 				<th>ID</th>
 				<th>LTD</th>
 				<th>SERVICIO</th>
+				<th>COSTO</th>
 				<th>KG. INICIAL</th>
-				<th>Costo Base</th>
 				<th>KG. FINAL</th>
 				<th>KG. EXTRA</th>
 				<th>AREA EXTENDIDA</th>
@@ -21,9 +21,9 @@
 					<td>{{ $objeto->id }}</td>
 					<td>{{ $pluckLtd[$objeto->ltds_id] }}</td>
 					<td>{{ $pluckServicio[$objeto->servicio_id] }}</td>
+					<td>$ {{ $objeto->costo }}</td>
 					<td>{{ $objeto->kg_ini }}</td>
 					<td>{{ $objeto->kg_fin }}</td>
-					<td>{{ $objeto->costo }}</td>
 					<td>$ {{ $objeto->kg_extra }}</td>
 					<td>$ {{ $objeto->extendida }}</td>
 					<td>{{ $objeto->fecha }}</td>

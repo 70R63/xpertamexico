@@ -10,6 +10,7 @@ $(function() {
                ,{ extend: 'pdf', footer: true } 
                ]
       ,"paging": true
+      , order: [[0, 'desc']],
    } );
 
    exportGeneral.buttons().container()

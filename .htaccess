@@ -1,21 +1,14 @@
 <IfModule mod_rewrite.c>
-    RewriteEngine On
+
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
-
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-    RewriteCond %{REQUEST_URI} !(\.css|\.js|\.png|\.jpg|\.gif|robots\.txt)$ [NC]
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
-
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-   
+    RewriteEngine On
+    # Rewrite "everything" to the "public" subdirectory if not already
+    # This ignores existing files/dirs in the document root
+    RewriteCond %{REQUEST_URI} ^/(.*)
+    RewriteRule !^public/ public/%1
 
 </IfModule>
 

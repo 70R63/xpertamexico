@@ -10,7 +10,7 @@
             <div class="card custom-card">
                 <div class="card-header bg-transparent border-bottom-0">
                     <div>
-                        <label class="main-content-label mb-2">Creacion de una Sucursal</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para agregar las sucursales</span>
+                        <label class="main-content-label mb-2">Creacion del Remitente</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para agregar los remitentes</span>
                     </div>
                 </div>
             </div>

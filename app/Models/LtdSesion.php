@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class Guia extends Model
+class LtdSesion extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = []; 
 
     /**
      * Agraga a la consulta los casos de negocio.
@@ -22,9 +22,9 @@ class Guia extends Model
     {
 
         parent::boot();        
-        static::addGlobalScope('guia_empresa', function (Builder $builder) {
-            $builder->where('guias.empresa_id', auth()->user()->empresa_id);
-            
+        static::addGlobalScope('ltd_empresa', function (Builder $builder) {
+            $builder->where('ltd_sesions.empresa_id', auth()->user()->empresa_id);
+        
         });
     }
 }

@@ -42,24 +42,17 @@ Route::middleware('auth:sanctum')->group(function(){
 
 });
 
+Route::middleware(['throttle:100,1','auth'])->group(function () {
+    Route::name('api.')->group(function () {
+        Route::apiResource('cotizaciones', CotizacionController::class);
 
-//Route::group(array('domain' => env('APP_URL')), function() {
-    Route::middleware(['throttle:100,1','auth'])->group(function () {
-        Route::name('api.')->group(function () {
-            Route::apiResource('cotizaciones', CotizacionController::class);
-
-            Route::controller(CotizacionController::class)->group(function(){
-                Route::get('cp', 'cp');    
-            });
-
-            Route::apiResource('empresaltd', EmpresaLtdController::class);
-
+        Route::controller(CotizacionController::class)->group(function(){
+            Route::get('cp', 'cp');    
         });
-
+        Route::apiResource('empresaltd', EmpresaLtdController::class);
     });
-    //Fin Middileware
-//}); 
-//Fin Domain
+});
+//Fin Middileware
 
 
     

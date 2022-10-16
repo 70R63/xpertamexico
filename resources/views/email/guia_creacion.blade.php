@@ -19,24 +19,5 @@
     Paquete enviado con <b>{{ $nombre }}</b>
     <br>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>PESO</th>
-                <th>ALTO</th>
-                <th>ANCHO</th>
-                <th>LARGO</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($objeto->peso as $key => $value)
-                <tr>
-                    <td>{{ $objeto->peso[$key] }}kg.</td>
-                    <td>{{ $objeto->alto[$key] }}</td>
-                    <td>{{ $objeto->ancho[$key] }}</td>
-                    <td>{{ $objeto->largo[$key] }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    
 </div>

@@ -36,16 +36,23 @@
     ])
 !!}
 
-{!! Form::hidden('piezas_guia'
-    , null
-    ,['class'       => 'form-control'
-        ,'id'       => 'piezas_guia' 
-    ])
-!!}
-
 {!! Form::hidden('ltd_id'
     , null
     ,['class'       => 'form-control'
         ,'id'       => 'ltd_id' 
+    ])
+!!}
+
+{!! Form::text('piezas_cotizacion'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'piezas_cotizacion' 
+    ])
+!!}
+
+{!! Form::text('peso_cotizacion'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'peso_cotizacion' 
     ])
 !!}

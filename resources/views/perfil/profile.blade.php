@@ -1,5 +1,8 @@
 @extends('dashboard') 
-@section('content')
+@section('content')   
+@include('perfil.dashboard.header')
+
+
 <!-- Main Content-->
 <div class="container-fluid">
     <div class="inner-body">
@@ -9,7 +12,7 @@
                     <div class="card-body">
                         <div class="panel profile-cover">
                             <div class="profile-cover__img">
-                                <img src="{{  url('img/users/1.png')}}" alt="img" />
+                                <img src="{{  url('spruha/img/users/user.png')}}" alt="img" />
                                 <h3 class="h3">{{ Auth::user()->name }}</h3>
                             </div>
                             <br />

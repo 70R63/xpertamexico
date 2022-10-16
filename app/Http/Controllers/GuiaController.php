@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Guia;
 use App\Models\EmpresaLtd;
+use App\Models\Sucursal;
+use App\Models\Cliente;
+use App\Models\Ltd;
+
 use App\Mail\GuiaCreada;
+
 use App\Dto\Estafeta;
 use App\Dto\Guia as GuiaDTO;
-use GuzzleHttp\Client;
+use App\Dto\FedexDTO;
 
+use App\Singlenton\Fedex;
+
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Log;
 use Mail;
+use Config;
 
 class GuiaController extends Controller
 {
@@ -32,12 +41,14 @@ class GuiaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__); 
-            $ltdActivo = EmpresaLtd::LtdEmpresa()->pluck("nombre","ltd_id");
-            
+            $ltdActivo = Ltd::pluck("nombre","id");
+            $cliente = Cliente::pluck("nombre","id");
+            $sucursal = Sucursal::pluck("nombre","id");
             $tabla = Guia::get(); 
             
-            return view('guia.dashboard' 
-                    ,compact("tabla", "ltdActivo")
+            Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
+            return view(self::DASH_v 
+                    ,compact("tabla", "ltdActivo","cliente","sucursal")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -54,13 +65,11 @@ class GuiaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);   
-            $ltdActivo = EmpresaLtd::LtdEmpresa()
-                    ->where('empresa_id', auth()->user()->empresa_id)
+            $ltdActivo = EmpresaLtd::Ltds()
                     ->pluck("nombre","id");
             
-            $tabla = array();
-            return view('guia.crear' 
-                    ,compact("tabla", "ltdActivo")
+            return view(self::CREAR_v 
+                    ,compact("ltdActivo")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -77,39 +86,59 @@ class GuiaController extends Controller
     public function store(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
+        $mensaje = "Error General";
         try {
             
             Log::debug($request);
-            /*
-            $guia = new Estafeta();
-            $guia->parser($request);
-            $result = $guia -> init(); 
-            Log::info($result);
-            */
+            
+            $fedex = Fedex::getInstance($request['ltd_id']);
+
+            $fedexDTO = new FedexDTO();
+            $etiqueta = $fedexDTO->parser($request);
+            
+            $fedex->envio(json_encode($etiqueta));
+
             $guiaDTO = new GuiaDTO();
             $guiaDTO->parser($request);
 
+            Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
             $id = Guia::create($guiaDTO->insert)->id;
             Mail::to($request->email)
-                ->cc(\Config("mail.cc"))
+                ->cc(Config("mail.cc"))
                 ->send(new GuiaCreada($request, $id));
            
-            $tmp = sprintf("El registro de la guia '%s', fue exitoso",$id);
+            $tmp = sprintf("El registro de la guia con ID %d fue exitoso, la guia sera enviada al correo '%s' ",$id,$request->email);
             $notices = array($tmp);
-  
+            
+            Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+        } catch (\GuzzleHttp\Exception\ClientException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
+            $response = json_decode($ex->getResponse()->getBody());
+            Log::debug(print_r($response,true));
+            $mensaje = $response->errors[0]->code;
+            
+        } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
+            Log::debug($ex->getBody());
+            $mensaje = "Se ha producido un error interno favor de contactar al proveedor";
 
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
             Log::debug($ex->getMessage()); 
-            return \Redirect::back()
-                ->withErrors(array($ex->errorInfo[2]))
-                ->withInput();
+            $mensaje= $ex->errorInfo[2];
 
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
             Log::debug( $e->getMessage() );
+            $mensaje= $e->getMessage();
         }
+
+        return \Redirect::back()
+                ->withErrors(array($mensaje))
+                ->withInput();
+
     }
 
     /**

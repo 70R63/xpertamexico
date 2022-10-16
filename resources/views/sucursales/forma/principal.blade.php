@@ -4,7 +4,7 @@
         	<div class="card-item">
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">SUCURSAL
+						<span class="input-group-text" id="basic-addon1">NOMBRE REMITENTE
 						</span>
 					</div>
 

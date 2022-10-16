@@ -22,8 +22,8 @@
                                 <td>{{ $objeto->id }}</td>
                                 <td>{{ $objeto->usuario }}</td>
                                 <td>{{ $ltdActivo[$objeto->ltd_id] }}</td>
-                                <td>{{ $objeto->cia }}</td>
-                                <td>{{ $objeto->cia_d }}</td>
+                                <td>{{ $sucursal[$objeto->cia] }}</td>
+                                <td>{{ $cliente[$objeto->cia_d] }}</td>
                                 <td></td>
                                 <td></td>
                             </tr>

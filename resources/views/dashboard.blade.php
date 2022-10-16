@@ -117,7 +117,7 @@
                         <a class="main-header-menu-icon" href="#" id="mainSidebarToggle"><span></span></a>
                     </div>
                     <div class="main-header-center">
-                        test
+                        @include('dashboard.header')
                     </div>
                     <div class="main-header-right">
                         @include('perfil.index')

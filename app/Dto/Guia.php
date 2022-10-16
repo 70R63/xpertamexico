@@ -28,9 +28,9 @@ class Guia
 		$this->insert = array('usuario' => auth()->user()->name
 				,'empresa_id' 	=> auth()->user()->empresa_id
 				,'ltd_id' 	=> $request->ltd_id
-				,'cia' 		=> $request->compania
-				,'cia_d' 	=> $request->compania_d
-				,'piezas' 	=> 0
+				,'cia' 		=> $request->sucursal_id
+				,'cia_d' 	=> $request->cliente_id
+				,'piezas' 	=> $request->piezas
 				, );
 	}
 }

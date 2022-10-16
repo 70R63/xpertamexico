@@ -4,10 +4,11 @@
     		<thead>
                 <tr>
                     <th>ID TARIFA</th>
-                    <th>LTD</th>
+                    <th>PROVEEDOR</th>
+                    <th>Costo</th>
                     <th>kg Inicial</th>
                     <th>kg Final</th>
-                    <th>Costo Base</th>
+                    
                     <th>$ kg Extra.</th>
                     <th>$ Area Extendida</th>
                     <th>COSTO TOTAL</th>
@@ -17,10 +18,10 @@
             <tfoot>
                 <tr>
                     <th>ID TARIFA</th>
-                    <th>LTD</th>
+                    <th>PROVEEDOR</th>
+                    <th>Costo</th>
                     <th>kg Inicial</th>
                     <th>kg Final</th>
-                    <th>Costo Base</th>
                     <th>$ kg Extra.</th>
                     <th>$ Area Extendida</th>
                     <th>COSTO TOTAL</th>

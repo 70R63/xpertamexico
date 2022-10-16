@@ -55,7 +55,8 @@ class CotizadorController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__);
         try {
             
-            Log::info($request);
+            $objeto = $request->all();
+            Log::info($objeto);
             $cliente = Cliente::findOrFail($request->get("cliente_id"));
             $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
             $precio = $request->get("precio");
@@ -63,7 +64,7 @@ class CotizadorController extends Controller
             $piezas = $request->get("piezas_guia");
   
             return view(self::CREAR_v
-                , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre') 
+                , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre','objeto') 
             );
 
         } catch(\Illuminate\Database\QueryException $ex){ 

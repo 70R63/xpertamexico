@@ -2,12 +2,12 @@
 <div class="card custom-card">
     <div class="card-body">
     	<div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-            <label class="main-content-label mb-4">DETALLES DE LA SUCURSAL</label>
+            <label class="main-content-label mb-4">DETALLES DEL REMITENTE</label>
         </div>
     	<div class="card-item">
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
-					<span class="input-group-text" id="basic-addon1">SUCURSAL
+					<span class="input-group-text" id="basic-addon1">NOMBRE
 					</span>
 				</div>
 
@@ -154,3 +154,9 @@
 	<!-- fin class="card-body" -->
 </div>
 <!-- fin class="card custom-card" -->
+{!! Form::hidden('sucursal_id'
+    , $sucursal->id
+    ,['class'       => 'form-control'
+        ,'id'       => 'sucursal_id' 
+    ])
+!!}

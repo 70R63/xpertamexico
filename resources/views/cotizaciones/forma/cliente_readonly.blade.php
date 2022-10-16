@@ -2,19 +2,19 @@
 <div class="card custom-card">
     <div class="card-body">
     	<div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-            <label class="main-content-label mb-4">DETALLES DEL CLIENTE</label>
+            <label class="main-content-label mb-4">DETALLES DEL DESTINATARIO</label>
         </div>
     	<div class="card-item">
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
-					<span class="input-group-text" id="basic-addon1">CLIENTE
+					<span class="input-group-text" id="basic-addon1">NOMBRE
 					</span>
 				</div>
 
-				{!! Form::text('nombre'
+				{!! Form::text('nombre_d'
 					, $cliente->nombre
 					,['class' 		=> 'form-control'
-						,'id'		=> 'nombre'
+						,'id'		=> 'nombre_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -27,10 +27,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('contacto'
+				{!! Form::text('contacto_d'
 					, $cliente->contacto
 					,['class' 		=> 'form-control'
-						,'id'		=> 'contacto'
+						,'id'		=> 'contacto_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -43,10 +43,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('direccion'
+				{!! Form::text('direccion_d'
 					, $cliente->direccion
 					,['class' 		=> 'form-control'
-						,'id'		=> 'direccion'
+						,'id'		=> 'direccion_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -59,10 +59,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('cp'
+				{!! Form::text('cp_d'
 					, $cliente->cp
 					,['class' 		=> 'form-control'
-						,'id'		=> 'cp'
+						,'id'		=> 'cp_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -75,10 +75,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('colonia'
+				{!! Form::text('colonia_d'
 					, $cliente->colonia
 					,['class' 		=> 'form-control'
-						,'id'		=> 'colonia'
+						,'id'		=> 'colonia_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -91,10 +91,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('ciudad'
+				{!! Form::text('ciudad_d'
 					, $cliente->ciudad
 					,['class' 		=> 'form-control'
-						,'id'		=> 'ciudad'
+						,'id'		=> 'ciudad_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -107,10 +107,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('entidad_federativa'
+				{!! Form::text('entidad_federativa_d'
 					, $cliente->entidad_federativa
 					,['class' 		=> 'form-control'
-						,'id'		=> 'entidad_federativa'
+						,'id'		=> 'entidad_federativa_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -123,10 +123,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('celular'
+				{!! Form::text('celular_d'
 					, $cliente->celular
 					,['class' 		=> 'form-control'
-						,'id'		=> 'celular'
+						,'id'		=> 'celular_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -139,10 +139,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('telefono'
+				{!! Form::text('telefono_d'
 					, $cliente->telefono
 					,['class' 		=> 'form-control'
-						,'id'		=> 'telefono'
+						,'id'		=> 'telefono_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -154,3 +154,9 @@
 	<!-- fin class="card-body" -->
 </div>
 <!-- fin class="card custom-card" -->
+{!! Form::hidden('cliente_id'
+    , $cliente->id
+    ,['class'       => 'form-control'
+        ,'id'       => 'cliente_id' 
+    ])
+!!}

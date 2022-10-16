@@ -26,3 +26,17 @@
         </div>
     </div>
 </div>
+
+{!! Form::hidden('ltd_id'
+    , $objeto['ltd_id']
+    ,['class'       => 'form-control'
+        ,'id'       => 'ltd_id' 
+    ])
+!!}
+
+{!! Form::hidden('piezas'
+    , $piezas
+    ,['class'       => 'form-control'
+        ,'id'       => 'piezas' 
+    ])
+!!}

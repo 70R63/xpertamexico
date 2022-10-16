@@ -1,7 +1,7 @@
 
 <div class="input-group mb-3">
 	<div class="input-group-prepend">
-		<span class="input-group-text" id="basic-addon1"> Cliente<span class="tx-danger">*</span></span>
+		<span class="input-group-text" id="basic-addon1"> Nombre<span class="tx-danger">*</span></span>
 	</div>
 	{!! Form::select('cliente'
 		, $cliente

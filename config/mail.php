@@ -115,6 +115,6 @@ return [
         ],
     ],
 
-    'cc' => env('MAIL_CC_DEFAULT','guias@ulalaexpress.com'),
-
+    'cc' => env('MAIL_CC_DEFAULT','guias@default.com'),
+    'asunto' => env('MAIL_ASUNTO','ASUNTO DEL MAIL')
 ];

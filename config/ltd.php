@@ -13,5 +13,5 @@ return [
 
     'estafeta'      => env('WSDL_ESTAFETA', 'Laravel'),
     'estafeta_tracking' => env('WSDL_ESTAFETA_TRACKING_DEV', 'tracking'),
-
+    'fedex' => ['base_uri' => env('FEDEX_BASEURI')]
     ];
