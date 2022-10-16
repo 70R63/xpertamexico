@@ -15,7 +15,9 @@ class Fedex {
     private static $instance;
 
     private $token;
-    private $baseUri; 
+    private $baseUri;
+
+    public $documento = 0; 
 
     private function __construct(int $ltd_id){
 
@@ -82,8 +84,14 @@ class Fedex {
                         ,'body'     => $body
                     ]);
 
-            $contenido = ($response);
-            Log::debug(print_r($contenido,true));
+            $contenido = json_decode($response->getBody()->getContents());
+            $pieceResponses = $contenido->output->transactionShipments[0]->pieceResponses[0];
+
+            $packageDocuments = $pieceResponses->packageDocuments[0];
+
+            $this->documento = $packageDocuments->url;
+
+            Log::debug(print_r($contenido->output,true));
 
     }
 

@@ -98,12 +98,14 @@
 						</span>
 					</div>
 
-					{!! Form::text('entidad_federativa'
-						, null
+					{!! Form::select('entidad_federativa'
+						, Config('general.entidad_federativa')
+						,null
 						,['class' 		=> 'form-control'
+							,'placeholder'	=> 'Seleccionar'
+							,'required'	=> 'true'
 							,'id'		=> 'entidad_federativa'
-							,'required'	=>	'true'
-						])
+						]);
 					!!}
 				</div>
 

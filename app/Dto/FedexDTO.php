@@ -55,8 +55,8 @@ class FedexDTO
 		$addressShipper = New Address(
 			array("streetLines"	=> array($request['direccion'],"")
 				,"city"	=> $request['colonia']
-				,"stateOrProvinceCode"	=> Config('estados_ltd.fedex')['ESTADO DE MEXICO']
-				,"postalCode"	=> "15520"
+				,"stateOrProvinceCode"	=> $request['entidad_federativa']
+				,"postalCode"	=> $request['cp']
 			));
 
 		$contactRecipients = New Contact( 
@@ -68,8 +68,8 @@ class FedexDTO
 		$addressRecipients = New Address(
 			array("streetLines"	=> array($request['direccion_d'],"")
 				,"city"	=> $request['colonia_d']
-				,"stateOrProvinceCode"	=> Config('estados_ltd.fedex')['ESTADO DE MEXICO']
-				,"postalCode"	=> "04230"
+				,"stateOrProvinceCode"	=> $request['entidad_federativa_d']
+				,"postalCode"	=> $request['cp_d']
 			));
 
 		$shipper = new Shipper(array('contact' => $contactShipper, 'address' => $addressShipper ));

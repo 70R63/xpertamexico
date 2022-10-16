@@ -12,7 +12,7 @@
                                 <th>MENSAJERIA</th>
                                 <th>REMITENTE</th>
                                 <th>DESTINATARIO</th>
-                                <th>ESTATUS</th>
+                                <th>GUIA</th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
@@ -24,8 +24,9 @@
                                 <td>{{ $ltdActivo[$objeto->ltd_id] }}</td>
                                 <td>{{ $sucursal[$objeto->cia] }}</td>
                                 <td>{{ $cliente[$objeto->cia_d] }}</td>
-                                <td></td>
-                                <td></td>
+                                <td>@include('guia.dashboard.documento')</td>
+                                <td> </td>
+
                             </tr>
                             @endforeach
                         </tbody>

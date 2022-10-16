@@ -23,7 +23,7 @@ class Guia
 	 * 
 	 */
 
-	public function parser($request)
+	public function parser($request, $documento)
 	{
 		$this->insert = array('usuario' => auth()->user()->name
 				,'empresa_id' 	=> auth()->user()->empresa_id
@@ -31,7 +31,7 @@ class Guia
 				,'cia' 		=> $request->sucursal_id
 				,'cia_d' 	=> $request->cliente_id
 				,'piezas' 	=> $request->piezas
-				, );
+				, 'documento' => $documento);
 	}
 }
 
