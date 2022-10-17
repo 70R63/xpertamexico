@@ -4,7 +4,7 @@
 		<i class="ace-icon fa fa-times"></i>
 	</button>
 	<p>
-		Favor de corregir los datos ingresados:
+		Error inesperado:
 	</p>
 	<ul>
 		@foreach(Session::get('dangers') as $danger)

@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Log;
 use Mail;
 use Config;
+use Redirect;
 
 class GuiaController extends Controller
 {
@@ -96,6 +97,7 @@ class GuiaController extends Controller
             $fedexDTO = new FedexDTO();
             $etiqueta = $fedexDTO->parser($request);
             
+            Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
             $fedex->envio(json_encode($etiqueta));
 
             $guiaDTO = new GuiaDTO();
@@ -113,6 +115,16 @@ class GuiaController extends Controller
             
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+        } catch (\GuzzleHttp\Exception\RequestException $re) {
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException");
+            $response = json_decode($re->getResponse()->getBody());
+            Log::debug(print_r($response,true));
+            $mensaje = "Proveedor - ".$response->errors[0]->code;
+
+            return Redirect::back()
+                ->with('dangers',array($mensaje))
+                ->withInput(); 
 
         } catch (\GuzzleHttp\Exception\ClientException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." ClientException");
