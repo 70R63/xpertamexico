@@ -89,7 +89,7 @@ class EmpresaController extends Controller
             EmpresaEmpresas::create(array('id' => $empresa->id
                     ,'empresa_id' => $empresa->id ));
 
-            $tmp = sprintf("El registro de la nueva Empresa '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("'%s, El registro fue exitoso",$request->get('nombre'));
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

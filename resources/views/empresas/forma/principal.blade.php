@@ -4,7 +4,7 @@
         	<div class="card-item">
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">EMPRESA
+						<span class="input-group-text" id="basic-addon1">CLIENTE
 						</span>
 					</div>
 
@@ -28,6 +28,23 @@
 						,['class' 		=> 'form-control'
 							,'id'		=> 'contacto'
 							,'required'	=>	'true'
+						])
+					!!}
+
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">R.F.C<span class="tx-danger">*</span>
+						</span>
+					</div>
+
+					{!! Form::text('rfc'
+						, null
+						,['class' 		=> 'form-control'
+
+							,'id'		=> 'rfc'
+							,'required'	=>	'true'
+							,'placeholder'=>'Ingrese el rfc en mayusculas o Ingrese XAXX010101000'
+							,'pattern'	=> '^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z\d]{3})?$'
+
 						])
 					!!}
 				</div>
@@ -59,6 +76,23 @@
 							,'id'		=> 'telefono'
 							,'required'	=>	'true'
 						])
+					!!}
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">CLASIFICACIÓN
+						</span>
+					</div>
+
+					{!! Form::select('clasificacion'
+						, Config('general.cliente.clasificacion')
+						,null
+						,['class' 		=> 'form-control'
+							,'placeholder'	=> 'Seleccionar'
+							,'required'	=> 'true'
+							,'id'		=> 'clasificacion'
+						]);
 					!!}
 				</div>
 			</div>

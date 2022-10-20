@@ -11,7 +11,7 @@
 	    	<div class="modal-body">
 	        	<p class="bigger-50 bolder center grey">
 					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-					Seguro que quieres eliminar el ID '{{ $objeto->id }}', empresa '{{ $objeto->nombre }}' ?  	
+					Seguro que quieres eliminar el ID '{{ $objeto->id }}', del cliente '{{ $objeto->nombre }}' ?  	
 				</p>
 	      	</div>
 		     <div class="modal-footer">

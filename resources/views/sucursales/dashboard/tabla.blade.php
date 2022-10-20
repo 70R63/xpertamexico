@@ -10,7 +10,7 @@
 				<th>CIUDAD</th>
 				<th>CP</th>
 				<th>ENTIDAD FEDERATIVA</th>
-				<th>ACCIONES</th>
+				<th class='notexport'>ACCIONES</th>
 			</tr>
 		</thead>
 		<tbody>

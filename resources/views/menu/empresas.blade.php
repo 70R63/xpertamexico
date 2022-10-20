@@ -3,7 +3,7 @@
 		<span class="shape1"></span>
 		<span class="shape2"></span>
 		<i class="fa fa-hotel sidemenu-icon"></i>
-		<span class="sidemenu-label">E M P R E S A <span></span> </span>
+		<span class="sidemenu-label">C L I E N T E S <span></span> </span>
 		<i class="angle fe fe-chevron-right"></i>
 	</a>
 	<ul class="nav-sub">

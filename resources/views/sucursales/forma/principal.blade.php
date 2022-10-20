@@ -5,6 +5,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">NOMBRE REMITENTE
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -20,6 +21,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CONTACTO
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -35,6 +37,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">DIRECCIÓN
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -49,7 +52,24 @@
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">REFERENCIA
+						</span>
+					</div>
+
+					{!! Form::text('direccion2'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'direccion2'
+							,'placeholder'=>'Entre calles vive, color de fachada, locales cercanos'
+							
+						])
+					!!}
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">C.P.
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -65,6 +85,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">COLONIA
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -80,6 +101,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CIUDAD
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -95,6 +117,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">ENTIDAD FEDERATIVA
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -113,6 +136,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CELULAR
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -123,9 +147,7 @@
 							,'required'	=>	'true'
 						])
 					!!}
-				</div>
-
-				<div class="input-group mb-3">
+				
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">TELEFONO
 						</span>
@@ -135,7 +157,7 @@
 						, null
 						,['class' 		=> 'form-control'
 							,'id'		=> 'telefono'
-							,'required'	=>	'true'
+							
 						])
 					!!}
 				</div>

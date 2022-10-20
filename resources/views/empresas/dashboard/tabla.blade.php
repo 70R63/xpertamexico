@@ -3,8 +3,10 @@
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>EMPRESA</th>
+				<th>CLIENTE</th>
 				<th>CONTACTO</th>
+				<th>RFC</th>
+				<th>CLASIFICACIÓN</th>
 				<th>EMAIL</th>
 				<th>REGISTRADO</th>
 				<th>MODIFICADO</th>
@@ -18,6 +20,8 @@
 					<td>{{ $objeto->id }}</td>
 					<td>{{ $objeto->nombre }}</td>
 					<td>{{ $objeto->contacto }}</td>
+					<td>{{ $objeto->rfc }}</td>
+					<td>{{ $objeto->clasificacion }}</td>
 					<td>{{ $objeto->email }}</td>
 					<td>{{ $objeto->created_at }}</td>
 					<td>{{ $objeto->updated_at }}</td>

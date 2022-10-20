@@ -118,12 +118,12 @@
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1"> @ <span class="tx-danger">*</span></span>
+                        <span class="input-group-text" id="basic-addon1"> @ 
+                        </span>
                     </div>
                     {!! Form::text('email', null,
                         ['class'        => 'form-control'
                         ,'placeholder'  => 'ejemplo@ulalaexpress.com'
-                        ,'required' => ''
                         ,'data-parsley-type' => 'email'
                         ])
                     !!}

@@ -60,7 +60,7 @@
             <div class="main-sidebar main-sidebar-sticky side-menu">
 
                 <div class="sidemenu-logo">
-                    <a class="main-logo" href="{{ route('dashboard') }}">
+                    <a class="main-logo" href="https://xperta.com/" target="_blank">
                         <img src="{{ url('spruha/img/brand/xpertaLogoTrans-110x91-2.png') }}" class="header-brand-img desktop-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/xperta-50x56-removebg-preview.png') }}" class="header-brand-img icon-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img desktop-logo theme-logo" alt="logo">

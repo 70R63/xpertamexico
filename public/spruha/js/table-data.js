@@ -6,8 +6,16 @@ $(function() {
       pagingType: "full_numbers",
       lengthChange: true,
       buttons: [ 
-               { extend: 'excel', footer: true }
-               ,{ extend: 'pdf', footer: true } 
+                  { extend: 'excel', footer: true }
+                  ,{ 
+                     extend: 'pdf'
+                     ,orientation: 'landscape'
+                     , footer: true 
+                     ,exportOptions: {
+                        columns: ':not(.notexport)'
+                     } 
+                  }
+                  
                ]
       ,"paging": true
       , order: [[0, 'desc']],

@@ -2,7 +2,7 @@
 	<div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	    	<div class="modal-header">
-	            <h5 class="modal-title" id="exampleModalLabel">Asignar LTD a la Empresa</h5>
+	            <h5 class="modal-title" id="exampleModalLabel">Asignar PROVEEDOR aL CLIENTE</h5>
 	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
 	            	<span aria-hidden="true">×</span>
 	            </button>
@@ -14,7 +14,7 @@
 	    	<div class="modal-body">
 	        	<p class="bigger-50 bolder center grey">
 					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-					Selecciona los LTD para la empresa '{{ $objeto->nombre }}'.  	
+					Selecciona los proveedores para Cliente '{{ $objeto->nombre }}'.  	
 				</p>
 
 				<div class="col-lg-12">

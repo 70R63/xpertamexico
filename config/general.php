@@ -48,4 +48,14 @@ return [
         ,'YU'=>'Yucatán'
         ,'ZA'=>'Zacatecas'
     ]
+    ,'cliente' => [
+        'clasificacion' => [
+            'XS'=>'Hasta 10 guías'
+            ,'S'=>'11 a 50 guías'
+            ,'M'=>'51 a 100 guías'
+            ,'X'=>'101 a 500 guías'
+            ,'XL'=>'Mas de 500 guías'
+            ,'XXX'=>'500 guías en Adelante'
+        ]
+    ]
 ];

@@ -9,7 +9,8 @@
         <div class="card custom-card">
             <div class="card-header bg-transparent border-bottom-0">
                 <div>
-                    <label class="main-content-label mb-2">Edicion de las empresas</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para crear un proveedor de mensajeria</span>
+                    <label class="main-content-label mb-2">Edicion del Cliente</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para crear un Cliente
+                    </span>
                 </div>
             </div>
         </div>

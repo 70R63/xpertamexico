@@ -1,5 +1,5 @@
 <div class="card-header border-bottom-0 custom-card-header">
-	<h6 class="main-content-label mb-0">Multi Pieza</h6>
+	<h6 class="main-content-label mb-0"></h6>
 </div>
 
 <div class="card-body">

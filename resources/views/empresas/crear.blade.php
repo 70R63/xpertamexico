@@ -10,7 +10,7 @@
             <div class="card custom-card">
                 <div class="card-header bg-transparent border-bottom-0">
                     <div>
-                        <label class="main-content-label mb-2">Creacion de una Empresa</label> <span class="d-block tx-12 mb-0 text-muted">Seccion para agregar las empresas</span>
+                        <label class="main-content-label mb-2">Creacion de un Cliente</label> <span class="d-block tx-12 mb-0 text-muted">Sección para agregar los Clientes </span>
                     </div>
                 </div>
             </div>
