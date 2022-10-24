@@ -143,7 +143,6 @@
 					, $sucursal->telefono
 					,['class' 		=> 'form-control'
 						,'id'		=> 'telefono'
-						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
 				!!}

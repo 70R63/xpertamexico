@@ -42,7 +42,8 @@ class UsersController extends Controller
         $resultset = DB::table('users_roles')
                 ->where('user_id', auth()->user()->id )
                 ->get();
-        $roles = Roles::where('id','>=',$resultset[0]->roles_id)->get();
+
+        $roles = Roles::where('id','>',$resultset[0]->roles_id)->get();
         
 
         $pluckEmpresa = Empresa::pluck('nombre','id');

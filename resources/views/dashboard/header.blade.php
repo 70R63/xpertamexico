@@ -1,1 +1,1 @@
-HOLA {{ Auth::user()->name }}, BIENVENIDO
+<b class="tx-16 text-warning">HOLA {{ Auth::user()->name }}, BIENVENIDO AL PORTAL DE '{{ Session::get('empresa_nombre') }}'</b>

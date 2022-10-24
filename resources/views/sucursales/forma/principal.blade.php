@@ -60,7 +60,7 @@
 						, null
 						,['class' 		=> 'form-control'
 							,'id'		=> 'direccion2'
-							,'placeholder'=>'Entre calles vive, color de fachada, locales cercanos'
+							,'placeholder'=>'Entre calles, color de fachada, locales cercanos'
 							
 						])
 					!!}
@@ -80,9 +80,6 @@
 							,'required'	=>	'true'
 						])
 					!!}
-				</div>
-
-				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">COLONIA
 							<span class="tx-danger">*</span>

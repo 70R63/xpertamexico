@@ -10,12 +10,14 @@
 						</span>
 					</div>
 					
-					{!! Form::text('nombre', null,
-						['class' 		=> 'form-control'
-							,'placeholder'	=> 'NOMBRE COMERCIAL'
+					{!! Form::select('nombre'
+						,$pluckLtd
+						,null
+						,['class' 		=> 'form-control'
+							,'placeholder'	=> 'Seleccionar'
+							,'required'	=> 'true'
 							,'id'		=> 'nombre'
-							,'required'	=>	''
-						])
+						]);
 					!!}
 					   
 				</div>

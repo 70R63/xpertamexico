@@ -8,6 +8,10 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Log;
+
+use App\Models\Empresa;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -28,10 +32,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+
+        Log::debug("store Login");
         $request->authenticate();
 
         $request->session()->regenerate();
 
+        $empresa = Empresa::findOrFail(auth()->user()->empresa_id);
+        $request->session()->put('empresa_nombre', $empresa->nombre);
+    
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
@@ -43,6 +52,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+        Log::debug("destruyendo sesion");
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

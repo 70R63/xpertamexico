@@ -71,7 +71,7 @@ class SucursalController extends Controller
             
             Sucursal::create($request->except('_token'));
 
-            $tmp = sprintf("El registro de la nueva SUCURSAL '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("El registro de la REMITENTE '%s', fue exitoso",$request->get('nombre'));
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

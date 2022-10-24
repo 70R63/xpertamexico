@@ -10,5 +10,8 @@
 		<li class="nav-sub-item">
 			<a class="nav-sub-link" href="{{ route('empresas.index') }}">Dashboard</a>
 		</li>
+		<li class="nav-sub-item">
+			<a class="nav-sub-link" href="{{ route('tarifas.index') }}">Tarifa</a>
+		</li>
 	</ul>
 </li>

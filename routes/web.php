@@ -58,7 +58,10 @@ Route::middleware(['roles:sysadmin,admin'])->group(function(){
 
 });//FIN DEL MIDDLEWARE PARA ADMINISTRATIVOS
 
+Route::middleware(['roles:sysadmin,admin'])->group(function(){
+    Route::resource('cfgltds','CfgLtdController');
 
+});//FIN DEL MIDDLEWARE
 
 Route::resource('profile','userProfileController');
 

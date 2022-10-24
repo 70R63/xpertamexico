@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ltd;
+use App\Models\Cfg_ltd;
+
 use App\Http\Requests\StoreLtdRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Log;
@@ -22,13 +24,14 @@ class LtdController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = Ltd::where('estatus',1)
-                    ->get();
-
+            $tabla = Ltd::get();
+            $ltdNombre = Cfg_ltd::pluck("nombre","id");
+            
             $registros = $tabla->count();
             $row = ceil($registros/3);
+
             return view('ltd.dashboard' 
-                    ,compact("tabla", "row", "registros")
+                    ,compact("tabla", "row", "registros","ltdNombre")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." Exception");    
@@ -44,9 +47,11 @@ class LtdController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);
-            $tabla = array();
+            
+            $pluckLtd = Cfg_ltd::pluck('nombre','id');
+            
             return view('ltd.crear' 
-                    ,compact("tabla")
+                    ,compact("pluckLtd")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." Exception");
@@ -64,9 +69,16 @@ class LtdController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__);
         try {
             
-            Ltd::create($request->except('_token'));
+            
+            $cfgltd = Cfg_ltd::where("id",$request->nombre)->first();
+            
+            $data= $request->all();
+            $data['nombre'] = $cfgltd->nombre;
+            $data['imagen_ruta']=$cfgltd->imagen_ruta;
+            
+            Ltd::create($data);
 
-            $tmp = sprintf("El registro del nuevo LTD '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("El registro fue habilitado exitosamente ",$request->get('nombre'));
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
@@ -108,8 +120,11 @@ class LtdController extends Controller
             $ltd = Ltd::findOrFail($ltd->id);
                
             Log::debug($ltd);
+
+            $pluckLtd = Cfg_ltd::pluck('nombre','id');
+
             return view(self::EDITAR_v
-                , compact('ltd') 
+                , compact('ltd',"pluckLtd") 
             );
        
         } catch (ModelNotFoundException $e) {
@@ -136,8 +151,9 @@ class LtdController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__);
         try {
             
-            $tmp = sprintf("Actualizacion del LTD '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("Actualizacion exitosa",$request->get('nombre'));
             $notices = array($tmp);
+
             $ltd->fill($request->post())->save();
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

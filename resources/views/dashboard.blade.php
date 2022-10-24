@@ -60,7 +60,7 @@
             <div class="main-sidebar main-sidebar-sticky side-menu">
 
                 <div class="sidemenu-logo">
-                    <a class="main-logo" href="https://xperta.com/" target="_blank">
+                    <a class="main-logo" href="https://xpertamexico.com/" target="_blank">
                         <img src="{{ url('spruha/img/brand/xpertaLogoTrans-110x91-2.png') }}" class="header-brand-img desktop-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/xperta-50x56-removebg-preview.png') }}" class="header-brand-img icon-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img desktop-logo theme-logo" alt="logo">
@@ -76,8 +76,8 @@
                             <a class="nav-link" href="{{ route('dashboard') }}"><span class="shape1"></span><span class="shape2"></span><i class="ti-home sidemenu-icon"></i><span class="sidemenu-label">DASHBOARD</span></a>
                         </li>
                         @canany(['isSysAdmin'])  
-                         {{--   @include('menu.configuracion') 
-                            @include('menu.cliente')  --}}
+                            @include('menu.cfgltds') 
+                        {{--    @include('menu.cliente')  --}}
                          {{--    @include('menu.envio')  --}}
                               
                             @include('menu.roles')  
@@ -160,7 +160,7 @@
                 <div class="container">
                     <div class="row row-sm">
                         <div class="col-md-12">
-                            <span>Copyright © 2022 <a href="https://www.xpertamexico.com/">XPERTAMEXICO</a>. Designed by <a href="#">TED</a> All rights reserved.</span>
+                            <span>Copyright © 2022 <a href="https://www.xpertamexico.com/" target="_blank">XPERTAMEXICO</a>. Designed by <a href="#">TED</a> All rights reserved.</span>
                         </div>
                     </div>
                 </div>

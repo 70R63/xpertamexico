@@ -17,5 +17,7 @@
     </div>
 </div>
 @include('guia.dashboard.tabla')
+
+@include('guia.dashboard.grafica')
+     
 @endsection
-<!-- Row end -->

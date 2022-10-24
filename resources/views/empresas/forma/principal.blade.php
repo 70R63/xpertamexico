@@ -42,11 +42,14 @@
 
 							,'id'		=> 'rfc'
 							,'required'	=>	'true'
-							,'placeholder'=>'Ingrese el rfc en mayusculas o Ingrese XAXX010101000'
+							,'placeholder'=>'Ingrese el rfc en mayusculas o precione RFC para asignar XAXX010101000'
 							,'pattern'	=> '^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z\d]{3})?$'
 
 						])
 					!!}
+					<a href="" class="text-nowrap tx-20" id="asignarRcPG" >
+						<i title="RFC PUBLICO GENERAL" class="">rfc </i>
+					</a>
 				</div>
 
 				<div class="input-group mb-3">

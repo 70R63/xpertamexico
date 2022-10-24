@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('contacto', 50)->nullable(false)->default('contactName');
             $table->string('nombre', 50)->nullable(false)->default('corporateName');
             $table->string('direccion', 100)->nullable(false)->default('address1');
-            $table->string('direccion2', 100)->nullable(false)->default('address2');
+            $table->string('direccion2', 100)->nullable(true)->default('address2');
             $table->string('cp', 5)->nullable(false)->default('00000');
             $table->string('colonia', 100)->nullable(false)->default('neighborhood');
             $table->string('ciudad', 100)->nullable(false)->default('city');

@@ -1,5 +1,3 @@
-
-
 $(".btnAsignarLtd").click(function(e) {
     console.log("btnAsignarLtd")
     e.preventDefault();
@@ -50,4 +48,12 @@ $(".btnAsignarLtd").click(function(e) {
         return false;
     }
     
+});
+
+$("#asignarRcPG").click(function(e) {
+    console.log("asignarRcPG")
+    e.preventDefault();
+
+    $("#rfc").val("XAXX010101000");
+
 });

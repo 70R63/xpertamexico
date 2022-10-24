@@ -10,6 +10,7 @@
 				<th>CIUDAD</th>
 				<th>CP</th>
 				<th>ENTIDAD FEDERATIVA</th>
+				<th>TELEFONO</th>
 				<th>ACCIONES</th>
 			</tr>
 		</thead>
@@ -24,6 +25,7 @@
 					<td>{{ $objeto->colonia }}</td>
 					<td>{{ $objeto->ciudad }}</td>
 					<td>{{ $objeto->cp }}</td>
+					<td>{{ $objeto->entidad_federativa }}</td>
 					<td>{{ $objeto->entidad_federativa }}</td>
 					<td>
 						<a href=" {{ route('clientes.edit', $objeto->id) }} " class="text-info tx-20 ">

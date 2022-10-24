@@ -20,7 +20,10 @@
 
 <!--Row-->
 <div class="row row-sm">
-    <div class="col-lg-12 col-xl-9  col-md-12">
+    <div class="col-lg-12 col-xl-1  col-md-12">
+    </div>
+    
+    <div class="col-lg-12 col-xl-10  col-md-12">
         <div class="card custom-card mg-b-20">
             <div class="card-body">
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
@@ -32,7 +35,10 @@
             </div>
         </div>
     </div>
-
+</div>
+<!-- Row end -->
+<!--Row-->
+<div class="row row-sm">
     <div class="col-lg-12 col-xl-3  col-md-12">
         <div class="card custom-card mg-b-20">
             <div class="card-body">

@@ -143,7 +143,6 @@
 					, $cliente->telefono
 					,['class' 		=> 'form-control'
 						,'id'		=> 'telefono_d'
-						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
 				!!}

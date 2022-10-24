@@ -7,8 +7,8 @@
 
 	<input type="radio" name="radio3" id="credit" value="credit" >
 		<label class="credit-label payment-cards four ml-0 col" for="credit">
-			<span class="d-none d-md-block"> {{ $tabla[$ii]->nombre}}</span>
-			<img src="{{ asset('img/png-transparent-estafeta.png') }}" alt="estafeta">
+			<span class="d-none d-md-block"> {{ $tabla[$ii]->nombre }}</span>
+			<img src="{{ asset( $tabla[$ii]->imagen_ruta ) }}" alt="estafeta">
 			
 			<div class="text-right">
 						

@@ -38,7 +38,7 @@
 
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">
-							EMPRESA <span class="tx-danger">*</span>
+							CLIENTE <span class="tx-danger">*</span>
 						</span>
 					</div>
 					

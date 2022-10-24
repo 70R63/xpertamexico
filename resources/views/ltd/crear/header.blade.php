@@ -4,13 +4,13 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }} ">Dashboard</a></li>
             <li class="breadcrumb-item"><a href="{{ route('ltds.index') }} ">PROVEEDOR</a></li>
-            <li class="breadcrumb-item active" aria-current="page">NUEVO</li>
+            <li class="breadcrumb-item active" aria-current="page">HABILITAR</li>
         </ol>
     </div>
     <div class="d-flex">
         <div class="justify-content-center">
             <a type="button" class="btn btn-primary my-2 btn-icon-text" href="{{ route('ltds.create') }}" >
-                <i class="fe fe-download-cloud mr-2"> Nuevo</i>
+                <i class="fe fe-download-cloud mr-2"> Habilitar</i>
             </a>
         </div>
     </div>                          
