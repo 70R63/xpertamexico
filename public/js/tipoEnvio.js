@@ -1,7 +1,7 @@
 var costoSeguroGlobal = 0;
             // Calculo de peso Bascula
             function calculo(argument) {
-                console.log("test")
+                
                 var pieza = $("#pieza").val()
                 var peso = $("#peso").val()
                 var alto = $("#alto").val()
@@ -22,19 +22,19 @@ var costoSeguroGlobal = 0;
             }
 
             $(function(){
-                $("#peso").on("change keyup paste", function (){
+                $("#peso1").on("change keyup paste", function (){
                     calculo();
                 });
 
-                $("#alto").on("change keyup paste", function (){
+                $("#alto1").on("change keyup paste", function (){
                     calculo();
                 });
 
-                $("#ancho").on("change keyup paste ", function (){
+                $("#ancho1").on("change keyup paste ", function (){
                     calculo();
                 });
 
-                $("#largo").on("change keyup paste", function (){
+                $("#largo1").on("change keyup paste", function (){
                     calculo();
                 });
 

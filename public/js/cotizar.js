@@ -1,8 +1,88 @@
+var table;
+var piezas = 0;
+
+function pesofacturado(){
+
+    var pieza = $("#piezas").val()
+    var peso = $("#peso").val()
+    var alto = $("#alto").val()
+    var ancho = $("#ancho").val()
+    var largo = $("#largo").val()
+
+    var bascula = peso*pieza
+    var dimensional = ((alto*ancho*largo)/5000)*pieza
+    //console.log(bascula+" "+dimensional+" "+Math.ceil(dimensional));
+    pesoFacturado = (bascula > dimensional) ? bascula : Math.ceil(dimensional);
+
+
+    $("#pesoFacturado").val(pesoFacturado);
+
+}
+
+function preciofinal(dataRow){
+    //Variable Global;
+    piezas = $('#piezas').val();
+    var peso = $('#pesoFacturado').val();
+    var costoPesoExtra = 0;
+
+    if (peso > dataRow.kg_fin) {
+        sobrepeso = peso -dataRow.kg_fin ;
+        costoPesoExtra = sobrepeso * dataRow.kg_extra * piezas;
+    }
+
+    return (piezas*dataRow.costo)+ costoPesoExtra
+
+}
+
+function obtenerCP(id, modelo) {
+
+    $.ajax({
+        /* Usar el route  */
+        url: "api/cp",
+        type: 'GET',
+        /* send the csrf-token and the input to the controller */
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: "id="+id+"&modelo="+modelo
+        
+        /* remind that 'data' is the response of the AjaxController */
+        }).done(function( response) {
+            console.log("done");
+            var contador = response.data.length
+
+            if ("Sucursal" == modelo) {
+                if (contador == 1) {
+                    $("#cp").val(response.data[0].cp);    
+                } else {
+                    $("#cp").val("00000");
+                }
+                
+            } else {
+                if (contador == 1) {
+                    $("#cp_d").val(response.data[0].cp);    
+                } else {
+                    $("#cp_d").val("00000");
+                }
+            }
+            
+        
+        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+            console.log( "fail" );
+            console.log(textStatus);
+            
+            alert( data.responseJSON.message);
+
+        }).always(function() {
+            console.log( "complete" );
+        });
+
+}
+
+
+
 $("#limpiar").click(function() {
     $('#cotizacionesForm').trigger('reset');
 });
 
-var table;
 
 $("#cotizar").click(function(e) {
     console.log("cotizar")
@@ -45,9 +125,7 @@ $("#cotizar").click(function(e) {
                         { "data": "extendida" },
                         { "data": "costo_total"
                             ,render: function (data, type, row, meta) {
-                                var piezas = $('#piezas').val();
-                                var costo = data* piezas;
-                                return '<a href="#">$ '+costo+'</a>';
+                                return '$ '+preciofinal(row);   
                             } 
                         }
                     ],
@@ -79,14 +157,15 @@ table = $('#cotizacionAjax').DataTable({
 });
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
     
-    console.log(table.row(this).data());
-    var piezas = $('#piezas').val();
+    var dataRow = table.row(this).data(); 
     var sucursal_id = $('#sucursal').val();
     var cliente_id = $('#cliente').val();
     var cp = $('#cp').val();
     var cp_d = $('#cp_d').val();
+    var costoPesoExtra = 0;
+ 
+    var precio =  preciofinal(dataRow);
 
-    var precio = table.row(this).data()['costo_total']*piezas;
     var tarifa_id = table.row(this).data()['id'];
     var ltd_nombre = table.row(this).data()['nombre'];
     var ltd_id = table.row(this).data()['ltds_id'];
@@ -106,56 +185,10 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#ltd_id").val(ltd_id);
     $("#piezas_guia").val(piezas);
     
-    console.log(cliente_id);
-    console.log(sucursal_id);
 
     $("#myModal").modal("show");
 });
 
-function obtenerCP(id, modelo) {
-
-    $.ajax({
-        /* Usar el route  */
-        url: "api/cp",
-        type: 'GET',
-        /* send the csrf-token and the input to the controller */
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        data: "id="+id+"&modelo="+modelo
-        
-        /* remind that 'data' is the response of the AjaxController */
-        }).done(function( response) {
-            console.log("done");
-            var contador = response.data.length
-            console.log(contador)
-
-
-            if ("Sucursal" == modelo) {
-                if (contador == 1) {
-                    $("#cp").val(response.data[0].cp);    
-                } else {
-                    $("#cp").val("00000");
-                }
-                
-            } else {
-                if (contador == 1) {
-                    $("#cp_d").val(response.data[0].cp);    
-                } else {
-                    $("#cp_d").val("00000");
-                }
-            }
-            
-        
-        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
-            console.log( "fail" );
-            console.log(textStatus);
-            
-            alert( data.responseJSON.message);
-
-        }).always(function() {
-            console.log( "complete" );
-        });
-
-}
 
 $("#sucursal").change(function() {
     var idSucursal = $('#sucursal').val();
@@ -165,4 +198,23 @@ $("#sucursal").change(function() {
 $("#cliente").change(function() {
     var idCliente = $('#cliente').val();
     obtenerCP(idCliente, "Cliente");
+});
+
+$(function(){
+    $("#peso").on("change keyup paste", function (){
+        pesofacturado();
+    });
+
+    $("#alto").on("change keyup paste", function (){
+        pesofacturado();
+    });
+
+    $("#ancho").on("change keyup paste ", function (){
+        pesofacturado();
+    });
+
+    $("#largo").on("change keyup paste", function (){
+        pesofacturado();
+    });
+
 });

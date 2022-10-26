@@ -21,7 +21,7 @@
  {!! Form::open([ 'route' => 'api.cotizaciones.index', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'cotizacionesForm' ]) !!}
 <!--Row-->
 <div class="row row-sm">
-    <div class="col-lg-12 col-xl-4  col-md-12">
+    <div class="col-lg-12 col-xl-5  col-md-12">
         <div class="card custom-card ">
             <div class="card-body">
                 <div class="col-sm-5 ">
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12 col-xl-8  col-md-12">
+    <div class="col-lg-12 col-xl-7  col-md-12">
         <div class="card custom-card ">
            
             <div class="row row-sm">
