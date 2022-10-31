@@ -47,6 +47,7 @@
                             </div>
                         </div>
                         @include('cotizaciones.forma.origen')
+                        @include('cotizaciones.forma.check_manual')
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -90,5 +91,5 @@
         </div>
     </div>
 </div>
-
+@include('cotizaciones.modals.resumen_cotizacion')
 @endsection

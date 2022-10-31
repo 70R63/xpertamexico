@@ -74,5 +74,5 @@
 			,'readonly' =>	'true'
 		])
 	!!}
-	
 </div>
+@include('guia.crear.paquete.campos.seguro')

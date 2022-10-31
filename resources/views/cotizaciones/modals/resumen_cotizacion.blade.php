@@ -14,11 +14,11 @@
             <div class="modal-body">
                 <div class="card custom-card pricingTable2">
                     <div class="pricingTable2-header">
-                        <h3>PRECIO </h3>
+                        <h2>PRECIO </h2> <h6>CON IVA </h6>
                     </div>
                     <div class="pricing-plans  bg-primary">
                         <span class="price-value1">
-                            $<span id="spanPrecio"></span>.00 MXP
+                            $<span id="spanPrecio"></span> MXP
                         </span>
                     </div>
                     <div class="pricingContent2">
@@ -32,9 +32,14 @@
                                     
                                 </li>
                                 <li>
-                                    <b>Piezas:</b> <span id="spanPieza"></span>
+                                    <b>Piezas:</b> <span id="spanPieza"></span>,
+                                    <b>Peso Facturado:</b> <span id="spanPeso"></span> Kg.
                                 </li>
                             </h4>
+                            <li>
+                                <b>Valor de Envio:</b>$ <span id="spanValorEnvio"></span>
+                                <b>Seguro:</b>$ <span id="spanSeguro"></span>
+                            </li>
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">

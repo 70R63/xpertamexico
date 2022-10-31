@@ -1,5 +1,8 @@
 var table;
+var peso;
 var piezas = 0;
+var costoSeguro = 0;
+var valorEnvio = 0;
 
 function pesofacturado(){
 
@@ -11,7 +14,6 @@ function pesofacturado(){
 
     var bascula = peso*pieza
     var dimensional = ((alto*ancho*largo)/5000)*pieza
-    //console.log(bascula+" "+dimensional+" "+Math.ceil(dimensional));
     pesoFacturado = (bascula > dimensional) ? bascula : Math.ceil(dimensional);
 
 
@@ -19,19 +21,31 @@ function pesofacturado(){
 
 }
 
+function costoSeguroValidar(seguro){
+
+    costoSeguro = 0;
+    valorEnvio = 0;
+
+    if ($('#checkSeguro').is(":checked")) {
+        valorEnvio = $("#valor_envio").val();
+        costoSeguro = (valorEnvio * seguro)/100;  
+    }
+}
+
 function preciofinal(dataRow){
     //Variable Global;
     piezas = $('#piezas').val();
-    var peso = $('#pesoFacturado').val();
+    peso = $('#pesoFacturado').val();
     var costoPesoExtra = 0;
 
+    costoSeguroValidar(dataRow.seguro);
+
     if (peso > dataRow.kg_fin) {
-        sobrepeso = peso -dataRow.kg_fin ;
+        sobrepeso = peso - dataRow.kg_fin ;
         costoPesoExtra = sobrepeso * dataRow.kg_extra * piezas;
     }
 
-    return (piezas*dataRow.costo)+ costoPesoExtra
-
+    return (piezas*dataRow.costo)+ costoPesoExtra + costoSeguro;
 }
 
 function obtenerCP(id, modelo) {
@@ -76,8 +90,6 @@ function obtenerCP(id, modelo) {
         });
 
 }
-
-
 
 $("#limpiar").click(function() {
     $('#cotizacionesForm').trigger('reset');
@@ -148,34 +160,37 @@ $("#cotizar").click(function(e) {
     }
 });
 
-
-
 table = $('#cotizacionAjax').DataTable({
     "oLanguage": {
         "sEmptyTable": "Ingresa los datos para cotizar"
     }
 });
+
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
-    
+   
     var dataRow = table.row(this).data(); 
     var sucursal_id = $('#sucursal').val();
     var cliente_id = $('#cliente').val();
     var cp = $('#cp').val();
     var cp_d = $('#cp_d').val();
     var costoPesoExtra = 0;
- 
-    var precio =  preciofinal(dataRow);
 
     var tarifa_id = table.row(this).data()['id'];
     var ltd_nombre = table.row(this).data()['nombre'];
     var ltd_id = table.row(this).data()['ltds_id'];
 
-    $("#spanPrecio").text(precio);
+    var precio =  preciofinal(dataRow);
+    var iva = precio*0.16;
+    
+    $("#spanPrecio").text(precio+iva);
     $("#spanMensajeria").text(ltd_nombre);
     $("#spanRemitente").text(cp);
     $("#spanDestinatario").text(cp_d);
     $("#spanPieza").text(piezas);
-    
+    $("#spanSeguro").text(costoSeguro);
+    $("#spanValorEnvio").text(valorEnvio);
+    $("#spanPeso").text(peso);
+      
     //valores para request, campos ocultos guiastore_ocultos
     $("#precio").val(precio);
     $("#tarifa_id").val(tarifa_id);
@@ -216,5 +231,20 @@ $(function(){
     $("#largo").on("change keyup paste", function (){
         pesofacturado();
     });
-
 });
+
+// Seguro de envio
+$(function() {
+    $('#checkCotizacionManual').change(function() {
+
+        console.log("checkCotizacionManual");
+        var checkSeguro = $(this).is( ":checked" )
+        if ( checkSeguro ) {
+            $(".cotizacionManual").removeAttr("readonly");
+        } else {
+            $(".cotizacionManual").attr("readonly","true");
+        }
+      });
+});
+// fin Seguro de envio
+

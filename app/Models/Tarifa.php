@@ -11,7 +11,7 @@ class Tarifa extends Model
 {
     use HasFactory;
 
-    protected $fillable =['id','ltds_id','servicio_id','kg_ini','kg_fin','kg_extra','extendida', 'costo', 'empresa_id'];
+    protected $guarded = [];
 
     /**
      * Agraga a la consulta los casos de negocio.

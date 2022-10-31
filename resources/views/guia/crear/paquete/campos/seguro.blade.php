@@ -7,31 +7,17 @@
 		<span class="custom-switch-indicator"></span>
 		
 	</label>
-</div>
-<!-- Inicio Class Seguro -->
-<div class="seguro" style="display: none;" >
-	<div class="input-group mb-3">
-		<div class="input-group-prepend">
-			<span class="input-group-text" id="basic-addon1"> Valor de Envio <span class="tx-danger">*</span></span>
-		</div>
+	<!-- Inicio Class Seguro -->
+	<div class="seguro" style="display: none;" >
+	
 		{!! Form::text('valor_envio', null,
 			['class' 		=> 'form-control'
-			,'id'			=> 'valorEnvio'
-			,'placeholder'	=> 'Valor factura Sin IVA'
+			,'id'			=> 'valor_envio'
+			,'placeholder'	=> 'Valor de Envio Sin IVA'
 			
 			])
 		!!}
 
-		<div class="input-group-prepend">
-			<span class="input-group-text" id="basic-addon1"> Costo del Seguro <span class="tx-danger">*</span></span>
-		</div>
-		{!! Form::text('envio_costo_seguro', null,
-			['class' 		=> 'form-control'
-			,'id'		=> 'costoSeguro'
-			,'placeholder'	=> ''
-			,'disabled'	=> ''
-			])
-		!!}
 	</div>
+	<!-- Fin Class Seguro -->
 </div>
-<!-- Fin Class Seguro -->

@@ -1,7 +1,9 @@
-<div class="col-sm-12 ">
+<div class="col-sm-12">
     <div class="card custom-card">
         <div class="card-body">
         	<div class="card-item">
+
+
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">
@@ -16,8 +18,7 @@
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'
 						]);
-					!!}
-					   
+					!!}   
 				</div>
 
 				<div class="input-group mb-3">
@@ -74,21 +75,18 @@
 					</div>
 					<div class="handle-counter" id="handleCounterMax100_ini">
 						<text class="counter-minus btn btn-light">-</text>
-						
 						{!! Form::text('kg_ini'
-						, null
-						,['class' 		=> 'form-control'
-							,'id'		=> 'kg_ini'
-							,'min'		=> '1'
-							,'required'	=>	'true'
-						])
-					!!}
+							, null
+							,['class' 		=> 'form-control'
+								,'id'		=> 'kg_ini'
+								,'min'		=> '1'
+								,'required'	=>	'true'
+							])
+						!!}
 
 						<text class="counter-plus btn btn-light">+</text>
 					</div>
-				</div>
-
-				<div class="input-group mb-3">
+					
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">Kg Final <span class="tx-danger">*</span></span>
 					</div>
@@ -122,9 +120,7 @@
 							,'required'	=>	'true'
 						])
 					!!}
-				</div>
-
-				<div class="input-group mb-3">
+			
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">AREA EXTENDIDA
 						</span>
@@ -139,7 +135,55 @@
 						])
 					!!}
 				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">DESCUENTO
+						</span>
+					</div>
+
+					{!! Form::text('descuento'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'descuento'
+							,'data-parsley-type'		=> 'number'
+							,'placeholder'	=> 'Ingresa el monto de descuento'
+						])
+					!!}
+
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">SEGURO
+						</span>
+					</div>
+
+					{!! Form::text('seguro'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'seguro'
+							,'data-parsley-type'		=> 'number'
+							,'placeholder'	=> 'Ingresa % del monto de seguro'
+						])
+					!!}
+
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">EXCESO DE DIMENSIÓN
+						</span>
+					</div>
+
+					{!! Form::text('exceso_dimension'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'exceso_dimension'
+							,'data-parsley-type'		=> 'number'
+							,'required'	=>	'true'
+						])
+					!!}
+				</div>
 			</div>
+			<!--Fin class="card-item" -->
 		</div>
+		<!-- Fin class="card-body" -->
 	</div>
+	<!-- Fin class="card custom-card" -->
 </div>
+<!-- Fin class="col-sm-12" -->

@@ -18,7 +18,7 @@
 		<span class="input-group-text" id="basic-addon1"> CP <span class="tx-danger">*</span></span>
 	</div>
 	{!! Form::text('cp', null,
-		['class' 		=> 'form-control'
+		['class' 		=> 'form-control cotizacionManual'
 			,'id'		=> 'cp'
 			,'placeholder'	=> 'Codigo Postal'
 			,'required'	=> ''

@@ -31,5 +31,3 @@
     	</table>
     </div>
 </div>
-
-@include('cotizaciones.modals.guiastore')

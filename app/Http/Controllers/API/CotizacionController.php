@@ -26,12 +26,12 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__);
         Log::info($request->get('peso'));
 
-        $tabla = Tarifa::join('empresa_ltds', 'tarifas.ltds_id', '=', 'empresa_ltds.ltd_id')
-                    ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+        $tabla = Tarifa::join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                     ->select('tarifas.*', 'ltds.nombre'
                         ,\DB::raw('(tarifas.kg_extra+tarifas.extendida+tarifas.costo) as costo_total'))
-                    ->get()->toArray();
-              
+                    ->get()->toArray()
+                    ;
+
         Log::debug($tabla);
         $success['data'] = $tabla;
         Log::info($success);
