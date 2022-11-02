@@ -132,27 +132,137 @@ class rolesPermisosSeeder extends Seeder
           $rolAdmin->save();
         }
 
+// **********************   USUARIO CONTRALORIA  ********************************
 
-// **********************   USUARIO EJECUTIVO  ********************************
+    //CREAR USUARIO CONTRALORIA
+        $usuarioAdmin = User::create([
+            'name'      => 'Contraloria',
+            'email'     => 'contraloria@gmail.com',
+            'password'  => Hash::make('123456789'),
+            'empresa_id'=> '1'
+        ]);
+
+    //CREAR ROL ADMIN 
+
+         $rolAdmin = Roles::create(['name' => 'Contraloria','slug' => 'contraloria',]);
+
+         $usuarioAdmin->roles()->sync([ $rolAdmin->id ]);
 
 
-//CREAR USUARIO EJECUTIVO
+    //CREAR PERMISOS
+
+        $permisos_Admin = [];
+
+        $permisosadm = Permisos::create([
+            'name' => 'Crear',
+            'slug' => 'crear'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Editar',
+            'slug' => 'editar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Leer',
+            'slug' => 'leer'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Borrar',
+            'slug' => 'borrar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+       foreach ($permisos_Admin as $permisoad) {
+          $usuarioAdmin->permisos()->attach($permisoad);
+          $usuarioAdmin->save();
+          $rolAdmin->permisos()->attach($permisoad);
+          $rolAdmin->save();
+        }
+
+// **********************   USUARIO CONTRALORIA FIN ********************************
+
+
+// **********************   USUARIO AUDITORIA  ********************************
+
+    //CREAR USUARIO AUDITORIA
+        $usuarioAdmin = User::create([
+            'name'      => 'Auditoria',
+            'email'     => 'auditoria@gmail.com',
+            'password'  => Hash::make('123456789'),
+            'empresa_id'=> '1'
+        ]);
+
+    //CREAR ROL ADMIN 
+
+         $rolAdmin = Roles::create(['name' => 'Auditoria','slug' => 'auditoria',]);
+
+         $usuarioAdmin->roles()->sync([ $rolAdmin->id ]);
+
+
+    //CREAR PERMISOS
+
+        $permisos_Admin = [];
+
+        $permisosadm = Permisos::create([
+            'name' => 'Crear',
+            'slug' => 'crear'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Editar',
+            'slug' => 'editar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Leer',
+            'slug' => 'leer'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Borrar',
+            'slug' => 'borrar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+       foreach ($permisos_Admin as $permisoad) {
+          $usuarioAdmin->permisos()->attach($permisoad);
+          $usuarioAdmin->save();
+          $rolAdmin->permisos()->attach($permisoad);
+          $rolAdmin->save();
+        }
+
+// **********************   USUARIO AUDITORIA FIN ********************************
+
+
+
+// **********************   USUARIO COMERCIAL  ********************************
+
+
+    //CREAR USUARIO COMERCIAL
 
         $usuarioEjecutivo = User::create([
-            'name'      => 'EjecutivoUser',
-            'email'     => 'ejecutivouser@gmail.com',
-            'password'  => Hash::make('EjecutivoTemp01'),
+            'name'      => 'Comercial',
+            'email'     => 'comercial@gmail.com',
+            'password'  => Hash::make('123456789'),
             'empresa_id'=> '1'
         ]);
 
 
-// CREAR ROL EJECUTIVO
+    // CREAR ROL COMERCIAL
 
-        $rolEjecutivo = Roles::create(['name' => 'Ejecutivo','slug' => 'ejecutivo',]);
+        $rolEjecutivo = Roles::create(['name' => 'Comercial','slug' => 'comercial',]);
 
         $usuarioEjecutivo->roles()->sync([ $rolEjecutivo->id ]);
 
-//CREAR PERMISOS
+    //CREAR PERMISOS
 
         $permisos_ejecutivo = [];
 
@@ -186,6 +296,115 @@ class rolesPermisosSeeder extends Seeder
           $rolEjecutivo->permisos()->attach($permisoej);
           $rolEjecutivo->save();
         }
+
+// **********************   USUARIO ADMIN OPERACIONES  ********************************
+
+    //CREAR USUARIO AUDITORIA
+        $usuarioAdmin = User::create([
+            'name'      => 'Admin Operaciones',
+            'email'     => 'adminops@gmail.com',
+            'password'  => Hash::make('123456789'),
+            'empresa_id'=> '1'
+        ]);
+
+    //CREAR ROL ADMIN OPERACIONES 
+
+         $rolAdmin = Roles::create(['name' => 'Admin Operaciones','slug' => 'adminops',]);
+
+         $usuarioAdmin->roles()->sync([ $rolAdmin->id ]);
+
+
+    //CREAR PERMISOS
+
+        $permisos_Admin = [];
+
+        $permisosadm = Permisos::create([
+            'name' => 'Crear',
+            'slug' => 'crear'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Editar',
+            'slug' => 'editar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Leer',
+            'slug' => 'leer'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Borrar',
+            'slug' => 'borrar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+       foreach ($permisos_Admin as $permisoad) {
+          $usuarioAdmin->permisos()->attach($permisoad);
+          $usuarioAdmin->save();
+          $rolAdmin->permisos()->attach($permisoad);
+          $rolAdmin->save();
+        }
+
+// **********************   USUARIO ADMIN OPERACIONES FIN ********************************
+
+
+// **********************   USUARIO OPERACIONES  ********************************
+
+    //CREAR USUARIO AUDITORIA
+        $usuarioAdmin = User::create([
+            'name'      => 'Operaciones',
+            'email'     => 'operaciones@gmail.com',
+            'password'  => Hash::make('123456789'),
+            'empresa_id'=> '1'
+        ]);
+
+    //CREAR ROL OPERACIONES 
+
+         $rolAdmin = Roles::create(['name' => 'Operaciones','slug' => 'operaciones',]);
+
+         $usuarioAdmin->roles()->sync([ $rolAdmin->id ]);
+
+
+    //CREAR PERMISOS
+
+        $permisos_Admin = [];
+
+        $permisosadm = Permisos::create([
+            'name' => 'Crear',
+            'slug' => 'crear'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Editar',
+            'slug' => 'editar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Leer',
+            'slug' => 'leer'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+        $permisosadm = Permisos::create([
+            'name' => 'Borrar',
+            'slug' => 'borrar'
+        ]);
+        $permisos_Admin[] = $permisosadm ->id;
+
+       foreach ($permisos_Admin as $permisoad) {
+          $usuarioAdmin->permisos()->attach($permisoad);
+          $usuarioAdmin->save();
+          $rolAdmin->permisos()->attach($permisoad);
+          $rolAdmin->save();
+        }
+
+// **********************   USUARIO ADMIN OPERACIONES FIN ********************************
 
 
 // **********************   USUARIO CLIENTE  ********************************
@@ -240,10 +459,12 @@ class rolesPermisosSeeder extends Seeder
           $rolCliente->save();
         }
 
+// **********************   USUARIO CLIENTE FIN  ********************************
+
 
 // **********************   USUARIO USUARIO  ********************************
 
-//CREAR USUARIO USUARIO
+    //CREAR USUARIO USUARIO
         
         $usuarioUsuario = User::create([
             'name'      => 'Usuario',
@@ -252,12 +473,12 @@ class rolesPermisosSeeder extends Seeder
             'empresa_id'=> '1'
         ]);
 
-// CREAR ROL USUARIO
+    // CREAR ROL USUARIO
         $rolUsuario = Roles::create(['name' => 'Usuario','slug' => 'usuario',]);
 
         $usuarioUsuario->roles()->sync([ $rolUsuario->id ]);
 
-//CREAR PERMISOS
+    //CREAR PERMISOS
 
         $permisos_Usuario = [];
 
@@ -294,3 +515,5 @@ class rolesPermisosSeeder extends Seeder
 
     }
 }
+
+// **********************   USUARIO USUARIO FIN ********************************

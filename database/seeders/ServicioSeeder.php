@@ -19,28 +19,28 @@ class ServicioSeeder extends Seeder
             'estatus' => '1',
             'nombre' => 'Terrestre',
             'descripcion' =>"Servicio de recoleccion Terrestre" ,
-            'prioridad' => '1'
+            'prioridad' => '4'
         ]);
 
         Servicio::create([
             'estatus' => '1',
             'nombre' => 'Dia Sig',
             'descripcion' =>"Servicio de recoleccion Dia Siguiente" ,
-            'prioridad' => '3'
+            'prioridad' => '2'
         ]);
 
         Servicio::create([
             'estatus' => '1',
             'nombre' => '2 Dias',
             'descripcion' =>"Servicio de recoleccion 2 Dias" ,
-            'prioridad' => '2'
+            'prioridad' => '3'
         ]);
 
         Servicio::create([
             'estatus' => '1',
             'nombre' => '930',
             'descripcion' =>"Servicio de recoleccion " ,
-            'prioridad' => '4'
+            'prioridad' => '1'
         ]);
     }
 }

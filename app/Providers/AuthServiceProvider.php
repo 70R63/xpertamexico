@@ -34,12 +34,28 @@ class AuthServiceProvider extends ServiceProvider
             return $user->roles->first()->slug == 'admin';
         });
 
-        Gate::define('isCliente', function ($user) {
-            return $user->roles->first()->slug == 'cliente';
+        Gate::define('isContraloria', function ($user) {
+            return $user->roles->first()->slug == 'contraloria';
         });
 
-        Gate::define('isEjecutivo', function ($user) {
-            return $user->roles->first()->slug == 'ejecutivo';
+        Gate::define('isAuditoria', function ($user) {
+            return $user->roles->first()->slug == 'auditoria';
+        });
+
+        Gate::define('isComercial', function ($user) {
+            return $user->roles->first()->slug == 'comercial';
+        });
+
+        Gate::define('isAdminOps', function ($user) {
+            return $user->roles->first()->slug == 'adminops';
+        });
+
+        Gate::define('isOperaciones', function ($user) {
+            return $user->roles->first()->slug == 'operaciones';
+        });
+
+        Gate::define('isCliente', function ($user) {
+            return $user->roles->first()->slug == 'cliente';
         });
 
         Gate::define('isUsuario', function ($user) {

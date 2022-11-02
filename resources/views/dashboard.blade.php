@@ -77,32 +77,64 @@
                         </li>
                         @canany(['isSysAdmin'])  
                             @include('menu.cfgltds') 
-                        {{--    @include('menu.cliente')  --}}
-                         {{--    @include('menu.envio')  --}}
-                              
-                            @include('menu.roles')  
-                        @endcanany
-
-                        @canany(['isSysAdmin','isAdmin'])
                             @include('menu.empresas')
                             @include('menu.direcciones')
                             @include('menu.ltd')
-                        @endcanany
-
-                        @canany(['isSysAdmin','isAdmin','isEjecutivo'])
-                            
-                           
-                        @endcanany
-
-                        @canany(['isSysAdmin','isAdmin','isEjecutivo','isCliente'])
                             @include('menu.usuario')
-                            
+                            @include('menu.guia')
+                            @include('menu.roles')  
                         @endcanany
 
-                        @canany(['isSysAdmin','isAdmin','isEjecutivo','isCliente','isUsuario'])
+                        @canany(['isAdmin'])
+                            @include('menu.cfgltds') 
+                            @include('menu.empresas')
+                            @include('menu.direcciones')
+                            @include('menu.ltd')
+                            @include('menu.usuario')
+                            @include('menu.guia')
+                            @include('menu.roles')
+                        @endcanany
+
+                        @canany(['isContraloria'])
+                            @include('menu.reportes')
+                        @endcanany
+
+                        @canany(['isAuditoria'])
+                            @include('menu.reportes')
+                            @include('menu.ltd')
+                        @endcanany
+
+
+                        @canany(['isComercial'])
+                            @include('menu.empresas')
+                            @include('menu.direcciones')
+                            @include('menu.ltd')
+                            @include('menu.usuario')
+                        @endcanany
+
+                        @canany(['isAdminOps'])
+                            @include('menu.empresas')
+                            @include('menu.direcciones')
+                            @include('menu.usuario')
+
+                        @endcanany
+
+                        @canany(['isOperaciones'])
+                            @include('menu.empresas')
+                            @include('menu.direcciones')
                             @include('menu.guia')
                         @endcanany
-                      
+
+                        @canany(['isCliente'])
+                            @include('menu.direcciones')
+                            @include('menu.usuario')
+                            @include('menu.guia')
+                        @endcanany
+
+                        @canany(['isUsuario'])
+                            @include('menu.guia')
+                            
+                        @endcanany                      
                         
                     </ul>
                 </div>
