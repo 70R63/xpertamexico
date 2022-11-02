@@ -233,7 +233,7 @@ $(function(){
     });
 });
 
-// Seguro de envio
+// La fucnion habilita el modo edicion de los CP, esto ayuda a realizar una cotizacion manual basda en tarifias de un cliente
 $(function() {
     $('#checkCotizacionManual').change(function() {
 
