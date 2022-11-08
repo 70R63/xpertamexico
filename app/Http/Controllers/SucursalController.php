@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoresucursalRequest;
 use App\Http\Requests\UpdatesucursalRequest;
 use App\Models\Sucursal;
+use App\Models\Empresa;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -30,7 +31,6 @@ class SucursalController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__);    
             $tabla = Sucursal::get();
 
-            
             return view(self::DASH_v 
                     ,compact("tabla")
                 );
@@ -50,7 +50,11 @@ class SucursalController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
            
-            return view(self::CREAR_v);
+            $pluckEmpresa = Empresa::pluck('nombre','id');
+
+            return view(self::CREAR_v
+                ,compact("pluckEmpresa")
+            );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
             Log::info("Error general ");       
@@ -116,10 +120,12 @@ class SucursalController extends Controller
             Log::debug($id);
             Log::info(__CLASS__." ".__FUNCTION__."");
             $objeto = Sucursal::findOrFail($id);
+
+            $pluckEmpresa = Empresa::pluck('nombre','id');
                
             Log::debug($objeto);
             return view(self::EDITAR_v
-                , compact('objeto') 
+                , compact('objeto',"pluckEmpresa") 
             );
        
         } catch (ModelNotFoundException $e) {

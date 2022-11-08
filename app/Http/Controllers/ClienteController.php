@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateClienteRequest;
 use App\Models\Cliente;
 use App\Models\Ltd;
 use App\Models\Servicio;
+use App\Models\Empresa;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -51,8 +52,10 @@ class ClienteController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__);    
             $tabla = array();
 
+             $pluckEmpresa = Empresa::where('estatus',1)
+                    ->pluck('nombre','id');
             return view(self::CREAR_v 
-                    ,compact("tabla")
+                    ,compact("pluckEmpresa")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -120,9 +123,11 @@ class ClienteController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__."");
             $objeto = Cliente::findOrFail($id);
                
+            $pluckEmpresa = Empresa::pluck('nombre','id');
+            
             Log::debug($objeto);
             return view(self::EDITAR_v
-                , compact('objeto') 
+                , compact('objeto',"pluckEmpresa") 
             );
        
         } catch (ModelNotFoundException $e) {

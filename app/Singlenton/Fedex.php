@@ -18,6 +18,7 @@ class Fedex {
     private $baseUri;
 
     public $documento = 0; 
+    private $trackingNumber = 0; 
 
     private function __construct(int $ltd_id){
 
@@ -85,13 +86,16 @@ class Fedex {
                     ]);
 
             $contenido = json_decode($response->getBody()->getContents());
-            $pieceResponses = $contenido->output->transactionShipments[0]->pieceResponses[0];
+            
+            $transactionShipments = $contenido->output->transactionShipments[0];
 
+            $pieceResponses = $transactionShipments->pieceResponses[0];
             $packageDocuments = $pieceResponses->packageDocuments[0];
 
             $this->documento = $packageDocuments->url;
-
+            $this->trackingNumber = $transactionShipments->masterTrackingNumber;
             Log::debug(print_r($contenido->output,true));
+            //Log::debug(print_r($transactionShipments->masterTrackingNumber ,true));
 
     }
 
@@ -110,6 +114,11 @@ class Fedex {
 
     public function getToken(){
         return $this->token;
+    }
+
+
+    public function getTrackingNumber(){
+        return $this->trackingNumber;
     }
 }
 

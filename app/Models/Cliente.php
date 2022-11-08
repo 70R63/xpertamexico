@@ -26,6 +26,10 @@ class Cliente extends Model
         parent::boot();        
         static::addGlobalScope('estatus', function (Builder $builder) {
             $builder->where('clientes.estatus', '1');
+
+            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+                ->pluck('empresa_id')->toArray();
+            $builder->whereIN('empresa_id',$empresas);
         });
     }
 }

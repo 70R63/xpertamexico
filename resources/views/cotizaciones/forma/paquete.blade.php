@@ -7,7 +7,7 @@
 			,'data-parsley-type' => 'number'
 			,'data-parsley-type' =>'integer'
 			,'min'	=>	'1'
-			,'placeholder'	=> 'Peso aproximado'
+			,'placeholder'	=> 'Piezas que se enviaran'
 			,'id'		=> 'piezas'
 			,'required'	=> ''
 		])

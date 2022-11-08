@@ -8,25 +8,29 @@
                         <thead>
                             <tr>
                                 <th>CLAVE</th>
-                                <th>USUARIO</th>
                                 <th>MENSAJERIA</th>
+                                <th>TRACKING</th>
+                                <th>SERVICIO</th>
+                                <th>USUARIO</th>
+                                
                                 <th>REMITENTE</th>
                                 <th>DESTINATARIO</th>
                                 <th>GUIA</th>
-                                <th>ACCIONES</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             @foreach( $tabla  as $objeto)
                             <tr>
                                 <td>{{ $objeto->id }}</td>
-                                <td>{{ $objeto->usuario }}</td>
                                 <td>{{ $ltdActivo[$objeto->ltd_id] }}</td>
+                                <td>{{ $objeto->tracking_number }} </td>
+                                <td>{{ $objeto->id }}</td>
+                                <td>{{ $objeto->usuario }}</td>
+                                
                                 <td>{{ $sucursal[$objeto->cia] }}</td>
                                 <td>{{ $cliente[$objeto->cia_d] }}</td>
                                 <td>@include('guia.dashboard.documento')</td>
-                                <td> </td>
-
                             </tr>
                             @endforeach
                         </tbody>

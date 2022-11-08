@@ -28,7 +28,7 @@ class Tarifa extends Model
             $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
                 ->pluck('empresa_id')->toArray();
             $builder->whereIN('empresa_id',$empresas);
-            //$builder->where('tarifas.empresa_id', auth()->user()->empresa_id);
+
         });
     }
 }

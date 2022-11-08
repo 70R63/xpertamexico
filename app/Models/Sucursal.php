@@ -24,6 +24,10 @@ class Sucursal extends Model
         parent::boot();        
         static::addGlobalScope('estatus', function (Builder $builder) {
             $builder->where('sucursals.estatus', '1');
+
+            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+                ->pluck('empresa_id')->toArray();
+            $builder->whereIN('empresa_id',$empresas);
         });
     }
 }

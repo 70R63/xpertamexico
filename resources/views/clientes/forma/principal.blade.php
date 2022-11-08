@@ -108,9 +108,7 @@
 							,'required'	=>	'true'
 						])
 					!!}
-				</div>
 
-				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">ENTIDAD FEDERATIVA
 							<span class="tx-danger">*</span>
@@ -124,6 +122,23 @@
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'
 							,'id'		=> 'entidad_federativa'
+						]);
+					!!}
+				</div>
+
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">CLIENTE
+							<span class="tx-danger">*</span>
+						</span>
+					</div>
+					{!! Form::select('empresa_id'
+						, $pluckEmpresa
+						,null
+						,['class' 		=> 'form-control'
+							,'placeholder'	=> 'Seleccionar'
+							,'required'	=> 'true'
+							,'id'		=> 'empresa_id'
 						]);
 					!!}
 				</div>

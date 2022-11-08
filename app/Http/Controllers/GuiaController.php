@@ -101,7 +101,7 @@ class GuiaController extends Controller
             $fedex->envio(json_encode($etiqueta));
 
             $guiaDTO = new GuiaDTO();
-            $guiaDTO->parser($request,$fedex->documento);
+            $guiaDTO->parser($request,$fedex);
 
             Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
             $id = Guia::create($guiaDTO->insert)->id;
