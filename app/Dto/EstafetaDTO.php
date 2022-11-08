@@ -80,10 +80,12 @@ class EstafetaDTO
 	}
 
      /**
-     * Parser 
-     *
-     * @param  Array $data
-     * @return array $body
+     * Metodo para asignar los valores del request a una etiqueta 
+     * para generar el venvio a la api de Fedex
+     * 
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return App\Dto\Fedex\Etiqueta Etiqueta
      */
 
     public function parser(array $data){

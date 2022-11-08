@@ -6,10 +6,12 @@ use GuzzleHttp\Client;
 use Log;
 use Carbon\Carbon;
 use Config;
+use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
 use App\Dto\EstafetaDTO;
+
 
 
 class Estafeta {
@@ -61,6 +63,8 @@ class Estafeta {
     public function envio($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIO");
        
+        Log::debug(print_r($request,true));
+
 
         $dto = new EstafetaDTO();
         $body = $dto->parser($request);

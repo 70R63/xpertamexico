@@ -8,6 +8,7 @@ use Log;
 use Laravel\Sanctum\HasApiTokens;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
+use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
 use App\Singlenton\Estafeta ;
@@ -112,13 +113,18 @@ class GuiaController extends Controller
         $response = null;
 
         try {
+
+            $data = $request->except(['api_token']);
+            if(empty($data))
+                 return $this->sendError("Body, sin estructura o vacio", null, "400");
+
             
             $estafeta = new Estafeta(2);
 
-            $estafeta -> envio($request->except(['api_token']));
+            $estafeta -> envio($data);
             $resultado = $singlenton->getResultado();
             
-            $mensaje = "LA guia se creo con exito";
+            $mensaje = "La guia se creo con exito";
             return $this->sendResponse(json_decode($resultado), $mensaje);
         
             
@@ -138,6 +144,9 @@ class GuiaController extends Controller
             Log::debug(print_r(json_decode($response),true));
             return $this->sendResponse(json_decode($response), "ServerException");            
 
+        } catch (InvalidArgumentException $ex) {
+            Log::debug($ex );
+            return $this->sendResponse("Response", "InvalidArgumentException","400");
         } catch (HttpException $ex) {
           
             $resultado = $ex;
