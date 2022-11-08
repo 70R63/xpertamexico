@@ -33,14 +33,16 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
         ], 200);
 });
 
+//Route::domain('local.xpertamexico.com')->group(function () {
+    Route::middleware('auth:api','throttle:100,1')->group(function(){
+        Route::controller(GuiaController::class)->group(function(){
+            Route::get('ltds', 'creacion');
+            Route::post('fedex', 'fedex');
+            Route::post('estafeta', 'estafeta');
+        });
 
-Route::middleware('auth:sanctum')->group(function(){
-    Route::controller(GuiaController::class)->group(function(){
-        Route::get('ltds', 'creacion');
-        Route::post('fedex', 'fedex');
     });
-
-});
+//});
 
 Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {

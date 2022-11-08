@@ -6,9 +6,22 @@ use App\Http\Controllers\API\BaseController as Controller;
 use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\HasApiTokens;
-use App\Dto\Estafeta;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
 
+#CLASES DE NEGOCIO 
+use App\Singlenton\Estafeta ;
+
+/**
+ * GuiaController
+ * Los parametros para los ltds estan definidos desde el comienzo de la contruccion 
+ * del sistema.
+ * 
+ * @param fedex = 1
+ * @param estafeta = 2
+ *
+ * @return \Illuminate\Http\Response
+ */
 class GuiaController extends Controller
 {
     /**
@@ -36,20 +49,6 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__);
 
         Log::info($request);
-        
-        /*
-        $request = new HttpRequest();
-        $request->setUrl('https://apis-sandbox.fedex.com/ship/v1/shipments');
-        $request->setMethod(HTTP_METH_POST);
-
-        $request->setHeaders(array(
-          'Authorization' => 'Bearer ',
-          'X-locale' => 'en_US',
-          'Content-Type' => 'application/json'
-        ));
-
-        $request->setBody(input); // 'input' refers to JSON Payload
-        */
         $response = null;
 
         try {
@@ -61,11 +60,11 @@ class GuiaController extends Controller
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ];
 
-            
+            /*
             $body = array('grant_type' => 'client_credentials',
                     'client_id' => 'l7640a59a8ce1c4dfea7bb2d302febc882' ,
                     'client_secret' => '2bc10d1d2f3b4b6ab55a0e63518c306e');
-            
+            */
             $body = "grant_type=client_credentials&client_id=l7640a59a8ce1c4dfea7bb2d302febc882&client_secret=2bc10d1d2f3b4b6ab55a0e63518c306e";
 
 
@@ -74,9 +73,6 @@ class GuiaController extends Controller
                 ,'body'     => $body
                 
             ]);
-
-            //return $response;
-
 
             Log::debug(print_r($response>getBody()->scope,true));
             Log::debug("Fin Response --------------------");
@@ -100,4 +96,53 @@ class GuiaController extends Controller
             return $this->sendResponse($resultado, $mensaje);
         }
     }
+
+
+    /**
+     * ESTAFETA CREACION DE GUIA
+     * @param body,json con estructura para la guia
+     * 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function estafeta(Request $request){
+        Log::info(__CLASS__." ".__FUNCTION__);
+
+        Log::debug($request);
+        $response = null;
+
+        try {
+            
+            $estafeta = new Estafeta(2);
+
+            $estafeta -> envio($request->except(['api_token']));
+            $resultado = $singlenton->getResultado();
+            
+            $mensaje = "LA guia se creo con exito";
+            return $this->sendResponse(json_decode($resultado), $mensaje);
+        
+            
+        } catch (\GuzzleHttp\Exception\ClientException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
+            Log::debug(print_r($ex,true));
+            
+            return $this->sendResponse("Response", "ClientException");
+
+        } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
+            Log::debug($ex );
+            return $this->sendResponse("Response", "InvalidArgumentException");
+
+        } catch (\GuzzleHttp\Exception\ServerException $ex) {
+            $response = $ex->getResponse()->getBody()->getContents();
+            Log::debug(print_r($response,true));
+            Log::debug(print_r(json_decode($response),true));
+            return $this->sendResponse(json_decode($response), "ServerException");            
+
+        } catch (HttpException $ex) {
+          
+            $resultado = $ex;
+            $mensaje = "La guia no pudo ser creada";
+            return $this->sendResponse($resultado, $mensaje);
+        }
+    }// Fin public function Estafeta
 }

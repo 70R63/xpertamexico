@@ -3,18 +3,20 @@ namespace App\Dto;
 
 use Log;
 
-use App\Dto\Estafeta\Label;
-use App\Dto\Estafeta\LabelDescriptionList;
-use App\Dto\Estafeta\OriginInfo;
-use App\Dto\Estafeta\DestinationInfo;
-use App\Dto\Estafeta\DrAlternativeInfo;
+use App\Dto\Estafeta\API\V3\Label;
+use App\Dto\Estafeta\API\V3\Identification;
+use App\Dto\Estafeta\API\V3\SystemInformation;
+use App\Dto\Estafeta\API\V3\LabelDefinition;
 
-use Spatie\DataTransferObject\DataTransferObjectError;
+use App\Dto\Estafeta\API\V3\WayBillDocument;
+use App\Dto\Estafeta\API\V3\ItemDescription;
+use App\Dto\Estafeta\API\V3\ServiceConfiguration;
+use App\Dto\Estafeta\API\V3\Location;
 
 /**
  * 
  */
-class Estafeta 
+class EstafetaDTO 
 {
     public $data = null;
 	
@@ -28,18 +30,8 @@ class Estafeta
 		Log::info(__CLASS__." ".__FUNCTION__); 
 
         
-		//$originInfo = new OriginInfo();
-		//$destinationInfo = new DestinationInfo();
-        /*No se porque debo de inicializar esta clase*/
 		$Dralternativeinfo = new DrAlternativeInfo();  
 
-        /*
-        son los datos de cada cliente
-            $data['suscriberId'] = $this->mensajeria->suscriberId;
-            $data['customerNumber'] = $this->mensajeria->customerNumber ;
-            $data['password'] = $this->mensajeria->ws_pass ;
-            $data['login'] = $this->mensajeria->login ;
-        */
         try{
 
             /* Se inicializa el WS para DEV*/
@@ -87,12 +79,48 @@ class Estafeta
 
 	}
 
-    public function parser($data,$tipo = "FORMA"){
-        if ("API" === $tipo) {
-            $this->data = $data->all();
-        } else {
-            $this->parserForma($data);
-        }
+     /**
+     * Parser 
+     *
+     * @param  Array $data
+     * @return array $body
+     */
+
+    public function parser(array $data){
+        Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
+
+        $identification = new Identification();
+        $systemInformation = new SystemInformation();
+        
+        /*
+        $labelDefinition = new LabelDefinition(
+            "wayBillDocument" => $wayBillDocument
+            ,"itemDescription" =>$itemDescription
+            ,"serviceConfiguration" => $serviceConfiguration
+            ,"location" => $location
+        );
+        */
+
+        Log::debug(print_r($data,true));
+        //$labelDefinition = new LabelDefinition($data);
+
+        $tmp = new Label(
+            [
+                "identification" => $identification
+                ,"systemInformation" => $systemInformation
+                ,"labelDefinition"  => $data['labelDefinition']
+            ]
+        );
+
+        Log::debug(print_r($tmp,true));
+
+        $identification = ["identification" =>$identification];
+        $systemInformation = ["systemInformation" =>$systemInformation];
+
+        $body = array_merge($identification,$systemInformation,$data);
+
+        Log::debug(__CLASS__." ".__FUNCTION__." FIN");
+        return $body;
     }//fin public function parser
 
 

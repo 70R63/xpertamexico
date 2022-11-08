@@ -24,7 +24,11 @@ class Tarifa extends Model
         parent::boot();        
         static::addGlobalScope('status', function (Builder $builder) {
             $builder->where('tarifas.estatus', '1');
-            $builder->where('tarifas.empresa_id', auth()->user()->empresa_id);
+
+            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+                ->pluck('empresa_id')->toArray();
+            $builder->whereIN('empresa_id',$empresas);
+            //$builder->where('tarifas.empresa_id', auth()->user()->empresa_id);
         });
     }
 }

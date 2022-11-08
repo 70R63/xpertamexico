@@ -39,11 +39,14 @@ class TarifaController extends Controller
             $pluckServicio = Servicio::where('estatus',1)
                     ->pluck('nombre','id');
 
+            $pluckEmpresa = Empresa::where('estatus',1)
+                    ->pluck('nombre','id');
+
             $registros = $tabla->count();
             $row = ceil($registros/3);
 
             return view(self::DASH_v 
-                    ,compact("tabla", "pluckLtd", "pluckServicio", "row", "registros")
+                    ,compact("tabla", "pluckLtd", "pluckServicio", "pluckEmpresa")
                 );
 
         } catch (Exception $e) {

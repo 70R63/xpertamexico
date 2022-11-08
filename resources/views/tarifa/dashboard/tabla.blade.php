@@ -3,6 +3,7 @@
 		<thead>
 			<tr>
 				<th>ID</th>
+				<th>EMPRESA</th>
 				<th>LTD</th>
 				<th>SERVICIO</th>
 				<th>COSTO</th>
@@ -19,6 +20,7 @@
 			@foreach( $tabla  as $objeto)
 				<tr>
 					<td>{{ $objeto->id }}</td>
+					<td>{{ $pluckEmpresa[$objeto->empresa_id] }}</td>
 					<td>{{ $pluckLtd[$objeto->ltds_id] }}</td>
 					<td>{{ $pluckServicio[$objeto->servicio_id] }}</td>
 					<td>$ {{ $objeto->costo }}</td>

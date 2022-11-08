@@ -106,11 +106,12 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
             $id = Guia::create($guiaDTO->insert)->id;
             
-            Mail::to($request->email)
-                ->cc(Config("mail.cc"))
-                ->send(new GuiaCreada($request, $id));
-           
-            $tmp = sprintf("El registro de la guia con ID %d fue exitoso, la guia sera enviada al correo '%s' ",$id,$request->email);
+            /*
+            * Mail::to($request->email)
+            *    ->cc(Config("mail.cc"))
+            *    ->send(new GuiaCreada($request, $id));
+            */
+            $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
             $notices = array($tmp);
             
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
