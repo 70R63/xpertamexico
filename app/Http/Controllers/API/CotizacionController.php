@@ -24,12 +24,18 @@ class CotizacionController extends BaseController
     public function index(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__);
-        Log::info($request->get('peso'));
+        Log::debug($request);
 
-        $tabla = Tarifa::join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
-                    ->select('tarifas.*', 'ltds.nombre'
-                        ,\DB::raw('(tarifas.kg_extra+tarifas.extendida+tarifas.costo) as costo_total'))
+        $empresa_id= Sucursal::where('id',$request['sucursal'])
+                    ->value('empresa_id');
+        Log::debug($empresa_id);
+        $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre')
+                    ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+                    
+                    ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
+                    ->where('tarifas.empresa_id', $empresa_id)
                     ->get()->toArray()
+                    //->toSql()
                     ;
 
         Log::debug($tabla);

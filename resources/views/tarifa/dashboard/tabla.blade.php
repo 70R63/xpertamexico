@@ -3,8 +3,8 @@
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>EMPRESA</th>
-				<th>LTD</th>
+				<th>CLIENTE</th>
+				<th>MENSAJERIA</th>
 				<th>SERVICIO</th>
 				<th>COSTO</th>
 				<th>KG. INICIAL</th>

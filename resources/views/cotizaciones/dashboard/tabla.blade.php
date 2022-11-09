@@ -5,13 +5,14 @@
                 <tr>
                     <th>ID TARIFA</th>
                     <th>PROVEEDOR</th>
-                    <th>Costo</th>
+                    <th>SERVICIO</th>
+                    <th>COSTO</th>
                     <th>kg Inicial</th>
-                    <th>kg Final</th>
-                    
+                    <th>kg Final</th> 
                     <th>$ kg Extra.</th>
                     <th>$ Area Extendida</th>
-                    <th>COSTO TOTAL</th>
+                    <th>$ SEGURO</th>
+                    <th>COSTO TOTAL (sin IVA)</th>
                     
                 </tr>
             </thead>
@@ -19,11 +20,13 @@
                 <tr>
                     <th>ID TARIFA</th>
                     <th>PROVEEDOR</th>
-                    <th>Costo</th>
+                    <th>SERVICIO</th>
+                    <th>COSTO</th>
                     <th>kg Inicial</th>
                     <th>kg Final</th>
                     <th>$ kg Extra.</th>
                     <th>$ Area Extendida</th>
+                    <th>$ SEGURO</th>
                     <th>COSTO TOTAL</th>
                     
                 </tr>

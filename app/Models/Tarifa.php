@@ -17,7 +17,7 @@ class Tarifa extends Model
      * Agraga a la consulta los casos de negocio.
      *
      * 
-         */
+    */
 
     protected static function boot()
     {
@@ -27,7 +27,7 @@ class Tarifa extends Model
 
             $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
                 ->pluck('empresa_id')->toArray();
-            $builder->whereIN('empresa_id',$empresas);
+            $builder->whereIN('tarifas.empresa_id',$empresas);
 
         });
     }

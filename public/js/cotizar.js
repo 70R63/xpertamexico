@@ -22,7 +22,6 @@ function pesofacturado(){
 }
 
 function costoSeguroValidar(seguro){
-
     costoSeguro = 0;
     valorEnvio = 0;
 
@@ -30,6 +29,7 @@ function costoSeguroValidar(seguro){
         valorEnvio = $("#valor_envio").val();
         costoSeguro = (valorEnvio * seguro)/100;  
     }
+    return costoSeguro;
 }
 
 function preciofinal(dataRow){
@@ -126,6 +126,7 @@ $("#cotizar").click(function(e) {
                     "columns": [
                         { "data": "id" },
                         { "data": "nombre" },
+                        { "data": "servicios_nombre" },
                         { "data": "costo" 
                             ,render: function (data) {
                                 return '$ '+data;
@@ -135,6 +136,12 @@ $("#cotizar").click(function(e) {
                         { "data": "kg_fin" },
                         { "data": "kg_extra" },
                         { "data": "extendida" },
+                        { "data": "seguro"
+                            ,render: function (data, type, row, meta) {
+                                return '$ '+costoSeguroValidar(row.seguro);   
+                            } 
+                            
+                        },
                         { "data": "costo_total"
                             ,render: function (data, type, row, meta) {
                                 return '$ '+preciofinal(row);   
@@ -181,8 +188,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
 
     var precio =  preciofinal(dataRow);
     var iva = precio*0.16;
-    
-    $("#spanPrecio").text(precio+iva);
+    var precioIva = (precio+iva).toFixed(2);
+    $("#spanPrecio").text( precioIva );
     $("#spanMensajeria").text(ltd_nombre);
     $("#spanRemitente").text(cp);
     $("#spanDestinatario").text(cp_d);
@@ -192,7 +199,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#spanPeso").text(peso);
       
     //valores para request, campos ocultos guiastore_ocultos
-    $("#precio").val(precio);
+    $("#precio").val(precioIva);
     $("#tarifa_id").val(tarifa_id);
     $("#sucursal_id").val(sucursal_id);
     $("#cliente_id").val(cliente_id);

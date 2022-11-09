@@ -7,7 +7,7 @@
             </div>
             <div class="pricing-plans  bg-primary">
                 <span class="price-value1">
-                    $<span id="spanPrecio">{{$precio}}</span>.00 MXP
+                    $<span id="spanPrecio">{{$precio}}</span> MXP
                 </span>
             </div>
             <div class="pricingContent2">
