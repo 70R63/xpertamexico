@@ -23,6 +23,7 @@ class Estafeta {
 
     public $documento = 0; 
     private $resultado = array();
+    private $trackingNumber = "trackingNumber";
 
     public function __construct(int $ltd_id){
 
@@ -84,8 +85,9 @@ class Estafeta {
             ,'body'     => json_encode($body)
         ]);
 
-        $this -> resultado = $response->getBody()->getContents();
-            
+        $this -> resultado = json_decode($response->getBody()->getContents());
+        $this->documento = $this->resultado->data;
+        $this->trackingNumber = $this->resultado->labelPetitionResult->elements[0]->trackingCode;
         Log::info(__CLASS__." ".__FUNCTION__." FIN");
     }
 
@@ -108,6 +110,10 @@ class Estafeta {
 
     public function getResultado(){
         return $this->resultado;
+    }
+
+    public function getTrackingNumber(){
+        return $this->trackingNumber;
     }
 }
 

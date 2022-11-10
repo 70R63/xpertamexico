@@ -6,7 +6,7 @@ use App\Models\Guia;
 use App\Models\EmpresaLtd;
 use App\Models\Sucursal;
 use App\Models\Cliente;
-use App\Models\Ltd;
+use App\Models\Cfg_ltd;
 
 use App\Mail\GuiaCreada;
 
@@ -42,7 +42,7 @@ class GuiaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__); 
-            $ltdActivo = Ltd::pluck("nombre","id");
+            $ltdActivo = Cfg_ltd::pluck("nombre","id");
             $cliente = Cliente::pluck("nombre","id");
             $sucursal = Sucursal::pluck("nombre","id");
             $tabla = Guia::get(); 

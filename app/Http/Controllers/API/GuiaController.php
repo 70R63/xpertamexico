@@ -12,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
 use App\Singlenton\Estafeta ;
+use App\Dto\Guia as GuiaDTO;
+use App\Models\Guia;
 
 /**
  * GuiaController
@@ -102,12 +104,12 @@ class GuiaController extends Controller
     /**
      * ESTAFETA CREACION DE GUIA
      * @param body,json con estructura para la guia
+     * @var ltd_id Estafeta sera 2
      * 
-     *
      * @return \Illuminate\Http\Response
      */
     public function estafeta(Request $request){
-        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info(__CLASS__." ".__FUNCTION__." INICIO");
 
         Log::debug($request);
         $response = null;
@@ -123,10 +125,13 @@ class GuiaController extends Controller
             Log::debug("sEstafeta -> envio()");
             $sEstafeta -> envio($data);
             $resultado = $sEstafeta->getResultado();
-            
-            $mensaje = "La guia se creo con exito";
-            Log::debug($mensaje);
-            return $this->sendResponse(json_decode($resultado), $mensaje);
+            Log::debug(print_r($resultado,true));
+
+            $insert = GuiaDTO::estafeta($sEstafeta);
+            $id = Guia::create($insert)->id;
+            $mensaje = array("La guia se creo con exito","Guia con ID $id");
+            Log::info(__CLASS__." ".__FUNCTION__." FIN");
+            return $this->sendResponse($resultado, $mensaje);
         
         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");

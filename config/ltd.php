@@ -14,10 +14,12 @@ return [
     'estafeta'      => env('WSDL_ESTAFETA', 'Laravel'),
     'estafeta_tracking' => env('WSDL_ESTAFETA_TRACKING_DEV', 'tracking'),
     'fedex' => [
-        'base_uri' => env('FEDEX_BASEURI')
+        'id'    => "1"
+        ,'base_uri'  => env('FEDEX_BASEURI')
     ]
     ,'estafeta' =>[
-        'base_uri'  =>  env('ESTAFETA_BASEURI')
+        'id'    => "2"
+        ,'base_uri'  =>  env('ESTAFETA_BASEURI')
         ,'token'    =>  env('ESTAFETA_TOKEN')
         ,'api_key'  =>  env('ESTAFETA_APIKEY')
     ]
