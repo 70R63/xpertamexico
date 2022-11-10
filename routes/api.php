@@ -25,7 +25,7 @@ Route::controller(LoginController::class)->group(function(){
 
 });
 
-Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
+Route::middleware('auth:api')->get('/ping', function (Request $request) {
     
     return response()->json([
             'status' => true,

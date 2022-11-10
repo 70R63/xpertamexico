@@ -17,6 +17,8 @@ return [
         'base_uri' => env('FEDEX_BASEURI')
     ]
     ,'estafeta' =>[
-        'base_uri' => env('ESTAFETA_BASEURI')
+        'base_uri'  =>  env('ESTAFETA_BASEURI')
+        ,'token'    =>  env('ESTAFETA_TOKEN')
+        ,'api_key'  =>  env('ESTAFETA_APIKEY')
     ]
 ];

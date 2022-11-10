@@ -118,21 +118,27 @@ class GuiaController extends Controller
             if(empty($data))
                  return $this->sendError("Body, sin estructura o vacio", null, "400");
 
-            
-            $estafeta = new Estafeta(2);
-
-            $estafeta -> envio($data);
-            $resultado = $singlenton->getResultado();
+            Log::debug("Se intancia el Singlento Estafeta");
+            $sEstafeta = new Estafeta(2);
+            Log::debug("sEstafeta -> envio()");
+            $sEstafeta -> envio($data);
+            $resultado = $sEstafeta->getResultado();
             
             $mensaje = "La guia se creo con exito";
+            Log::debug($mensaje);
             return $this->sendResponse(json_decode($resultado), $mensaje);
         
-            
+        } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
+            Log::debug(print_r($ex->getMessage(),true));
+            return $this->sendError("DataTransferObjectError, consulte con su proveedor", $ex->getMessage(), "400" );
+
         } catch (\GuzzleHttp\Exception\ClientException $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
-            Log::debug(print_r($ex,true));
+            Log::info(__CLASS__." ".__FUNCTION__."GuzzleHttp\Exception\ClientException");
+             $response = $ex->getResponse()->getBody()->getContents();
+            Log::debug(print_r($response,true));
             
-            return $this->sendResponse("Response", "ClientException");
+            return $this->sendError("ClientException",$response, "400");
 
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::debug($ex );

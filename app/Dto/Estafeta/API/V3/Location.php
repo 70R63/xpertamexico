@@ -6,4 +6,8 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class Location extends DataTransferObject {
 
+	public Contact $contact;
+	public Address $address;
+	
+
 }

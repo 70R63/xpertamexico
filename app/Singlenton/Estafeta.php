@@ -38,7 +38,7 @@ class Estafeta {
 
         }else {
             Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
-            $this->token = "98ee1a03-72b7-497e-9cfb-179be5339f94";
+            $this->token = Config('ltd.estafeta.token');
 
             $insert = array('empresa_id' => auth()->user()->empresa_id
                 ,'ltd_id'   => $ltd_id
@@ -76,7 +76,7 @@ class Estafeta {
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
             ,'Accept'    => 'application/json'
-            ,'apiKey'   => 'l76a4958a420d244328a2daa8d68740c75'
+            ,'apiKey'   => Config('ltd.estafeta.api_key')
         ];
         
         $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [

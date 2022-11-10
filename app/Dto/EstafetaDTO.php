@@ -8,11 +8,6 @@ use App\Dto\Estafeta\API\V3\Identification;
 use App\Dto\Estafeta\API\V3\SystemInformation;
 use App\Dto\Estafeta\API\V3\LabelDefinition;
 
-use App\Dto\Estafeta\API\V3\WayBillDocument;
-use App\Dto\Estafeta\API\V3\ItemDescription;
-use App\Dto\Estafeta\API\V3\ServiceConfiguration;
-use App\Dto\Estafeta\API\V3\Location;
-
 /**
  * 
  */
@@ -93,20 +88,10 @@ class EstafetaDTO
 
         $identification = new Identification();
         $systemInformation = new SystemInformation();
-        
-        /*
-        $labelDefinition = new LabelDefinition(
-            "wayBillDocument" => $wayBillDocument
-            ,"itemDescription" =>$itemDescription
-            ,"serviceConfiguration" => $serviceConfiguration
-            ,"location" => $location
-        );
-        */
 
         Log::debug(print_r($data,true));
-        //$labelDefinition = new LabelDefinition($data);
-
-        $tmp = new Label(
+       
+        $body = new Label(
             [
                 "identification" => $identification
                 ,"systemInformation" => $systemInformation
@@ -114,12 +99,8 @@ class EstafetaDTO
             ]
         );
 
-        Log::debug(print_r($tmp,true));
-
-        $identification = ["identification" =>$identification];
-        $systemInformation = ["systemInformation" =>$systemInformation];
-
-        $body = array_merge($identification,$systemInformation,$data);
+        Log::debug("Label armada--------------------------");
+        Log::debug(print_r($body,true));
 
         Log::debug(__CLASS__." ".__FUNCTION__." FIN");
         return $body;
