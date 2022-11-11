@@ -38,8 +38,10 @@ class Fedex {
 
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
                 
-            $body = "grant_type=client_credentials&client_id=l7640a59a8ce1c4dfea7bb2d302febc882&client_secret=2bc10d1d2f3b4b6ab55a0e63518c306e";
-
+            $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
+                        ,Config('ltd.fedex.client_id'),Config('ltd.fedex.client_secret')
+                    );
+            
             $response = $client->request('POST', 'oauth/token', [
                     'headers'   => $headers
                     ,'body'     => $body
@@ -80,6 +82,8 @@ class Fedex {
                         ,'X-locale' => 'en_US'
                         ,'Content-Type' => 'application/json'];
             
+            Log::debug(print_r($body,true));
+
             $response = $client->request('POST', 'ship/v1/shipments', [
                         'headers'   => $headers
                         ,'body'     => $body
