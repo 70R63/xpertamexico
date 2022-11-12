@@ -48,6 +48,31 @@
 							,'required'	=>	'true'
 						])
 					!!}
+
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">NO. EXTERIOR
+							<span class="tx-danger">*</span>
+						</span>
+					</div>
+
+					{!! Form::text('no_ext'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'no_ext'
+							,'required'	=>	'true'
+						])
+					!!}
+
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">NO. INTERIOR</span>
+					</div>
+
+					{!! Form::text('no_int'
+						, null
+						,['class' 		=> 'form-control'
+							,'id'		=> 'no_int'
+						])
+					!!}
 				</div>
 
 				<div class="input-group mb-3">

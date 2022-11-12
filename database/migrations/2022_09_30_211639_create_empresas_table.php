@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->string('contacto', 50)->nullable(false)->default('contactName');
             $table->string('nombre', 50)->nullable(false)->default('corporateName');
-            $table->string('email')->unique();
+            $table->string('email')->nullable(true)->unique();
             $table->string('telefono', 10)->nullable(false)->default('5555555555');
 
         });

@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCotizadorRequest;
 use App\Http\Requests\UpdateCotizadorRequest;
-use App\Models\Cotizador;
-
-use App\Models\Sucursal;
-use App\Models\Cliente;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+
+use App\Models\Cotizador;
+use App\Models\Servicio;
+use App\Models\Sucursal;
+use App\Models\Cliente;
 
 class CotizadorController extends Controller
 {
@@ -59,12 +60,14 @@ class CotizadorController extends Controller
             Log::info($objeto);
             $cliente = Cliente::findOrFail($request->get("cliente_id"));
             $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
+            $servicio = Servicio::findOrFail($request->get("servicio_id"));
+
             $precio = $request->get("precio");
             $ltd_nombre = $request->get("ltd_nombre");
             $piezas = $request->get("piezas_guia");
   
             return view(self::CREAR_v
-                , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre','objeto') 
+                , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre','objeto','servicio') 
             );
 
         } catch(\Illuminate\Database\QueryException $ex){ 

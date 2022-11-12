@@ -116,6 +116,7 @@
                             @include('menu.empresas')
                             @include('menu.direcciones')
                             @include('menu.usuario')
+                            @include('menu.guia')
 
                         @endcanany
 

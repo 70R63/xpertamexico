@@ -32,7 +32,8 @@ class Guia {
 				,'cia_d' 	=> $request->cliente_id
 				,'piezas' 	=> $request->piezas
 				, 'documento' => $sFedex->documento
-				,'tracking_number' =>$sFedex->getTrackingNumber()
+				,'tracking_number' 	=>$sFedex->getTrackingNumber()
+				,'servicio_id'		=>$request->servicio_id
 			);
 	}
 

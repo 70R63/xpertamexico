@@ -31,7 +31,6 @@ class CotizacionController extends BaseController
         Log::debug($empresa_id);
         $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre')
                     ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
-                    
                     ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
                     ->where('tarifas.empresa_id', $empresa_id)
                     ->get()->toArray()

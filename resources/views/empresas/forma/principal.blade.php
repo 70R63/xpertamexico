@@ -5,6 +5,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CLIENTE
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -20,6 +21,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CONTACTO
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -62,14 +64,12 @@
 						, null
 						,['class' 		=> 'form-control'
 							,'id'		=> 'email'
-							,'required'	=>	'true'
 						])
 					!!}
-				</div>
-
-				<div class="input-group mb-3">
+				
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">TELEFONO
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
@@ -85,6 +85,7 @@
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CLASIFICACIÓN
+							<span class="tx-danger">*</span>
 						</span>
 					</div>
 

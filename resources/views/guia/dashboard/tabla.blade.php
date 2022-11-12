@@ -25,7 +25,7 @@
                                 <td>{{ $objeto->id }}</td>
                                 <td>{{ $ltdActivo[$objeto->ltd_id] }}</td>
                                 <td>{{ $objeto->tracking_number }} </td>
-                                <td>{{ $objeto->id }}</td>
+                                <td>{{ $servicioPluck[$objeto->servicio_id] }}</td>
                                 <td>{{ $objeto->usuario }}</td>
                                 
                                 <td>{{ $sucursal[$objeto->cia] }}</td>

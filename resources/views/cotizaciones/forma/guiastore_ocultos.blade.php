@@ -49,3 +49,10 @@
         ,'id'       => 'ltd_id' 
     ])
 !!}
+
+{!! Form::hidden('servicio_id'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'servicio_id' 
+    ])
+!!}

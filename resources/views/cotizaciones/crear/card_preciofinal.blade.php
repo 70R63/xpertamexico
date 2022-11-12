@@ -13,7 +13,7 @@
             <div class="pricingContent2">
                 <ul>
                     <h4>
-                        <li><b>Mensajeria:</b> <span id="spanMensajeria"> {{$ltd_nombre}}</span></li>
+                        <li><b>Mensajeria:</b> <span id="spanMensajeria"> {{$ltd_nombre}} - {{$servicio->nombre}}</span></li>
                         <li>
                             <b>Piezas:</b> <span id="spanPieza"> {{ $piezas}}</span>
                         </li>
@@ -38,5 +38,12 @@
     , $piezas
     ,['class'       => 'form-control'
         ,'id'       => 'piezas' 
+    ])
+!!}
+
+{!! Form::hidden('servicio_id'
+    , $servicio->id
+    ,['class'       => 'form-control'
+        ,'id'       => 'servicio_id' 
     ])
 !!}

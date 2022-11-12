@@ -24,7 +24,7 @@
                     <div class="pricingContent2">
                         <ul>
                             <h4>
-                                <li><b>Mensajeria:</b> <span id="spanMensajeria"> </span></li>
+                                <li><b>Mensajeria:</b> <span id="spanMensajeria"> </span> - <span id="spanservicioId"> </span> </li>
                                 <li><b>Remitente Postal:</b> <span id="spanRemitente"> </span>
                                     
                                 </li>

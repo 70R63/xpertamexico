@@ -7,6 +7,8 @@ use App\Models\EmpresaLtd;
 use App\Models\Sucursal;
 use App\Models\Cliente;
 use App\Models\Cfg_ltd;
+use App\Models\Servicio;
+
 
 use App\Mail\GuiaCreada;
 
@@ -45,11 +47,12 @@ class GuiaController extends Controller
             $ltdActivo = Cfg_ltd::pluck("nombre","id");
             $cliente = Cliente::pluck("nombre","id");
             $sucursal = Sucursal::pluck("nombre","id");
+            $servicioPluck = Servicio::pluck("nombre","id");
             $tabla = Guia::get(); 
             
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
             return view(self::DASH_v 
-                    ,compact("tabla", "ltdActivo","cliente","sucursal")
+                    ,compact("tabla", "ltdActivo","cliente","sucursal", "servicioPluck")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -86,7 +89,7 @@ class GuiaController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info(__CLASS__." ".__FUNCTION__."store inicia ----------------------------");
         $mensaje = "Error General";
         try {
             
@@ -114,6 +117,7 @@ class GuiaController extends Controller
             $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
             $notices = array($tmp);
             
+            Log::info(__CLASS__." ".__FUNCTION__."store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
 

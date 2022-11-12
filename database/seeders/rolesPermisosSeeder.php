@@ -86,7 +86,7 @@ class rolesPermisosSeeder extends Seeder
         $usuarioAdmin = User::create([
             'name'      => 'AdminUser',
             'email'     => 'adminuser@gmail.com',
-            'password'  => Hash::make('AdminTemp01'),
+            'password'  => Hash::make('123456789'),
             'empresa_id'=> '1'
         ]);
 
@@ -414,7 +414,7 @@ class rolesPermisosSeeder extends Seeder
         $usuarioCliente = User::create([
             'name'      => 'ClienteUser',
             'email'     => 'clienteuser@gmail.com',
-            'password'  => Hash::make('ClienteTemp01'),
+            'password'  => Hash::make('123456789'),
             'empresa_id'=> '1'
         ]);
 
@@ -469,7 +469,7 @@ class rolesPermisosSeeder extends Seeder
         $usuarioUsuario = User::create([
             'name'      => 'Usuario',
             'email'     => 'usuario@gmail.com',
-            'password'  => Hash::make('UsuarioTemp01'),
+            'password'  => Hash::make('123456789'),
             'empresa_id'=> '1'
         ]);
 

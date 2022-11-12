@@ -176,6 +176,8 @@ table = $('#cotizacionAjax').DataTable({
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
    
     var dataRow = table.row(this).data(); 
+
+    console.log(dataRow);
     var sucursal_id = $('#sucursal').val();
     var cliente_id = $('#cliente').val();
     var cp = $('#cp').val();
@@ -185,12 +187,15 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var tarifa_id = table.row(this).data()['id'];
     var ltd_nombre = table.row(this).data()['nombre'];
     var ltd_id = table.row(this).data()['ltds_id'];
-
+    var servicioNombre = dataRow['servicios_nombre'];
+    var servicioId  = dataRow['servicio_id'];
     var precio =  preciofinal(dataRow);
     var iva = precio*0.16;
     var precioIva = (precio+iva).toFixed(2);
+    
     $("#spanPrecio").text( precioIva );
     $("#spanMensajeria").text(ltd_nombre);
+    $("#spanservicioId").text(servicioNombre);
     $("#spanRemitente").text(cp);
     $("#spanDestinatario").text(cp_d);
     $("#spanPieza").text(piezas);
@@ -206,6 +211,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#ltd_nombre").val(ltd_nombre);
     $("#ltd_id").val(ltd_id);
     $("#piezas_guia").val(piezas);
+    $("#servicio_id").val(servicioId);
+    
     
 
     $("#myModal").modal("show");
