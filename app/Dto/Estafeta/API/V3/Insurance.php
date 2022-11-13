@@ -7,9 +7,9 @@ use Spatie\DataTransferObject\DataTransferObject;
 class Insurance extends DataTransferObject {
 
 	#[Max(100)]
-	public string $contentDescription = "contentDescription";
+	public string $contentDescription = "Descripcion del Contenido";
 
 
-	public float $declaredValue = 0.0; 
+	public float $declaredValue = 0.3; 
 
 }

@@ -121,13 +121,13 @@ class GuiaController extends Controller
                  return $this->sendError("Body, sin estructura o vacio", null, "400");
 
             Log::debug("Se intancia el Singlento Estafeta");
-            $sEstafeta = new Estafeta(2);
+            $sEstafeta = new Estafeta(Config('ltd.estafeta.id'));
             Log::debug("sEstafeta -> envio()");
             $sEstafeta -> envio($data);
             $resultado = $sEstafeta->getResultado();
             Log::debug(print_r($resultado,true));
 
-            $insert = GuiaDTO::estafeta($sEstafeta);
+            $insert = GuiaDTO::estafeta($sEstafeta, $request);
             $id = Guia::create($insert)->id;
             $mensaje = array("La guia se creo con exito","Guia con ID $id");
             Log::info(__CLASS__." ".__FUNCTION__." FIN");

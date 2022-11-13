@@ -14,18 +14,18 @@ class Address extends DataTransferObject {
 	public string $roadName = "roadName";
 
 	#[Max(5)]
-	public string $settlementTypeAbbName = "settlementTypeAbbName";
+	public string $settlementTypeAbbName = "Col";
 
 	#[Max(57)]
 	public string $settlementName = "settlementName";
 
 	#[Max(5)]
-	public string $zipCode = "zipCode";
+	public string $zipCode = "00000";
 	
 	public string $countryName = "MEX";
 
 	#[Max(100)]
-	public string $addressReference = "addressReference";
+	public string $addressReference = "Sin Referencia";
 	
 	#[Max(20)]
 	public string $externalNum = "externalNum";

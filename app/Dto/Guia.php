@@ -37,19 +37,28 @@ class Guia {
 			);
 	}
 
-	static public function estafeta($sEstafeta){
+	static public function estafeta($sEstafeta, $request, $canal = "API"){
+		$cia = 1;
+		$cia_d = 1;
+		$piezas= 1;
 
+		if ($canal === "WEB") {
+			$cia = $request['sucursal_id'];
+			$cia_d = $request['cliente_id'];
+			$piezas = $request['piezas'];
+		}
 		$namePdf = sprintf("%s.pdf",$sEstafeta->getTrackingNumber());
 		Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 		//Log::debug(print_r(Storage::disk('local'),true));
 		$insert = array('usuario' => auth()->user()->name
 				,'empresa_id' 	=> auth()->user()->empresa_id
 				,'ltd_id' 	=> Config('ltd.estafeta.id')
-				,'cia' 		=> 2
-				,'cia_d' 	=> 1
-				,'piezas' 	=> 1
+				,'cia' 		=> $cia
+				,'cia_d' 	=> $cia_d
+				,'piezas' 	=> $piezas
 				, 'documento' => $namePdf
 				,'tracking_number' =>$sEstafeta->getTrackingNumber()
+				,'canal'	=> $canal
 			);
 
 		return $insert;

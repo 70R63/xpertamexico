@@ -15,10 +15,10 @@ class Contact extends DataTransferObject {
 	public string $cellPhone = "cellPhone";
 	
 	#[Email]
-	public string $email = "email";
+	public string $email = "sinmail@gmail.com";
 	
 	#[Max(13)]
-	public string $taxPayerCode = "taxPayerCode";
+	public string $taxPayerCode = "XAXX010101000";
 	
 
 }

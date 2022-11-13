@@ -12,10 +12,12 @@ use App\Models\Servicio;
 
 use App\Mail\GuiaCreada;
 
-use App\Dto\Estafeta;
+use App\Dto\EstafetaDTO;
+//use App\Dto\Estafeta;
 use App\Dto\Guia as GuiaDTO;
 use App\Dto\FedexDTO;
 
+use App\Singlenton\Estafeta as sEstafeta;
 use App\Singlenton\Fedex;
 
 use GuzzleHttp\Client;
@@ -90,24 +92,45 @@ class GuiaController extends Controller
     public function store(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__."store inicia ----------------------------");
-        $mensaje = "Error General";
+        $mensaje = array();
         try {
             
             Log::debug($request);
+
+            $requestInicial = $request->except(['_token']);
+            //ltd_id = 1 Estafeta
+            if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
+                Log::debug("Se intancia el Singlento Estafeta");
+
+                $dto = new EstafetaDTO();
+                $body = $dto->parser($requestInicial,"WEB");
+
+                $sEstafeta = new sEstafeta(Config('ltd.estafeta.id'));
+                Log::debug("sEstafeta -> envio()");
+                $sEstafeta -> envio($body);
+                $resultado = $sEstafeta->getResultado();
+                Log::debug(print_r($resultado,true));
+
+                $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
+                $id = Guia::create($insert)->id;
+
+            } else{
+                $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
+
+                $fedexDTO = new FedexDTO();
+                $etiqueta = $fedexDTO->parser($request);
+                
+                Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
+                $fedex->envio(json_encode($etiqueta));
+
+                $guiaDTO = new GuiaDTO();
+                $guiaDTO->parser($request,$fedex);
+
+                Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
+                $id = Guia::create($guiaDTO->insert)->id;
             
-            $fedex = Fedex::getInstance($request['ltd_id']);
-
-            $fedexDTO = new FedexDTO();
-            $etiqueta = $fedexDTO->parser($request);
+            }
             
-            Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
-            $fedex->envio(json_encode($etiqueta));
-
-            $guiaDTO = new GuiaDTO();
-            $guiaDTO->parser($request,$fedex);
-
-            Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
-            $id = Guia::create($guiaDTO->insert)->id;
             
             /*
             * Mail::to($request->email)
@@ -121,15 +144,43 @@ class GuiaController extends Controller
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
 
-        } catch (\GuzzleHttp\Exception\RequestException $re) {
-            Log::info(__CLASS__." ".__FUNCTION__." RequestException");
-            $response = json_decode($re->getResponse()->getBody());
-            Log::debug(print_r($response,true));
-            $mensaje = "Proveedor - ".$response->errors[0]->code;
+         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = $ex->getMessage();
 
-            return Redirect::back()
-                ->with('dangers',array($mensaje))
-                ->withInput(); 
+        } catch (\GuzzleHttp\Exception\RequestException $re) {
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
+            $response = ($re->getResponse());
+            //Log::debug(print_r(($response->getBody()),true));
+
+            $responseContenido = json_decode($response->getBody()->getContents());    
+
+            if (is_object($responseContenido)) {
+                Log::debug(print_r($responseContenido,true));
+                if ($responseContenido->code === 131) {
+                    $mensaje= array($responseContenido->description);
+
+                } else {
+
+                    $mensaje = $responseContenido;
+                     return Redirect::back()
+                        ->with('dangers',$mensaje)
+                        ->withInput();    
+                }
+                 
+
+            } else{
+                //Log::debug(print_r($responseContenido,true));
+                
+                
+                foreach ($responseContenido as $key => $value) {
+                    $mensaje = array("desc$key"=> $value->description);                   
+                }
+
+            }
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
 
         } catch (\GuzzleHttp\Exception\ClientException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." ClientException");
@@ -154,7 +205,7 @@ class GuiaController extends Controller
         }
 
         return \Redirect::back()
-                ->withErrors(array($mensaje))
+                ->withErrors($mensaje)
                 ->withInput();
 
     }

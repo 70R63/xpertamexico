@@ -42,10 +42,10 @@ function preciofinal(dataRow){
 
     if (peso > dataRow.kg_fin) {
         sobrepeso = peso - dataRow.kg_fin ;
-        costoPesoExtra = sobrepeso * dataRow.kg_extra * piezas;
+        costoPesoExtra = sobrepeso * dataRow.kg_extra ;
     }
 
-    return (piezas*dataRow.costo)+ costoPesoExtra + costoSeguro;
+    return dataRow.costo+ costoPesoExtra + costoSeguro;
 }
 
 function obtenerCP(id, modelo) {
@@ -140,7 +140,6 @@ $("#cotizar").click(function(e) {
                             ,render: function (data, type, row, meta) {
                                 return '$ '+costoSeguroValidar(row.seguro);   
                             } 
-                            
                         },
                         { "data": "costo_total"
                             ,render: function (data, type, row, meta) {
@@ -178,12 +177,18 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var dataRow = table.row(this).data(); 
 
     console.log(dataRow);
+    //Valores de la cotizacion
     var sucursal_id = $('#sucursal').val();
     var cliente_id = $('#cliente').val();
     var cp = $('#cp').val();
     var cp_d = $('#cp_d').val();
     var costoPesoExtra = 0;
+    var largo = $('#largo').val();
+    var ancho = $('#ancho').val();
+    var alto = $('#alto').val();
+    var bSeguro = ( $('#checkSeguro').is(":checked") ? true : false);
 
+    //Inicializacion de variables
     var tarifa_id = table.row(this).data()['id'];
     var ltd_nombre = table.row(this).data()['nombre'];
     var ltd_id = table.row(this).data()['ltds_id'];
@@ -193,6 +198,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var iva = precio*0.16;
     var precioIva = (precio+iva).toFixed(2);
     
+    //valores para el modal 
     $("#spanPrecio").text( precioIva );
     $("#spanMensajeria").text(ltd_nombre);
     $("#spanservicioId").text(servicioNombre);
@@ -212,7 +218,12 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#ltd_id").val(ltd_id);
     $("#piezas_guia").val(piezas);
     $("#servicio_id").val(servicioId);
-    
+    $("#peso_facturado").val(peso);
+    $("#largos").val(largo);
+    $("#anchos").val(ancho);
+    $("#altos").val(alto);
+    $("#bSeguro").val(bSeguro);
+    $("#costo_seguro").val(costoSeguro);
     
 
     $("#myModal").modal("show");

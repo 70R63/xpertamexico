@@ -5,7 +5,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 
 class ItemDescription extends DataTransferObject {
-	public int $parcelId =1;
+	public int $parcelId =4;
 	public float $weight =1;
 	public int $height =1;
 	public int $length =1;

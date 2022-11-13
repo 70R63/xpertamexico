@@ -51,9 +51,36 @@
 						,'readonly' =>  'true'
 					])
 				!!}
+
+
 			</div>
 
 			<div class="input-group mb-3">
+
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">NO. EXTERIOR</span>
+				</div>
+
+				{!! Form::text('no_ext'
+					, $sucursal->no_ext
+					,['class' 		=> 'form-control'
+						,'id'		=> 'no_ext'
+						,'required'	=>	'true'
+						,'readonly' =>  'true'
+					])
+				!!}
+
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">NO. INTERIOR</span>
+				</div>
+
+				{!! Form::text('no_int'
+					, $sucursal->no_int
+					,['class' 		=> 'form-control'
+						,'id'		=> 'no_int'
+						,'readonly' =>  'true'
+					])
+				!!}
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">C.P.
 					</span>

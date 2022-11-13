@@ -3,7 +3,6 @@ namespace App\Dto\Estafeta\API\V3;
 
 use Spatie\DataTransferObject\DataTransferObject;
 
-use App\Dto\Estafeta\API\V3\Insurance;
 
 class ServiceConfiguration extends DataTransferObject {
 	
@@ -17,9 +16,9 @@ class ServiceConfiguration extends DataTransferObject {
 	#[Max(5)]
 	public string $originZipCodeForRouting = "00000";
 
-	public bool $isInsurance;
+	public bool $isInsurance = false;
 
-	public Insurance $insurance;
+	//public $insurance;
 
 	public bool $isReturnDocument = FALSE;
 	

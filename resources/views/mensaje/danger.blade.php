@@ -8,6 +8,7 @@
 	</p>
 	<ul>
 		@foreach(Session::get('dangers') as $danger)
+		 	
 			<li> {{ $danger }} </li>
 		@endforeach
 	</ul>

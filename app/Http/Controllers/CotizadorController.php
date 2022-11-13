@@ -53,7 +53,7 @@ class CotizadorController extends Controller
      */
     public function create(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info(__CLASS__." ".__FUNCTION__."CREATE INICIO-----------------");
         try {
             
             $objeto = $request->all();

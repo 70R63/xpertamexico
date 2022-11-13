@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
-use App\Dto\EstafetaDTO;
+
 
 
 
@@ -57,19 +57,13 @@ class Estafeta {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  array  $body
      * @return \Illuminate\Http\Response
      */
 
-    public function envio($request){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIO");
-       
-        Log::debug(print_r($request,true));
-
-
-        $dto = new EstafetaDTO();
-        $body = $dto->parser($request);
-
+    public function envio($body){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIO ------------------");
+        
         $client = new Client(['base_uri' => $this->baseUri]);
         $authorization = sprintf("Bearer %s",$this->token);
 
@@ -86,9 +80,11 @@ class Estafeta {
         ]);
 
         $this -> resultado = json_decode($response->getBody()->getContents());
+
+        Log::info(print_r($this->resultado,true));
         $this->documento = $this->resultado->data;
         $this->trackingNumber = $this->resultado->labelPetitionResult->elements[0]->trackingCode;
-        Log::info(__CLASS__." ".__FUNCTION__." FIN");
+        Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");
     }
 
     public static function getInstance( int $ltd_id){

@@ -8,14 +8,14 @@
                         <thead>
                             <tr>
                                 <th>CLAVE</th>
+                                <th>GUIA</th>
                                 <th>MENSAJERIA</th>
                                 <th>TRACKING</th>
                                 <th>SERVICIO</th>
                                 <th>USUARIO</th>
-                                
                                 <th>REMITENTE</th>
                                 <th>DESTINATARIO</th>
-                                <th>GUIA</th>
+                                <th>CANAL</th>
                                 
                             </tr>
                         </thead>
@@ -23,6 +23,7 @@
                             @foreach( $tabla  as $objeto)
                             <tr>
                                 <td>{{ $objeto->id }}</td>
+                                <td>@include('guia.dashboard.documento')</td>
                                 <td>{{ $ltdActivo[$objeto->ltd_id] }}</td>
                                 <td>{{ $objeto->tracking_number }} </td>
                                 <td>{{ $servicioPluck[$objeto->servicio_id] }}</td>
@@ -30,7 +31,8 @@
                                 
                                 <td>{{ $sucursal[$objeto->cia] }}</td>
                                 <td>{{ $cliente[$objeto->cia_d] }}</td>
-                                <td>@include('guia.dashboard.documento')</td>
+                                <td>{{ $objeto->canal }}</td>
+                                
                             </tr>
                             @endforeach
                         </tbody>

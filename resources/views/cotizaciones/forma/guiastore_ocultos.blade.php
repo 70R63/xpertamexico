@@ -56,3 +56,43 @@
         ,'id'       => 'servicio_id' 
     ])
 !!}
+
+{!! Form::hidden('peso_facturado'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'peso_facturado' 
+    ])
+!!}
+
+{!! Form::hidden('largos'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'largos' 
+    ])
+!!}
+{!! Form::hidden('anchos'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'anchos' 
+    ])
+!!}
+{!! Form::hidden('altos'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'altos' 
+    ])
+!!}
+
+{!! Form::hidden('bSeguro'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'bSeguro' 
+    ])
+!!}
+
+{!! Form::hidden('costo_seguro'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'costo_seguro' 
+    ])
+!!}

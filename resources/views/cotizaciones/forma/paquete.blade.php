@@ -34,27 +34,27 @@
 	<div class="input-group-prepend">
 		<span class="input-group-text" id="basic-addon1">Dimensiones (LxWxH) <span class="tx-danger">*</span></span>
 	</div>
-	{!! Form::text('largo[]', null,
+	{!! Form::text('largo', null,
 		['class' 		=> 'form-control'
 		,'id'			=> 'largo'
 		,'placeholder'	=> 'Largo '
-		
+		,'required'		=> 'true'
 		])
 	!!}
 
-	{!! Form::text('ancho[]', null,
+	{!! Form::text('ancho', null,
 		['class' 		=> 'form-control'
 		,'id'			=> 'ancho'
 		,'placeholder'	=> 'Ancho  '
-		
+		,'required'		=> 'true'
 		])
 	!!}
 
-	{!! Form::text('alto[]', null,
+	{!! Form::text('alto', null,
 		['class' 		=> 'form-control'
 		,'id'			=> 'alto'
 		,'placeholder'	=> 'Alto '
-		
+		,'required'		=> 'true'
 		])
 	!!}
 </div>

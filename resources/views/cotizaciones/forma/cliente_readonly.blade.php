@@ -54,6 +54,31 @@
 			</div>
 
 			<div class="input-group mb-3">
+
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">NO. EXTERIOR</span>
+				</div>
+
+				{!! Form::text('no_ext_d'
+					, $cliente->no_ext
+					,['class' 		=> 'form-control'
+						,'id'		=> 'no_ext_d'
+						,'required'	=>	'true'
+						,'readonly' =>  'true'
+					])
+				!!}
+
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">NO. INTERIOR</span>
+				</div>
+
+				{!! Form::text('no_int_d'
+					, $cliente->no_int
+					,['class' 		=> 'form-control'
+						,'id'		=> 'no_int_d'
+						,'readonly' =>  'true'
+					])
+				!!}
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">C.P.
 					</span>
