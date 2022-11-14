@@ -97,6 +97,7 @@ class GuiaController extends Controller
             
             Log::debug($request);
 
+            //    dd(Config('ltd.fedex.cred'));
             $requestInicial = $request->except(['_token']);
             //ltd_id = 1 Estafeta
             if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
@@ -104,12 +105,11 @@ class GuiaController extends Controller
 
                 $dto = new EstafetaDTO();
                 $body = $dto->parser($requestInicial,"WEB");
-
+ 
                 $sEstafeta = new sEstafeta(Config('ltd.estafeta.id'));
                 Log::debug("sEstafeta -> envio()");
                 $sEstafeta -> envio($body);
                 $resultado = $sEstafeta->getResultado();
-                Log::debug(print_r($resultado,true));
 
                 $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
                 $id = Guia::create($insert)->id;

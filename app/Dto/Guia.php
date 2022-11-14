@@ -46,7 +46,21 @@ class Guia {
 			$cia = $request['sucursal_id'];
 			$cia_d = $request['cliente_id'];
 			$piezas = $request['piezas'];
+			$servicioId = $request['servicio_id'];
 		}
+		if ($canal === "API") {
+			
+			$servicioId=1;
+			$servicio_name = $request['labelDefinition']['serviceConfiguration']['serviceTypeId'];
+			
+			if ($servicio_name === Config('ltd.estafeta.servicio.3')) {
+				$servicioId=3;
+			} elseif ( $servicio_name === Config('ltd.estafeta.servicio.2') ) {
+				$servicioId=2;
+			} 
+			
+		}
+
 		$namePdf = sprintf("%s.pdf",$sEstafeta->getTrackingNumber());
 		Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 		//Log::debug(print_r(Storage::disk('local'),true));
@@ -59,6 +73,7 @@ class Guia {
 				, 'documento' => $namePdf
 				,'tracking_number' =>$sEstafeta->getTrackingNumber()
 				,'canal'	=> $canal
+				,'servicio_id'	=> $servicioId
 			);
 
 		return $insert;

@@ -7,7 +7,14 @@ return [
     | Configuracion para LTDs
     |--------------------------------------------------------------------------
     |
-    | Se agregan las rutas de los wsdl para los LTD
+    | LTD.ID valor para decalro en la tabla ltd
+    |
+    |
+    |
+    |El valor servicio es el Id delcaro en la tabla servicios
+    |en caso de poner un valor mal el tipo de servicio puede causar una guia con valores distintos
+    |1) = Terrestre, 2) Siguientes dia, 3) dos dias, los valores debran ajustarse para cada LTD
+    |
     |
     */
 
@@ -19,9 +26,12 @@ return [
         ,'client_id'    => env('FEDEX_CLIENT_ID')
         ,'client_secret'=> env('FEDEX_CLIENT_SECRET')
         ,'servicio' => [
-            '1'     => '70'
-            ,'2'    => '60'
-            ,'3'    => 'D0'
+            '1'     => 'FEDEX_EXPRESS_SAVER'
+            ,'2'    => 'STANDARD_OVERNIGHT'
+            ,'3'    => 'STANDARD_OVERNIGHT'
+        ]
+        ,'cred'     => [
+            'accountNumber' => env('FEDEX_ACCOUNTNUMBER')
         ]
     ]
     ,'estafeta' =>[
@@ -33,6 +43,10 @@ return [
             '1'     => '70'
             ,'2'    => '60'
             ,'3'    => 'D0'
+        ]
+        ,'cred'     => [
+            'suscriberId' => env('ESTAFETA_SUSCRIBERID')
+            ,'customerNumber' => env('ESTAFETA_CUSTOMERNUMBER')
         ]
     ]
 ];

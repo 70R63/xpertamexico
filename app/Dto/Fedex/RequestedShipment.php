@@ -18,6 +18,7 @@ class RequestedShipment extends DataTransferObject {
 
 	public $shipDatestamp;
 
+	//STANDARD_OVERNIGHT y FEDEX_EXPRESS_SAVER
 	public $serviceType = "FEDEX_EXPRESS_SAVER";
 
 	public $packagingType = "YOUR_PACKAGING";

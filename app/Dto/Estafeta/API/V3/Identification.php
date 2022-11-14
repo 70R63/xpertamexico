@@ -5,6 +5,6 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 
 class Identification extends DataTransferObject {
-	public string $suscriberId = "01";
+	public string $suscriberId = "00";
     public string $customerNumber ="0000000";
 }

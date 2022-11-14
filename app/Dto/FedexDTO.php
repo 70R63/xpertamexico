@@ -84,11 +84,18 @@ class FedexDTO
         $requestedShipment = 
             array('shipper' => $shipper
             ,'recipients' => array($recipients)
-            ,'requestedPackageLineItems' => array($requestedPackageLineItems));
+            ,'requestedPackageLineItems' => array($requestedPackageLineItems)
+            ,'serviceType'		=> Config('ltd.fedex.servicio')[$request['servicio_id']]
+        );
 
+
+        $accountNumber = new AccountNumber([
+        		'value' => config('ltd.fedex.cred.accountNumber')
+        	]
+        );
 
         $init = array('requestedShipment'   => new RequestedShipment($requestedShipment)
-	                    ,'accountNumber'    => new AccountNumber() );
+	                    ,'accountNumber'    => $accountNumber );
         
         return new Etiqueta($init);
 

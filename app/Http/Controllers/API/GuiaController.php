@@ -63,11 +63,7 @@ class GuiaController extends Controller
                 'Content-Type' => 'application/x-www-form-urlencoded'
             ];
 
-            /*
-            $body = array('grant_type' => 'client_credentials',
-                    'client_id' => 'l7640a59a8ce1c4dfea7bb2d302febc882' ,
-                    'client_secret' => '2bc10d1d2f3b4b6ab55a0e63518c306e');
-            */
+        
             $body = "grant_type=client_credentials&client_id=l7640a59a8ce1c4dfea7bb2d302febc882&client_secret=2bc10d1d2f3b4b6ab55a0e63518c306e";
 
 
@@ -122,7 +118,8 @@ class GuiaController extends Controller
 
             Log::debug("Se intancia el Singlento Estafeta");
             $sEstafeta = new Estafeta(Config('ltd.estafeta.id'));
-            Log::debug("sEstafeta -> envio()");
+            Log::debug(__CLASS__." ".__FUNCTION__." sEstafeta -> envio()");
+            Log::debug( json_encode($data) );
             $sEstafeta -> envio($data);
             $resultado = $sEstafeta->getResultado();
             Log::debug(print_r($resultado,true));

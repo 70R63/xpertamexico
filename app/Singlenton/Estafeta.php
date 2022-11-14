@@ -81,7 +81,7 @@ class Estafeta {
 
         $this -> resultado = json_decode($response->getBody()->getContents());
 
-        Log::info(print_r($this->resultado,true));
+        //Log::info(print_r($this->resultado,true));
         $this->documento = $this->resultado->data;
         $this->trackingNumber = $this->resultado->labelPetitionResult->elements[0]->trackingCode;
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");

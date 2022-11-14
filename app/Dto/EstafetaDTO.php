@@ -97,7 +97,11 @@ class EstafetaDTO
     public function parser(array $data, $canal = 'API'){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
 
-        $identification = new Identification();
+        $identification = new Identification([
+                    'suscriberId' =>   Config('ltd.estafeta.cred.suscriberId')
+                    ,'customerNumber' =>   Config('ltd.estafeta.cred.customerNumber')
+                ]
+            );
         $systemInformation = new SystemInformation();
 
 
