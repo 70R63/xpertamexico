@@ -11,7 +11,7 @@ class ServiceConfiguration extends DataTransferObject {
 	#[Max(2)]	
 	public string $serviceTypeId="70";
 
-	public string $salesOrganization = "112";
+	public string $salesOrganization = "000";
 
 	#[Max(5)]
 	public string $originZipCodeForRouting = "00000";

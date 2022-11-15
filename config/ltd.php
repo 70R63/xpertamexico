@@ -47,6 +47,7 @@ return [
         ,'cred'     => [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID')
             ,'customerNumber' => env('ESTAFETA_CUSTOMERNUMBER')
+            ,'salesOrganization'=>env('ESTAFETA_SALESORGANIZATION')
         ]
     ]
 ];

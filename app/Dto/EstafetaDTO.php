@@ -172,6 +172,8 @@ class EstafetaDTO
         
         $serviceConfiguration->serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
+        $serviceConfiguration->salesOrganization=Config('ltd.estafeta.cred.salesOrganization');
+
         $serviceConfiguration->isInsurance= false;//$data['bSeguro']; 
 
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration FIN -----------------");
