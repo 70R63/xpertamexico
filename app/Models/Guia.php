@@ -23,8 +23,11 @@ class Guia extends Model
 
         parent::boot();        
         static::addGlobalScope('guia_empresa', function (Builder $builder) {
-            $builder->where('guias.empresa_id', auth()->user()->empresa_id);
-            
+            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+                ->pluck('empresa_id')->toArray();
+
+            $builder->whereIN('guias.empresa_id',$empresas);
+            $builder->orderBy('id', 'desc');
         });
     }
 }

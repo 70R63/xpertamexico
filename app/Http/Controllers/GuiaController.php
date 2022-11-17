@@ -13,9 +13,8 @@ use App\Models\Servicio;
 use App\Mail\GuiaCreada;
 
 use App\Dto\EstafetaDTO;
-//use App\Dto\Estafeta;
-use App\Dto\Guia as GuiaDTO;
 use App\Dto\FedexDTO;
+use App\Dto\Guia as GuiaDTO;
 
 use App\Singlenton\Estafeta as sEstafeta;
 use App\Singlenton\Fedex;
@@ -46,15 +45,19 @@ class GuiaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__); 
-            $ltdActivo = Cfg_ltd::pluck("nombre","id");
-            $cliente = Cliente::pluck("nombre","id");
-            $sucursal = Sucursal::pluck("nombre","id");
+            $ltdActivo = Cfg_ltd::pluck("nombre","id");            
             $servicioPluck = Servicio::pluck("nombre","id");
-            $tabla = Guia::get(); 
             
+            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.contacto as empresa_contacto')
+                        ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
+                        ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
+                        ->join('empresas', 'empresas.id', '=', 'guias.empresa_id')
+                        //->toSql();
+                        ->get(); 
+           
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
             return view(self::DASH_v 
-                    ,compact("tabla", "ltdActivo","cliente","sucursal", "servicioPluck")
+                    ,compact("tabla", "ltdActivo", "servicioPluck")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -97,7 +100,6 @@ class GuiaController extends Controller
             
             Log::debug($request);
 
-            //    dd(Config('ltd.fedex.cred'));
             $requestInicial = $request->except(['_token']);
             //ltd_id = 1 Estafeta
             if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
@@ -123,10 +125,12 @@ class GuiaController extends Controller
                 Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
                 $fedex->envio(json_encode($etiqueta));
 
+                Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
                 $guiaDTO = new GuiaDTO();
                 $guiaDTO->parser($request,$fedex);
 
                 Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
+                
                 $id = Guia::create($guiaDTO->insert)->id;
             
             }

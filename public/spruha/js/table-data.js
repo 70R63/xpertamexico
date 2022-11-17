@@ -6,7 +6,12 @@ $(function() {
       pagingType: "full_numbers",
       lengthChange: true,
       buttons: [ 
-                  { extend: 'excel', footer: true }
+                  { 
+                     extend: 'excel', footer: false
+                     ,exportOptions: {
+                        columns: ':not(.notexport)'
+                     } 
+                  }
                   ,{ 
                      extend: 'pdf'
                      ,orientation: 'landscape'
