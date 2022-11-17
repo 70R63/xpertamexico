@@ -36,6 +36,7 @@ function preciofinal(dataRow){
     //Variable Global;
     piezas = $('#piezas').val();
     peso = $('#pesoFacturado').val();
+    var costoCoberturaExtendida = 0;
     var costoPesoExtra = 0;
 
     costoSeguroValidar(dataRow.seguro);
@@ -45,7 +46,15 @@ function preciofinal(dataRow){
         costoPesoExtra = sobrepeso * dataRow.kg_extra ;
     }
 
-    return dataRow.costo+ costoPesoExtra + costoSeguro;
+    console.log(dataRow.entendida_cobertura);
+    var textAreaExtendida = dataRow.entendida_cobertura.toUpperCase()
+    if ( textAreaExtendida == "SI"){
+        
+        costoCoberturaExtendida = dataRow.extendida
+        console.log(costoCoberturaExtendida);
+    } 
+
+    return dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida;
 }
 
 function obtenerCP(id, modelo) {
@@ -135,6 +144,7 @@ $("#cotizar").click(function(e) {
                         { "data": "kg_ini" },
                         { "data": "kg_fin" },
                         { "data": "kg_extra" },
+                        { "data": "entendida_cobertura" },
                         { "data": "extendida" },
                         { "data": "seguro"
                             ,render: function (data, type, row, meta) {

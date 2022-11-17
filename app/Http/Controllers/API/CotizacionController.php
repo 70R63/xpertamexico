@@ -29,10 +29,13 @@ class CotizacionController extends BaseController
         $empresa_id= Sucursal::where('id',$request['sucursal'])
                     ->value('empresa_id');
         Log::debug($empresa_id);
-        $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre')
+        
+        $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as entendida_cobertura')
                     ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                     ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
+                    ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
                     ->where('tarifas.empresa_id', $empresa_id)
+                    ->where('ltd_coberturas.cp', $request['cp_d'])
                     ->get()->toArray()
                     //->toSql()
                     ;
