@@ -45,7 +45,7 @@ class FedexDTO
         Log::info(__CLASS__." ".__FUNCTION__);
 		
 		
-		$weight = new Weight(array('value'=> $request['peso']));
+		$weight = new Weight(array('value'=> $request['peso_facturado']));
 
 		$contactShipper = New Contact( 
 			array("personName" 	=> $request['contacto']
