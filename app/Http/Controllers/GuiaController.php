@@ -48,7 +48,7 @@ class GuiaController extends Controller
             $ltdActivo = Cfg_ltd::pluck("nombre","id");            
             $servicioPluck = Servicio::pluck("nombre","id");
             
-            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.contacto as empresa_contacto')
+            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre')
                         ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
                         ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
                         ->join('empresas', 'empresas.id', '=', 'guias.empresa_id')

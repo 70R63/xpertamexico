@@ -38,7 +38,7 @@
                                 <td>{{ $objeto->tracking_number }} </td>
                                 <td>{{ $servicioPluck[$objeto->servicio_id] }}</td>
                                 <td>{{ $objeto->usuario }}</td>
-                                <td>{{ $objeto->empresa_contacto}}</td>
+                                <td>{{ $objeto->nombre}}</td>
                                 <td>{{ $objeto->contacto }}</td>
                                 <td>{{ $objeto->contacto_d }}</td>
                                 <td>{{ $objeto->created_at }}</td>
