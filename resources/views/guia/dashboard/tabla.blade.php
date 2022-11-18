@@ -7,6 +7,7 @@
                     <table id="exportGeneral" class="table table-striped table-bordered text-nowrap" >
                         <thead>
                             <tr>
+                                <th class='notexport'>ID</th>
                                 <th class='notexport'>GUIA</th>
                                 <th>MENSAJERIA</th>
                                 <th>TRACKING</th>
@@ -33,6 +34,7 @@
                         <tbody>
                             @foreach( $tabla  as $objeto)
                             <tr>
+                                <td>{{ $objeto->id }}</td>
                                 <td>@include('guia.dashboard.documento')</td>
                                 <td >{{ $ltdActivo[$objeto->ltd_id] }}</td>
                                 <td>{{ $objeto->tracking_number }} </td>

@@ -93,10 +93,26 @@ class Fedex {
             
             $transactionShipments = $contenido->output->transactionShipments[0];
 
-            $pieceResponses = $transactionShipments->pieceResponses[0];
-            $packageDocuments = $pieceResponses->packageDocuments[0];
+            $pieceResponses = $transactionShipments->pieceResponses;
+            //$packageDocuments = $pieceResponses->packageDocuments;
 
-            $this->documento = $packageDocuments->url;
+            $documentos = "";
+            $pieceResponsesCount = count($pieceResponses);
+            foreach ($pieceResponses as $key => $value) {
+                
+                $documentos =sprintf("%s%s",$documentos, $value->packageDocuments[0]->url);
+
+                Log::debug($pieceResponsesCount);
+                Log::debug($key);
+
+                if ($key < ($pieceResponsesCount-1)){
+                    Log::debug("Entre");                    
+                    $documentos =sprintf("%s|",$documentos);    
+                }
+
+            }
+
+            $this->documento = $documentos;
             $this->trackingNumber = $transactionShipments->masterTrackingNumber;
             Log::debug(print_r($contenido->output,true));
             //Log::debug(print_r($transactionShipments->masterTrackingNumber ,true));

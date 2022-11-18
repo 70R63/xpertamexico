@@ -169,7 +169,7 @@ class EstafetaDTO
         
         //["insurance"=>$this->insurance($data)]
         $serviceConfiguration = new ServiceConfiguration();
-        
+        $serviceConfiguration->quantityOfLabels = $data['piezas'];
         $serviceConfiguration->serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
         $serviceConfiguration->salesOrganization=Config('ltd.estafeta.cred.salesOrganization');

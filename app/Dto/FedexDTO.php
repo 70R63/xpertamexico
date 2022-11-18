@@ -77,7 +77,9 @@ class FedexDTO
 		$recipients = New Recipients(array('contact' => $contactRecipients, 'address' => $addressRecipients ));
 
 		$declaredValueWeight = array('declaredValue' => new DeclaredValue()
-                                    ,'weight' => $weight);
+                                    ,'weight' => $weight
+                                    ,'groupPackageCount' => $request['piezas'] 
+                                );
 
 		$requestedPackageLineItems = New RequestedPackageLineItems($declaredValueWeight);
 

@@ -10,7 +10,7 @@ use App\Dto\Fedex\Weight;
 
 class RequestedPackageLineItems extends DataTransferObject {
 
-	public $groupPackageCount;
+	public $groupPackageCount=1;
 
 	public $itemDescriptionForClearance;
 

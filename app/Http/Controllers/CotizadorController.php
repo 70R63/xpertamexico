@@ -33,9 +33,9 @@ class CotizadorController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
             
-            $sucursal = Sucursal::pluck('nombre','id');
+            $sucursal = Sucursal::pluck('contacto','id');
 
-            $cliente = Cliente::pluck('nombre','id');
+            $cliente = Cliente::pluck('contacto','id');
 
             return view(self::DASH_v 
                     ,compact( "sucursal", "cliente")

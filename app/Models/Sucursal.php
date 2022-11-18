@@ -10,7 +10,7 @@ class Sucursal extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['direccion2']; 
+    protected $guarded = []; 
 
     /**
      * Agraga a la consulta los casos de negocio.
