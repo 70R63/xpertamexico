@@ -46,8 +46,7 @@
 						,['class' 		=> 'form-control'
 							,'id'		=> 'direccion'
 							,'required'	=>	'true'
-							,'min'		=> 3
-							,'max'		=> 30
+							,'maxlength'	=> 30
 						])
 					!!}
 
