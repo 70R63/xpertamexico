@@ -51,10 +51,10 @@ class GuiaController extends Controller
             $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre')
                         ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
                         ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
-                        ->join('empresas', 'empresas.id', '=', 'guias.empresa_id')
+                        ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
                         //->toSql();
                         ->get(); 
-           
+
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
             return view(self::DASH_v 
                     ,compact("tabla", "ltdActivo", "servicioPluck")
