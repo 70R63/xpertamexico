@@ -96,3 +96,10 @@
         ,'id'       => 'contenido' 
     ])
 !!}
+
+{!! Form::hidden('extendida'
+    , $objeto['extendida_r']
+    ,['class'       => 'form-control'
+        ,'id'       => 'extendida' 
+    ])
+!!}

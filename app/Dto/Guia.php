@@ -38,6 +38,7 @@ class Guia {
 				,'servicio_id'		=>$request->servicio_id
 				,'peso'			=> $request->peso_facturado
 				,'dimensiones'	=> $dimensiones
+				,'extendida'	=>  $request['extendida']
 			);
 
 	}
@@ -46,6 +47,7 @@ class Guia {
 		$cia = 1;
 		$cia_d = 1;
 		$piezas= 1;
+		$extendida = "NO";
 
 		if ($canal === "WEB") {
 			$cia = $request['sucursal_id'];
@@ -54,6 +56,7 @@ class Guia {
 			$servicioId = $request['servicio_id'];
 			$peso = $request['peso_facturado'];
 			$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
+			$extendida = $request['extendida'];
 
 		}
 		if ($canal === "API") {
@@ -86,6 +89,7 @@ class Guia {
 				,'servicio_id'	=> $servicioId
 				,'peso'			=> $peso
 				,'dimensiones'	=> $dimensiones
+				,'extendida'	=> $extendida
 
  			);
 

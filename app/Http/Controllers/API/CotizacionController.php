@@ -30,7 +30,7 @@ class CotizacionController extends BaseController
                     ->value('empresa_id');
         Log::debug($empresa_id);
         
-        $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as entendida_cobertura')
+        $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')
                     ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                     ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
                     ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')

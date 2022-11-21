@@ -46,10 +46,9 @@ function preciofinal(dataRow){
         costoPesoExtra = sobrepeso * dataRow.kg_extra ;
     }
 
-    console.log(dataRow.entendida_cobertura);
-    var textAreaExtendida = dataRow.entendida_cobertura.toUpperCase()
+    console.log(dataRow.extendida_cobertura);
+    var textAreaExtendida = dataRow.extendida_cobertura.toUpperCase()
     if ( textAreaExtendida == "SI"){
-        
         costoCoberturaExtendida = dataRow.extendida
         console.log(costoCoberturaExtendida);
     } 
@@ -144,7 +143,7 @@ $("#cotizar").click(function(e) {
                         { "data": "kg_ini" },
                         { "data": "kg_fin" },
                         { "data": "kg_extra" },
-                        { "data": "entendida_cobertura" },
+                        { "data": "extendida_cobertura" },
                         { "data": "extendida" },
                         { "data": "seguro"
                             ,render: function (data, type, row, meta) {
@@ -220,7 +219,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#spanValorEnvio").text(valorEnvio);
     $("#spanPeso").text(peso);
       
-    //valores para request, campos ocultos guiastore_ocultos
+    //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
     $("#precio").val(precioIva);
     $("#tarifa_id").val(tarifa_id);
     $("#sucursal_id").val(sucursal_id);
@@ -235,8 +234,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#altos").val(alto);
     $("#bSeguro").val(bSeguro);
     $("#costo_seguro").val(costoSeguro);
-    console.log(contenido);
     $("#contenido_r").val(contenido);
+    $("#extendida_r").val(dataRow['extendida_cobertura']);
     
 
     $("#myModal").modal("show");

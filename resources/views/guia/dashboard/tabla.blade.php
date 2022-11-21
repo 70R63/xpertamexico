@@ -24,9 +24,9 @@
                                 <th style="display:none;">DIMENSIONES</th>
                                 <th style="display:none;">CP ORIGEN</th>
                                 <th style="display:none;">CIUDAD ORIGEN</th>
-                                
                                 <th style="display:none;">CP DESTINO</th>
                                 <th style="display:none;">CIUDAD DESTINO</th>
+                                <th style="display:none;">APLICA A.E.</th>
                                 
                                 
                             </tr>
@@ -53,6 +53,7 @@
                                 <td style="display:none;" >{{ $objeto->ciudad }}</td>
                                 <td style="display:none;">{{ $objeto->cp }}</td>
                                 <td style="display:none;" >{{ $objeto->ciudad_d }}</td>
+                                <td style="display:none;" >{{ $objeto->extendida }}</td>
                                 
                             </tr>
                             @endforeach
@@ -60,7 +61,7 @@
                         
                         <tfoot>
                             <tr>
-                              <td class='notexport' colspan="16">Los datos son responsalidad del usuario</td>
+                              <td class='notexport' colspan="17">Los datos son responsalidad del usuario</td>
                             </tr>
                         </tfoot>
                     </table>
