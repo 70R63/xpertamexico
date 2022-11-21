@@ -13,9 +13,6 @@
 		])
 	!!}
 	
-</div>
-
-<div class="input-group mb-3">
 	<div class="input-group-prepend">
 		<span class="input-group-text" id="basic-addon1"> Peso (Kg.) <span class="tx-danger">*</span></span>
 	</div>
@@ -57,6 +54,20 @@
 		,'required'		=> 'true'
 		])
 	!!}
+</div>
+
+<div class="input-group mb-3">
+	<div class="input-group-prepend">
+		<span class="input-group-text" id="basic-addon1"> Contenido </span>
+	</div>
+	{!! Form::text('contenido', null,
+		['class' 		=> 'form-control'
+			,'id'		=> 'contenido'
+			,'placeholder'	=> 'Contenido del envio '
+			
+		])
+	!!}
+	
 </div>
 
 <div class="input-group mb-3">

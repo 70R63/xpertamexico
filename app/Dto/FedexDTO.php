@@ -52,8 +52,12 @@ class FedexDTO
 				,"phoneNumber"	=> $request['celular']
 				,"companyName"	=> $request['nombre']) 
 			);
+
+		$streetLines = sprintf("%s %s, Exterior %s",$request['direccion'],$request['no_int'],$request['no_ext'] );
+
 		$addressShipper = New Address(
-			array("streetLines"	=> array($request['direccion'],"")
+
+			array("streetLines"	=> array($streetLines,$request['direccion2'])
 				,"city"	=> $request['colonia']
 				,"stateOrProvinceCode"	=> $request['entidad_federativa']
 				,"postalCode"	=> $request['cp']
@@ -65,8 +69,10 @@ class FedexDTO
 				,"companyName"	=> $request['nombre_d']) 
 			);
 
+		$streetLines_d = sprintf("%s %s, Exterior %s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'] );
+		
 		$addressRecipients = New Address(
-			array("streetLines"	=> array($request['direccion_d'],"")
+			array("streetLines"	=> array($streetLines_d ,$request['direccion2_d'])
 				,"city"	=> $request['colonia_d']
 				,"stateOrProvinceCode"	=> $request['entidad_federativa_d']
 				,"postalCode"	=> $request['cp_d']
@@ -79,6 +85,7 @@ class FedexDTO
 		$declaredValueWeight = array('declaredValue' => new DeclaredValue()
                                     ,'weight' => $weight
                                     ,'groupPackageCount' => $request['piezas'] 
+                                    ,'itemDescriptionForClearance' => $request['contenido']
                                 );
 
 		$requestedPackageLineItems = New RequestedPackageLineItems($declaredValueWeight);

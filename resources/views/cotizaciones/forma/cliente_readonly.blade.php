@@ -96,6 +96,23 @@
 
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">REFERENCIA
+					</span>
+				</div>
+
+				{!! Form::text('direccion2_d'
+					, $cliente->direccion2
+					,['class' 		=> 'form-control'
+						,'id'		=> 'direccion2_d'
+						,'required'	=>	'true'
+						,'readonly' =>  'true'
+					])
+				!!}
+
+			</div>
+
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">COLONIA
 					</span>
 				</div>
@@ -156,10 +173,8 @@
 						,'readonly' =>  'true'
 					])
 				!!}
-			</div>
-
-			<div class="input-group mb-3">
-				<div class="input-group-prepend">
+			
+			<div class="input-group-prepend">
 					<span class="input-group-text" id="basic-addon1">TELEFONO
 					</span>
 				</div>

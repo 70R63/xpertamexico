@@ -53,11 +53,11 @@ class CotizadorController extends Controller
      */
     public function create(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__."CREATE INICIO-----------------");
+        Log::info(__CLASS__." ".__FUNCTION__." INICIO-----------------");
         try {
             
             $objeto = $request->all();
-            Log::info($objeto);
+            Log::debug($objeto);
             $cliente = Cliente::findOrFail($request->get("cliente_id"));
             $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
             $servicio = Servicio::findOrFail($request->get("servicio_id"));

@@ -12,7 +12,7 @@ class RequestedPackageLineItems extends DataTransferObject {
 
 	public $groupPackageCount=1;
 
-	public $itemDescriptionForClearance;
+	public $itemDescriptionForClearance = "Contenido del envio sin descripcion";
 
 	public DeclaredValue $declaredValue;
 

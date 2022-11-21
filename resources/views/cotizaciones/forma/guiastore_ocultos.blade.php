@@ -96,3 +96,10 @@
         ,'id'       => 'costo_seguro' 
     ])
 !!}
+
+{!! Form::hidden('contenido_r'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'contenido_r' 
+    ])
+!!}

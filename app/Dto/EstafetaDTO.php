@@ -157,7 +157,9 @@ class EstafetaDTO
 
     private function wayBillDocument($data){
         Log::debug(__CLASS__." ".__FUNCTION__." wayBillDocument INICIO -----------------");
-        $wayBillDocument = new WayBillDocument();
+        $wayBillDocument = new WayBillDocument(array(
+            "content" => $data['contenido'])
+        );
 
         Log::debug(__CLASS__." ".__FUNCTION__." wayBillDocument FIN -----------------");
         return $wayBillDocument;

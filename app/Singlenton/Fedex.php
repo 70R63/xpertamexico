@@ -56,7 +56,7 @@ class Fedex {
             $insert = array('empresa_id' => auth()->user()->empresa_id
                 ,'ltd_id'   => $ltd_id
                 ,'token'    => $this->token
-                ,'expira_en'=> Carbon::now()->addSeconds($contenido->expires_in)
+                ,'expira_en'=> Carbon::now()->addHours(12)
                  );
 
             $id = LtdSesion::create($insert)->id;

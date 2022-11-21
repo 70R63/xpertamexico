@@ -207,6 +207,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var precio =  preciofinal(dataRow);
     var iva = precio*0.16;
     var precioIva = (precio+iva).toFixed(2);
+    var contenido = $('#contenido').val();
     
     //valores para el modal 
     $("#spanPrecio").text( precioIva );
@@ -234,6 +235,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#altos").val(alto);
     $("#bSeguro").val(bSeguro);
     $("#costo_seguro").val(costoSeguro);
+    console.log(contenido);
+    $("#contenido_r").val(contenido);
     
 
     $("#myModal").modal("show");

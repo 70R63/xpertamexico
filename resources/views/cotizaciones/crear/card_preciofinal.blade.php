@@ -89,3 +89,10 @@
         ,'id'       => 'bSeguro' 
     ])
 !!}
+
+{!! Form::hidden('contenido'
+    , $objeto['contenido_r']
+    ,['class'       => 'form-control'
+        ,'id'       => 'contenido' 
+    ])
+!!}
