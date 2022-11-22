@@ -53,7 +53,7 @@ class FedexDTO
 				,"companyName"	=> $request['nombre']) 
 			);
 
-		$streetLines = sprintf("%s %s, Exterior %s",$request['direccion'],$request['no_int'],$request['no_ext'] );
+		$streetLines = sprintf("%s %s,Ext %s",$request['direccion'],$request['no_int'],$request['no_ext'] );
 
 		$addressShipper = New Address(
 

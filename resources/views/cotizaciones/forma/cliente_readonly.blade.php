@@ -104,7 +104,6 @@
 					, $cliente->direccion2
 					,['class' 		=> 'form-control'
 						,'id'		=> 'direccion2_d'
-						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
 				!!}

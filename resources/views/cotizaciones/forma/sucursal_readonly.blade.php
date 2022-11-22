@@ -106,7 +106,6 @@
 					, $sucursal->direccion2
 					,['class' 		=> 'form-control'
 						,'id'		=> 'direccion2'
-						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
 				!!}
