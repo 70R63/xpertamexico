@@ -83,7 +83,7 @@ class Estafeta {
 
         Log::debug(print_r($this->resultado,true));
         $this->documento = $this->resultado->data;
-        $this->trackingNumber = $this->resultado->labelPetitionResult->elements[0]->trackingCode;
+        $this->trackingNumber = $this->resultado->labelPetitionResult->result->description;
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");
     }
 

@@ -10,7 +10,6 @@
                                 <th class='notexport'>ID</th>
                                 <th class='notexport'>GUIA</th>
                                 <th>MENSAJERIA</th>
-                                <th>TRACKING</th>
                                 <th>SERVICIO</th>
                                 <th>USUARIO</th>
                                 <th>CLIENTE XPERTA</th>
@@ -18,6 +17,7 @@
                                 <th>DESTINATATIO <br>(CONTACTO)</th>
                                 <th >CREACION</th>
                                 <th >CANAL</th>
+                                <th>TRACKING</th>
 
                                 <th style="display:none;">PIEZAS</th>
                                 <th style="display:none;">PESO KG</th>
@@ -37,7 +37,6 @@
                                 <td>{{ $objeto->id }}</td>
                                 <td>@include('guia.dashboard.documento')</td>
                                 <td >{{ $ltdActivo[$objeto->ltd_id] }}</td>
-                                <td>{{ $objeto->tracking_number }} </td>
                                 <td>{{ $servicioPluck[$objeto->servicio_id] }}</td>
                                 <td>{{ $objeto->usuario }}</td>
                                 <td>{{ $objeto->nombre}}</td>
@@ -45,6 +44,7 @@
                                 <td>{{ $objeto->contacto_d }}</td>
                                 <td>{{ $objeto->created_at }}</td>
                                 <td >{{ $objeto->canal }}</td>
+                                <td>{{ $objeto->tracking_number }} </td>
 
                                 <td style="display:none;">{{ $objeto->piezas }}</td>
                                 <td style="display:none;">{{ $objeto->peso }}</td>

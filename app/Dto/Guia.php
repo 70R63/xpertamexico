@@ -4,6 +4,7 @@ namespace App\Dto;
 
 use Illuminate\Support\Facades\Storage;
 use Log;
+use Carbon\Carbon;
 /**
  * 
  */
@@ -73,8 +74,13 @@ class Guia {
 			} 
 			
 		}
+		$carbon = Carbon::parse();
 
-		$namePdf = sprintf("%s.pdf",$sEstafeta->getTrackingNumber());
+		$unique = bcrypt((string)$carbon);
+		$carbon->settings(['toStringFormat' => 'Y-m-d']);
+
+
+		$namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
 		Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 		
 		$insert = array('usuario' => auth()->user()->name

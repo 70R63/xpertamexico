@@ -26,6 +26,8 @@ use Mail;
 use Config;
 use Redirect;
 
+use Carbon\Carbon;
+
 class GuiaController extends Controller
 {
 
