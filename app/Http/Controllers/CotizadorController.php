@@ -33,7 +33,7 @@ class CotizadorController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
             
-            $sucursal = Sucursal::pluck('contacto','id');
+            $sucursal = Sucursal::pluck('nombre','id');
 
             $cliente = Cliente::pluck('contacto','id');
 

@@ -69,7 +69,7 @@ class FedexDTO
 				,"companyName"	=> $request['nombre_d']) 
 			);
 
-		$streetLines_d = sprintf("%s %s, Exterior %s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'] );
+		$streetLines_d = sprintf("%s %s, Ext %s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'] );
 		
 		$addressRecipients = New Address(
 			array("streetLines"	=> array($streetLines_d ,$request['direccion2_d'])
