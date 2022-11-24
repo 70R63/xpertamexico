@@ -9,6 +9,13 @@ use Config;
 
 use App\Models\LtdSesion;
 
+/**
+* Singlenton para contriuir una peticion de creacion de guia y validacion del token
+* 
+* @param string $token
+* @param string $baseUri
+*  
+*/
 
 class Fedex {
 
@@ -56,7 +63,7 @@ class Fedex {
             $insert = array('empresa_id' => auth()->user()->empresa_id
                 ,'ltd_id'   => $ltd_id
                 ,'token'    => $this->token
-                ,'expira_en'=> Carbon::now()->addHours(12)
+                ,'expira_en'=> Carbon::now()->addHours(1)
                  );
 
             $id = LtdSesion::create($insert)->id;
