@@ -51,7 +51,7 @@
                                 <td style="display:none;">{{ $objeto->dimensiones }}</td>
                                 <td style="display:none;" >{{ $objeto->cp }}</td>
                                 <td style="display:none;" >{{ $objeto->ciudad }}</td>
-                                <td style="display:none;">{{ $objeto->cp }}</td>
+                                <td style="display:none;">{{ $objeto->cp_d }}</td>
                                 <td style="display:none;" >{{ $objeto->ciudad_d }}</td>
                                 <td style="display:none;" >{{ $objeto->extendida }}</td>
                                 
