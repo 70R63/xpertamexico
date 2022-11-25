@@ -44,7 +44,7 @@
                                 <td>{{ $objeto->contacto_d }}</td>
                                 <td>{{ $objeto->created_at }}</td>
                                 <td >{{ $objeto->canal }}</td>
-                                <td>{{ $objeto->tracking_number }} </td>
+                                <td>'{{ $objeto->tracking_number }} </td>
 
                                 <td style="display:none;">{{ $objeto->piezas }}</td>
                                 <td style="display:none;">{{ $objeto->peso }}</td>
