@@ -5,9 +5,9 @@ $(function() {
    var exportGeneral = $('#exportGeneral').DataTable( {
       pagingType: "full_numbers",
       lengthChange: true,
-      buttons: [ 
+     buttons: [ 
                   { 
-                     extend: 'excel', footer: false
+                     extend: 'csv', footer: false
                      ,exportOptions: {
                         columns: ':not(.notexport)'
                      } 
