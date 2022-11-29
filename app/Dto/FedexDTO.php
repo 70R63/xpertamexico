@@ -53,11 +53,11 @@ class FedexDTO
 				,"companyName"	=> $request['nombre']) 
 			);
 
-		$streetLines = sprintf("%s %s,Ext %s",$request['direccion'],$request['no_int'],$request['no_ext'] );
+		$direccion = sprintf("%s %s,Ext %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
+		$streetLines = str_split($direccion,35);
 
 		$addressShipper = New Address(
-
-			array("streetLines"	=> array($streetLines,$request['direccion2'])
+			array("streetLines"     => $streetLines
 				,"city"	=> $request['colonia']
 				,"stateOrProvinceCode"	=> $request['entidad_federativa']
 				,"postalCode"	=> $request['cp']
@@ -69,10 +69,12 @@ class FedexDTO
 				,"companyName"	=> $request['nombre_d']) 
 			);
 
-		$streetLines_d = sprintf("%s %s, Ext %s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'] );
-		
+
+		$direccion_d = sprintf("%s %s,Ext %s,%s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'],$request['direccion2_d'] );
+		$streetLines_d = str_split($direccion_d,35);
+
 		$addressRecipients = New Address(
-			array("streetLines"	=> array($streetLines_d ,$request['direccion2_d'])
+			array("streetLines"     => $streetLines_d
 				,"city"	=> $request['colonia_d']
 				,"stateOrProvinceCode"	=> $request['entidad_federativa_d']
 				,"postalCode"	=> $request['cp_d']

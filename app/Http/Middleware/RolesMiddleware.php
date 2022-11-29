@@ -26,7 +26,7 @@ class RolesMiddleware
         return redirect('login');
      }else {
          foreach($roles as $rol){
-            Log::info($rol);
+            
             if(auth()->user()->hasRol($rol)){
                 return $next($request);
             }       
