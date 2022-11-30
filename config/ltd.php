@@ -37,8 +37,9 @@ return [
     ,'estafeta' =>[
         'id'    => "2"
         ,'base_uri'  =>  env('ESTAFETA_BASEURI')
-        ,'token'    =>  env('ESTAFETA_TOKEN')
+        ,'token_uri'    =>  env('ESTAFETA_TOKEN_URI')
         ,'api_key'  =>  env('ESTAFETA_APIKEY')
+        ,'secret'   => env('ESTAFETA_SECRET')
         ,'servicio' => [
             '1'     => '70'
             ,'2'    => '60'

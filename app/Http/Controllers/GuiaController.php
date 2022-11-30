@@ -103,7 +103,7 @@ class GuiaController extends Controller
             Log::debug($request);
 
             $requestInicial = $request->except(['_token']);
-            //ltd_id = 1 Estafeta
+            //ltd_id = 2, Estafeta
             if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
                 Log::debug("Se intancia el Singlento Estafeta");
 
@@ -118,7 +118,7 @@ class GuiaController extends Controller
                 $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
                 $id = Guia::create($insert)->id;
 
-            } else{
+            } else{ //ltd_id = 1, Fedex
                 $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
 
                 $fedexDTO = new FedexDTO();
@@ -155,32 +155,36 @@ class GuiaController extends Controller
             Log::debug(print_r($ex->getMessage(),true));
             
             $mensaje = $ex->getMessage();
+            
+        } catch (\GuzzleHttp\Exception\ConnectException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ConnectException");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("No se pudo establecer la conexion con el LTD");
+       
 
         } catch (\GuzzleHttp\Exception\RequestException $re) {
             Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
             $response = ($re->getResponse());
-            //Log::debug(print_r(($response->getBody()),true));
-
             $responseContenido = json_decode($response->getBody()->getContents());    
 
             if (is_object($responseContenido)) {
+                Log::info(__CLASS__." ".__FUNCTION__." is_object ");
                 Log::debug(print_r($responseContenido,true));
-                if ($responseContenido->code === 131) {
+
+                if (isset($responseContenido->code) && $responseContenido->code === 131) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
                     $mensaje= array($responseContenido->description);
 
                 } else {
-
-                    $mensaje = $responseContenido;
-                     return Redirect::back()
-                        ->with('dangers',$mensaje)
-                        ->withInput();    
+                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
+                    Log::debug(print_r($responseContenido,true));
+                    $mensaje = array($responseContenido->error_description);                    
+    
                 }
                  
-
             } else{
-                //Log::debug(print_r($responseContenido,true));
-                
-                
+               
                 foreach ($responseContenido as $key => $value) {
                     $mensaje = array("desc$key"=> $value->description);                   
                 }
@@ -210,8 +214,10 @@ class GuiaController extends Controller
             $mensaje= $e->getMessage();
         }
 
-        return \Redirect::back()
-                ->withErrors($mensaje)
+        Log::info(__CLASS__." ".__FUNCTION__." Finaliza ---------------------------- ");
+
+        return back()
+                ->with('dangers',$mensaje)
                 ->withInput();
 
     }

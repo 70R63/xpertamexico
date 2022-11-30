@@ -8,6 +8,7 @@ use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
+
 use App\Models\Cotizador;
 use App\Models\Servicio;
 use App\Models\Sucursal;
@@ -32,7 +33,7 @@ class CotizadorController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
-            
+
             $sucursal = Sucursal::pluck('nombre','id');
 
             $cliente = Cliente::pluck('contacto','id');
@@ -53,11 +54,13 @@ class CotizadorController extends Controller
      */
     public function create(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__." INICIO-----------------");
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         try {
-            
+
             $objeto = $request->all();
-            Log::debug($objeto);
+           
+            Log::debug(print_r($objeto ,true));
+
             $cliente = Cliente::findOrFail($request->get("cliente_id"));
             $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
             $servicio = Servicio::findOrFail($request->get("servicio_id"));
@@ -65,7 +68,8 @@ class CotizadorController extends Controller
             $precio = $request->get("precio");
             $ltd_nombre = $request->get("ltd_nombre");
             $piezas = $request->get("piezas_guia");
-  
+            
+            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO CON EXITO-----------------");  
             return view(self::CREAR_v
                 , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre','objeto','servicio') 
             );
@@ -80,6 +84,7 @@ class CotizadorController extends Controller
 
         }
 
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO CON ERROR-----------------");
         return \Redirect::back()
                 ->withErrors(array($ex->errorInfo[2]))
                 ->withInput();

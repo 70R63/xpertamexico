@@ -7,6 +7,7 @@ use Log;
 use Carbon\Carbon;
 use Config;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Http;
 
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
@@ -39,16 +40,36 @@ class Estafeta {
 
         }else {
             Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
-            $this->token = Config('ltd.estafeta.token');
+            $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
+            $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
 
-            $insert = array('empresa_id' => auth()->user()->empresa_id
-                ,'ltd_id'   => $ltd_id
-                ,'token'    => $this->token
-                ,'expira_en'=> Carbon::now()->addMinutes(1440)
-                 );
+            $formParams = [
+                'client_id' => Config('ltd.estafeta.api_key'),
+                'client_secret' => Config('ltd.estafeta.secret'),
+                'grant_type' => 'client_credentials'
+                ,'scope' => 'execute'
+            ];
 
-            $id = LtdSesion::create($insert)->id;
-            Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
+            $response = $client->request('POST', 'auth/oauth/v2/token',
+                ['form_params' => $formParams
+                , 'headers'     => $headers]
+            );
+
+            if ($response->getStatusCode() == "200"){
+                $json = json_decode($response->getBody()->getContents());
+
+                $this->token = $json->access_token;//Config('ltd.estafeta.token');
+
+                $insert = array('empresa_id' => auth()->user()->empresa_id
+                    ,'ltd_id'   => $ltd_id
+                    ,'token'    => $this->token
+                    ,'expira_en'=> Carbon::now()->addMinutes(1380)
+                     );
+
+                $id = LtdSesion::create($insert)->id;
+                Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
+            }
+            
         }
         
     }
