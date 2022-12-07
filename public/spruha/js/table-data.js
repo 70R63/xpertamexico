@@ -7,7 +7,10 @@ $(function() {
       lengthChange: true,
      buttons: [ 
                   { 
-                     extend: 'csv', footer: true
+                     extend: 'excel'
+                     , footer: true
+                     , charset: 'utf-8'
+                     , bom: true
                      ,exportOptions: {
                         columns: ':not(.notexport)'
                      } 
