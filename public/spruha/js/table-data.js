@@ -18,9 +18,7 @@ $(function() {
                      }
                      ,customizeData: function(data) {
                        for(var i = 0; i < data.body.length; i++) {
-                         for(var j = 0; j < data.body[i].length; j++) {
-                           data.body[i][8] = '\u200C' + data.body[i][8];
-                         }
+                         data.body[i][8] = '\0' + data.body[i][8];
                        }
                      } 
                   }
