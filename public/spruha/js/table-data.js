@@ -7,7 +7,7 @@ $(function() {
       lengthChange: true,
      buttons: [ 
                   { 
-                     extend: 'csv', footer: false
+                     extend: 'excelHtml5', footer: true
                      ,exportOptions: {
                         columns: ':not(.notexport)'
                      } 

@@ -61,7 +61,7 @@
                         
                         <tfoot>
                             <tr>
-                              <td class='notexport' colspan="17">Los datos son responsalidad del usuario</td>
+                              <td colspan="17">Los datos son responsalidad del usuario</td>
                             </tr>
                         </tfoot>
                     </table>
