@@ -5,14 +5,23 @@ $(function() {
    var exportGeneral = $('#exportGeneral').DataTable( {
       pagingType: "full_numbers",
       lengthChange: true,
-     buttons: [ 
+      buttons: [ 
                   { 
-                     extend: 'excel'
+                     extend: 'excelHtml5'
                      , footer: true
                      , charset: 'utf-8'
                      , bom: true
+                     , fieldSeparator: ','
+                     ,fieldBoundary: ''
                      ,exportOptions: {
                         columns: ':not(.notexport)'
+                     }
+                     ,customizeData: function(data) {
+                       for(var i = 0; i < data.body.length; i++) {
+                         for(var j = 0; j < data.body[i].length; j++) {
+                           data.body[i][8] = '\u200C' + data.body[i][8];
+                         }
+                       }
                      } 
                   }
                   ,{ 
