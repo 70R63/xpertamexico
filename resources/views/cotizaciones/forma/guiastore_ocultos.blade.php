@@ -110,3 +110,10 @@
         ,'id'       => 'extendida_r' 
     ])
 !!}
+
+{!! Form::hidden('valor_envio_r'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'valor_envio_r' 
+    ])
+!!}

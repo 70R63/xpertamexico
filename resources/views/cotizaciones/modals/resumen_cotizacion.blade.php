@@ -58,5 +58,5 @@
 </div>
 
 
-    @include('cotizaciones.forma.guiastore_ocultos')
+@include('cotizaciones.forma.guiastore_ocultos')
 {!! Form::close() !!} 

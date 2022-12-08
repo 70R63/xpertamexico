@@ -58,8 +58,10 @@ class Guia {
 			$peso = $request['peso_facturado'];
 			$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
 			$extendida = $request['extendida'];
-
+			$costoSeguro = $request['costo_seguro'];
+			$valorEnvio = $request['valor_envio'];
 		}
+
 		if ($canal === "API") {
 			
 			$servicioId=1;
@@ -96,6 +98,9 @@ class Guia {
 				,'peso'			=> $peso
 				,'dimensiones'	=> $dimensiones
 				,'extendida'	=> $extendida
+				,'seguro'		=> $costoSeguro
+				,'valor_envio'	=> $valorEnvio
+
 
  			);
 

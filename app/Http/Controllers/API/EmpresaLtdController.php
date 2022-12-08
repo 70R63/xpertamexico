@@ -44,7 +44,10 @@ class EmpresaLtdController extends BaseController
                 EmpresaLtd::create(array('empresa_id' => $empresa_id
                         ,'ltd_id' => $value ));
             }
-            $mensaje = "Asignacion exitosa";
+
+            $success['mensaje'] = "Asignacion exitosa";
+
+            return $this->sendResponse($success, 'User login successfully.');
 
         } catch(\Illuminate\Database\QueryException $e){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
@@ -57,9 +60,7 @@ class EmpresaLtdController extends BaseController
             $mensaje = $e->getMessage();
         }
         
+        return $this->sendError($mensaje);
         
-        $success['mensaje'] = $mensaje;
-        
-        return $this->sendResponse($success, 'User login successfully.');
     }
 }

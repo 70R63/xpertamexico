@@ -18,7 +18,7 @@ class ServiceConfiguration extends DataTransferObject {
 
 	public bool $isInsurance = false;
 
-	//public $insurance;
+	public $insurance;
 
 	public bool $isReturnDocument = FALSE;
 	

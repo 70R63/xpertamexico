@@ -22,6 +22,8 @@
                                 <th style="display:none;">PIEZAS</th>
                                 <th style="display:none;">PESO KG</th>
                                 <th style="display:none;">DIMENSIONES</th>
+                                <th style="display:none;">VALOR DEL ENVIO</th>
+                                <th style="display:none;">COSTO SEGURO</th>
                                 <th style="display:none;">CP ORIGEN</th>
                                 <th style="display:none;">CIUDAD ORIGEN</th>
                                 <th style="display:none;">CP DESTINO</th>
@@ -49,6 +51,8 @@
                                 <td style="display:none;">{{ $objeto->piezas }}</td>
                                 <td style="display:none;">{{ $objeto->peso }}</td>
                                 <td style="display:none;">{{ $objeto->dimensiones }}</td>
+                                <td style="display:none;">{{ $objeto->valor_envio }}</td>
+                                <td style="display:none;">{{ $objeto->seguro }}</td>
                                 <td style="display:none;" >{{ $objeto->cp }}</td>
                                 <td style="display:none;" >{{ $objeto->ciudad }}</td>
                                 <td style="display:none;">{{ $objeto->cp_d }}</td>
@@ -61,7 +65,7 @@
                         
                         <tfoot>
                             <tr>
-                              <td colspan="17">Los datos son responsalidad del usuario</td>
+                              <td colspan="19">Los datos son responsalidad del usuario</td>
                             </tr>
                         </tfoot>
                     </table>

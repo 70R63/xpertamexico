@@ -38,6 +38,8 @@ class EmpresaController extends Controller
             foreach ($empresaLtd as $key => $value) {
                 $ltdActivo[$value['empresa_id']][$value['ltd_id']]= "true";
             }
+            Log::debug(print_r($ltdActivo,true));
+            
             $ltds = Ltd::get();             
             
             return view(self::DASH_v 

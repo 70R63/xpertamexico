@@ -27,6 +27,10 @@
                             </li>
                         </li>
                     </h4>
+                    <li>
+                        <b>Valor de Envio:</b>${{$objeto['valor_envio_r']}} <span id="spanValorEnvio"></span>
+                        <b>Seguro:</b>${{$objeto['costo_seguro']}} <span id="spanSeguro"></span>
+                    </li>
                 </ul>
             </div>
             <div class="pricing-plans  bg-primary">
@@ -101,5 +105,19 @@
     , $objeto['extendida_r']
     ,['class'       => 'form-control'
         ,'id'       => 'extendida' 
+    ])
+!!}
+
+{!! Form::hidden('valor_envio'
+    , $objeto['valor_envio_r']
+    ,['class'       => 'form-control'
+        ,'id'       => 'valor_envio_r' 
+    ])
+!!}
+
+{!! Form::hidden('costo_seguro'
+    , $objeto['costo_seguro']
+    ,['class'       => 'form-control'
+        ,'id'       => 'costo_seguro' 
     ])
 !!}

@@ -109,9 +109,6 @@ class EstafetaDTO
        
         if($canal === "WEB"){
             Log::info(__CLASS__." ".__FUNCTION__." WEB");
-            
-            //$location = new LocationLabel();
-
 
             $labelDefinition = new labelDefinition([
                 'wayBillDocument'   => $this->wayBillDocument($data)
@@ -176,7 +173,15 @@ class EstafetaDTO
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
         $serviceConfiguration->salesOrganization=Config('ltd.estafeta.cred.salesOrganization');
 
-        $serviceConfiguration->isInsurance= false;//$data['bSeguro']; 
+        $serviceConfiguration->isInsurance=false;
+        if ($data['bSeguro']==="true"){
+            $serviceConfiguration->isInsurance = true;
+            $serviceConfiguration->insurance = array('contentDescription' => 'contentDescription'
+                ,'declaredValue' => 99999.99 );
+
+        }
+        
+        Log::debug(print_r($serviceConfiguration,true)); 
 
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration FIN -----------------");
         return $serviceConfiguration;

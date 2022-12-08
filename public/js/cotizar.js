@@ -196,6 +196,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var ancho = $('#ancho').val();
     var alto = $('#alto').val();
     var bSeguro = ( $('#checkSeguro').is(":checked") ? true : false);
+    var valorEnvio = $('#valor_envio').val();
 
     //Inicializacion de variables
     var tarifa_id = table.row(this).data()['id'];
@@ -236,7 +237,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#costo_seguro").val(costoSeguro);
     $("#contenido_r").val(contenido);
     $("#extendida_r").val(dataRow['extendida_cobertura']);
-    
+    $("#valor_envio_r").val(valorEnvio);
 
     $("#myModal").modal("show");
 });
