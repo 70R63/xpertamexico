@@ -18,6 +18,7 @@ use App\Dto\Estafeta\API\V3\Notified;
 use App\Dto\Estafeta\API\V3\Contact;
 use App\Dto\Estafeta\API\V3\Address;
 
+use Carbon\Carbon;
 
 /**
  * 
@@ -166,7 +167,6 @@ class EstafetaDTO
     private function serviceConfiguration($data){
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration INICIO -----------------");
         
-        //["insurance"=>$this->insurance($data)]
         $serviceConfiguration = new ServiceConfiguration();
         $serviceConfiguration->quantityOfLabels = $data['piezas'];
         $serviceConfiguration->serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
@@ -176,11 +176,15 @@ class EstafetaDTO
         $serviceConfiguration->isInsurance=false;
         if ($data['bSeguro']==="true"){
             $serviceConfiguration->isInsurance = true;
-            $serviceConfiguration->insurance = array('contentDescription' => 'contentDescription'
-                ,'declaredValue' => 99999.99 );
+
+            $declaredValue = sprintf("%.2f",$data['valor_envio']);
+            $serviceConfiguration->insurance = array('contentDescription' => $data['contenido']
+                ,'declaredValue' => $declaredValue);
 
         }
-        
+
+        $serviceConfiguration->effectiveDate=Carbon::now()->addMonth()->format('Ymd');
+
         Log::debug(print_r($serviceConfiguration,true)); 
 
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration FIN -----------------");
@@ -250,6 +254,7 @@ class EstafetaDTO
         $address->roadName = $data['direccion_d'];
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
+        $address->addressReference = $data['direccion2_d'];
 
         $contact->corporateName=$data['nombre_d'];
         $contact->contactName=$data['contacto_d'];
@@ -279,6 +284,7 @@ class EstafetaDTO
         $address->roadName = $data['direccion_d'];
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
+        $address->addressReference = $data['direccion2_d'];
 
         $contact->corporateName=$data['nombre_d'];
         $contact->contactName=$data['contacto_d'];

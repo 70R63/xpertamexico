@@ -21,6 +21,8 @@ class ServiceConfiguration extends DataTransferObject {
 	public $insurance;
 
 	public bool $isReturnDocument = FALSE;
+
+	public string $effectiveDate = "";
 	
 	
 }

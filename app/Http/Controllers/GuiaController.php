@@ -154,7 +154,7 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
             Log::debug(print_r($ex->getMessage(),true));
             
-            $mensaje = $ex->getMessage();
+            $mensaje = array("DataTransferObjectError - Consulte a su proveedor");
             
         } catch (\GuzzleHttp\Exception\ConnectException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." ConnectException");
