@@ -25,7 +25,7 @@ class Address extends DataTransferObject {
 	public string $countryName = "MEX";
 
 	#[Max(100)]
-	public string $addressReference = "Sin Referencia";
+	public $addressReference = "Sin Referencia";
 	
 	#[Max(20)]
 	public string $externalNum = "externalNum";
