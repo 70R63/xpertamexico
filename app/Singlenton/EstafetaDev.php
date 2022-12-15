@@ -15,7 +15,7 @@ use App\Models\LtdSesion;
 
 
 
-class Estafeta {
+class EstafetaDev {
 
     private static $instance;
 
@@ -29,7 +29,7 @@ class Estafeta {
     public function __construct(int $ltd_id, $empresa_id= 1, $plataforma = 'WEB'){
 
         Log::info(__CLASS__." ".__FUNCTION__);
-        $this->baseUri = Config('ltd.estafeta.base_uri');
+        $this->baseUri = 'https://labelqa.estafeta.com/';
         
         if ($plataforma == 'WEB'){
             $empresa_id = auth()->user()->empresa_id;
@@ -45,12 +45,12 @@ class Estafeta {
 
         }else {
             Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
-            $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
+            $client = new Client(['base_uri' => 'https://apiqa.estafeta.com:8443/']);
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
 
             $formParams = [
-                'client_id' => Config('ltd.estafeta.api_key'),
-                'client_secret' => Config('ltd.estafeta.secret'),
+                'client_id' => 'l76a4958a420d244328a2daa8d68740c75',
+                'client_secret' => '1daa8683d556479698c79d46004ef490',
                 'grant_type' => 'client_credentials'
                 ,'scope' => 'execute'
             ];
@@ -97,7 +97,7 @@ class Estafeta {
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
             ,'Accept'    => 'application/json'
-            ,'apiKey'   => Config('ltd.estafeta.api_key')
+            ,'apiKey'   => 'l76a4958a420d244328a2daa8d68740c75'
         ];
         
         Log::debug(print_r("Armando Peticion",true));
@@ -109,7 +109,6 @@ class Estafeta {
 
         $this -> resultado = json_decode($response->getBody()->getContents());
 
-        #Log::debug(print_r($this->resultado,true));
         $this->documento = $this->resultado->data;
         $this->trackingNumber = $this->resultado->labelPetitionResult->result->description;
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");

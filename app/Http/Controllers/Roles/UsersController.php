@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Roles;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\EmpresaEmpresas;
 use App\Models\Roles\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,10 @@ class UsersController extends Controller
 
     public function index()
     {
-        $users = User::where('empresa_id',auth()->user()->empresa_id)
+        $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+                ->pluck('empresa_id')->toArray();
+
+        $users = User::whereIN('users.empresa_id',$empresas)
             ->orderBy('id','asc')->get();
         
         return view('usuario.index', compact("users") );

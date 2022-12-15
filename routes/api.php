@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\API\LoginController;
+use App\Http\Controllers\API\LoginController  as AuthController;
 use App\Http\Controllers\API\GuiaController;
 use App\Http\Controllers\API\CotizacionController;
 use App\Http\Controllers\API\EmpresaLtdController;
@@ -19,13 +19,10 @@ use App\Http\Controllers\API\EmpresaLtdController;
 |
 */
 
-Route::controller(LoginController::class)->group(function(){
-    Route::post('login', 'login');
-    Route::get('registro', 'register');
+Route::post('/register',[AuthController::class,'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-});
-
-Route::middleware('auth:api')->get('/ping', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
     
     return response()->json([
             'status' => true,
@@ -34,7 +31,9 @@ Route::middleware('auth:api')->get('/ping', function (Request $request) {
 });
 
 //Route::domain('local.xpertamexico.com')->group(function () {
-    Route::middleware('auth:api','throttle:100,1')->group(function(){
+    Route::middleware(['throttle:100,1','validaToken'])->group(function(){
+        Route::post('logout', [AuthController::class, 'logout']);
+        
         Route::controller(GuiaController::class)->group(function(){
             Route::get('ltds', 'creacion');
             Route::post('fedex', 'fedex');

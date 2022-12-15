@@ -97,128 +97,12 @@ class GuiaController extends Controller
     public function store(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__."store inicia ----------------------------");
-        $mensaje = array();
-        try {
-            
-            Log::debug($request);
 
-            $requestInicial = $request->except(['_token']);
-            //ltd_id = 2, Estafeta
-            if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
-                Log::debug("Se intancia el Singlento Estafeta");
-
-                $dto = new EstafetaDTO();
-                $body = $dto->parser($requestInicial,"WEB");
- 
-                $sEstafeta = new sEstafeta(Config('ltd.estafeta.id'));
-                Log::debug("sEstafeta -> envio()");
-                $sEstafeta -> envio($body);
-                $resultado = $sEstafeta->getResultado();
-
-                $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
-                $id = Guia::create($insert)->id;
-
-            } else{ //ltd_id = 1, Fedex
-                $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
-
-                $fedexDTO = new FedexDTO();
-                $etiqueta = $fedexDTO->parser($request);
-                
-                Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
-                $fedex->envio(json_encode($etiqueta));
-
-                Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
-                $guiaDTO = new GuiaDTO();
-                $guiaDTO->parser($request,$fedex);
-
-                Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
-                
-                $id = Guia::create($guiaDTO->insert)->id;
-            
-            }
-            
-            
-            /*
-            * Mail::to($request->email)
-            *    ->cc(Config("mail.cc"))
-            *    ->send(new GuiaCreada($request, $id));
-            */
-            $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
-            $notices = array($tmp);
-            
-            Log::info(__CLASS__." ".__FUNCTION__."store Fin ----------------------------");
-            Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
-            return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
-
-         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
-            Log::debug(print_r($ex->getMessage(),true));
-            
-            $mensaje = array("DataTransferObjectError - Consulte a su proveedor");
-            
-        } catch (\GuzzleHttp\Exception\ConnectException $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." ConnectException");
-            Log::debug(print_r($ex->getMessage(),true));
-            
-            $mensaje = array("No se pudo establecer la conexion con el LTD");
-       
-
-        } catch (\GuzzleHttp\Exception\RequestException $re) {
-            Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
-            $response = ($re->getResponse());
-            $responseContenido = json_decode($response->getBody()->getContents());    
-
-            if (is_object($responseContenido)) {
-                Log::info(__CLASS__." ".__FUNCTION__." is_object ");
-                Log::debug(print_r($responseContenido,true));
-
-                if (isset($responseContenido->code) && $responseContenido->code === 131) {
-                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
-                    $mensaje= array($responseContenido->description);
-
-                } else {
-                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
-                    Log::debug(print_r($responseContenido,true));
-                    $mensaje = array($responseContenido->error_description);                    
-    
-                }
-                 
-            } else{
-               
-                foreach ($responseContenido as $key => $value) {
-                    $mensaje = array("desc$key"=> $value->description);                   
-                }
-
-            }
-            Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
-
-        } catch (\GuzzleHttp\Exception\ClientException $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
-            $response = json_decode($ex->getResponse()->getBody());
-            Log::debug(print_r($response,true));
-            $mensaje = $response->errors[0]->code;
-            
-        } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
-            Log::debug($ex->getBody());
-            $mensaje = "Se ha producido un error interno favor de contactar al proveedor";
-
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
-            Log::debug($ex->getMessage()); 
-            $mensaje= $ex->errorInfo[2];
-
-        } catch (Exception $e) {
-            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
-            Log::debug( $e->getMessage() );
-            $mensaje= $e->getMessage();
+        if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
+            return $this->estafeta($request);
+        } else {
+            return $this->fedex($request);
         }
-
-        Log::info(__CLASS__." ".__FUNCTION__." Finaliza ---------------------------- ");
-
-        return back()
-                ->with('dangers',$mensaje)
-                ->withInput();
 
     }
 
@@ -266,4 +150,243 @@ class GuiaController extends Controller
     {
         //
     }
+
+
+    /**
+     * Caso de uso pra estafeta 
+     *
+     * @param  \App\Models\Guia  $guia
+     * @param  LTD_ID = 2
+     * @return \Illuminate\Http\Response
+     */
+    private function estafeta($request){
+        Log::info(__CLASS__." ".__FUNCTION__."estafeta iniciando ----------------------------");
+        $mensaje = array();
+        try {
+            
+            Log::debug($request);
+
+            $requestInicial = $request->except(['_token']);
+
+            Log::debug("Singlento Estafeta");
+
+            $dto = new EstafetaDTO();
+            $body = $dto->parser($requestInicial,"WEB");
+
+            $sEstafeta = new sEstafeta(Config('ltd.estafeta.id'));
+            Log::debug("sEstafeta -> envio()");
+            $sEstafeta -> envio($body);
+            $resultado = $sEstafeta->getResultado();
+
+            $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
+            $id = Guia::create($insert)->id;
+
+            
+            
+            /*
+            * Mail::to($request->email)
+            *    ->cc(Config("mail.cc"))
+            *    ->send(new GuiaCreada($request, $id));
+            */
+            $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
+            $notices = array($tmp);
+            
+            Log::info(__CLASS__." ".__FUNCTION__." store Fin ----------------------------");
+            Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
+            return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("DataTransferObjectError - Consulte a su proveedor");
+            
+        } catch (\GuzzleHttp\Exception\ConnectException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ConnectException");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("No se pudo establecer la conexion con el LTD");
+       
+
+        } catch (\GuzzleHttp\Exception\RequestException $re) {
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
+            $response = ($re->getResponse());
+            $responseContenido = json_decode($response->getBody()->getContents());    
+
+            if (is_object($responseContenido)) {
+                Log::info(__CLASS__." ".__FUNCTION__." is_object ");
+                Log::debug(print_r($responseContenido,true));
+
+                if (isset($responseContenido->code) && $responseContenido->code === 131) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
+                    $mensaje= array($responseContenido->description);
+
+                } else {
+                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
+                    
+                    $mensaje = array($responseContenido->errors);                    
+    
+                }
+                 
+            } else{
+               
+                foreach ($responseContenido as $key => $value) {
+                    $mensaje = array("desc$key"=> $value->description);                   
+                }
+
+            }
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
+
+        } catch (\GuzzleHttp\Exception\ClientException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
+            $response = json_decode($ex->getResponse()->getBody());
+            Log::debug(print_r($response,true));
+            $mensaje = $response->errors[0]->code;
+            
+        } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
+            Log::debug($ex->getBody());
+            $mensaje = "Se ha producido un error interno favor de contactar al proveedor";
+
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            $mensaje= $ex->errorInfo[2];
+
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::debug( $e->getMessage() );
+            $mensaje= $e->getMessage();
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." Finaliza ---------------------------- ");
+
+        return back()
+                ->with('dangers',$mensaje)
+                ->withInput();
+    }
+
+
+    /**
+     * Caso de uso pra fedex
+     *
+     * @param  \App\Models\Guia  $guia
+     * @param  LTD_ID = 1
+     * @return \Illuminate\Http\Response
+     */
+    private function fedex($request){
+
+        Log::info(__CLASS__." ".__FUNCTION__."FEDEX iniciado ----------------------------");
+        $mensaje = array();
+        try {
+            
+            Log::debug($request);
+
+            $requestInicial = $request->except(['_token']);
+            
+            $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
+
+            $fedexDTO = new FedexDTO();
+            $etiqueta = $fedexDTO->parser($request);
+            
+            Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
+            $fedex->envio(json_encode($etiqueta));
+
+            Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
+            $guiaDTO = new GuiaDTO();
+            $guiaDTO->parser($request,$fedex);
+
+            Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
+            
+            $id = Guia::create($guiaDTO->insert)->id;
+            
+            
+            
+            
+            /*
+            * Mail::to($request->email)
+            *    ->cc(Config("mail.cc"))
+            *    ->send(new GuiaCreada($request, $id));
+            */
+            $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
+            $notices = array($tmp);
+            
+            Log::info(__CLASS__." ".__FUNCTION__."store Fin ----------------------------");
+            Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
+            return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("DataTransferObjectError - Consulte a su proveedor");
+            
+        } catch (\GuzzleHttp\Exception\ConnectException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ConnectException");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("No se pudo establecer la conexion con el LTD");
+       
+
+        } catch (\GuzzleHttp\Exception\RequestException $re) {
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
+            $response = ($re->getResponse());
+            $responseContenido = json_decode($response->getBody()->getContents());    
+
+            if (is_object($responseContenido)) {
+                Log::info(__CLASS__." ".__FUNCTION__." is_object ");
+                Log::debug(print_r($responseContenido,true));
+
+                if (isset($responseContenido->code) && $responseContenido->code === 131) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
+                    $mensaje= array($responseContenido->description);
+
+                } else {
+                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
+                    
+                    $mensaje = array($responseContenido->errors[0]->message);                    
+    
+                }
+                 
+            } else{
+               
+                foreach ($responseContenido as $key => $value) {
+                    $mensaje = array("desc$key"=> $value->description);                   
+                }
+
+            }
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
+
+        } catch (\GuzzleHttp\Exception\ClientException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
+            $response = json_decode($ex->getResponse()->getBody());
+            Log::debug(print_r($response,true));
+            $mensaje = $response->errors[0]->code;
+            
+        } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
+            Log::debug($ex->getBody());
+            $mensaje = "Se ha producido un error interno favor de contactar al proveedor";
+
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            $mensaje= $ex->errorInfo[2];
+
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::debug( $e->getMessage() );
+            $mensaje= $e->getMessage();
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__."FEDEX Finalizado ---------------------------- ");
+
+        return back()
+                ->with('dangers',$mensaje)
+                ->withInput();
+        
+    }
+
+
+
 }

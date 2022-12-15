@@ -5,14 +5,14 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class BaseController extends Controller
+class ApiController extends Controller
 {
     /**
      * success response method.
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendResponse($result, $message)
+    public function successResponse($result, $message)
     {
         $response = [
             'success' => true,

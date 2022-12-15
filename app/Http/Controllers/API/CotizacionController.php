@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\API\ApiController as BaseController;
 use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,7 +43,7 @@ class CotizacionController extends BaseController
         Log::debug($tabla);
         $success['data'] = $tabla;
         Log::info($success);
-        return $this->sendResponse($success, 'User login successfully.');
+        return $this->successResponse($success, 'User login successfully.');
         
     }
 
@@ -65,9 +65,8 @@ class CotizacionController extends BaseController
         }
         $resultado = $datos->get()
                 ->toArray();
-
         
-        return $this->sendResponse($resultado, 'User login successfully.');
+        return $this->successResponse($resultado, 'User login successfully.');
         
     }
 
@@ -75,6 +74,6 @@ class CotizacionController extends BaseController
     {
         $success['name'] = "nombre";
         
-        return $this->sendResponse($success, 'User login successfully.');
+        return $this->successResponse($success, 'User login successfully.');
     }
 }

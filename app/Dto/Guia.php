@@ -45,25 +45,29 @@ class Guia {
 	}
 
 	static public function estafeta($sEstafeta, $request, $canal = "API"){
+		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ".$canal);
+		
+
 		$cia = 1;
 		$cia_d = 1;
-		$piezas= 1;
 		$extendida = "NO";
-
+		$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
+		$valorEnvio = sprintf("%.2f",$request['valor_envio']);
+	
 		if ($canal === "WEB") {
 			$cia = $request['sucursal_id'];
 			$cia_d = $request['cliente_id'];
-			$piezas = $request['piezas'];
 			$servicioId = $request['servicio_id'];
 			$peso = $request['peso_facturado'];
 			$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
 			$extendida = $request['extendida'];
-			$costoSeguro = $request['costo_seguro'];
-			$valorEnvio = $request['valor_envio'];
+			$usuario = auth()->user()->name;
+			$empresa_id = auth()->user()->empresa_id;
+			$piezas = $request['piezas'];
 		}
 
 		if ($canal === "API") {
-			
+			//Servicio 1= FEDEX
 			$servicioId=1;
 			$servicio_name = $request['labelDefinition']['serviceConfiguration']['serviceTypeId'];
 			$peso = $request['labelDefinition']['itemDescription']['weight'];
@@ -74,8 +78,11 @@ class Guia {
 			} elseif ( $servicio_name === Config('ltd.estafeta.servicio.2') ) {
 				$servicioId=2;
 			} 
-			
+			$usuario = $request['name'];
+			$empresa_id = $request['empresa_id'];
+			$piezas = $request['labelDefinition']['serviceConfiguration']['quantityOfLabels'];
 		}
+
 		$carbon = Carbon::parse();
 
 		$unique = bcrypt((string)$carbon);
@@ -85,13 +92,13 @@ class Guia {
 		$namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
 		Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 		
-		$insert = array('usuario' => auth()->user()->name
-				,'empresa_id' 	=> auth()->user()->empresa_id
+		$insert = array('usuario' => $usuario
+				,'empresa_id' 	=> $empresa_id
 				,'ltd_id' 	=> Config('ltd.estafeta.id')
 				,'cia' 		=> $cia
 				,'cia_d' 	=> $cia_d
 				,'piezas' 	=> $piezas
-				, 'documento' => $namePdf
+				,'documento' => $namePdf
 				,'tracking_number' =>$sEstafeta->getTrackingNumber()
 				,'canal'	=> $canal
 				,'servicio_id'	=> $servicioId
@@ -103,7 +110,7 @@ class Guia {
 
 
  			);
-
+		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ".$canal);
 		return $insert;
 	}
 }

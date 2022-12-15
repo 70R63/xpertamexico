@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as Controller;
+use App\Http\Controllers\API\ApiController as Controller;
 use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\HasApiTokens;
@@ -11,7 +11,8 @@ use GuzzleHttp\Psr7;
 use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
-use App\Singlenton\Estafeta ;
+//use App\Singlenton\Estafeta ; PRODUCTION
+use App\Singlenton\EstafetaDev as Estafeta;
 use App\Dto\Guia as GuiaDTO;
 use App\Models\Guia;
 
@@ -77,22 +78,22 @@ class GuiaController extends Controller
             Log::debug("Fin Response --------------------");
             $resultado = "RESPONSE";
             $mensaje = "LA guia se creo con exito";
-            return $this->sendResponse($resultado, $mensaje);
+            return $this->successResponse($resultado, $mensaje);
         
             
         } catch (\GuzzleHttp\Exception\ClientException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." ClientException");
             Log::debug(print_r($ex,true));
             
-            return $this->sendResponse("Response", "ClientException");
+            return $this->successResponse("Response", "ClientException");
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::debug($ex);
-            return $this->sendResponse("Response", "InvalidArgumentException");
+            return $this->successResponse("Response", "InvalidArgumentException");
         } catch (HttpException $ex) {
           
             $resultado = $ex;
             $mensaje = "La guia no pudo ser creada";
-            return $this->sendResponse($resultado, $mensaje);
+            return $this->successResponse($resultado, $mensaje);
         }
     }
 
@@ -109,6 +110,13 @@ class GuiaController extends Controller
 
         Log::debug($request);
         $response = null;
+        $systemInformation = array("id"=>"AP01",
+            "name"=>"AP01",
+            "version"=>"1.10.20");
+
+        $identification = array(
+            "suscriberId"=>"01",
+            "customerNumber"=>"0000000");
 
         try {
 
@@ -116,10 +124,15 @@ class GuiaController extends Controller
             if(empty($data))
                  return $this->sendError("Body, sin estructura o vacio", null, "400");
 
+            $data['systemInformation']= $systemInformation;
+            $data['identification']=$identification;
+
             Log::debug("Se intancia el Singlento Estafeta");
-            $sEstafeta = new Estafeta(Config('ltd.estafeta.id'));
+            $sEstafeta = new Estafeta(Config('ltd.estafeta.id'), $data['empresa_id'], "API");
+
             Log::debug(__CLASS__." ".__FUNCTION__." sEstafeta -> envio()");
             Log::debug( json_encode($data) );
+
             $sEstafeta -> envio($data);
             $resultado = $sEstafeta->getResultado();
             Log::debug(print_r($resultado,true));
@@ -128,7 +141,7 @@ class GuiaController extends Controller
             $id = Guia::create($insert)->id;
             $mensaje = array("La guia se creo con exito","Guia con ID $id");
             Log::info(__CLASS__." ".__FUNCTION__." FIN");
-            return $this->sendResponse($resultado, $mensaje);
+            return $this->successResponse($resultado, $mensaje);
         
         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
@@ -144,22 +157,22 @@ class GuiaController extends Controller
 
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::debug($ex );
-            return $this->sendResponse("Response", "InvalidArgumentException");
+            return $this->successResponse("Response", "InvalidArgumentException");
 
         } catch (\GuzzleHttp\Exception\ServerException $ex) {
             $response = $ex->getResponse()->getBody()->getContents();
             Log::debug(print_r($response,true));
             Log::debug(print_r(json_decode($response),true));
-            return $this->sendResponse(json_decode($response), "ServerException");            
+            return $this->successResponse(json_decode($response), "ServerException");            
 
         } catch (InvalidArgumentException $ex) {
             Log::debug($ex );
-            return $this->sendResponse("Response", "InvalidArgumentException","400");
+            return $this->successResponse("Response", "InvalidArgumentException","400");
         } catch (HttpException $ex) {
           
             $resultado = $ex;
             $mensaje = "La guia no pudo ser creada";
-            return $this->sendResponse($resultado, $mensaje);
+            return $this->successResponse($resultado, $mensaje);
         }
     }// Fin public function Estafeta
 }

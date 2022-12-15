@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\API\ApiController as BaseController;
 use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\HasApiTokens;
@@ -23,7 +23,7 @@ class EmpresaLtdController extends BaseController
         
         $success['data'] = array();
         Log::info($success);
-        return $this->sendResponse($success, 'User login successfully.');
+        return $this->successResponse($success, 'User login successfully.');
         
     }
 
@@ -47,7 +47,7 @@ class EmpresaLtdController extends BaseController
 
             $success['mensaje'] = "Asignacion exitosa";
 
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->successResponse($success, 'User login successfully.');
 
         } catch(\Illuminate\Database\QueryException $e){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
