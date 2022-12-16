@@ -18,7 +18,7 @@
                                 <th >CREACION</th>
                                 <th >CANAL</th>
                                 <th>TRACKING</th>
-
+                                <th style="display:none;">PRECIO</th>
                                 <th style="display:none;">PIEZAS</th>
                                 <th style="display:none;">PESO KG</th>
                                 <th style="display:none;">DIMENSIONES</th>
@@ -47,7 +47,7 @@
                                 <td>{{ $objeto->created_at }}</td>
                                 <td >{{ $objeto->canal }}</td>
                                 <td>{{$objeto->tracking_number}}</td>
-
+                                <td style="display:none;">{{ $objeto->precio }}</td>
                                 <td style="display:none;">{{ $objeto->piezas }}</td>
                                 <td style="display:none;">{{ $objeto->peso }}</td>
                                 <td style="display:none;">{{ $objeto->dimensiones }}</td>
@@ -65,7 +65,7 @@
                         
                         <tfoot>
                             <tr>
-                              <td colspan="19">Los datos son responsalidad del usuario</td>
+                              <td colspan="20">Los datos son responsalidad del usuario</td>
                             </tr>
                         </tfoot>
                     </table>

@@ -121,3 +121,10 @@
         ,'id'       => 'costo_seguro' 
     ])
 !!}
+
+{!! Form::hidden('precio'
+    , $precio
+    ,['class'       => 'form-control'
+        ,'id'       => 'precio' 
+    ])
+!!}

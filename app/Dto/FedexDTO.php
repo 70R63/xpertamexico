@@ -42,7 +42,7 @@ class FedexDTO
 	 */
 
 	public function parser($request){
-        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO");
 		
 		
 		$weight = new Weight(array('value'=> $request['peso_facturado']));
@@ -84,7 +84,7 @@ class FedexDTO
 
 		$recipients = New Recipients(array('contact' => $contactRecipients, 'address' => $addressRecipients ));
 
-		$declaredValueWeight = array('declaredValue' => new DeclaredValue()
+		$declaredValueWeight = array('declaredValue' => new DeclaredValue(["amount"=>$request['valor_envio']])
                                     ,'weight' => $weight
                                     ,'groupPackageCount' => $request['piezas'] 
                                     ,'itemDescriptionForClearance' => $request['contenido']
@@ -108,6 +108,7 @@ class FedexDTO
         $init = array('requestedShipment'   => new RequestedShipment($requestedShipment)
 	                    ,'accountNumber'    => $accountNumber );
         
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO");
         return new Etiqueta($init);
 
 	}

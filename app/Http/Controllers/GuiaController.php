@@ -241,17 +241,18 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ClientException");
             $response = json_decode($ex->getResponse()->getBody());
             Log::debug(print_r($response,true));
-            $mensaje = $response->errors[0]->code;
+            $mensaje = array($response->errors[0]->code);
             
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
             Log::debug($ex->getBody());
-            $mensaje = "Se ha producido un error interno favor de contactar al proveedor";
+            $mensaje = array("Se ha producido un error interno favor de contactar al proveedor");
 
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
-            Log::debug($ex->getMessage()); 
-            $mensaje= $ex->errorInfo[2];
+            Log::debug(print_r($ex,true)); 
+            Log::debug(print_r($insert,true)); 
+            $mensaje= array($ex->errorInfo[2], "Tracking ".$insert['tracking_number'], "Contactar a su proveedor para el registro");
 
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
@@ -276,7 +277,7 @@ class GuiaController extends Controller
      */
     private function fedex($request){
 
-        Log::info(__CLASS__." ".__FUNCTION__."FEDEX iniciado ----------------------------");
+        Log::info(__CLASS__." ".__FUNCTION__." iniciado ----------------------------");
         $mensaje = array();
         try {
             
@@ -299,9 +300,6 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
             
             $id = Guia::create($guiaDTO->insert)->id;
-            
-            
-            
             
             /*
             * Mail::to($request->email)
@@ -344,8 +342,7 @@ class GuiaController extends Controller
                 } else {
                     Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
                     
-                    $mensaje = array($responseContenido->errors[0]->message);                    
-    
+                    $mensaje = array($responseContenido->errors[0]->message);
                 }
                  
             } else{
@@ -361,22 +358,23 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ClientException");
             $response = json_decode($ex->getResponse()->getBody());
             Log::debug(print_r($response,true));
-            $mensaje = $response->errors[0]->code;
+            $mensaje = array($response->errors[0]->code);
             
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
             Log::debug($ex->getBody());
-            $mensaje = "Se ha producido un error interno favor de contactar al proveedor";
+            $mensaje = array("Se ha producido un error interno favor de contactar al proveedor");
 
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
-            Log::debug($ex->getMessage()); 
-            $mensaje= $ex->errorInfo[2];
+            Log::debug(print_r($ex->getMessage(),true)); 
+            Log::debug(print_r($guiaDTO->insert,true));
+            $mensaje= array($ex->errorInfo[2], "Tracking ".$guiaDTO->insert['tracking_number'], "Contactar a su proveedor para el registro");
 
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
             Log::debug( $e->getMessage() );
-            $mensaje= $e->getMessage();
+            $mensaje= array($e->getMessage());
         }
 
         Log::info(__CLASS__." ".__FUNCTION__."FEDEX Finalizado ---------------------------- ");

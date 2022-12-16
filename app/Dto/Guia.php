@@ -18,7 +18,22 @@ class Guia {
 	
 	function __construct()
 	{
-		// code...
+		$this->insert = array('usuario' => ""
+				,'empresa_id' 	=> ""
+				,'ltd_id' 	=> ""
+				,'cia' 		=> ""
+				,'cia_d' 	=> ""
+				,'piezas' 	=> ""
+				, 'documento' => ""
+				,'tracking_number'=>""
+				,'servicio_id'	=>""
+				,'peso'			=> ""
+				,'dimensiones'	=> ""
+				,'extendida'	=> ""
+				,'seguro'		=> ""
+				,'valor_envio'	=> ""
+				,'precio'		=> ""
+			);
 	}
 
 	/**
@@ -28,6 +43,7 @@ class Guia {
 	public function parser($request, $sFedex){
 
 		$dimensiones = sprintf("%sx%sx%s",$request->largo,$request->ancho,$request->alto);
+		$precio = sprintf("%.2f",$request['precio']);
 		$this->insert = array('usuario' => auth()->user()->name
 				,'empresa_id' 	=> auth()->user()->empresa_id
 				,'ltd_id' 	=> $request->ltd_id
@@ -39,7 +55,10 @@ class Guia {
 				,'servicio_id'		=>$request->servicio_id
 				,'peso'			=> $request->peso_facturado
 				,'dimensiones'	=> $dimensiones
-				,'extendida'	=>  $request['extendida']
+				,'extendida'	=> $request['extendida']
+				,'seguro'		=> $request['costo_seguro']
+				,'valor_envio'	=> $request['valor_envio']
+				,'precio'		=> $precio
 			);
 
 	}
@@ -53,6 +72,7 @@ class Guia {
 		$extendida = "NO";
 		$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
 		$valorEnvio = sprintf("%.2f",$request['valor_envio']);
+		$precio = 0;
 	
 		if ($canal === "WEB") {
 			$cia = $request['sucursal_id'];
@@ -64,6 +84,8 @@ class Guia {
 			$usuario = auth()->user()->name;
 			$empresa_id = auth()->user()->empresa_id;
 			$piezas = $request['piezas'];
+			$precio = sprintf("%.2f",$request['precio']);
+
 		}
 
 		if ($canal === "API") {
@@ -107,7 +129,7 @@ class Guia {
 				,'extendida'	=> $extendida
 				,'seguro'		=> $costoSeguro
 				,'valor_envio'	=> $valorEnvio
-
+				,'precio'		=> $precio
 
  			);
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ".$canal);
