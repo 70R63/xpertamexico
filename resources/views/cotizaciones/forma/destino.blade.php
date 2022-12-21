@@ -6,7 +6,7 @@
 	{!! Form::select('cliente'
 		, $cliente
 		,'MEX'
-		,['class' 		=> 'form-control'
+		,['class' 		=> 'form-control select2'
 			,'placeholder'	=> 'Seleccionar'
 			,'required'	=> ''
 			,'name'		=> 'cliente'
