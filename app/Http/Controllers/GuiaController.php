@@ -97,6 +97,34 @@ class GuiaController extends Controller
     public function store(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__."store inicia ----------------------------");
+ 
+        if ($request->esManual === "SI") {
+            Log::info(__CLASS__." ".__FUNCTION__." iniciando es manual ----------------------------");
+            try{
+                $cliente = new Cliente();
+                $cliente_id = $cliente->insertManual($request);
+                $request['cliente_id']=$cliente_id;
+            } catch(\Illuminate\Database\QueryException $ex){ 
+                Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+                Log::debug(print_r($ex,true)); 
+                $mensaje= array($ex->errorInfo[2]);
+
+                return back()
+                ->with('dangers',$mensaje)
+                ->withInput();
+
+            } catch (Exception $e) {
+                Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+                Log::debug( $e->getMessage() );
+                $mensaje= array($e->getMessage());
+
+                return back()
+                ->with('dangers',$mensaje)
+                ->withInput();
+            }
+
+            Log::info(__CLASS__." ".__FUNCTION__."finalizando es manual ----------------------------");
+        }//FIN if ($request->esManual === "SI")
 
         if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
             return $this->estafeta($request);
@@ -224,7 +252,7 @@ class GuiaController extends Controller
                 } else {
                     Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
                     
-                    $mensaje = array($responseContenido->errors);                    
+                    $mensaje = array($responseContenido->error);                    
     
                 }
                  
@@ -291,7 +319,7 @@ class GuiaController extends Controller
             $etiqueta = $fedexDTO->parser($request);
             
             Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
-            $fedex->envio(json_encode($etiqueta));
+            $fedex->envio( json_encode($etiqueta, JSON_UNESCAPED_UNICODE));
 
             Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
             $guiaDTO = new GuiaDTO();
