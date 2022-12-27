@@ -11,8 +11,8 @@ use GuzzleHttp\Psr7;
 use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
-//use App\Singlenton\Estafeta ; PRODUCTION
-use App\Singlenton\EstafetaDev as Estafeta;
+use App\Singlenton\Estafeta ; //PRODUCTION
+//use App\Singlenton\EstafetaDev as Estafeta;
 use App\Dto\Guia as GuiaDTO;
 use App\Models\Guia;
 
@@ -115,8 +115,9 @@ class GuiaController extends Controller
             "version"=>"1.10.20");
 
         $identification = array(
-            "suscriberId"=>"01",
-            "customerNumber"=>"0000000");
+            "suscriberId"=>Config('ltd.estafeta.cred.suscriberId'),
+            "customerNumber"=>Config('ltd.estafeta.cred.customerNumber')
+        );
 
         try {
 
