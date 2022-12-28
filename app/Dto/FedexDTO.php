@@ -43,17 +43,18 @@ class FedexDTO
 
 	public function parser($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO");
-		
+		Log::info(utf8_encode($request['contacto']));
+		Log::info(($request['contacto']));
 		
 		$weight = new Weight(array('value'=> $request['peso_facturado']));
 
 		$contactShipper = New Contact( 
-			array("personName" 	=> $request['contacto']
+			array("personName" 	=> ($request['contacto'])
 				,"phoneNumber"	=> $request['celular']
 				,"companyName"	=> $request['nombre']) 
 			);
 
-		$direccion = sprintf("%s %s,Ext %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
+		$direccion = sprintf("%s %s %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
 		$streetLines = str_split($direccion,35);
 
 		$addressShipper = New Address(
@@ -70,7 +71,7 @@ class FedexDTO
 			);
 
 
-		$direccion_d = sprintf("%s %s,Ext %s,%s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'],$request['direccion2_d'] );
+		$direccion_d = sprintf("%s %s %s,%s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'],$request['direccion2_d'] );
 		$streetLines_d = str_split($direccion_d,35);
 
 		$addressRecipients = New Address(

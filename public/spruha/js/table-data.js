@@ -3,6 +3,7 @@ $(function() {
 	
 	//Data tabla general
    var exportGeneral = $('#exportGeneral').DataTable( {
+      paging:       true,
       pagingType: "full_numbers",
       lengthChange: true,
       buttons: [ 

@@ -40,6 +40,9 @@
                                 <b>Valor de Envio:</b>$ <span id="spanValorEnvio"></span>
                                 <b>Seguro:</b>$ <span id="spanSeguro"></span>
                             </li>
+                            <li>
+                                <b>Cotización Manual:</b><span id="spanCotizacionManual"></span>
+                            </li>
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">

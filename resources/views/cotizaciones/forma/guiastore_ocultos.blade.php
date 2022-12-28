@@ -117,3 +117,17 @@
         ,'id'       => 'valor_envio_r' 
     ])
 !!}
+
+{!! Form::hidden('esManual'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'esManual' 
+    ])
+!!}
+
+{!! Form::hidden('cp_manual'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'cp_manual' 
+    ])
+!!}

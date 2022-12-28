@@ -208,7 +208,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var iva = precio*0.16;
     var precioIva = (precio+iva).toFixed(2);
     var contenido = $('#contenido').val();
-    
+    var esManual = $('#checkCotizacionManual').is( ":checked" ) ? "SI" : "NO";
+
+    console.log($(this).is( ":checked" ));
     //valores para el modal 
     $("#spanPrecio").text( precioIva );
     $("#spanMensajeria").text(ltd_nombre);
@@ -219,7 +221,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#spanSeguro").text(costoSeguro);
     $("#spanValorEnvio").text(valorEnvio);
     $("#spanPeso").text(peso);
-      
+    $("#spanCotizacionManual").text(esManual);
+
     //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
     $("#precio").val(precioIva);
     $("#tarifa_id").val(tarifa_id);
@@ -238,6 +241,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#contenido_r").val(contenido);
     $("#extendida_r").val(dataRow['extendida_cobertura']);
     $("#valor_envio_r").val(valorEnvio);
+    $("#esManual").val(esManual);
+    $("#cp_manual").val(cp_d);
+
 
     $("#myModal").modal("show");
 });
@@ -279,6 +285,7 @@ $(function() {
         var checkSeguro = $(this).is( ":checked" )
         if ( checkSeguro ) {
             $(".cotizacionManual").removeAttr("readonly");
+            $("#cliente").removeAttr("required");
         } else {
             $(".cotizacionManual").attr("readonly","true");
         }

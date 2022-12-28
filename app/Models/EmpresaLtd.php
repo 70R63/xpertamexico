@@ -23,7 +23,6 @@ class EmpresaLtd extends Model
    protected static function boot(){
         parent::boot();        
         static::addGlobalScope('empresa_id', function (Builder $builder) {
-            //$builder->where('empresa_ltds.empresa_id', auth()->user()->empresa_id);
 
             $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
                 ->pluck('empresa_id')->toArray();

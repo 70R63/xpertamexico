@@ -155,10 +155,14 @@ class EstafetaDTO
 
     private function wayBillDocument($data){
         Log::debug(__CLASS__." ".__FUNCTION__." wayBillDocument INICIO -----------------");
-        $wayBillDocument = new WayBillDocument(array(
-            "content" => $data['contenido'])
-        );
 
+
+        $wayBillDocument = new WayBillDocument();
+        if( !empty($data['contenido']) ){
+            $wayBillDocument->content=str_split($data['contenido'],25)[0]; 
+        }
+
+        $wayBillDocument->aditionalInfo = $data['direccion2_d'];
         Log::debug(__CLASS__." ".__FUNCTION__." wayBillDocument FIN -----------------");
         return $wayBillDocument;
     }
@@ -178,9 +182,8 @@ class EstafetaDTO
             $serviceConfiguration->isInsurance = true;
 
             $declaredValue = sprintf("%.2f",$data['valor_envio']);
-            $serviceConfiguration->insurance = array('contentDescription' => $data['contenido']
+            $serviceConfiguration->insurance = array('contentDescription' => str_split($data['contenido'],100)[0]
                 ,'declaredValue' => $declaredValue);
-
         }
 
         $serviceConfiguration->effectiveDate=Carbon::now()->addMonth()->format('Ymd');
@@ -195,7 +198,6 @@ class EstafetaDTO
         Log::debug(__CLASS__." ".__FUNCTION__." insurance INICIO -----------------");
 
         $insurance = new Insurance();
-        //$insurance->declaredValue= $data['']
         Log::debug(__CLASS__." ".__FUNCTION__." insurance FIN -----------------");
         return $insurance;
     }
@@ -220,18 +222,18 @@ class EstafetaDTO
     private function origin($data){
         Log::debug(__CLASS__." ".__FUNCTION__." origin INICIO -----------------");
 
-        $contact = new Contact();
         $address = new Address();
-
         $address->zipCode = $data['cp'];
-        $address->roadName = $data['direccion'];
-        $address->settlementName = $data['colonia'];
-        $address->externalNum = $data['no_ext'];
+        $address->roadName = str_split($data['direccion'],50)[0];
+        $address->settlementName = str_split($data['colonia'],57)[0];
+        $address->externalNum = $data['no_ext'] ;
+        $address->indoorInformation = (empty($data['no_int']) ? "" : $data['no_int']);
 
-        $contact->corporateName=$data['nombre'];
-        $contact->contactName=$data['contacto'];
+        $contact = new Contact();
+        $contact->corporateName= str_split($data['nombre'],50)[0];
+        $contact->contactName= str_split($data['contacto'],30)[0];
         $contact->cellPhone=$data['celular'];
-        //$contact->=$data[''];
+        
 
         $origin = new Location(
             [
@@ -247,7 +249,6 @@ class EstafetaDTO
     private function destination($data){
         Log::debug(__CLASS__." ".__FUNCTION__." destination INICIO -----------------");
 
-        $contact = new Contact();
         $address = new Address();
 
         $address->zipCode = $data['cp_d'];
@@ -255,7 +256,9 @@ class EstafetaDTO
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
         $address->addressReference = $data['direccion2_d'];
-
+        $address->indoorInformation = (empty($data['no_int_d']) ? "" : $data['no_int_d']); 
+        
+        $contact = new Contact();        
         $contact->corporateName=$data['nombre_d'];
         $contact->contactName=$data['contacto_d'];
         $contact->cellPhone=$data['celular_d'];
@@ -285,7 +288,8 @@ class EstafetaDTO
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
         $address->addressReference = $data['direccion2_d'];
-
+        $address->indoorInformation = (empty($data['no_int_d']) ? "" : $data['no_int_d']);
+        
         $contact->corporateName=$data['nombre_d'];
         $contact->contactName=$data['contacto_d'];
         $contact->cellPhone=$data['celular_d'];

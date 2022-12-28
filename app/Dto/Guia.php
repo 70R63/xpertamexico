@@ -5,6 +5,8 @@ namespace App\Dto;
 use Illuminate\Support\Facades\Storage;
 use Log;
 use Carbon\Carbon;
+
+use App\Models\API\Empresa;
 /**
  * 
  */
@@ -67,8 +69,8 @@ class Guia {
 		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ".$canal);
 		
 
-		$cia = 1;
-		$cia_d = 1;
+		$cia = 5;
+		$cia_d = 23;
 		$extendida = "NO";
 		$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
 		$valorEnvio = sprintf("%.2f",$request['valor_envio']);
@@ -88,8 +90,12 @@ class Guia {
 
 		}
 
+		//Servicio 1= FEDEX
 		if ($canal === "API") {
-			//Servicio 1= FEDEX
+			Log::debug(print_r($request['empresa_id'],true));
+			$empresa = Empresa::where("id",$request['empresa_id'])->pluck('nombre');
+			Log::debug(print_r($empresa[0],true)); 
+
 			$servicioId=1;
 			$servicio_name = $request['labelDefinition']['serviceConfiguration']['serviceTypeId'];
 			$peso = $request['labelDefinition']['itemDescription']['weight'];

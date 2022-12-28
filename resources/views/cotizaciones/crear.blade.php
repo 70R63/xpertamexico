@@ -32,7 +32,11 @@
     </div>
     <!-- class="col-lg-12 col-xl-4 col-md-4" -->
     <div class="col-lg-12 col-xl-4 col-md-4">
-        @include('cotizaciones.forma.cliente_readonly')    
+        @if($objeto['esManual']==='SI' )
+            @include('cotizaciones.forma.cliente_esmanual_readonly')
+        @else
+            @include('cotizaciones.forma.cliente_readonly')
+        @endif    
     </div>
     <!-- class="col-lg-12 col-xl-4 col-md-4" -->
         

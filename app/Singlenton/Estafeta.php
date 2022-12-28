@@ -99,7 +99,6 @@ class Estafeta {
             ,'Accept'    => 'application/json'
             ,'apiKey'   => Config('ltd.estafeta.api_key')
         ];
-        
         Log::debug(print_r("Armando Peticion",true));
 
         $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
@@ -109,7 +108,6 @@ class Estafeta {
 
         $this -> resultado = json_decode($response->getBody()->getContents());
 
-        #Log::debug(print_r($this->resultado,true));
         $this->documento = $this->resultado->data;
         $this->trackingNumber = $this->resultado->labelPetitionResult->result->description;
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");

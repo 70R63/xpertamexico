@@ -56,7 +56,7 @@ class GuiaController extends Controller
                         ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
                         //->toSql();
                         ->get(); 
-
+            
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
             return view(self::DASH_v 
                     ,compact("tabla", "ltdActivo", "servicioPluck")

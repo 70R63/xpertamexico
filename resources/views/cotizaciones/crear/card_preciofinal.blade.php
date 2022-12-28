@@ -31,6 +31,9 @@
                         <b>Valor de Envio:</b>${{$objeto['valor_envio_r']}} <span id="spanValorEnvio"></span>
                         <b>Seguro:</b>${{$objeto['costo_seguro']}} <span id="spanSeguro"></span>
                     </li>
+                    <li>
+                        <b>Cotización Manual:</b>{{$objeto['esManual']}}<span id="spanCotizacionManual"></span>
+                    </li>
                 </ul>
             </div>
             <div class="pricing-plans  bg-primary">

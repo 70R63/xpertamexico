@@ -12,7 +12,6 @@ use Illuminate\Validation\ValidationException;
 
 #CLASES DE NEGOCIO 
 use App\Singlenton\Estafeta ; //PRODUCTION
-//use App\Singlenton\EstafetaDev as Estafeta;
 use App\Dto\Guia as GuiaDTO;
 use App\Models\Guia;
 
@@ -118,7 +117,7 @@ class GuiaController extends Controller
             "suscriberId"=>Config('ltd.estafeta.cred.suscriberId'),
             "customerNumber"=>Config('ltd.estafeta.cred.customerNumber')
         );
-
+        Log::debug($identification);
         try {
 
             $data = $request->except(['api_token']);

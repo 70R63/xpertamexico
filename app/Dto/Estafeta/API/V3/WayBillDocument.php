@@ -5,5 +5,6 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 
 class WayBillDocument extends DataTransferObject {
-	public string $content = "Contenido del envio";
+	public string $content = "No declarado";
+	public string $aditionalInfo = "";
 }

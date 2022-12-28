@@ -57,11 +57,13 @@ class CotizadorController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         try {
 
-            $objeto = $request->all();
-           
-            Log::debug(print_r($objeto ,true));
+            $objeto = $request->all();           
+            Log::debug(print_r($objeto,true));
+            $cliente=array();
 
-            $cliente = Cliente::findOrFail($request->get("cliente_id"));
+            if ($objeto['esManual']==="NO") {
+               $cliente = Cliente::findOrFail($request->get("cliente_id"));
+            }
             $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
             $servicio = Servicio::findOrFail($request->get("servicio_id"));
 

@@ -30,5 +30,10 @@ class Address extends DataTransferObject {
 	#[Max(20)]
 	public string $externalNum = "externalNum";
 	
+	#[Max(100)]
+	public string $betweenRoadName1 = "";
 
+	#[Max(40)]
+	public string $indoorInformation = "";
+	
 }

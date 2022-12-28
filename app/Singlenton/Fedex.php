@@ -48,7 +48,7 @@ class Fedex {
             $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
                         ,Config('ltd.fedex.client_id'),Config('ltd.fedex.client_secret')
                     );
-            
+           
             $response = $client->request('POST', 'oauth/token', [
                     'headers'   => $headers
                     ,'body'     => $body
@@ -86,11 +86,13 @@ class Fedex {
             $authorization = sprintf("Bearer %s",$this->token);
 
             $headers = ['Authorization' => $authorization
-                        ,'X-locale' => 'en_US'
-                        ,'Content-Type' => 'application/json'];
+                        ,'X-locale' => 'es_MX'
+                        ,'Content-Type' => 'application/json'
+                        ,'charset' => 'utf-8'
+                    ];
             
             Log::debug(print_r($body,true));
-
+            #Log::debug(utf8_encode($body));
             $response = $client->request('POST', 'ship/v1/shipments', [
                         'headers'   => $headers
                         ,'body'     => $body
