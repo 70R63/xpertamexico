@@ -23,15 +23,9 @@ class Address extends DataTransferObject {
 	public string $zipCode = "00000";
 	
 	public string $countryName = "MEX";
-
-	#[Max(100)]
-	public $addressReference = "Sin Referencia";
 	
 	#[Max(20)]
 	public string $externalNum = "externalNum";
-	
-	#[Max(100)]
-	public string $betweenRoadName1 = "";
 
 	#[Max(40)]
 	public string $indoorInformation = "";

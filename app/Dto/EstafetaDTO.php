@@ -255,7 +255,6 @@ class EstafetaDTO
         $address->roadName = $data['direccion_d'];
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
-        $address->addressReference = $data['direccion2_d'];
         $address->indoorInformation = (empty($data['no_int_d']) ? "" : $data['no_int_d']); 
         
         $contact = new Contact();        
@@ -287,7 +286,6 @@ class EstafetaDTO
         $address->roadName = $data['direccion_d'];
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
-        $address->addressReference = $data['direccion2_d'];
         $address->indoorInformation = (empty($data['no_int_d']) ? "" : $data['no_int_d']);
         
         $contact->corporateName=$data['nombre_d'];

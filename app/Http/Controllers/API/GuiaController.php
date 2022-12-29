@@ -109,6 +109,7 @@ class GuiaController extends Controller
 
         Log::debug($request);
         $response = null;
+        $trackingNumber = "";
         $systemInformation = array("id"=>"AP01",
             "name"=>"AP01",
             "version"=>"1.10.20");
@@ -135,6 +136,7 @@ class GuiaController extends Controller
 
             $sEstafeta -> envio($data);
             $resultado = $sEstafeta->getResultado();
+            $trackingNumber = $sEstafeta->getTrackingNumber();
             Log::debug(print_r($resultado,true));
 
             $insert = GuiaDTO::estafeta($sEstafeta, $request);
@@ -146,18 +148,18 @@ class GuiaController extends Controller
         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
             Log::debug(print_r($ex->getMessage(),true));
-            return $this->sendError("DataTransferObjectError, consulte con su proveedor", $ex->getMessage(), "400" );
+            return $this->sendError("tracking :$trackingNumber, consulte con su proveedor", $ex->getMessage(), "400" );
 
         } catch (\GuzzleHttp\Exception\ClientException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__."GuzzleHttp\Exception\ClientException");
              $response = $ex->getResponse()->getBody()->getContents();
             Log::debug(print_r($response,true));
             
-            return $this->sendError("ClientException",$response, "400");
+            return $this->sendError("tracking :$trackingNumber",$response, "400");
 
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::debug($ex );
-            return $this->successResponse("Response", "InvalidArgumentException");
+            return $this->sendError("tracking :$trackingNumber",$ex->getMessage(), "400");
 
         } catch (\GuzzleHttp\Exception\ServerException $ex) {
             $response = $ex->getResponse()->getBody()->getContents();
@@ -165,14 +167,25 @@ class GuiaController extends Controller
             Log::debug(print_r(json_decode($response),true));
             return $this->successResponse(json_decode($response), "ServerException");            
 
-        } catch (InvalidArgumentException $ex) {
+        } catch (\InvalidArgumentException $ex) {
             Log::debug($ex );
             return $this->successResponse("Response", "InvalidArgumentException","400");
-        } catch (HttpException $ex) {
-          
+
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            
+            $mensaje =$ex->getMessage();
+            return $this->sendError("tracking :$trackingNumber",$ex->getMessage(), "400");
+
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
             $resultado = $ex;
             $mensaje = "La guia no pudo ser creada";
-            return $this->successResponse($resultado, $mensaje);
+            return $this->sendError("tracking :$trackingNumber",$mensaje, "400");
+        } catch (\Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            return $this->sendError("Exception",$e->getMessage(), "400");
         }
     }// Fin public function Estafeta
 }
