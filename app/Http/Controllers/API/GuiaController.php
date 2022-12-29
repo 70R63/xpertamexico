@@ -118,6 +118,8 @@ class GuiaController extends Controller
             "suscriberId"=>Config('ltd.estafeta.cred.suscriberId'),
             "customerNumber"=>Config('ltd.estafeta.cred.customerNumber')
         );
+
+        $salesOrganization = Config('ltd.estafeta.cred.salesOrganization'); 
         Log::debug($identification);
         try {
 
@@ -127,6 +129,7 @@ class GuiaController extends Controller
 
             $data['systemInformation']= $systemInformation;
             $data['identification']=$identification;
+            $data['labelDefinition']['serviceConfiguration']['salesOrganization']=$salesOrganization; 
 
             Log::debug("Se intancia el Singlento Estafeta");
             $sEstafeta = new Estafeta(Config('ltd.estafeta.id'), $data['empresa_id'], "API");
