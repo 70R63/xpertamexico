@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Http;
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
 
-
-
-
 class Estafeta {
 
     private static $instance;

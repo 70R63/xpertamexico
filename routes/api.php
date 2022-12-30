@@ -8,6 +8,9 @@ use App\Http\Controllers\API\GuiaController;
 use App\Http\Controllers\API\CotizacionController;
 use App\Http\Controllers\API\EmpresaLtdController;
 
+use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,10 +41,19 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
             Route::get('ltds', 'creacion');
             Route::post('fedex', 'fedex');
             Route::post('estafeta', 'estafeta');
+            Route::post('dev/estafeta', 'estafeta');
         });
 
     });
 //});
+
+//AMBIENTE DEV
+Route::middleware(['throttle:20,1','validaToken'])->group(function(){
+    Route::controller(DevGuiaController::class)->group(function(){
+        Route::post('dev/estafeta', 'estafeta');
+    });
+
+});
 
 Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {

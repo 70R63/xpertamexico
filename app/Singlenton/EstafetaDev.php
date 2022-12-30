@@ -38,6 +38,7 @@ class EstafetaDev {
         $sesion = LtdSesion::where('ltd_id', $ltd_id)
                 ->where('empresa_id',$empresa_id)
                 ->where('expira_en','>', Carbon::now())
+                ->where('ambiente',"DEV")
                 ->first();
 
         if (!is_null($sesion)) {
@@ -69,6 +70,7 @@ class EstafetaDev {
                     ,'ltd_id'   => $ltd_id
                     ,'token'    => $this->token
                     ,'expira_en'=> Carbon::now()->addMinutes(1380)
+                    ,'ambiente' => "DEV"
                      );
 
                 $id = LtdSesion::create($insert)->id;
