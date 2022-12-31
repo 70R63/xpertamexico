@@ -64,6 +64,7 @@ class CotizadorController extends Controller
             if ($objeto['esManual']==="NO") {
                $cliente = Cliente::findOrFail($request->get("cliente_id"));
             }
+            
             $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
             $servicio = Servicio::findOrFail($request->get("servicio_id"));
 

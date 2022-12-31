@@ -20,8 +20,6 @@
 				<div class="col-lg-12">
 					<div class="form-group ">
 						<div class="selectgroup selectgroup-pills">
-							
-
 							@foreach ($ltds as $ltd)
 							    <label class="selectgroup-item ">
 									{{ Form::checkbox('value[]', $ltd->id

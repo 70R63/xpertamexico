@@ -45,15 +45,30 @@ class Guia {
 	 * 
 	 */
 
-	public function parser($request, $sFedex){
-
+	public function parser($request, $sFedex, $canal = "API"){
+		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO----- ");
 		$dimensiones = sprintf("%sx%sx%s",$request->largo,$request->ancho,$request->alto);
 		$precio = sprintf("%.2f",$request['precio']);
+
+		$cia = $request['sucursal_id'];
+		$cia_d = $request['cliente_id'];
+
+		if ($request['esManual'] === "RETORNO") {
+			$canal = "RET" ;
+			$cia_d = $request['sucursal_id'];
+			$cia = $request['cliente_id'];
+		}
+
+		if ($request['esManual'] === "SI") {
+				$canal = "MNL" ;
+			}
+
+
 		$this->insert = array('usuario' => auth()->user()->name
 				,'empresa_id' 	=> auth()->user()->empresa_id
 				,'ltd_id' 	=> $request->ltd_id
-				,'cia' 		=> $request->sucursal_id
-				,'cia_d' 	=> $request->cliente_id
+				,'cia' 		=> $cia
+				,'cia_d' 	=> $cia_d
 				,'piezas' 	=> $request->piezas
 				, 'documento' => $sFedex->documento
 				,'tracking_number' 	=>$sFedex->getTrackingNumber()
@@ -64,8 +79,11 @@ class Guia {
 				,'seguro'		=> $request['costo_seguro']
 				,'valor_envio'	=> $request['valor_envio']
 				,'precio'		=> $precio
+				,'contenido'	=> empty($request['contenido']) ? "" :$request['contenido']
+				,'canal'		=> $canal
 			);
-
+		Log::debug(print_r($this->insert,true));
+		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO----- ");
 	}
 
 	static public function estafeta($sEstafeta, $request, $canal = "API"){
@@ -77,8 +95,21 @@ class Guia {
 		$precio = 0;
 	
 		if ($canal === "WEB") {
+			
 			$cia = $request['sucursal_id'];
 			$cia_d = $request['cliente_id'];
+
+			if ($request['esManual'] === "RETORNO") {
+				Log::info(__CLASS__." ".__FUNCTION__." SECCION RETORNO ");
+				$canal = "RET" ;
+				$cia_d = $request['sucursal_id'];
+				$cia = $request['cliente_id'];
+			}
+
+			if ($request['esManual'] === "SI") {
+				$canal = "MNL" ;
+			}
+
 			$servicioId = $request['servicio_id'];
 			$peso = $request['peso_facturado'];
 			$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
@@ -87,7 +118,8 @@ class Guia {
 			$empresa_id = auth()->user()->empresa_id;
 			$piezas = $request['piezas'];
 			$precio = sprintf("%.2f",$request['precio']);
-
+			$contenido = empty($request['contenido']) ? "" :$request['contenido'];
+			
 		}
 
 		//Servicio 1= FEDEX
@@ -113,6 +145,7 @@ class Guia {
 			$usuario = $request['name'];
 			$empresa_id = $request['empresa_id'];
 			$piezas = $request['labelDefinition']['serviceConfiguration']['quantityOfLabels'];
+			$contenido = $request['labelDefinition']['wayBillDocument']['content'];
 		}
 
 		$carbon = Carbon::parse();
@@ -140,8 +173,10 @@ class Guia {
 				,'seguro'		=> $costoSeguro
 				,'valor_envio'	=> $valorEnvio
 				,'precio'		=> $precio
+				,'contenido'	=> $contenido
 
  			);
+
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ".$canal);
 		return $insert;
 	}

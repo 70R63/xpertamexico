@@ -8,7 +8,7 @@
                         <thead>
                             <tr>
                                 <th class='notexport'>ID</th>
-                                <th class='notexport'>GUIA</th>
+                                <th class='notexport'>GUIA /<br>RETORNO</th>
                                 <th>MENSAJERIA</th>
                                 <th>SERVICIO</th>
                                 <th>USUARIO</th>
@@ -37,13 +37,15 @@
                             @foreach( $tabla  as $objeto)
                             <tr>
                                 <td>{{ $objeto->id }}</td>
-                                <td>@include('guia.dashboard.documento')</td>
+                                <td>
+                                    @include('guia.dashboard.documento')
+                                    @include('guia.dashboard.retorno')
+                                </td>
                                 <td >{{ $ltdActivo[$objeto->ltd_id] }}</td>
                                 <td>{{ $servicioPluck[$objeto->servicio_id] }}</td>
                                 <td>{{ $objeto->usuario }}</td>
                                 <td>{{ $objeto->nombre}}</td>
-                                <td>{{ $objeto->contacto }}</td>
-                                <td>{{ $objeto->contacto_d }}</td>
+                                @include('guia.dashboard.canal')
                                 <td>{{ $objeto->created_at }}</td>
                                 <td >{{ $objeto->canal }}</td>
                                 <td>{{$objeto->tracking_number}}</td>

@@ -46,9 +46,7 @@
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">
-                        
-                            Para continuar con la creación, precionar el boton continuar
-                        
+                        Para continuar con la creación, precionar el boton continuar
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -56,6 +54,7 @@
                     <a class="btn badge-dark" data-dismiss="modal" type="button">Cerrar</a>
                 </div>
             </div>
+            <!-- FIN class="modal-body" -->
         </div>
     </div>
 </div>

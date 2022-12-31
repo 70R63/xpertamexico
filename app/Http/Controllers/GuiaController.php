@@ -82,6 +82,7 @@ class GuiaController extends Controller
             return view(self::CREAR_v 
                     ,compact("ltdActivo")
                 );
+            
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
             Log::info("Error general ");       
@@ -323,7 +324,7 @@ class GuiaController extends Controller
 
             Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
             $guiaDTO = new GuiaDTO();
-            $guiaDTO->parser($request,$fedex);
+            $guiaDTO->parser($request,$fedex, "WEB");
 
             Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
             
