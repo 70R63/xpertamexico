@@ -15,6 +15,10 @@
                                 <th>CLIENTE XPERTA</th>
                                 <th>REMITENTE <br>(CONTACTO)</th>
                                 <th>DESTINATATIO <br>(CONTACTO)</th>
+                                 <th style="display:none;">CP ORIGEN</th>
+                                <th style="display:none;">CIUDAD ORIGEN</th>
+                                <th style="display:none;">CP DESTINO</th>
+                                <th style="display:none;">CIUDAD DESTINO</th>
                                 <th >CREACION</th>
                                 <th >CANAL</th>
                                 <th>TRACKING</th>
@@ -24,10 +28,7 @@
                                 <th style="display:none;">DIMENSIONES</th>
                                 <th style="display:none;">VALOR DEL ENVIO</th>
                                 <th style="display:none;">COSTO SEGURO</th>
-                                <th style="display:none;">CP ORIGEN</th>
-                                <th style="display:none;">CIUDAD ORIGEN</th>
-                                <th style="display:none;">CP DESTINO</th>
-                                <th style="display:none;">CIUDAD DESTINO</th>
+                               
                                 <th style="display:none;">APLICA A.E.</th>
                                 
                                 
@@ -55,10 +56,6 @@
                                 <td style="display:none;">{{ $objeto->dimensiones }}</td>
                                 <td style="display:none;">{{ $objeto->valor_envio }}</td>
                                 <td style="display:none;">{{ $objeto->seguro }}</td>
-                                <td style="display:none;" >{{ $objeto->cp }}</td>
-                                <td style="display:none;" >{{ $objeto->ciudad }}</td>
-                                <td style="display:none;">{{ $objeto->cp_d }}</td>
-                                <td style="display:none;" >{{ $objeto->ciudad_d }}</td>
                                 <td style="display:none;" >{{ $objeto->extendida }}</td>
                                 
                             </tr>
