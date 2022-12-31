@@ -38,7 +38,7 @@
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">
-                        Para continuar con la creación, precionar el boton continuar
+                        Para continuar con la creación, presionar el boton continuar
                     </div>
                 </div>
                 <div class="modal-footer">
