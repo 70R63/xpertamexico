@@ -19,7 +19,7 @@ $(function() {
                      }
                      ,customizeData: function(data) {
                        for(var i = 0; i < data.body.length; i++) {
-                         data.body[i][8] = '\0' + data.body[i][8];
+                         data.body[i][12] = '\0' + data.body[i][12];
                        }
                      } 
                   }
