@@ -8,11 +8,12 @@ var valorEnvio = 0;
 function pesofacturado(){
 
     var peso = 0
-    var multipieza = 0
     var piezas = $("#piezas").val()
+    /*
     var alto = 0
     var ancho = 0
     var largo = 0
+    */
     var iteracionClone = 0
     var bascula = +0
     var dimensional =+0
@@ -32,14 +33,6 @@ function pesofacturado(){
         var largo = $('.registroMultipieza .multi').get()[indexLargo].value
         var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
         var alto = $('.registroMultipieza .multi').get()[indexAlto].value
-        console.log("peso")
-        console.log(peso)
-        console.log("largo")
-        console.log(largo)
-        console.log("ancho")
-        console.log(ancho)
-        console.log("alto")
-        console.log(alto)
 
         if ($('.registroMultipieza').length == 1){
             bascula = peso*piezas
@@ -56,7 +49,7 @@ function pesofacturado(){
 
     })       
     console.log("peso facturado = "+pesoFacturado)
-     $("#pesoFacturado").val(pesoFacturado);
+    $("#pesoFacturado").val(pesoFacturado);
 }
 
 function costoSeguroValidar(seguro){

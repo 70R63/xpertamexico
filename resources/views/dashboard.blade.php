@@ -262,7 +262,6 @@
         <script src="{{ asset('js/guardar.js') }}" ></script> 
         <script src="{{ asset('js/tipoEnvio.js') }}" ></script>
         <script src="{{ asset('js/submitModal.js') }}" ></script>
-       
         <script src="{{ asset('js/preSubmit.js') }}" ></script>
         <script src="{{ asset('js/cotizar.js') }}" ></script>
         <script src="{{ asset('js/empresa.js') }}" ></script>

@@ -127,6 +127,21 @@
 
 	$('#handleCounterMax28').handleCounter(options28)
 
+    //  handleCounter 40 unidades
+   var options40 = {
+        minimum: 1,
+        maximize: 40,
+        onChange:  valChanged
+        ,onMinimum: function(e) {
+            console.log('reached minimum: '+e)
+
+        },
+        onMaximize: function(e) {
+            console.log('reached maximize'+e)
+        }
+    };
+
+    $('#handleCounterMax40').handleCounter(options40)
 
     var options = {
         minimum: 1,
