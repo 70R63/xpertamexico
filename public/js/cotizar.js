@@ -4,21 +4,59 @@ var piezas = 0;
 var costoSeguro = 0;
 var valorEnvio = 0;
 
+
 function pesofacturado(){
 
-    var pieza = $("#piezas").val()
-    var peso = $("#peso").val()
-    var alto = $("#alto").val()
-    var ancho = $("#ancho").val()
-    var largo = $("#largo").val()
+    var peso = 0
+    var multipieza = 0
+    var piezas = $("#piezas").val()
+    var alto = 0
+    var ancho = 0
+    var largo = 0
+    var iteracionClone = 0
+    var bascula = +0
+    var dimensional =+0
+    var pesoFacturado =+0
 
-    var bascula = peso*pieza
-    var dimensional = ((alto*ancho*largo)/5000)*pieza
-    pesoFacturado = (bascula > dimensional) ? bascula : Math.ceil(dimensional);
 
+    $('.registroMultipieza').each(function(){
+        console.log("--------------"+iteracionClone)
+        var control = +iteracionClone *4
+        var indexPeso = 0 +control
+        var indexLargo = 1 +control
+        var indexAncho = 2 +control
+        var indexAlto = 3 +control 
+        
 
-    $("#pesoFacturado").val(pesoFacturado);
+        var peso = $('.registroMultipieza .multi').get()[indexPeso].value
+        var largo = $('.registroMultipieza .multi').get()[indexLargo].value
+        var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
+        var alto = $('.registroMultipieza .multi').get()[indexAlto].value
+        console.log("peso")
+        console.log(peso)
+        console.log("largo")
+        console.log(largo)
+        console.log("ancho")
+        console.log(ancho)
+        console.log("alto")
+        console.log(alto)
 
+        if ($('.registroMultipieza').length == 1){
+            bascula = peso*piezas
+            dimensional = (((alto*ancho*largo)/5000)*piezas)    
+            
+        }else{
+            bascula = peso
+            dimensional = ((alto*ancho*largo)/5000)
+        }
+        
+        pesoFacturado = pesoFacturado + ((bascula > dimensional) ? Math.ceil(bascula) : Math.ceil(dimensional));
+        console.log("bascula "+bascula+ ">"+ dimensional+" dimensional")
+        iteracionClone++
+
+    })       
+    console.log("peso facturado = "+pesoFacturado)
+     $("#pesoFacturado").val(pesoFacturado);
 }
 
 function costoSeguroValidar(seguro){
@@ -260,21 +298,15 @@ $("#cliente").change(function() {
 });
 
 $(function(){
-    $("#peso").on("change keyup paste", function (){
+    $(".multi").on("change keyup paste", function (){
         pesofacturado();
     });
 
-    $("#alto").on("change keyup paste", function (){
+    
+    $("#handleCounterMax28").click( function (){
         pesofacturado();
     });
-
-    $("#ancho").on("change keyup paste ", function (){
-        pesofacturado();
-    });
-
-    $("#largo").on("change keyup paste", function (){
-        pesofacturado();
-    });
+    
 });
 
 // La fucnion habilita el modo edicion de los CP, esto ayuda a realizar una cotizacion manual basda en tarifias de un cliente
@@ -292,4 +324,27 @@ $(function() {
       });
 });
 // fin Seguro de envio
+
+$("#addRow").click(function () {
+    console.log('AddRow')
+    var piezas = $("#piezas").val()  
+    var multipiezas = $(".registroMultipieza").length;
+    
+    
+    var html = $("#clone").clone(true,true)
+
+    $('.registroMultipieza').each(function( index ) {
+        $(this).remove();    
+        
+    });
+
+    console.log("piezas -> "+piezas)
+    for (let i = 0; i < piezas ; i++) {
+        console.log("iteracion piezas")
+        html.clone(true,true).appendTo( "#multiPieza" ).show()
+    }
+
+    pesofacturado();
+    
+});
 

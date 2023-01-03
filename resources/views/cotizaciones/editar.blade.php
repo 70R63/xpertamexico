@@ -1,8 +1,6 @@
 @extends('dashboard')
 @section('content')
 
-
-
 <!-- Row -->
 <div class="row">
     <div class="col-xl-12">

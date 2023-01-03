@@ -40,9 +40,9 @@ class CotizacionController extends BaseController
                     //->toSql()
                     ;
 
-        Log::debug($tabla);
+      
         $success['data'] = $tabla;
-        Log::info($success);
+       
         return $this->successResponse($success, 'User login successfully.');
         
     }

@@ -125,8 +125,8 @@
 		}
 	};
 
-
 	$('#handleCounterMax28').handleCounter(options28)
+
 
     var options = {
         minimum: 1,
@@ -147,6 +147,7 @@
 		
     function valChanged(d) {
         console.log(d)
+        //pesofacturado();
     };
 
 		

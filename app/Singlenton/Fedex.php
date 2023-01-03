@@ -92,14 +92,14 @@ class Fedex {
                     ];
             
             Log::debug(print_r($body,true));
-            #Log::debug(utf8_encode($body));
+            
             $response = $client->request('POST', 'ship/v1/shipments', [
                         'headers'   => $headers
                         ,'body'     => $body
                     ]);
 
             $contenido = json_decode($response->getBody()->getContents());
-            
+            Log::debug(print_r($contenido,true));
             $transactionShipments = $contenido->output->transactionShipments[0];
 
             $pieceResponses = $transactionShipments->pieceResponses;
