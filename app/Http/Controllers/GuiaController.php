@@ -54,7 +54,9 @@ class GuiaController extends Controller
                         ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
                         ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
                         ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
+                        //->offset(0)->limit(2000)
                         //->toSql();
+                        ->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
                         ->get(); 
             
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
