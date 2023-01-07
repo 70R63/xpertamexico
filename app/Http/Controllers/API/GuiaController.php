@@ -266,7 +266,8 @@ class GuiaController extends Controller
 
             $tabla = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',1)
-                    ->offset(0)->limit(10)
+                    ->whereIN('id',array(2,3))
+                    //->offset(0)->limit(10)
                     ->get()->toArray();
 
             $sFedex = sFedex::getInstance();
