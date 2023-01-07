@@ -37,7 +37,7 @@ class RastreosController extends Controller
                 );
         } catch (\Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." Exception FINALIZANDO-----------------");
-            Log::debug(print_r($e->getMessage,true));
+            Log::debug(print_r($e->getMessage(),true));
             
         }
     }
