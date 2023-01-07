@@ -42,18 +42,12 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
             Route::post('fedex', 'fedex');
             Route::post('estafeta', 'estafeta');
             Route::post('dev/estafeta', 'estafeta');
+            Route::get('rastreoTabla', 'rastreoTabla');
         });
 
     });
 //});
 
-//AMBIENTE DEV
-Route::middleware(['throttle:20,1','validaToken'])->group(function(){
-    Route::controller(DevGuiaController::class)->group(function(){
-        Route::post('dev/estafeta', 'estafeta');
-    });
-
-});
 
 Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {
@@ -62,10 +56,22 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
         Route::controller(CotizacionController::class)->group(function(){
             Route::get('cp', 'cp');    
         });
+
         Route::apiResource('empresaltd', EmpresaLtdController::class);
+
+        Route::controller(GuiaController::class)->group(function(){
+            Route::get('rastreoTabla', 'rastreoTabla');
+            Route::post('rastreoActualizar', 'rastreoActualizar');
+        });
     });
 });
 //Fin Middileware
 
+//AMBIENTE DEV
+Route::middleware(['throttle:20,1','validaToken'])->group(function(){
+    Route::controller(DevGuiaController::class)->group(function(){
+        Route::post('dev/estafeta', 'estafeta');
+    });
 
+});
     

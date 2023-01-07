@@ -267,7 +267,7 @@
         <script src="{{ asset('js/empresa.js') }}" ></script>
         <!-- Personalizacion de validicon con parley -->
         <script src="{{ asset('js/form-validation.js') }}" ></script>
-
+        <script src="{{ asset('js/rastreo.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')

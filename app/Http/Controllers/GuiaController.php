@@ -50,6 +50,7 @@ class GuiaController extends Controller
             $ltdActivo = Cfg_ltd::pluck("nombre","id");            
             $servicioPluck = Servicio::pluck("nombre","id");
             
+            
             $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre')
                         ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
                         ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
@@ -63,8 +64,9 @@ class GuiaController extends Controller
             return view(self::DASH_v 
                     ,compact("tabla", "ltdActivo", "servicioPluck")
                 );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
+            Log::debug(print_r($e->getMessage,true));
             Log::info("Error general ");       
         }
     }
@@ -415,7 +417,4 @@ class GuiaController extends Controller
                 ->withInput();
         
     }
-
-
-
 }

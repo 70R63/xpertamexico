@@ -3,10 +3,15 @@ $(function() {
 	
 	//Data tabla general
    var exportGeneral = $('#exportGeneral').DataTable( {
-      paging:       true,
-      pagingType: "full_numbers",
-      lengthChange: true,
-      buttons: [ 
+      procesing :true
+      ,serverSide:false
+      ,paging:true
+      ,pagingType: "full_numbers"
+      ,pageLength: 25
+      ,lengthChange: true
+      ,"deferRender": true
+      ,"paging": true
+      ,buttons: [ 
                   { 
                      extend: 'excelHtml5'
                      , footer: true
@@ -19,6 +24,7 @@ $(function() {
                      }
                      ,customizeData: function(data) {
                        for(var i = 0; i < data.body.length; i++) {
+                        console.log("custom")
                          data.body[i][12] = '\0' + data.body[i][12];
                        }
                      } 
@@ -33,7 +39,7 @@ $(function() {
                   }
                   
                ]
-      ,"paging": true
+      
       , order: [[0, 'desc']],
    } );
 

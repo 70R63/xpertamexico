@@ -9,11 +9,14 @@ use Laravel\Sanctum\HasApiTokens;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 #CLASES DE NEGOCIO 
 use App\Singlenton\Estafeta ; //PRODUCTION
+use App\Singlenton\Fedex as sFedex ; //PRODUCTION
 use App\Dto\Guia as GuiaDTO;
 use App\Models\Guia;
+use App\Models\Rastreo_peticion;
 
 /**
  * GuiaController
@@ -27,6 +30,10 @@ use App\Models\Guia;
  */
 class GuiaController extends Controller
 {
+
+    private $codeHttp = 500;
+    private $error = "Error general";
+    private $mensaje = array("Error inesperado consulte con su proveedor");
     /**
      * Login api
      *
@@ -191,4 +198,143 @@ class GuiaController extends Controller
             return $this->sendError("Exception",$e->getMessage(), "400");
         }
     }// Fin public function Estafeta
+
+
+    /**
+     * Funcion para regresar los registros para la tabla de ratreo 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function rastreoTabla(){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        try {
+            
+
+            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre')
+                    ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
+                    ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
+                    ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
+                    ->join('rastreo_estatus', 'rastreo_estatus.id', '=', 'guias.rastreo_estatus')
+                    ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
+                    ->join('servicios','servicios.id', '=', 'guias.servicio_id')
+                    
+                    //->toSql();
+                    //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
+                    ->get()->toArray();
+            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            return $this->successResponse($tabla, 'successfully.');
+            
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+            
+
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
+            $resultado = $ex;
+
+            $this->error = "HttpException";
+            $this->mensaje =$ex->getMessage();
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            $this->error = "Exception";
+            $this->mensaje =$ex->getMessage();
+        }
+
+        return $this->sendError("Exception",$e->getMessage(), $codeHttp);
+    }//fin reastreo
+
+
+    /**
+     * Funcion para actualizar los registros para la tabla de ratreo 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function rastreoActualizar(){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        try {
+
+            $rastreoPeticionesID = Rastreo_peticion::create()->id;
+
+            $tabla = Guia::select('id','ltd_id', 'tracking_number')
+                    ->where('ltd_id',1)
+                    ->offset(0)->limit(10)
+                    ->get()->toArray();
+
+            $sFedex = sFedex::getInstance();
+            $i = 0;
+            foreach ($tabla as $key => $value) {
+                Log::debug("-----".++$i."-----");
+                Log::debug($value);
+
+                $sFedex->rastreo($value['tracking_number']);
+                Log::info(__CLASS__." ".__FUNCTION__." Valida si hay seguimiento");
+                if ($sFedex->getExiteSeguimiento()) {
+                    $scanEvents = $sFedex->getScanEvents();
+                    $paquete = $sFedex->getPaquete();
+                    $quienRecibio = $sFedex->getQuienRecibio();
+
+                    $update = array('ultima_fecha' => $scanEvents->date
+                            ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$scanEvents->derivedStatusCode]
+                            ,'rastreo_peso' => $paquete['peso'] 
+                            ,'largo' => $paquete['largo'] 
+                            ,'ancho' => $paquete['ancho'] 
+                            ,'alto' => $paquete['alto']
+                            ,'quien_recibio' =>  $quienRecibio
+
+                        );
+
+                    
+                    Log::debug(print_r($update,true));
+
+                    $affectedRows = Guia::where("id", $value['id'])
+                            ->update($update);
+
+                    Log::debug("affectedRows -> $affectedRows");
+                }
+            }
+            
+            Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() ) );
+            
+            $tabla= array();
+            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            return $this->successResponse($tabla, 'successfully.');
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+            
+
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
+            $resultado = $ex;
+
+            $this->error = "HttpException";
+            $this->mensaje =$ex->getMessage();
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            Log::debug(print_r($ex,true));
+            $this->error = "Exception";
+            $this->mensaje =$ex->getMessage();
+        }
+
+        return $this->sendError($this->error,$this->mensaje, $this->codeHttp);
+    }//fin reastreo
 }

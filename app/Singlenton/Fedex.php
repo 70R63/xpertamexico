@@ -25,9 +25,13 @@ class Fedex {
     private $baseUri;
 
     public $documento = 0; 
-    private $trackingNumber = 0; 
+    private $trackingNumber = 0;
+    private $scanEvents = array();
+    private $paquete = array();
+    private $exiteSeguimiento = false;
+    private $quienRecibio = "No entregado aun"; 
 
-    private function __construct(int $ltd_id){
+    private function __construct(int $ltd_id= 1){
 
         Log::info(__CLASS__." ".__FUNCTION__);
         $this->baseUri = Config('ltd.fedex.base_uri');
@@ -70,6 +74,34 @@ class Fedex {
             Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
         }
         
+    }
+
+    /**
+     * Cliente busca crear una funcion donde se inicialice la peticion via guzzle.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return GuzzleHttp\Client $response
+     */
+
+    private function clienteRest(array $body,$metodo = 'GET', $servicio){
+        Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $client = new Client(['base_uri' => $this->baseUri]);
+        $authorization = sprintf("Bearer %s",$this->token);
+
+        $headers = ['Authorization' => $authorization
+                    
+                    ,'Content-Type' => 'application/json'
+                    ,'charset' => 'utf-8'
+                ];
+
+        $bodyJson = json_encode($body);
+        Log::debug(print_r($bodyJson,true));
+        
+        Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        return $client->request($metodo,$servicio , [
+                    'headers'   => $headers
+                    ,'body'     => $bodyJson
+                ]);
     }
 
 
@@ -126,7 +158,80 @@ class Fedex {
        
     }
 
-    public static function getInstance( int $ltd_id){
+
+    /**
+     * Rastreo busca los estatus con el LTD.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function rastreo(int $trackingNumber = 1){
+        Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $pesoDimension  = array('peso' => 0
+                    , 'largo' => 0
+                    , 'ancho' => 0
+                    , 'alto' => 0
+                );
+
+        $body = array('trackingInfo' => [
+                    array('trackingNumberInfo'=> array(
+                        'trackingNumber'=> $trackingNumber)
+                        )
+                    ]
+                    ,'includeDetailedScans' => true
+                );
+        
+        $response = $this->clienteRest($body, 'POST','track/v1/trackingnumbers');
+
+        Log::debug(__CLASS__." ".__FUNCTION__." response ");
+        $contenido = json_decode($response->getBody()->getContents());
+        foreach ($contenido->output->completeTrackResults as $key => $value) {
+            foreach ($value->trackResults as $key1 => $value1) {
+                //Log::debug(print_r($value1,true));
+
+                if ( isset($value1->error)) {
+                    Log::debug("No se econtro seguimiento");
+                    continue;
+                } else{
+                    Log::debug("Seguimientos ");
+                    Log::debug("scanEvents ".count($value1->scanEvents));
+                    Log::debug(print_r($value1,true));
+                    
+                    $this->scanEvents = $value1->scanEvents[0];
+                    foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
+                        if ($value->unit === 'KG') {
+                            $pesoDimension['peso'] = $value->value;
+                        }
+                    }
+                    
+                    if (isset($value1->packageDetails->weightAndDimensions->dimensions) ) {
+                        foreach ($value1->packageDetails->weightAndDimensions->dimensions as $key => $value2) {
+                            if ( $value2['units']=== 'CM' ){
+                                $pesoDimension['largo'] = $value2->length;
+                                $pesoDimension['ancho'] = $value2->width;
+                                $pesoDimension['alto'] = $value2->height;
+                            }
+
+                        } 
+                    }
+
+                    if (isset($value1->deliveryDetails->receivedByName)) {
+                        $this->quienRecibio = $value1->deliveryDetails->receivedByName;
+                        
+                    }
+                    Log::debug(__CLASS__." ".__FUNCTION__." Asignando pesoDimension");
+                    $this->paquete = $pesoDimension;
+                    $this->exiteSeguimiento = true;
+                } 
+            }
+        }
+        
+        Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+       
+    }
+
+    public static function getInstance( int $ltd_id = 1){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
             self::$instance = new self($ltd_id);
@@ -143,10 +248,26 @@ class Fedex {
         return $this->token;
     }
 
-
     public function getTrackingNumber(){
         return $this->trackingNumber;
     }
+
+    public function getScanEvents(){
+        return $this->scanEvents;
+    }
+
+    public function getPaquete(){
+        return $this->paquete;
+    }
+
+    public function getExiteSeguimiento(){
+        return $this->exiteSeguimiento;
+    }
+
+    public function getQuienRecibio(){
+        return $this->quienRecibio;
+    }
+    
 }
 
 ?>

@@ -33,6 +33,13 @@ return [
         ,'cred'     => [
             'accountNumber' => env('FEDEX_ACCOUNTNUMBER')
         ]
+        ,'rastreoEstatus' => [
+            'IN'    => '1'
+            ,'PU'     => '2'
+            ,'IT'    => '3'
+            ,'DY'    => '3'
+            ,'DL'    => '4'
+        ]   
     ]
     ,'estafeta' =>[
         'id'    => "2"
