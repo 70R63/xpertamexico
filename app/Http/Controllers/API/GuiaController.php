@@ -266,10 +266,10 @@ class GuiaController extends Controller
 
             $tabla = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',1)
-                    ->whereIN('id',array(1.2,3))
+                    ->whereIN('rastreo_estatus',array(1,2,3))
                     //->offset(0)->limit(10)
                     ->get()->toArray();
-
+            Log::info("Total de guias revisar ".count($tabla));
             $sFedex = sFedex::getInstance();
             $i = 0;
             foreach ($tabla as $key => $value) {
