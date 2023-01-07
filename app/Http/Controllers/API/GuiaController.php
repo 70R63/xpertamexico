@@ -276,13 +276,15 @@ class GuiaController extends Controller
                 Log::debug($value);
 
                 $sFedex->rastreo($value['tracking_number']);
-                Log::info(__CLASS__." ".__FUNCTION__." Valida si hay seguimiento");
+                
                 if ($sFedex->getExiteSeguimiento()) {
+                    Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
                     $scanEvents = $sFedex->getScanEvents();
                     $paquete = $sFedex->getPaquete();
-                    $quienRecibio = $sFedex->getQuienRecibio();
+                    $quienRecibio = $sFedex->getQuienRecibio();    
+                    $ultimaFecha = Carbon::parse($scanEvents->date)->format('Y-m-d H:i:s');
 
-                    $update = array('ultima_fecha' => $scanEvents->date
+                    $update = array('ultima_fecha' => $ultimaFecha
                             ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$scanEvents->derivedStatusCode]
                             ,'rastreo_peso' => $paquete['peso'] 
                             ,'largo' => $paquete['largo'] 

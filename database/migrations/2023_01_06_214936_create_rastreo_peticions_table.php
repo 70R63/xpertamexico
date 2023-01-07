@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('usuario',50)->nullable(false)->default("usuario Default");
-            $table->dateTime('peticion_ini')->nullable(false)->default(Carbon::now()->toDateTimeString());
+            $table->dateTime('peticion_ini')->nullable(false)->useCurrent();
             $table->dateTime('peticion_fin')->nullable(false)->default(Carbon::now()->toDateTimeString());
 
         });
