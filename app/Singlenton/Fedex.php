@@ -207,7 +207,7 @@ class Fedex {
                     
                     if (isset($value1->packageDetails->weightAndDimensions->dimensions) ) {
                         foreach ($value1->packageDetails->weightAndDimensions->dimensions as $key => $value2) {
-                            if ( $value2['units']=== 'CM' ){
+                            if ( $value2->units=== 'CM' ){
                                 $pesoDimension['largo'] = $value2->length;
                                 $pesoDimension['ancho'] = $value2->width;
                                 $pesoDimension['alto'] = $value2->height;
