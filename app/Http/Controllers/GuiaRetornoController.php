@@ -58,7 +58,7 @@ class GuiaRetornoController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." INICIANDO -----");
-
+            Log::debug(print_r($request->all(),true));
             $guia = Guia::where('id',$request['guia_id'])->get()->toArray()[0];   
             Log::debug($guia);
             //retorno Invertir Cliente por Sucursal

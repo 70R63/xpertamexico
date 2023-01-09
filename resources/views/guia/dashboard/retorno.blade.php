@@ -1,9 +1,6 @@
-<a href="" class="text-nowrap tx-20" data-toggle="modal" data-target="#asignarLtd{{ $objeto->id }}" >
-	<i title="Retorno de la guia" class="si si-action-undo"> </i>
-</a>
 
 {!! Form::open([ 'route' => 'guiaretorno.create', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
-<div class="modalAsignarLtd modal fade" id="asignarLtd{{ $objeto->id }}" tabindex="-1" role="dialog" aria-labelledby="modalAsignarLtd" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalRetorno" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	    	<div class="modal-header">
@@ -16,23 +13,23 @@
 	    	<div class="modal-body">
                 <div class="card custom-card pricingTable2"> 
                     <div class="pricing-plans  bg-primary">
-                        <h2>Retorno de guia - ID {{$objeto->id}} </h2>
+                        <h2>Retorno de guia - ID <span id="spanID"> </span> </h2>
                     </div>
                     <div class="pricingContent2">
                         <ul>
                             <h4>
-                                <li><b>Remitente :</b>{{ $objeto->contacto }}   
+                                <li><b>Remitente : <span id="spanRemitente"> </span></b>   
                                 </li>
                                 <li>
-                                	<b>Destinatorio :</b> {{ $objeto->contacto_d }}
+                                	<b>Destinatorio : <span id="spanDestinatario"> </span> </b> 
                                 </li>
                             </h4>
 
                             <h4>
-                                <li><b>Nuevo Remitente:</b> {{ $objeto->contacto_d }}   
+                                <li><b>Nuevo Remitente: <span id="spanNuevoRemitente"> </span></b> 
                                 </li>
                                 <li>
-                                	<b>Nuevo Destinatorio:</b> {{ $objeto->contacto }}
+                                	<b>Nuevo Destinatorio: <span id="spanNuevoDestinatario"> </span></b> 
                                 </li>
                             </h4>
                         </ul>
@@ -54,7 +51,7 @@
 <!-- Campos ocultos -->
 
 {!! Form::hidden('guia_id'
-    , $objeto->id
+    , null
     ,['class'       => 'form-control'
         ,'id'       => 'guia_id'
     ])

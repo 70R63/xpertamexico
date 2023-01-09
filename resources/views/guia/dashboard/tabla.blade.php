@@ -4,10 +4,10 @@
         <div class="card custom-card mg-b-20">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="exportGeneral" class="table table-striped table-bordered text-nowrap" >
+                    <table id="guiasTabla" class="table table-striped table-bordered text-nowrap " >
                         <thead>
                             <tr>
-                                <th class='notexport'>ID</th>
+                                <th>ID</th>
                                 <th class='notexport'>GUIA /<br>RETORNO</th>
                                 <th>MENSAJERIA</th>
                                 <th>SERVICIO</th>
@@ -15,56 +15,26 @@
                                 <th>CLIENTE XPERTA</th>
                                 <th>REMITENTE <br>(CONTACTO)</th>
                                 <th>DESTINATATIO <br>(CONTACTO)</th>
-                                 <th style="display:none;">CP ORIGEN</th>
-                                <th style="display:none;">CIUDAD ORIGEN</th>
-                                <th style="display:none;">CP DESTINO</th>
-                                <th style="display:none;">CIUDAD DESTINO</th>
+                                <th >CP ORIGEN</th>
+                                <th >CIUDAD ORIGEN</th>
+                                <th>CP DESTINO</th>
+                                <th>CIUDAD DESTINO</th>
                                 <th >CREACION</th>
                                 <th >CANAL</th>
                                 <th>TRACKING</th>
-                                <th style="display:none;">PRECIO</th>
-                                <th style="display:none;">PIEZAS</th>
-                                <th style="display:none;">PESO KG</th>
-                                <th style="display:none;">DIMENSIONES</th>
-                                <th style="display:none;">VALOR DEL ENVIO</th>
-                                <th style="display:none;">COSTO SEGURO</th>
-                               
-                                <th style="display:none;">APLICA A.E.</th>
-                                
-                                
+                                <th>PRECIO</th>
+                                <th>PIEZAS</th>
+                                <th>PESO KG</th>
+                                <th>DIMENSIONES</th>
+                                <th>VALOR DEL ENVIO</th>
+                                <th>COSTO SEGURO</th>
+                                <th>APLICA A.E.</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach( $tabla  as $objeto)
-                            <tr>
-                                <td>{{ $objeto->id }}</td>
-                                <td>
-                                    @include('guia.dashboard.documento')
-                                    @include('guia.dashboard.retorno')
-                                </td>
-                                <td >{{ $ltdActivo[$objeto->ltd_id] }}</td>
-                                <td>{{ $servicioPluck[$objeto->servicio_id] }}</td>
-                                <td>{{ $objeto->usuario }}</td>
-                                <td>{{ $objeto->nombre}}</td>
-                                @include('guia.dashboard.canal')
-                                <td>{{ $objeto->created_at }}</td>
-                                <td >{{ $objeto->canal }}</td>
-                                <td>{{$objeto->tracking_number}}</td>
-                                <td style="display:none;">{{ $objeto->precio }}</td>
-                                <td style="display:none;">{{ $objeto->piezas }}</td>
-                                <td style="display:none;">{{ $objeto->peso }}</td>
-                                <td style="display:none;">{{ $objeto->dimensiones }}</td>
-                                <td style="display:none;">{{ $objeto->valor_envio }}</td>
-                                <td style="display:none;">{{ $objeto->seguro }}</td>
-                                <td style="display:none;" >{{ $objeto->extendida }}</td>
-                                
-                            </tr>
-                            @endforeach
-                        </tbody>
-                        
+                                                
                         <tfoot>
                             <tr>
-                              <td colspan="20">Los datos son responsalidad del usuario</td>
+                              <td colspan="22">Los datos son responsalidad del usuario</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -73,4 +43,6 @@
         </div>
     </div>
 </div>
+
+@include('guia.dashboard.retorno')
 <!-- End Row-->
