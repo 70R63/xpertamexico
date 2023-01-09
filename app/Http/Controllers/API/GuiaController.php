@@ -212,7 +212,6 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         try {
             
-
             $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre')
                     ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
                     ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
