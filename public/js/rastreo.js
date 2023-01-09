@@ -34,13 +34,14 @@ function rastrearTabla(){
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
                     }
-                    ,"processing": true
-                    //,serverSide: true
-                    
-                    ,"bDestroy": true,
-                    "data": response.data,
-                    "autoWidth": false
-                    , order: [[0, 'desc']]
+                    ,processing: true
+                    ,serverSide: false 
+                    ,pagingType: "full_numbers"
+                    ,deferRender: true
+                    ,bDestroy: true
+                    ,data: response.data
+                    ,autoWidth: false
+                    ,order: [[0, 'desc']]
                     ,columnDefs: [
                         {  
                             targets: 7 

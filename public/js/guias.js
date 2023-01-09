@@ -1,12 +1,11 @@
 $(document).ready(function() {
     if ($('#guiasTabla').length) {
-        rastrearTabla()     
+        guiasTabla()     
     }
    
 }) 
 
-
-function rastrearTabla(){
+function guiasTabla(){
     $.ajax({
         url: 'api/rastreoTabla',
         type: 'GET',
