@@ -323,7 +323,7 @@ class GuiaController extends Controller
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             Rastreo_peticion::where('id',$rastreoPeticionesID)
                 ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
-                        ,"completado"=>1) 
+                        ,"completado"=>true) 
                     );
             
             $tabla= array();
