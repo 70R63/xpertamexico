@@ -6,7 +6,7 @@ use App\Http\Requests\StoreRastreosRequest;
 use App\Http\Requests\UpdateRastreosRequest;
 use App\Models\Rastreos;
 use App\Models\Guia;
-use App\Models\Rastreo_peticion;
+use App\Models\API\Rastreo_peticion;
 
 
 //Generales 
@@ -28,7 +28,7 @@ class RastreosController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------"); 
-            $rastreoPeticion = Rastreo_peticion::latest()->first();
+            $rastreoPeticion = Rastreo_peticion::where('completado',1)->latest()->first();
             Log::debug(print_r($rastreoPeticion->peticion_fin,true));
 
             Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO----------------- ");

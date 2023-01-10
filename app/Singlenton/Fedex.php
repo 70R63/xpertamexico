@@ -31,7 +31,7 @@ class Fedex {
     private $exiteSeguimiento = false;
     private $quienRecibio = "No entregado aun"; 
 
-    private function __construct(int $ltd_id= 1){
+    private function __construct(int $ltd_id= 1, $empresa_id= 1, $plataforma = 'WEB'){
 
         Log::info(__CLASS__." ".__FUNCTION__);
         $this->baseUri = Config('ltd.fedex.base_uri');
@@ -45,6 +45,11 @@ class Fedex {
 
         }else {
             Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
+
+            if ($plataforma == 'WEB'){
+                $empresa_id = auth()->user()->empresa_id;
+            } 
+
             $client = new Client(['base_uri' => $this->baseUri]);
 
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
@@ -64,7 +69,7 @@ class Fedex {
 
             $this->token = $contenido->access_token;
 
-            $insert = array('empresa_id' => auth()->user()->empresa_id
+            $insert = array('empresa_id' => $empresa_id
                 ,'ltd_id'   => $ltd_id
                 ,'token'    => $this->token
                 ,'expira_en'=> Carbon::now()->addHours(1)
@@ -231,10 +236,10 @@ class Fedex {
        
     }
 
-    public static function getInstance( int $ltd_id = 1){
+    public static function getInstance( int $ltd_id = 1,$empresa_id= 1, $plataforma = 'WEB'){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
-            self::$instance = new self($ltd_id);
+            self::$instance = new self($ltd_id,$empresa_id, $plataforma);
         }
         Log::debug(__CLASS__." ".__FUNCTION__." return intancia");
         return self::$instance;

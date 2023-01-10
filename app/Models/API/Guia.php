@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\API;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-class Rastreo_peticion extends Model
+class Guia extends Model
 {
     use HasFactory;
+
 }

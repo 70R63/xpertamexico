@@ -20,7 +20,6 @@ class Guia extends Model
 
     protected static function boot()
     {
-
         parent::boot();        
         static::addGlobalScope('guia_empresa', function (Builder $builder) {
             $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)

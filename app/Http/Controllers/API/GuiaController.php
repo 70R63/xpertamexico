@@ -16,7 +16,8 @@ use App\Singlenton\Estafeta ; //PRODUCTION
 use App\Singlenton\Fedex as sFedex ; //PRODUCTION
 use App\Dto\Guia as GuiaDTO;
 use App\Models\Guia;
-use App\Models\Rastreo_peticion;
+use App\Models\API\Guia as GuiaAPI;
+use App\Models\API\Rastreo_peticion;
 
 /**
  * GuiaController
@@ -263,46 +264,7 @@ class GuiaController extends Controller
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
-            $tabla = Guia::select('id','ltd_id', 'tracking_number')
-                    ->where('ltd_id',1)
-                    ->whereIN('rastreo_estatus',array(1,2,3))
-                    //->offset(0)->limit(10)
-                    ->get()->toArray();
-            Log::info("Total de guias revisar ".count($tabla));
-            $sFedex = sFedex::getInstance();
-            $i = 0;
-            foreach ($tabla as $key => $value) {
-                Log::debug("-----".++$i."-----");
-                Log::debug($value);
-
-                $sFedex->rastreo($value['tracking_number']);
-                
-                if ($sFedex->getExiteSeguimiento()) {
-                    Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
-                    $scanEvents = $sFedex->getScanEvents();
-                    $paquete = $sFedex->getPaquete();
-                    $quienRecibio = $sFedex->getQuienRecibio();    
-                    $ultimaFecha = Carbon::parse($scanEvents->date)->format('Y-m-d H:i:s');
-
-                    $update = array('ultima_fecha' => $ultimaFecha
-                            ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$scanEvents->derivedStatusCode]
-                            ,'rastreo_peso' => $paquete['peso'] 
-                            ,'largo' => $paquete['largo'] 
-                            ,'ancho' => $paquete['ancho'] 
-                            ,'alto' => $paquete['alto']
-                            ,'quien_recibio' =>  $quienRecibio
-
-                        );
-
-                    
-                    Log::debug(print_r($update,true));
-
-                    $affectedRows = Guia::where("id", $value['id'])
-                            ->update($update);
-
-                    Log::debug("affectedRows -> $affectedRows");
-                }
-            }
+            $this->rastreoFedex();
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             Rastreo_peticion::where('id',$rastreoPeticionesID)
@@ -311,6 +273,7 @@ class GuiaController extends Controller
             $tabla= array();
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
             return $this->successResponse($tabla, 'successfully.');
+
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
             Log::debug($ex->getMessage()); 
@@ -338,5 +301,158 @@ class GuiaController extends Controller
         }
 
         return $this->sendError($this->error,$this->mensaje, $this->codeHttp);
-    }//fin reastreo
+    }//fin reastreo, Global para actualizar el esatus de las guias
+
+
+    /**
+     * Funcion para actualizar los registros para la tabla de ratreo 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function rastreoActualizarAutomatico(){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        try {
+
+            $rastreoPeticionesID = Rastreo_peticion::create()->id;
+
+            $this->rastreoFedex(true);
+            
+            Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>1) 
+                    );
+            
+            $tabla= array();
+            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            return $this->successResponse($tabla, 'successfully.');
+            
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+            
+
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
+            $resultado = $ex;
+
+            $this->error = "HttpException";
+            $this->mensaje =$ex->getMessage();
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            Log::debug(print_r($ex,true));
+            $this->error = "Exception";
+            $this->mensaje =$ex->getMessage();
+        }
+
+        return $this->sendError($this->error,$this->mensaje, $this->codeHttp);
+    }//fin reastreo, Global para actualizar el esatus de las guias
+
+    /**
+     * Funcion para actualizar guias de Fedex ltd = 1 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    private function rastreoFedex(bool $automatico = false){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $guia = array();
+        $sFedex = sFedex::getInstance(1,1,"ATM");
+        if ($automatico){
+            $guias = $this->consultaGuiaParaRastreoAutomatco(Config('ltd.fedex.id'));
+        }else{
+            $guias = $this->consultaGuiaParaRastreo(Config('ltd.fedex.id'));    
+        }
+        
+        $guiaCantidad = count($guias);
+        $i = 0;
+        foreach ($guias as $key => $value) {
+            Log::info("-----".++$i."/$guiaCantidad -----");
+            Log::debug($value);
+
+            $sFedex->rastreo($value['tracking_number']);
+            
+            if ($sFedex->getExiteSeguimiento()) {
+                Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
+                $scanEvents = $sFedex->getScanEvents();
+                $paquete = $sFedex->getPaquete();
+                $quienRecibio = $sFedex->getQuienRecibio();    
+                $ultimaFecha = Carbon::parse($scanEvents->date)->format('Y-m-d H:i:s');
+
+                $update = array('ultima_fecha' => $ultimaFecha
+                        ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$scanEvents->derivedStatusCode]
+                        ,'rastreo_peso' => $paquete['peso'] 
+                        ,'largo' => $paquete['largo'] 
+                        ,'ancho' => $paquete['ancho'] 
+                        ,'alto' => $paquete['alto']
+                        ,'quien_recibio' =>  $quienRecibio
+
+                    );
+
+                
+                Log::debug(print_r($update,true));
+
+                $affectedRows = Guia::where("id", $value['id'])
+                        ->update($update);
+
+                Log::debug("affectedRows -> $affectedRows");
+            }
+        } // fin foreach ($tabla as $key => $value)
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+    }// Fin rastreoFedex
+
+
+    /**
+     * Funcion para consultar guias con estatus [creada, recolectada, transito ] 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    private function consultaGuiaParaRastreo(int $ltdId ){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $guias = Guia::select('id','ltd_id', 'tracking_number')
+                    ->where('ltd_id',$ltdId)
+                    ->whereIN('rastreo_estatus',array(1,2,3))
+                    //->offset(0)->limit(10)
+                    ->get()->toArray();
+        Log::info("Total de guias revisar ".count($guias));
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        return $guias;
+    }
+
+    /**
+     * Funcion para consultar guias con estatus [creada, recolectada, transito ], 
+     * basado en el flujo automatico 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    private function consultaGuiaParaRastreoAutomatco(int $ltdId ){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
+                    ->where('ltd_id',$ltdId)
+                    ->whereIN('rastreo_estatus',array(1,2,3))
+                    //->offset(0)->limit(100)
+                    ->get()->toArray();
+        Log::info("Total de guias revisar ".count($guias));
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        return $guias;
+    }
 }
