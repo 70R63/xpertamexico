@@ -268,7 +268,9 @@ class GuiaController extends Controller
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             Rastreo_peticion::where('id',$rastreoPeticionesID)
-                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() ) );
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>true) 
+                    );
             
             $tabla= array();
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
