@@ -7,6 +7,7 @@ use App\Http\Controllers\API\LoginController  as AuthController;
 use App\Http\Controllers\API\GuiaController;
 use App\Http\Controllers\API\CotizacionController;
 use App\Http\Controllers\API\EmpresaLtdController;
+use App\Http\Controllers\API\DireccionController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -48,7 +49,7 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
     });
 //});
 
-
+//MIDDLEWARE PARA AJAX DESDE WEB
 Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {
         Route::apiResource('cotizaciones', CotizacionController::class);
@@ -62,6 +63,11 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
         Route::controller(GuiaController::class)->group(function(){
             Route::get('rastreoTabla', 'rastreoTabla');
             Route::post('rastreoActualizar', 'rastreoActualizar');
+        });
+
+        Route::controller(DireccionController::class)->prefix('direccion')->group(function(){
+            Route::get('{cliente}', 'index');
+           
         });
     });
 });

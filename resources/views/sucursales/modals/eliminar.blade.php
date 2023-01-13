@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal{{ $objeto->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	    	<div class="modal-header">
@@ -11,12 +11,12 @@
 	    	<div class="modal-body">
 	        	<p class="bigger-50 bolder center grey">
 					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-					Seguro que quieres eliminar el ID '{{ $objeto->id }}', empresa '{{ $objeto->nombre }}' ?  	
+					Seguro que quieres eliminar el ID '<span id="spanID"></span> ', empresa '<span id="spanNombre"></span>'   	
 				</p>
 	      	</div>
 		     <div class="modal-footer">
 		      	<button class="btn btn-primary" type="button" data-dismiss="modal">Cancelar</button>
-		      	{!! Form::open([ 'route' => ['sucursales.destroy', $objeto->id ], 'metdod' => 'PUT' ]) !!}
+		      	{!! Form::open([ 'route' => ['sucursales.destroy', 1 ], 'metdod' => 'PUT', 'id'=>'formRemitente' ]) !!}
 		      		@csrf
 		      		{{method_field('DELETE')}}
 					<a class="btn badge-dark" onclick="$(this).closest('form').submit();">Eliminar</a>

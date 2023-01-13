@@ -261,14 +261,14 @@
         <!-- Personalizacion -->
         <script src="{{ asset('js/guardar.js') }}" ></script> 
         <script src="{{ asset('js/tipoEnvio.js') }}" ></script>
-        <script src="{{ asset('js/submitModal.js') }}" ></script>
-        <script src="{{ asset('js/preSubmit.js') }}" ></script>
         <script src="{{ asset('js/cotizar.js') }}" ></script>
         <script src="{{ asset('js/empresa.js') }}" ></script>
         <!-- Personalizacion de validicon con parley -->
         <script src="{{ asset('js/form-validation.js') }}" ></script>
         <script src="{{ asset('js/rastreo.js') }}" ></script>
         <script src="{{ asset('js/guias.js') }}" ></script>
+        <script src="{{ asset('js/destinatario.js') }}" ></script>
+        <script src="{{ asset('js/remitente.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')
