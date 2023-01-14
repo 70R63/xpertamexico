@@ -229,6 +229,8 @@ class Fedex {
                     if (isset($value1->deliveryDetails->receivedByName)) {
                         $this->quienRecibio = $value1->deliveryDetails->receivedByName;
                         
+                    }else {
+                        $this->quienRecibio = "No entregado aun";
                     }
                     Log::debug(__CLASS__." ".__FUNCTION__." Asignando pesoDimension");
                     $this->paquete = $pesoDimension;
