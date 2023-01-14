@@ -30,6 +30,8 @@ class Fedex {
     private $paquete = array();
     private $exiteSeguimiento = false;
     private $quienRecibio = "No entregado aun"; 
+    private $latestStatusDetail; 
+    
 
     private function __construct(int $ltd_id= 1, $empresa_id= 1, $plataforma = 'WEB'){
 
@@ -193,10 +195,11 @@ class Fedex {
         $contenido = json_decode($response->getBody()->getContents());
         foreach ($contenido->output->completeTrackResults as $key => $value) {
             foreach ($value->trackResults as $key1 => $value1) {
-                //Log::debug(print_r($value1,true));
+                Log::debug(print_r($value1,true));
 
                 if ( isset($value1->error)) {
                     Log::debug("No se econtro seguimiento");
+                    $this->exiteSeguimiento = false;
                     continue;
                 } else{
                     Log::debug("Seguimientos ");
@@ -204,6 +207,8 @@ class Fedex {
                     Log::debug(print_r($value1,true));
                     
                     $this->scanEvents = $value1->scanEvents[0];
+                    $this->latestStatusDetail = $value1->latestStatusDetail;
+                    
                     foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
                         if ($value->unit === 'KG') {
                             $pesoDimension['peso'] = $value->value;
@@ -272,6 +277,11 @@ class Fedex {
     public function getQuienRecibio(){
         return $this->quienRecibio;
     }
+
+    public function getLatestStatusDetail(){
+        return $this->latestStatusDetail;
+    }
+    
     
 }
 

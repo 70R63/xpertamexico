@@ -267,9 +267,12 @@ class GuiaController extends Controller
             $this->rastreoFedex();
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
+            
             Rastreo_peticion::where('id',$rastreoPeticionesID)
                 ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
-                        ,"completado"=>true) 
+                        ,"completado"=>true
+                        ,"usuario"=> auth()->user()->name
+                        ) 
                     );
             
             $tabla= array();
@@ -387,15 +390,16 @@ class GuiaController extends Controller
 
             $sFedex->rastreo($value['tracking_number']);
             
-            if ($sFedex->getExiteSeguimiento()) {
+            if ($sFedex->getExiteSeguimiento()) {   
                 Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
                 $scanEvents = $sFedex->getScanEvents();
+                $latestStatusDetail = $sFedex->getLatestStatusDetail();
                 $paquete = $sFedex->getPaquete();
                 $quienRecibio = $sFedex->getQuienRecibio();    
                 $ultimaFecha = Carbon::parse($scanEvents->date)->format('Y-m-d H:i:s');
 
                 $update = array('ultima_fecha' => $ultimaFecha
-                        ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$scanEvents->derivedStatusCode]
+                        ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$latestStatusDetail->derivedCode]
                         ,'rastreo_peso' => $paquete['peso'] 
                         ,'largo' => $paquete['largo'] 
                         ,'ancho' => $paquete['ancho'] 
@@ -409,7 +413,7 @@ class GuiaController extends Controller
 
                 $affectedRows = Guia::where("id", $value['id'])
                         ->update($update);
-
+                $update = array();
                 Log::debug("affectedRows -> $affectedRows");
             }
         } // fin foreach ($tabla as $key => $value)
@@ -430,7 +434,7 @@ class GuiaController extends Controller
         $guias = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    //->offset(0)->limit(10)
+                    ->offset(0)->limit(10)
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
