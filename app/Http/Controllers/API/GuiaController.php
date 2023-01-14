@@ -389,7 +389,7 @@ class GuiaController extends Controller
             Log::debug($value);
 
             $sFedex->rastreo($value['tracking_number']);
-            
+            $update = array();
             if ($sFedex->getExiteSeguimiento()) {   
                 Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
                 $scanEvents = $sFedex->getScanEvents();
@@ -413,7 +413,7 @@ class GuiaController extends Controller
 
                 $affectedRows = Guia::where("id", $value['id'])
                         ->update($update);
-                $update = array();
+                
                 Log::debug("affectedRows -> $affectedRows");
             }
         } // fin foreach ($tabla as $key => $value)

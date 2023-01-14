@@ -202,8 +202,8 @@ class Fedex {
                     $this->exiteSeguimiento = false;
                     continue;
                 } else{
-                    Log::debug("Seguimientos ");
-                    Log::debug("scanEvents ".count($value1->scanEvents));
+                    Log::debug("Seguimientos scanEvents ".count($value1->scanEvents));
+                    
                     Log::debug(print_r($value1,true));
                     
                     $this->scanEvents = $value1->scanEvents[0];
