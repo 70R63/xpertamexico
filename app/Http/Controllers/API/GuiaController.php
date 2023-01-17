@@ -434,7 +434,7 @@ class GuiaController extends Controller
         $guias = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    //->offset(0)->limit(10)
+                    ->offset(0)->limit(10)
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");

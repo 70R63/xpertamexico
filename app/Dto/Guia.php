@@ -122,7 +122,8 @@ class Guia {
 			
 		}
 
-		//Servicio 1= FEDEX
+		//Servicio 1= FEDEX, 2= ESTAFETA
+
 		if ($canal === "API") {
 			Log::debug(print_r($request['empresa_id'],true));
 			$empresa = Empresa::where("id",$request['empresa_id'])->pluck('nombre');
@@ -191,17 +192,21 @@ class Guia {
 		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ----");
 
 		$remitente = $request['labelDefinition']['location']['origin'];
+		$direccion2 = isset($remitente['address']['addressReference']) ? $remitente['address']['addressReference'] : "";
+		$noInt= isset($remitente['address']['indoorInformation']) ? $remitente['address']['indoorInformation'] : "" ;
 
 		$insertValue = array('contacto' => $remitente['contact']['contactName'], 
 					'nombre' => $remitente['contact']['corporateName'],
 					'direccion' => $remitente['address']['roadName'],
-					'direccion2' => isset($request['labelDefinition']['wayBillDocument']['aditionalInfo']),
+					'direccion2' => $direccion2,
 					'cp' => $remitente['address']['zipCode'],
 					'colonia' => $remitente['address']['settlementName'],
 					'celular' =>  $remitente['contact']['cellPhone'],
 					'no_ext' => $remitente['address']['externalNum'],
-					'no_int' => isset($remitente['address']['indoorInformation']),
+					'no_int' => $noInt,
 					'empresa_id' => $empresa_id
+					,'ciudad'	=> $remitente['address']['ciudad']
+					,'entidad_federativa'=> $remitente['address']['entidad']
 				);
 		$tmp[0] = Sucursal::create($insertValue)->id;
 		Log::debug(print_r($tmp,true));
@@ -290,17 +295,21 @@ class Guia {
 		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ----");
 
 		$destinatario = $request['labelDefinition']['location']['destination']['homeAddress'];
+		$direccion2 = isset($destinatario['address']['addressReference']) ? $destinatario['address']['addressReference'] : "";
+		$noInt= isset($destinatario['address']['indoorInformation']) ? $destinatario['address']['indoorInformation'] : "" ;
 
 		$insertValue = array('contacto' => $destinatario['contact']['contactName'], 
 					'nombre' => $destinatario['contact']['corporateName'],
 					'direccion' => $destinatario['address']['roadName'],
-					'direccion2' => isset($request['labelDefinition']['wayBillDocument']['aditionalInfo']),
+					'direccion2' => $direccion2,
 					'cp' => $destinatario['address']['zipCode'],
 					'colonia' => $destinatario['address']['settlementName'],
 					'celular' =>  $destinatario['contact']['cellPhone'],
 					'no_ext' => $destinatario['address']['externalNum'],
-					'no_int' => isset($destinatario['address']['indoorInformation']),
+					'no_int' => $noInt,
 					'empresa_id' => $empresa_id
+					,'ciudad'	=> $destinatario['address']['ciudad']
+					,'entidad_federativa'=> $destinatario['address']['entidad']
 				);
 		$tmp[0] = Cliente::create($insertValue)->id;
 		Log::debug(print_r($tmp,true));
