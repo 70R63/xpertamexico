@@ -66,7 +66,7 @@ function destinatarioTabla(){
                     ,{ "data": "telefono" }
                     ,{ "data": "accion"
                             ,render: function(data, type, row){ 
-                            return acciones(row); 
+                            return destinatarioAcciones(row); 
                         }
                     }
 
@@ -89,7 +89,7 @@ function destinatarioTabla(){
 }
 
 
-function acciones(row){
+function destinatarioAcciones(row){
 
     var htmlEditar = '<a href="clientes/'+row.id+'/edit" class="text-info tx-20 "> <i class="fe fe-edit" alt="Editar"></i></a>'
 

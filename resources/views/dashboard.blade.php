@@ -267,8 +267,8 @@
         <script src="{{ asset('js/form-validation.js') }}" ></script>
         <script src="{{ asset('js/rastreo.js') }}" ></script>
         <script src="{{ asset('js/guias.js') }}" ></script>
-        <script src="{{ asset('js/destinatario.js') }}" ></script>
         <script src="{{ asset('js/remitente.js') }}" ></script>
+        <script src="{{ asset('js/destinatario.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')

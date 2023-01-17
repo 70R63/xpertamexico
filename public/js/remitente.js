@@ -66,7 +66,7 @@ function remitenteTabla(){
                     ,{ "data": "telefono" }
                     ,{ "data": "accion"
                             ,render: function(data, type, row){ 
-                            return acciones(row); 
+                            return remitentAcciones(row); 
                         }
                     }
 
@@ -89,7 +89,7 @@ function remitenteTabla(){
 }
 
 
-function acciones(row){
+function remitentAcciones(row){
 
     var htmlEditar = '<a href="sucursales/'+row.id+'/edit" class="text-info tx-20 "> <i class="fe fe-edit" alt="Editar"></i></a>'
 
