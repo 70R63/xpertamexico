@@ -18,6 +18,7 @@ use App\Dto\Guia as GuiaDTO;
 use App\Models\Guia;
 use App\Models\API\Guia as GuiaAPI;
 use App\Models\API\Rastreo_peticion;
+use App\Models\EmpresaEmpresas;
 
 /**
  * GuiaController
@@ -264,7 +265,9 @@ class GuiaController extends Controller
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
-            $this->rastreoFedex();
+            //$this->rastreoFedex();
+            $this->rastreoEstafeta();
+
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             
@@ -377,7 +380,7 @@ class GuiaController extends Controller
         $guia = array();
         $sFedex = sFedex::getInstance(1,1,"ATM");
         if ($automatico){
-            $guias = $this->consultaGuiaParaRastreoAutomatco(Config('ltd.fedex.id'));
+            $guias = $this->consultaGuiaParaRastreoAutomatico(Config('ltd.fedex.id'));
         }else{
             $guias = $this->consultaGuiaParaRastreo(Config('ltd.fedex.id'));    
         }
@@ -422,6 +425,68 @@ class GuiaController extends Controller
 
 
     /**
+     * Funcion para actualizar guias de Estafeta ltd = 2 
+     * 
+     * @param bool $automatico, Indica si la peticion es via crontab es igual a true
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    private function rastreoEstafeta(bool $automatico = false){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $guia = array();
+        
+        if ($automatico){
+            $empresaId = 1;
+        }else{
+            $empresaId = auth()->user()->empresa_id;    
+        }
+        Log::info(__CLASS__." ".__FUNCTION__." empresaId $empresaId");
+
+        $guias = $this->consultaGuiaParaRastreoAutomatico( Config('ltd.estafeta.id'), $empresaId);
+        $sEstafeta = Estafeta::getInstance(Config('ltd.estafeta.id'),$empresaId,"ATM");
+
+        $guiaCantidad = count($guias);
+        $i = 0;
+        foreach ($guias as $key => $value) {
+            Log::info("-----".++$i."/$guiaCantidad -----");
+            Log::debug($value);
+
+            $sEstafeta->rastreo($value['tracking_number']);
+            $update = array();
+            
+            if ($sEstafeta->getExiteSeguimiento()) {   
+                Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
+                $paquete = $sEstafeta->getPaquete();
+
+                $update = array('ultima_fecha' => $sEstafeta->getUltimaFecha()
+                        ,'rastreo_estatus' => Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()]
+                        ,'rastreo_peso' => $paquete['peso'] 
+                        ,'largo' => $paquete['largo'] 
+                        ,'ancho' => $paquete['ancho'] 
+                        ,'alto' => $paquete['alto']
+                        ,'quien_recibio' =>  $sEstafeta->getQuienRecibio()
+
+                    );
+
+                Log::info(print_r($update,true));
+
+                /*$affectedRows = Guia::where("id", $value['id'])
+                        ->update($update);
+                */
+                $affectedRows = "demo";
+                Log::debug("affectedRows -> $affectedRows");
+            }else{
+                Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
+            }
+            
+        } // fin foreach ($tabla as $key => $value)
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+    }// Fin rastreoFedex
+
+
+
+    /**
      * Funcion para consultar guias con estatus [creada, recolectada, transito ] 
      * 
      * @param 
@@ -434,7 +499,7 @@ class GuiaController extends Controller
         $guias = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    ->offset(0)->limit(10)
+                    //->offset(0)->limit(1)
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
@@ -450,12 +515,17 @@ class GuiaController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    private function consultaGuiaParaRastreoAutomatco(int $ltdId ){
+    private function consultaGuiaParaRastreoAutomatico(int $ltdId, int $empresaId = 1 ){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $empresas = EmpresaEmpresas::where('id',$empresaId)
+                ->pluck('empresa_id')->toArray();
+
         $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)
+                    ->whereIN('guias.empresa_id',$empresas)
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    //->offset(0)->limit(100)
+                    ->offset(0)->limit(50)
+                    ->orderBy('id', 'DESC')
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");

@@ -22,6 +22,11 @@ class Estafeta {
     public $documento = 0; 
     private $resultado = array();
     private $trackingNumber = "trackingNumber";
+    private $exiteSeguimiento = false;
+    private $quienRecibio = "No entregado aun";
+    private $paquete = array();
+    private $latestStatusDetail;
+    private $ultimaFecha;
 
     public function __construct(int $ltd_id, $empresa_id= 1, $plataforma = 'WEB'){
 
@@ -38,6 +43,7 @@ class Estafeta {
                 ->first();
 
         if (!is_null($sesion)) {
+            Log::info(__CLASS__." ".__FUNCTION__." Token existente");
             $this->token = $sesion->token;
 
         }else {
@@ -67,7 +73,7 @@ class Estafeta {
                     ,'token'    => $this->token
                     ,'expira_en'=> Carbon::now()->addMinutes(1380)
                      );
-
+                Log::debug(print_r($insert,true));
                 $id = LtdSesion::create($insert)->id;
                 Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
             }
@@ -76,6 +82,33 @@ class Estafeta {
         
     }
 
+    /**
+     * clienteRest busca crear una funcion donde se inicialice la peticion via guzzle.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return GuzzleHttp\Client $response
+     */
+
+    private function clienteRest(array $body,$metodo = 'GET', string $baseUri, $servicio){
+        Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $client = new Client(['base_uri' => $baseUri]);
+        $authorization = sprintf("Bearer %s",$this->token);
+
+        $headers = ['Authorization' => $authorization
+                    ,'Content-Type' => 'application/json'
+                    ,'charset' => 'utf-8'
+                    ,'apiKey'   => Config('ltd.estafeta.api_key')
+                ];
+
+        $bodyJson = json_encode($body);
+        Log::debug(print_r($bodyJson,true));
+        
+        Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        return $client->request($metodo,$servicio , [
+                    'headers'   => $headers
+                    ,'body'     => $bodyJson
+                ]);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -110,6 +143,104 @@ class Estafeta {
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");
     }
 
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  array  $body
+     * @return \Illuminate\Http\Response
+     */
+
+    public function rastreo($trackingNumber = 1,)
+    {
+        Log::info(__CLASS__." ".__FUNCTION__." INICIO ------------------");
+
+        $pesoDimension  = array('peso' => 0
+                    , 'largo' => 0
+                    , 'ancho' => 0
+                    , 'alto' => 0
+                );
+
+        $body = array (
+          'suscriberId' => Config('ltd.estafeta.cred.suscriberId'),
+          'login' => Config('ltd.estafeta.cred.loginTracking'),
+          'password' => Config('ltd.estafeta.cred.pswdTracking'),
+          'searchType' => array (
+            'type' => 'L',
+            'waybillList' => array (
+                'waybillType' => 'G',
+                'waybills' => array (
+                    'string' => array (
+                        0 => $trackingNumber,
+                    ),
+                ),
+            ),
+          ),
+          'searchConfiguration' => array (
+            'historyConfiguration' => array (
+              'historyType' => 'all',
+              'includeHistory' => true,
+            ),
+            'includeCustomerInfo' => true,
+            'includeDimensions' => true,
+            'includeInternationalData' => true,
+            'includeMultipleServiceData' => true,
+            'includeReturnDocumentData' => true,
+            'includeSignature' => true,
+            'includeWaybillReplaceData' => true,
+          ),
+        );
+
+        $response = $this->clienteRest($body, 'POST',Config('ltd.estafeta.base_uri_tracking'),Config('ltd.estafeta.servicio_tracking'));
+
+        $contenido = json_decode($response->getBody()->getContents());
+        $response = $contenido->ExecuteQueryResponse->ExecuteQueryResult->trackingData;
+        
+        if (isset($response->TrackingData)) {
+            Log::info("Existe tracking");
+
+            $trackingData = $response->TrackingData;
+            //Log::debug(print_r($trackingData,true));
+            Log::info(__CLASS__." ".__FUNCTION__." Ultimo estatus");
+            $this->latestStatusDetail = $trackingData->statusENG;
+            Log::debug(print_r($this->latestStatusDetail,true));
+            if (isset($trackingData->dimensions->weight)) {
+                $weight = $trackingData->dimensions->weight;
+                $volumetricWeight = $trackingData->dimensions->volumetricWeight;
+
+                $pesoDimension['largo'] = $trackingData->dimensions->length;
+                $pesoDimension['ancho'] = $trackingData->dimensions->width;
+                $pesoDimension['alto'] = $trackingData->dimensions->height;
+                $pesoDimension['peso'] = ( $weight > $volumetricWeight) ? $weight : $volumetricWeight;
+            }
+            
+            $this->paquete = $pesoDimension;
+
+            $receiverName = explode(":", $trackingData->deliveryData->receiverName);
+            $this->quienRecibio = ( count($receiverName) === 2) ? $receiverName[1] : "No entregado aun" ;
+
+            Log::info(__CLASS__." ".__FUNCTION__." Ultimo estatus");
+            if ($this->latestStatusDetail === "DELIVERED") {
+                $ultimaFecha = $trackingData->deliveryData->deliveryDateTime;
+            }else{
+                $evento = count($trackingData->history->History)-1;
+                $ultimoEvento = $trackingData->history->History[$evento];
+                $ultimaFecha = $ultimoEvento->eventDateTime;
+            }
+            $this->ultimaFecha = Carbon::parse($ultimaFecha)->format('Y-m-d H:i:s');
+            
+            Log::debug(print_r($this->ultimaFecha,true));
+            
+            $this->exiteSeguimiento = true;
+        }else{
+            Log::debug("Sin trcaking");
+            $this->exiteSeguimiento = false;   
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");
+    }
+
+
     public static function getInstance( int $ltd_id){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
@@ -133,6 +264,26 @@ class Estafeta {
 
     public function getTrackingNumber(){
         return $this->trackingNumber;
+    }
+
+    public function getExiteSeguimiento(){
+        return $this->exiteSeguimiento;
+    }
+
+    public function getQuienRecibio(){
+        return $this->quienRecibio;
+    }
+
+    public function getPaquete(){
+        return $this->paquete;
+    }
+
+    public function getLatestStatusDetail(){
+        return $this->latestStatusDetail;
+    }
+
+    public function getUltimaFecha(){
+        return $this->ultimaFecha;
     }
 }
 
