@@ -75,15 +75,15 @@
 
 .btn-primary {
   color: #ffffff;
-  background-color: #f5b221;
-  border-color: #f5b221;
+  background-color: #096fe6;
+  border-color: #096fe6;
 }
 
 .btn-primary:hover, .btn-primary:focus {
   -webkit-box-shadow: 0 0 0 1px rgba(134, 103, 255, 0.2);
           box-shadow: 0 0 0 1px rgba(134, 103, 255, 0.2);
   color: #ffffff;
-  background-color: #096fe6 !important;
+  background-color: #A7B9F3 !important;
   border-color: #096fe6 !important;
 }
 
