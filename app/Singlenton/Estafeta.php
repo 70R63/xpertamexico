@@ -179,9 +179,9 @@ class Estafeta {
                 );
 
         $body = array (
-          'suscriberId' => Config('ltd.estafeta.cred.suscriberId'),
-          'login' => Config('ltd.estafeta.cred.loginTracking'),
-          'password' => Config('ltd.estafeta.cred.pswdTracking'),
+          'suscriberId' => Config('ltd.estafeta.rastreo.suscriberId'),
+          'login' => Config('ltd.estafeta.rastreo.login'),
+          'password' => Config('ltd.estafeta.rastreo.pswd'),
           'searchType' => array (
             'type' => 'L',
             'waybillList' => array (

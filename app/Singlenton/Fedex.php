@@ -209,9 +209,11 @@ class Fedex {
                     $this->scanEvents = $value1->scanEvents[0];
                     $this->latestStatusDetail = $value1->latestStatusDetail;
                     
-                    foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
-                        if ($value->unit === 'KG') {
-                            $pesoDimension['peso'] = $value->value;
+                    if (isset($value1->packageDetails->weightAndDimensions) ) {
+                        foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
+                            if ($value->unit === 'KG') {
+                                $pesoDimension['peso'] = $value->value;
+                            }
                         }
                     }
                     
