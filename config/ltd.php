@@ -44,8 +44,6 @@ return [
     ,'estafeta' =>[
         'id'    => "2"
         ,'base_uri'  =>  env('ESTAFETA_BASEURI')
-        ,'base_uri_tracking'  =>  env('ESTAFETA_BASEURI_TRACKING')
-        ,'servicio_tracking'  =>  env('ESTAFETA_SERVICIO_TRACKING')
         ,'token_uri'    =>  env('ESTAFETA_TOKEN_URI')
         ,'api_key'  =>  env('ESTAFETA_APIKEY')
         ,'secret'   => env('ESTAFETA_SECRET')
@@ -58,12 +56,19 @@ return [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID')
             ,'customerNumber' => env('ESTAFETA_CUSTOMERNUMBER')
             ,'salesOrganization'=>env('ESTAFETA_SALESORGANIZATION')
-            ,'loginTracking'=>env('ESTAFETA_LOGIN_TRACKING')
-            ,'pswdTracking'=>env('ESTAFETA_PSWD_TRACKING')
         ]
         ,'rastreoEstatus' => [
             'ON_TRANSIT' => '3'
             ,'DELIVERED'=> '4'
+        ]
+        ,'rastreo' => [
+            'suscriberId' => env('ESTAFETA_SUSCRIBERID_TRACKING')
+            ,'login'=>env('ESTAFETA_LOGIN_TRACKING')
+            ,'pswd'=>env('ESTAFETA_PSWD_TRACKING')
+            ,'api_key'  =>  env('ESTAFETA_APIKEY_TRACKING')
+            ,'secret'   => env('ESTAFETA_SECRET_TRACKING')
+            ,'base_uri'  =>  env('ESTAFETA_BASEURI_TRACKING')
+            ,'servicio'  =>  env('ESTAFETA_SERVICIO_TRACKING')
         ]
     ]
 ];

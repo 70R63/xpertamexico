@@ -28,7 +28,7 @@ class Estafeta {
     private $latestStatusDetail;
     private $ultimaFecha;
 
-    public function __construct(int $ltd_id, $empresa_id= 1, $plataforma = 'WEB'){
+    public function __construct(int $ltd_id, $empresa_id= 1, $plataforma = 'WEB',int $servicioID = 1){
 
         Log::info(__CLASS__." ".__FUNCTION__);
         $this->baseUri = Config('ltd.estafeta.base_uri');
@@ -38,6 +38,7 @@ class Estafeta {
         } 
         
         $sesion = LtdSesion::where('ltd_id', $ltd_id)
+                ->where('servicio',$servicioID)
                 ->where('empresa_id',$empresa_id)
                 ->where('expira_en','>', Carbon::now())
                 ->first();
@@ -48,15 +49,29 @@ class Estafeta {
 
         }else {
             Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
+
+
             $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
 
-            $formParams = [
-                'client_id' => Config('ltd.estafeta.api_key'),
-                'client_secret' => Config('ltd.estafeta.secret'),
-                'grant_type' => 'client_credentials'
-                ,'scope' => 'execute'
-            ];
+            if ($servicioID === 1) {
+                Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
+                $formParams = [
+                    'client_id' => Config('ltd.estafeta.api_key'),
+                    'client_secret' => Config('ltd.estafeta.secret'),
+                    'grant_type' => 'client_credentials'
+                    ,'scope' => 'execute'
+                ];
+            } else {
+                Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
+                $formParams = [
+                    'client_id' => Config('ltd.estafeta.rastreo.api_key'),
+                    'client_secret' => Config('ltd.estafeta.rastreo.secret'),
+                    'grant_type' => 'client_credentials'
+                    ,'scope' => 'execute'
+                ];
+            }
+            
 
             $response = $client->request('POST', 'auth/oauth/v2/token',
                 ['form_params' => $formParams
@@ -71,6 +86,7 @@ class Estafeta {
                 $insert = array('empresa_id' => $empresa_id
                     ,'ltd_id'   => $ltd_id
                     ,'token'    => $this->token
+                    ,'servicio'    => $servicioID
                     ,'expira_en'=> Carbon::now()->addMinutes(1380)
                      );
                 Log::debug(print_r($insert,true));
@@ -89,15 +105,16 @@ class Estafeta {
      * @return GuzzleHttp\Client $response
      */
 
-    private function clienteRest(array $body,$metodo = 'GET', string $baseUri, $servicio){
+    private function clienteRest(array $body,$metodo = 'GET', string $baseUri, $servicio, int $servicioID=1){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $client = new Client(['base_uri' => $baseUri]);
         $authorization = sprintf("Bearer %s",$this->token);
 
+        $apiKey = ($servicioID === 1) ? Config('ltd.estafeta.api_key') : Config('ltd.estafeta.rastreo.api_key');
         $headers = ['Authorization' => $authorization
                     ,'Content-Type' => 'application/json'
                     ,'charset' => 'utf-8'
-                    ,'apiKey'   => Config('ltd.estafeta.api_key')
+                    ,'apiKey'   => $apiKey
                 ];
 
         $bodyJson = json_encode($body);
@@ -191,16 +208,19 @@ class Estafeta {
           ),
         );
 
-        $response = $this->clienteRest($body, 'POST',Config('ltd.estafeta.base_uri_tracking'),Config('ltd.estafeta.servicio_tracking'));
+        $response = $this->clienteRest($body, 'POST',Config('ltd.estafeta.rastreo.base_uri'),Config('ltd.estafeta.rastreo.servicio'), 2);
 
-        $contenido = json_decode($response->getBody()->getContents());
+        #Log::debug(print_r($response->getBody()->getContents(),true));
+        $tmp = $response->getBody()->getContents();
+        Log::debug(print_r($tmp,true));
+        $contenido = json_decode($tmp);
         $response = $contenido->ExecuteQueryResponse->ExecuteQueryResult->trackingData;
         
         if (isset($response->TrackingData)) {
             Log::info("Existe tracking");
 
             $trackingData = $response->TrackingData;
-            //Log::debug(print_r($trackingData,true));
+            
             Log::info(__CLASS__." ".__FUNCTION__." Ultimo estatus");
             $this->latestStatusDetail = $trackingData->statusENG;
             Log::debug(print_r($this->latestStatusDetail,true));
@@ -233,7 +253,7 @@ class Estafeta {
             
             $this->exiteSeguimiento = true;
         }else{
-            Log::debug("Sin trcaking");
+            Log::debug("Sin tracking");
             $this->exiteSeguimiento = false;   
         }
 
@@ -241,10 +261,10 @@ class Estafeta {
     }
 
 
-    public static function getInstance( int $ltd_id){
+    public static function getInstance( int $ltd_id, $empresaId = 1,$plataforma = "WEB", $servicioID=1 ){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
-            self::$instance = new self($ltd_id);
+            self::$instance = new self($ltd_id, $empresaId, $plataforma, $servicioID);
         }
         Log::debug(__CLASS__." ".__FUNCTION__." return intancia");
         return self::$instance;

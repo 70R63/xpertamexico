@@ -265,7 +265,7 @@ class GuiaController extends Controller
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
-            //$this->rastreoFedex();
+            $this->rastreoFedex();
             $this->rastreoEstafeta();
 
             
@@ -435,6 +435,8 @@ class GuiaController extends Controller
     private function rastreoEstafeta(bool $automatico = false){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $guia = array();
+        $plataforma = "WEB";
+        $servicioID = 2;
         
         if ($automatico){
             $empresaId = 1;
@@ -444,7 +446,7 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." empresaId $empresaId");
 
         $guias = $this->consultaGuiaParaRastreoAutomatico( Config('ltd.estafeta.id'), $empresaId);
-        $sEstafeta = Estafeta::getInstance(Config('ltd.estafeta.id'),$empresaId,"ATM");
+        $sEstafeta = Estafeta::getInstance(Config('ltd.estafeta.id'),$empresaId,$plataforma, $servicioID);
 
         $guiaCantidad = count($guias);
         $i = 0;
