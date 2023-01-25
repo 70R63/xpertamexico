@@ -35,6 +35,7 @@ return [
         ]
         ,'rastreoEstatus' => [
             'IN'    => '1'
+            ,'HL'     => '2'
             ,'PU'     => '2'
             ,'IT'    => '3'
             ,'DY'    => '3'
@@ -65,7 +66,7 @@ return [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID_TRACKING')
             ,'login'=>env('ESTAFETA_LOGIN_TRACKING')
             ,'pswd'=>env('ESTAFETA_PSWD_TRACKING')
-            ,'api_key'  =>  env('ESTAFETA_APIKEY_TRACKING')
+            ,'api_key'  =>  env('ESTAFETA_APIKEY_TRACKING') 
             ,'secret'   => env('ESTAFETA_SECRET_TRACKING')
             ,'base_uri'  =>  env('ESTAFETA_BASEURI_TRACKING')
             ,'servicio'  =>  env('ESTAFETA_SERVICIO_TRACKING')
