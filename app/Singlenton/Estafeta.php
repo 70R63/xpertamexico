@@ -245,9 +245,13 @@ class Estafeta {
             }else{
                 $ultimaFecha = Carbon::now();
                 if ( isset($trackingData->history->History)) {
-                    $evento = count($trackingData->history->History)-1;
-                    $ultimoEvento = $trackingData->history->History[$evento];
-                    $ultimaFecha = $ultimoEvento->eventDateTime;
+                    if (is_array($trackingData->history->History)) {
+                        $evento = count($trackingData->history->History)-1;
+                        $ultimoEvento = $trackingData->history->History[$evento];
+                        $ultimaFecha = $ultimoEvento->eventDateTime;
+                    } else {
+                        $ultimaFecha = $trackingData->history->History->eventDateTime;
+                    }
                 }
                 
             }
