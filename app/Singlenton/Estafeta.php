@@ -243,9 +243,13 @@ class Estafeta {
             if ($this->latestStatusDetail === "DELIVERED") {
                 $ultimaFecha = $trackingData->deliveryData->deliveryDateTime;
             }else{
-                $evento = count($trackingData->history->History)-1;
-                $ultimoEvento = $trackingData->history->History[$evento];
-                $ultimaFecha = $ultimoEvento->eventDateTime;
+                $ultimaFecha = Carbon::now();
+                if ( isset($trackingData->history->History)) {
+                    $evento = count($trackingData->history->History)-1;
+                    $ultimoEvento = $trackingData->history->History[$evento];
+                    $ultimaFecha = $ultimoEvento->eventDateTime;
+                }
+                
             }
             $this->ultimaFecha = Carbon::parse($ultimaFecha)->format('Y-m-d H:i:s');
             
