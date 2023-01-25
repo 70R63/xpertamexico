@@ -473,10 +473,9 @@ class GuiaController extends Controller
 
                 Log::info(print_r($update,true));
 
-                /*$affectedRows = Guia::where("id", $value['id'])
+                $affectedRows = Guia::where("id", $value['id'])
                         ->update($update);
-                */
-                $affectedRows = "demo";
+    
                 Log::debug("affectedRows -> $affectedRows");
             }else{
                 Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
