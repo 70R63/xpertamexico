@@ -133,9 +133,9 @@ function rastreoActualizarAjax() {
 $.ajax({
         url: 'api/rastreoActualizar',
         type: 'POST',
+        async: false
         /* send the csrf-token and the input to the controller */
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        
+        ,headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
