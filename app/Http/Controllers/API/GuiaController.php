@@ -526,7 +526,7 @@ class GuiaController extends Controller
                     ->where('ltd_id',$ltdId)
                     ->whereIN('guias.empresa_id',$empresas)
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    ->offset(0)->limit(50)
+                    //->offset(0)->limit(50)
                     ->orderBy('id', 'DESC')
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
