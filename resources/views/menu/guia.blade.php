@@ -13,7 +13,7 @@
 	</ul>
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('cotizaciones.index') }}">Cotizaciones</a>
+			<a class="nav-sub-link" href="{{ route('cotizaciones.index') }}">Creación</a>
 		</li>
 	</ul>
 	<ul class="nav-sub">

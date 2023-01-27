@@ -48,6 +48,7 @@
 
         <link href="{{ url('spruha/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
+
         @yield('css_rol_page')
 
     </head>
@@ -202,7 +203,7 @@
         </div>
         
 
-
+        @routes
         <!-- Jquery js-->
         <script src="{{ url('spruha/plugins/jquery/jquery.min.js') }}"></script>
 
@@ -269,6 +270,8 @@
         <script src="{{ asset('js/guias.js') }}" ></script>
         <script src="{{ asset('js/remitente.js') }}" ></script>
         <script src="{{ asset('js/destinatario.js') }}" ></script>
+
+        <script src="{{ asset('js/direcciones.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')

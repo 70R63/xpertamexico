@@ -103,21 +103,27 @@
 						, null
 						,['class' 		=> 'form-control'
 							,'id'		=> 'cp'
-							,'required'	=>	'true'
+							,'required'	=> 'true'
+							
 						])
 					!!}
+
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">COLONIA
 							<span class="tx-danger">*</span>
 						</span>
 					</div>
 
-					{!! Form::text('colonia'
-						, null
+					{!! Form::select('colonia'
+						, ( isset($objeto->colonia)) ? array($objeto->colonia) : array()
+						,"0"
 						,['class' 		=> 'form-control'
+							,'placeholder'	=> 'Seleccionar'
+							,'required'	=> 'true'
+							,'name'		=> 'colonia'
 							,'id'		=> 'colonia'
-							,'required'	=>	'true'
-						])
+							
+						]);
 					!!}
 				</div>
 
@@ -133,6 +139,7 @@
 						,['class' 		=> 'form-control'
 							,'id'		=> 'ciudad'
 							,'required'	=>	'true'
+							,'readonly' =>  'true'
 						])
 					!!}
 				
@@ -141,17 +148,15 @@
 							<span class="tx-danger">*</span>
 						</span>
 					</div>
-
-					{!! Form::select('entidad_federativa'
-						, Config('general.entidad_federativa')
-						,null
+					{!! Form::text('entidad_federativa'
+						, null
 						,['class' 		=> 'form-control'
-							,'placeholder'	=> 'Seleccionar'
-							,'required'	=> 'true'
-							,'name'		=> 'entidad_federativa'
 							,'id'		=> 'entidad_federativa'
-						]);
+							,'required'	=>	'true'
+							,'readonly' =>  'true'
+						])
 					!!}
+
 				</div>
 
 				<div class="input-group mb-3">
