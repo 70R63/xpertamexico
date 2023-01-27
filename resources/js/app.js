@@ -1,6 +1,6 @@
 import './bootstrap';
 
-import route from './ziggy';
+import route from 'ziggy';
 import { Ziggy } from './ziggy';
 
 import Alpine from 'alpinejs';

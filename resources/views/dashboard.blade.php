@@ -270,7 +270,7 @@
         <script src="{{ asset('js/guias.js') }}" ></script>
         <script src="{{ asset('js/remitente.js') }}" ></script>
         <script src="{{ asset('js/destinatario.js') }}" ></script>
-
+        @routes
         <script src="{{ asset('js/direcciones.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
