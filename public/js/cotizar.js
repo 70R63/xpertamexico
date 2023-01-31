@@ -132,6 +132,22 @@ function obtenerCP(id, modelo) {
 
 $("#limpiar").click(function() {
     $('#cotizacionesForm').trigger('reset');
+    table.clear().draw();
+    $('#cotizacionesForm').parsley().reset();
+    //validar se se puede reutilizar
+    $(".checkManualHtml").show()
+    $(".clienteCombo").hide()
+    $("#clienteIdCombo").removeAttr("required");
+    $(".cotizacionManual").attr("readonly","true");
+    $("#sucursal").attr("required","true");
+    $("#cliente").attr("required","true");
+    $("#cliente_id").removeAttr("required");
+    
+    $(".checkSemiHtml").show()
+    $(".cotizacionSemi").attr("readonly","true");
+    $("#esManual").val("NO");
+    //FIN validar se se puede reutilizar
+
 });
 
 
@@ -141,6 +157,7 @@ $("#cotizar").click(function(e) {
 
     var form = $('#cotizacionesForm').parsley().refresh();
     var action = $('#cotizacionesForm').attr("action"); 
+    console.log(action)
 
     if ( form.validate() ){
         $.ajax({
@@ -239,7 +256,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var iva = precio*0.16;
     var precioIva = (precio+iva).toFixed(2);
     var contenido = $('#contenido').val();
-    var esManual = $('#checkCotizacionManual').is( ":checked" ) ? "SI" : "NO";
+    var esManual = $("#esManual").val();
+    //var esManual = $('#checkCotizacionManual').is( ":checked" ) ? "SEMI" : "NO";
+    //var esManual = $('#checkManual').is( ":checked" ) ? "SI" : "NO";
 
     console.log($(this).is( ":checked" ));
     //valores para el modal 
@@ -302,21 +321,40 @@ $(function(){
     
 });
 
-// La fucnion habilita el modo edicion de los CP, esto ayuda a realizar una cotizacion manual basda en tarifias de un cliente
-$(function() {
-    $('#checkCotizacionManual').change(function() {
+function obtenerClientes() {
 
-        console.log("checkCotizacionManual");
-        var checkSeguro = $(this).is( ":checked" )
-        if ( checkSeguro ) {
-            $(".cotizacionManual").removeAttr("readonly");
-            $("#cliente").removeAttr("required");
-        } else {
-            $(".cotizacionManual").attr("readonly","true");
-        }
-      });
-});
-// fin Seguro de envio
+    $.ajax({
+        /* Usar el route  */
+        url: route('api.clientes'),
+        type: 'GET',
+        /* send the csrf-token and the input to the controller */
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        //data: "clienid="+id
+        
+        /* remind that 'data' is the response of the AjaxController */
+        }).done(function( response) {
+            console.log("done");
+            console.log(response.data);
+           
+            $('#clienteIdCombo').empty();
+            $("#clienteIdCombo").append('<option> Seleccionar</option>');
+            
+            $.each(response.data,function(key, empresa) {
+                $("#clienteIdCombo").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
+              });   
+            
+        
+        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+            console.log( "fail" );
+            console.log(textStatus);
+            
+            alert( data.responseJSON.message);
+
+        }).always(function() {
+            console.log( "complete" );
+        });
+
+}
 
 $("#addRow").click(function () {
     console.log('AddRow')
@@ -340,4 +378,52 @@ $("#addRow").click(function () {
     pesofacturado();
     
 });
+
+// La fucnion habilita el modo edicion de los CP, esto ayuda a realizar una cotizacion manual basda en tarifias de un cliente
+
+$('#checkCotizacionManual').change(function() {
+
+    console.log("checkCotizacionManual");
+    var checkSeguro = $(this).is( ":checked" )
+    if ( checkSeguro ) {
+        $("#cliente").removeAttr("required");
+        $(".cotizacionSemi").removeAttr("readonly");
+        //$("cotizacionSemi").removeAttr("required");
+        $("#esManual").val("SEMI");
+        $(".checkSemiHtml").hide()
+    } else {
+        $(".checkSemiHtml").show()
+        $(".cotizacionSemi").attr("readonly","true");
+        $("#cliente").attr("required","true");
+        $("#esManual").val("NO");
+    }
+  });
+
+$('#checkManual').change(function() {
+
+    console.log("checkManualHtml");
+    var check = $(this).is( ":checked" )
+    if ( check ) {
+        $(".checkManualHtml").hide()
+        $(".clienteCombo").show()
+        $("#clienteIdCombo").attr("required","true");
+        obtenerClientes()
+        $(".cotizacionManual").removeAttr("readonly");
+        $("#sucursal").removeAttr("required");
+        $("#cliente").removeAttr("required");
+        $("#cliente_id").attr("required","true");
+        $("#esManual").val("SI");
+        
+    } else {
+        $(".checkManualHtml").show()
+        $(".clienteCombo").hide()
+        $("#clienteIdCombo").removeAttr("required");
+        $(".cotizacionManual").attr("readonly","true");
+        $("#sucursal").attr("required","true");
+        $("#cliente").attr("required","true");
+        $("#cliente_id").removeAttr("required");
+        $("#esManual").val("NO");
+    }
+});
+
 

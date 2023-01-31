@@ -100,12 +100,3 @@ function remitentAcciones(row){
     return htmlEditar+htmlEliminar
 }
 
-$("body").on("click", 'tr', 'a', function (){
-    var row = table.row(this).data(); 
-    console.log(row)
-    $("#spanID").text( row.id );
-    $("#spanNombre").text( row.nombre );
-    $('#formRemitente').attr('action', 'http://local.xpertamexico.com/sucursales/'+row.id);
-    $("#modal").modal("show");
-
-});

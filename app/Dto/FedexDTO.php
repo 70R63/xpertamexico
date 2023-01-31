@@ -57,10 +57,20 @@ class FedexDTO
 		$direccion = sprintf("%s %s %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
 		$streetLines = str_split($direccion,35);
 
+		//Validacion temporal Entidad Federativa
+
+		if (strlen($request['entidad_federativa']) ===2 ){
+			$stateOrProvinceCode = $request['entidad_federativa'];
+		} else{
+			$stateOrProvinceCode = config('general.stateOrProvinceCode')[$request['entidad_federativa']];
+		}
+
+
+
 		$addressShipper = New Address(
 			array("streetLines"     => $streetLines
 				,"city"	=> $request['colonia']
-				,"stateOrProvinceCode"	=> $request['entidad_federativa']
+				,"stateOrProvinceCode"	=> $stateOrProvinceCode
 				,"postalCode"	=> $request['cp']
 			));
 

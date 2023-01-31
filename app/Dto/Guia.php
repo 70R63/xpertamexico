@@ -81,6 +81,8 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> empty($request['contenido']) ? "" :$request['contenido']
 				,'canal'		=> $canal
+				,'created_at'	=> Carbon::now()->toDateTimeString()
+
 			);
 		Log::debug(print_r($this->insert,true));
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO----- ");
@@ -175,6 +177,7 @@ class Guia {
 				,'valor_envio'	=> $valorEnvio
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
+				,'created_at'	=> Carbon::now()->toDateTimeString()
 
  			);
 

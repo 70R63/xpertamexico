@@ -119,7 +119,7 @@
 !!}
 
 {!! Form::hidden('esManual'
-    , null
+    , 'NO'
     ,['class'       => 'form-control'
         ,'id'       => 'esManual' 
     ])

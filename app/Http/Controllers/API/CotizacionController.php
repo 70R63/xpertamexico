@@ -26,8 +26,14 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__);
         Log::debug($request);
 
-        $empresa_id= Sucursal::where('id',$request['sucursal'])
+        
+        if ( is_null($request['sucursal']) ) {
+            $empresa_id = $request['clienteIdCombo'];
+        } else {
+            $empresa_id= Sucursal::where('id',$request['sucursal'])
                     ->value('empresa_id');
+        }
+        
         Log::debug($empresa_id);
         
         $tabla = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')

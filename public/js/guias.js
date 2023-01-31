@@ -134,15 +134,4 @@ function documento(row){
     return html;
 }
 
-$("body").on("click", 'tr', function (){
-    var row = table.row(this).data(); 
-    $("#spanRemitente").text( row.contacto );
-    $("#spanDestinatario").text( row.contacto_d );
-    $("#spanNuevoRemitente").text( row.contacto_d );
-    $("#spanNuevoDestinatario").text( row.contacto );
-    $("#spanID").text( row.id );
-
-    $("#guia_id").val( row.id );
-
-});
 

@@ -16,6 +16,10 @@ class Cliente extends Model
     protected $table = 'clientes';
     protected $guarded = []; 
 
+    private $existe = false ;
+    private $insertId = 0 ;
+
+
     /**
      * Agraga a la consulta los casos de negocio.
      *
@@ -42,11 +46,9 @@ class Cliente extends Model
      * 
     */
 
-    public function insertManual($request){
+    public function insertSemiManual($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
-
-        $sucusalId = $request['sucursal_id'];
-        $sucursalPluck = Sucursal::where("id",$sucusalId)->pluck("empresa_id","id");
+        $empresa_id = auth()->user()->empresa_id;
         
         $insert = array(
             "nombre"    => $request['nombre_d']
@@ -59,14 +61,57 @@ class Cliente extends Model
             ,"entidad_federativa"=>$request['entidad_federativa_d']
             ,"celular"  => $request['celular_d']
             ,"telefono" => $request['telefono_d']
-            ,"empresa_id"=>$sucursalPluck[$sucusalId]
+            ,"empresa_id"=>$empresa_id
             ,"no_ext"   => $request['no_ext_d']
             ,"no_int"   => $request['no_int_d']
 
             );
 
-        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO ---------");
-        return $this->create($insert)->id;
+        $this->insertId = $this->create($insert)->id;
+        
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO ---------");
+        
 
     }    
+
+    /**
+     * Funcion para crear un objeto para insertar el registro del cliente.
+     *
+     * @param $request
+     * @return array 
+     * 
+    */
+
+    public function validaCliente($request){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
+
+
+        $empresa_id = auth()->user()->empresa_id;
+        $cliente = self::where('nombre', 'like', $request['nombre_d'])
+                        ->where('empresa_id',$empresa_id)
+                        ->pluck('id')
+                        ->toArray();
+
+        Log::debug(print_r($cliente,true));
+
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO ---------");
+        if (empty($cliente)) {
+            $this->existe = false;
+        } else {
+            $this->existe = true;
+            $this->insertId = $cliente[0];
+        }
+
+        
+    }
+
+    public function getExiste(){
+        return $this->existe;
+    }
+
+
+    public function getId(){
+        return $this->insertId;
+    }
 }

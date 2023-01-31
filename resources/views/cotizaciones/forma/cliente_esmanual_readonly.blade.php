@@ -86,7 +86,7 @@
 
 				{!! Form::text('cp_d'
 					, $objeto['cp_manual']
-					,['class' 		=> 'form-control'
+					,['class' 		=> 'form-control buscaCP_d'
 						,'id'		=> 'cp_d'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
@@ -116,13 +116,15 @@
 					</span>
 				</div>
 
-				{!! Form::text('colonia_d'
-					, ''
+				{!! Form::select('colonia_d'
+					, array()
+					,"0"
 					,['class' 		=> 'form-control'
+						,'placeholder'	=> 'Seleccionar'
+						,'required'	=> 'true'
 						,'id'		=> 'colonia_d'
-						,'required'	=>	'true'
 						
-					])
+					]);
 				!!}
 			</div>
 
@@ -137,27 +139,26 @@
 					,['class' 		=> 'form-control'
 						,'id'		=> 'ciudad_d'
 						,'required'	=>	'true'
-						
+						,'readonly' =>  'true'
 					])
 				!!}
 			</div>
 
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">ENTIDAD FEDERATIVA
-							<span class="tx-danger">*</span>
-						</span>
-					</div>
+					<span class="input-group-text" id="basic-addon1">ENTIDAD FEDERATIVA
+						<span class="tx-danger">*</span>
+					</span>
+				</div>
 
-					{!! Form::select('entidad_federativa_d'
-						, Config('general.entidad_federativa')
-						,null
-						,['class' 		=> 'form-control'
-							,'placeholder'	=> 'Seleccionar'
-							,'required'	=> 'true'
-							,'id'		=> 'entidad_federativa_d'
-						]);
-					!!}
+				{!! Form::text('entidad_federativa_d'
+					, null
+					,['class' 		=> 'form-control'
+						,'id'		=> 'entidad_federativa_d'
+						,'required'	=>	'true'
+						,'readonly' =>  'true'		
+					])
+				!!}
 			</div>
 
 			<div class="input-group mb-3">

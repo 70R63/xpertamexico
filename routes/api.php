@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CotizacionController;
 use App\Http\Controllers\API\EmpresaLtdController;
 use App\Http\Controllers\API\DireccionController;
 use App\Http\Controllers\API\CPController;
+use App\Http\Controllers\API\ClienteController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -73,6 +74,10 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 
         Route::controller(CPController::class)->group(function(){
             Route::get('cp/colonias', 'colonias')->name("cp.colonias");    
+        });
+
+        Route::controller(ClienteController::class)->group(function(){
+            Route::get('clientes', 'clientes')->name("clientes");    
         });
     });
 });

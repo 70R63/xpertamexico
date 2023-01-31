@@ -1,9 +1,13 @@
-<div class="input-group mb-3">
-	<div class="input-group-prepend">
-		<span class="input-group-text" id="basic-addon1">COTIZACION MANUAL </span>
-	</div>
-	<label class="custom-switch">
-		<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" id="checkCotizacionManual">
-		<span class="custom-switch-indicator"></span>
-	</label>
-</div>
+<label class="custom-switch checkManualHtml">
+	<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" id="checkCotizacionManual" >
+	<span class="custom-switch-indicator"></span>
+	<span class="custom-switch-description"> SEMI</span>
+</label>
+
+<label class="custom-switch">
+	<input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" id="checkManual" >
+	<span class="custom-switch-indicator"></span>
+	<span class="custom-switch-description"> MANUAL</span>
+</label>
+
+	

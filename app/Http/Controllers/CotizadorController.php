@@ -13,6 +13,8 @@ use App\Models\Cotizador;
 use App\Models\Servicio;
 use App\Models\Sucursal;
 use App\Models\Cliente;
+use App\Models\CP;
+use App\Models\Guia;
 
 class CotizadorController extends Controller
 {
@@ -60,14 +62,32 @@ class CotizadorController extends Controller
             $objeto = $request->all();           
             Log::debug(print_r($objeto,true));
             $cliente=array();
+            $sucursal= array();
 
+            Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." Validacion esManual");
             if ($objeto['esManual']==="NO") {
+                Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." Obteniendo direccion");
                $cliente = Cliente::findOrFail($request->get("cliente_id"));
+               $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
+            }else{
+
+                if ($objeto['esManual']==="SEMI") {
+                    Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." semi");
+                    $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
+                    //$cps = CP::where('cp', '=', $request['cp'])->get();
+                    //Log::debug(print_r($cps,true));
+                }else{
+
+
+                }
+
             }
             
-            $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obteniendo Servicio");
+            //
             $servicio = Servicio::findOrFail($request->get("servicio_id"));
 
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obteniendo precio");
             $precio = $request->get("precio");
             $ltd_nombre = $request->get("ltd_nombre");
             $piezas = $request->get("piezas_guia");

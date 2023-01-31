@@ -57,9 +57,11 @@ class GuiaController extends Controller
                         ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
                         //->offset(0)->limit(2000)
                         //->toSql();
-                        ->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
-                        ->get(); 
+                        //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
+                        ->get()->toArray(); 
             
+            //Log::debug(print_r($tabla,true));
+            //dd($tabla);
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
             return view(self::DASH_v 
                     ,compact("tabla", "ltdActivo", "servicioPluck")
@@ -101,14 +103,21 @@ class GuiaController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__."store inicia ----------------------------");
+        Log::info(__CLASS__." ".__FUNCTION__." inicia ----------------------------");
+        Log::debug(print_r($request->all(),true));
  
-        if ($request->esManual === "SI") {
+        if ($request->esManual != "NO") {
             Log::info(__CLASS__." ".__FUNCTION__." iniciando es manual ----------------------------");
             try{
+
                 $cliente = new Cliente();
-                $cliente_id = $cliente->insertManual($request);
-                $request['cliente_id']=$cliente_id;
+                $cliente->validaCliente($request);
+                if ( !$cliente->getExiste() ) {
+                    $cliente->insertSemiManual($request);
+                }
+                
+                $request['cliente_id']=$cliente->getId();
+
             } catch(\Illuminate\Database\QueryException $ex){ 
                 Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
                 Log::debug(print_r($ex,true)); 
@@ -129,7 +138,7 @@ class GuiaController extends Controller
             }
 
             Log::info(__CLASS__." ".__FUNCTION__."finalizando es manual ----------------------------");
-        }//FIN if ($request->esManual === "SI")
+        }//FIN if$request->esManual != "NO"
 
         if ($request['ltd_id'] === Config('ltd.estafeta.id')) {
             return $this->estafeta($request);

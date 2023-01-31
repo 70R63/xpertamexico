@@ -100,12 +100,3 @@ function destinatarioAcciones(row){
     return htmlEditar+htmlEliminar
 }
 
-$("body").on("click", 'tr', 'a', function (){
-    var row = table.row(this).data(); 
-    console.log(row)
-    $("#spanID").text( row.id );
-    $("#spanNombre").text( row.nombre );
-    $('#formCliente').attr('action', 'http://local.xpertamexico.com/clientes/'+row.id);
-    $("#modal").modal("show");
-
-});
