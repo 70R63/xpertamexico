@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use DB;
 
 #CLASES DE NEGOCIO 
 use App\Singlenton\Estafeta ; //PRODUCTION
@@ -212,9 +213,12 @@ class GuiaController extends Controller
      */
     public function rastreoTabla(){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $codeHttp = 404;
         try {
             
-            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre')
+            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT(guias.created_at, "%Y-%c-%d %H:%i:%S") as creada')
+                )
+                
                     ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
                     ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
                     ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
@@ -243,11 +247,12 @@ class GuiaController extends Controller
             $this->mensaje =$ex->getMessage();
         } catch (\Exception $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            Log::debug(print_r($ex,true));
             $this->error = "Exception";
             $this->mensaje =$ex->getMessage();
         }
 
-        return $this->sendError("Exception",$e->getMessage(), $codeHttp);
+        return $this->sendError("Exception",$this->mensaje, $codeHttp);
     }//fin reastreo
 
 
@@ -322,6 +327,7 @@ class GuiaController extends Controller
      */
     public function rastreoActualizarAutomatico(){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $codeHttp = 404;
         try {
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
@@ -364,7 +370,7 @@ class GuiaController extends Controller
             $this->mensaje =$ex->getMessage();
         }
 
-        return $this->sendError($this->error,$this->mensaje, $this->codeHttp);
+        return $this->sendError($this->error,$this->mensaje, $codeHttp);
     }//fin reastreo, Global para actualizar el esatus de las guias
 
     /**

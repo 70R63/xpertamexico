@@ -65,8 +65,6 @@ class FedexDTO
 			$stateOrProvinceCode = config('general.stateOrProvinceCode')[$request['entidad_federativa']];
 		}
 
-
-
 		$addressShipper = New Address(
 			array("streetLines"     => $streetLines
 				,"city"	=> $request['colonia']
@@ -84,10 +82,16 @@ class FedexDTO
 		$direccion_d = sprintf("%s %s %s,%s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'],$request['direccion2_d'] );
 		$streetLines_d = str_split($direccion_d,35);
 
+		if (strlen($request['entidad_federativa_d']) ===2 ){
+			$stateOrProvinceCode_d = $request['entidad_federativa_d'];
+		} else{
+			$stateOrProvinceCode_d = config('general.stateOrProvinceCode')[$request['entidad_federativa_d']];
+		}
+
 		$addressRecipients = New Address(
 			array("streetLines"     => $streetLines_d
 				,"city"	=> $request['colonia_d']
-				,"stateOrProvinceCode"	=> $request['entidad_federativa_d']
+				,"stateOrProvinceCode"	=> $stateOrProvinceCode_d
 				,"postalCode"	=> $request['cp_d']
 			));
 

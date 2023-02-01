@@ -15,6 +15,7 @@ use App\Models\Sucursal;
 use App\Models\Cliente;
 use App\Models\CP;
 use App\Models\Guia;
+use App\Models\Empresa;
 
 class CotizadorController extends Controller
 {
@@ -82,9 +83,12 @@ class CotizadorController extends Controller
                 }
 
             }
+
             
+            $empresa = Empresa::findOrFail($sucursal->empresa_id);
+            Log::debug(print_r($empresa->nombre,true));
+            $objeto['clienteXperta'] = $empresa->nombre;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obteniendo Servicio");
-            //
             $servicio = Servicio::findOrFail($request->get("servicio_id"));
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obteniendo precio");

@@ -301,11 +301,13 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
 
 $("#sucursal").change(function() {
     var idSucursal = $('#sucursal').val();
+    console.log("sucursal "+idSucursal)
     obtenerCP(idSucursal, "Sucursal");
 }); 
 
 $("#cliente").change(function() {
     var idCliente = $('#cliente').val();
+    console.log("sucursal "+idCliente)
     obtenerCP(idCliente, "Cliente");
 });
 

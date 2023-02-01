@@ -80,7 +80,8 @@ function guiasTabla(){
                         ,{ "data": "ciudad" }
                         ,{ "data": "cp_d" }
                         ,{ "data": "ciudad_d" }
-                        ,{ "data": "created_at" }
+                         
+                        ,{ "data": "creada"      }
                         ,{ "data": "canal" }
                         ,{ "data": "tracking_number" }
                         ,{ "data": "precio" }

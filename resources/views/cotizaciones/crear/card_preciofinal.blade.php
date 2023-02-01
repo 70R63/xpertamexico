@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="card custom-card pricingTable2">
             <div class="pricingTable2-header">
-                <h2>PRECIO </h2> <h6>CON IVA </h6>
+                <h2>PRECIO </h2> <h6>CON IVA</h6>
             </div>
             <div class="pricing-plans  bg-primary">
                 <span class="price-value1">
