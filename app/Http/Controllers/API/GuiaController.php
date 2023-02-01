@@ -333,6 +333,7 @@ class GuiaController extends Controller
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
             $this->rastreoFedex(true);
+            $this->rastreoEstafeta(true);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             Rastreo_peticion::where('id',$rastreoPeticionesID)
@@ -419,8 +420,8 @@ class GuiaController extends Controller
 
                 
                 Log::debug(print_r($update,true));
-
-                $affectedRows = Guia::where("id", $value['id'])
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizado Guia");
+                $affectedRows = GuiaAPI::where("id", $value['id'])
                         ->update($update);
                 
                 Log::debug("affectedRows -> $affectedRows");

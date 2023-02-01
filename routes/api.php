@@ -83,6 +83,12 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 });
 //Fin Middileware
 
+//ejecucion
+ Route::controller(GuiaController::class)->group(function(){
+    //Route::get('rastreoTabla', 'rastreoTabla');
+    Route::get('rastreoActualizar', 'rastreoActualizarAutomatico')->name("rastreoConsola");
+});
+
 //AMBIENTE DEV
 Route::middleware(['throttle:20,1','validaToken'])->group(function(){
     Route::controller(DevGuiaController::class)->group(function(){
