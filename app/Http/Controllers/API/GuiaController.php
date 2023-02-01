@@ -442,7 +442,7 @@ class GuiaController extends Controller
     private function rastreoEstafeta(bool $automatico = false){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $guia = array();
-        $plataforma = "WEB";
+        $plataforma = "AUTOMATICO";
         $servicioID = 2;
         
         if ($automatico){
