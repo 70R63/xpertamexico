@@ -480,7 +480,7 @@ class GuiaController extends Controller
 
                 Log::info(print_r($update,true));
 
-                $affectedRows = Guia::where("id", $value['id'])
+                $affectedRows = GuiaAPI::where("id", $value['id'])
                         ->update($update);
     
                 Log::debug("affectedRows -> $affectedRows");
