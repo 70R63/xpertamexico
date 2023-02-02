@@ -104,9 +104,6 @@ class EstafetaDTO
                 ]
             );
         $systemInformation = new SystemInformation();
-
-
-        Log::debug(print_r($data,true));
        
         if($canal === "WEB"){
             Log::info(__CLASS__." ".__FUNCTION__." WEB");

@@ -16,10 +16,10 @@
                         <li><b>Mensajeria:</b> <span id="spanMensajeria"> {{$ltd_nombre}} - {{$servicio->nombre}}</span></li>
                         <li>
                             <li>
-                                <b>Remitente Postal:</b> {{$sucursal->cp}} </span>    
+                                <b>Remitente Postal:</b> {{ isset($sucursal->cp) ? $sucursal->cp : $objeto['cp_manual']}}</span>    
                             </li>
                             <li>
-                                <b>Destinatorio Postal:</b> {{ isset($cliente->cp) ? $cliente->cp : $sucursal->cp}} </span>
+                                <b>Destinatorio Postal:</b> {{ isset($cliente->cp) ? $cliente->cp : $objeto['cp_d_manual']}} </span>
                             </li>
                             <li>
                                 <b>Piezas: {{$piezas}}</b> <span id="spanPieza"></span>,
@@ -136,5 +136,12 @@
     , $objeto['esManual']
     ,['class'       => 'form-control'
         ,'id'       => 'esManual' 
+    ])
+!!}
+
+{!! Form::hidden('empresa_id'
+    , $objeto['empresa_id']
+    ,['class'       => 'form-control'
+        ,'id'       => 'empresa_id' 
     ])
 !!}

@@ -57,6 +57,10 @@ function listaColonias(remitente = 1){
     });
 }
 
+//Busca las colonias despues la creacion manual
+$(".buscaCP").click(function() {
+    listaColonias(1);
+});
 
 $("#colonia").on("change keyup", function (){
     console.log( "cambio de colonia")
@@ -84,3 +88,4 @@ $("#colonia_d").on("change keyup", function (){
 $(".buscaCP_d").click(function() {
     listaColonias(0);
 });
+

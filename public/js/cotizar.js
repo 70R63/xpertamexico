@@ -257,6 +257,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var precioIva = (precio+iva).toFixed(2);
     var contenido = $('#contenido').val();
     var esManual = $("#esManual").val();
+    var empresaId = $("#clienteIdCombo").val();
     //var esManual = $('#checkCotizacionManual').is( ":checked" ) ? "SEMI" : "NO";
     //var esManual = $('#checkManual').is( ":checked" ) ? "SI" : "NO";
 
@@ -292,7 +293,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#extendida_r").val(dataRow['extendida_cobertura']);
     $("#valor_envio_r").val(valorEnvio);
     $("#esManual").val(esManual);
-    $("#cp_manual").val(cp_d);
+    $("#cp_manual").val(cp);
+    $("#cp_d_manual").val(cp_d);
+    $("#empresa_id").val(empresaId);
 
 
     $("#myModal").modal("show");

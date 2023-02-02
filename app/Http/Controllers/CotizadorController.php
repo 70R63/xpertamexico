@@ -51,7 +51,8 @@ class CotizadorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Crea los atributos para la vista web
+     * .
      *
      * @return \Illuminate\Http\Response
      */
@@ -64,30 +65,32 @@ class CotizadorController extends Controller
             Log::debug(print_r($objeto,true));
             $cliente=array();
             $sucursal= array();
+            $empresaId = 0;
 
             Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." Validacion esManual");
             if ($objeto['esManual']==="NO") {
                 Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." Obteniendo direccion");
                $cliente = Cliente::findOrFail($request->get("cliente_id"));
                $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
+
+               $empresaId = $sucursal->empresa_id;
             }else{
 
                 if ($objeto['esManual']==="SEMI") {
                     Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." semi");
                     $sucursal = Sucursal::findOrFail($request->get("sucursal_id"));
-                    //$cps = CP::where('cp', '=', $request['cp'])->get();
-                    //Log::debug(print_r($cps,true));
+                    $empresaId = $sucursal->empresa_id;
                 }else{
-
-
+                    Log::info(__CLASS__." ".__FUNCTION__." LINE ".__LINE__." MANUAL SI  ");
+                    $empresaId = $objeto['empresa_id'];
                 }
 
             }
 
-            
-            $empresa = Empresa::findOrFail($sucursal->empresa_id);
+            $empresa = Empresa::findOrFail($empresaId);
             Log::debug(print_r($empresa->nombre,true));
             $objeto['clienteXperta'] = $empresa->nombre;
+            $objeto['empresa_id'] = $empresa->id;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obteniendo Servicio");
             $servicio = Servicio::findOrFail($request->get("servicio_id"));
 

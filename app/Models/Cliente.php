@@ -48,7 +48,12 @@ class Cliente extends Model
 
     public function insertSemiManual($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
+
         $empresa_id = auth()->user()->empresa_id;
+        if ($request['esManual'] === "SI") {
+            $empresa_id = $request['empresa_id'];
+        }
+        
         
         $insert = array(
             "nombre"    => $request['nombre_d']

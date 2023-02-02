@@ -2,7 +2,7 @@
 <div class="card custom-card">
     <div class="card-body">
     	<div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-            <label class="main-content-label mb-4">DETALLES DEL DESTINATARIO</label>
+            <label class="main-content-label mb-4">DETALLES DEL REMITENTE</label>
         </div>
     	<div class="card-item">
 			<div class="input-group mb-3">
@@ -11,10 +11,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('nombre_d'
+				{!! Form::text('nombre'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'nombre_d'
+						,'id'		=> 'nombre'
 						,'required'	=>	'true'
 						
 					])
@@ -27,10 +27,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('contacto_d'
+				{!! Form::text('contacto'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'contacto_d'
+						,'id'		=> 'contacto'
 						,'required'	=>	'true'
 						
 					])
@@ -43,10 +43,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('direccion_d'
+				{!! Form::text('direccion'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'direccion_d'
+						,'id'		=> 'direccion'
 						,'required'	=>	'true'
 						
 					])
@@ -59,10 +59,10 @@
 					<span class="input-group-text" id="basic-addon1">NO. EXTERIOR</span>
 				</div>
 
-				{!! Form::text('no_ext_d'
+				{!! Form::text('no_ext'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'no_ext_d'
+						,'id'		=> 'no_ext'
 						,'required'	=>	'true'
 						
 					])
@@ -72,10 +72,10 @@
 					<span class="input-group-text" id="basic-addon1">NO. INTERIOR</span>
 				</div>
 
-				{!! Form::text('no_int_d'
+				{!! Form::text('no_int'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'no_int_d'
+						,'id'		=> 'no_int'
 						
 					])
 				!!}
@@ -84,10 +84,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('cp_d'
-					, $objeto['cp_d_manual']
-					,['class' 		=> 'form-control buscaCP_d'
-						,'id'		=> 'cp_d'
+				{!! Form::text('cp'
+					, $objeto['cp_manual']
+					,['class' 		=> 'form-control buscaCP'
+						,'id'		=> 'cp'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -100,10 +100,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('direccion2_d'
+				{!! Form::text('direccion2'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'direccion2_d'
+						,'id'		=> 'direccion2'
 						
 					])
 				!!}
@@ -116,13 +116,13 @@
 					</span>
 				</div>
 
-				{!! Form::select('colonia_d'
+				{!! Form::select('colonia'
 					, array()
 					,"0"
 					,['class' 		=> 'form-control'
 						,'placeholder'	=> 'Seleccionar'
 						,'required'	=> 'true'
-						,'id'		=> 'colonia_d'
+						,'id'		=> 'colonia'
 						
 					]);
 				!!}
@@ -134,10 +134,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('ciudad_d'
+				{!! Form::text('ciudad'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'ciudad_d'
+						,'id'		=> 'ciudad'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'
 					])
@@ -151,10 +151,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('entidad_federativa_d'
+				{!! Form::text('entidad_federativa'
 					, null
 					,['class' 		=> 'form-control'
-						,'id'		=> 'entidad_federativa_d'
+						,'id'		=> 'entidad_federativa'
 						,'required'	=>	'true'
 						,'readonly' =>  'true'		
 					])
@@ -167,10 +167,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('celular_d'
+				{!! Form::text('celular'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'celular_d'
+						,'id'		=> 'celular'
 						,'required'	=>	'true'
 						
 					])
@@ -181,10 +181,10 @@
 					</span>
 				</div>
 
-				{!! Form::text('telefono_d'
+				{!! Form::text('telefono'
 					, ''
 					,['class' 		=> 'form-control'
-						,'id'		=> 'telefono_d'
+						,'id'		=> 'telefono'
 						
 					])
 				!!}

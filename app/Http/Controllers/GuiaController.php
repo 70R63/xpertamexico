@@ -112,11 +112,23 @@ class GuiaController extends Controller
 
                 $cliente = new Cliente();
                 $cliente->validaCliente($request);
+
                 if ( !$cliente->getExiste() ) {
                     $cliente->insertSemiManual($request);
                 }
+                if ($request->esManual === "SI") {
+                    Log::info(__CLASS__." ".__FUNCTION__." iniciando SI es manual ----------------------------");
+                    $remitente = new Sucursal();
+                    $remitente->existe($request);
+                    
+                    if ( !$remitente->getExiste() ) {
+                        $remitente->insertParse($request);
+                    }
+                    $request['sucursal_id']=$remitente->getId();
+                } 
                 
                 $request['cliente_id']=$cliente->getId();
+                
 
             } catch(\Illuminate\Database\QueryException $ex){ 
                 Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");

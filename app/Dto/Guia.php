@@ -53,15 +53,30 @@ class Guia {
 		$cia = $request['sucursal_id'];
 		$cia_d = $request['cliente_id'];
 
-		if ($request['esManual'] === "RETORNO") {
-			$canal = "RET" ;
-			$cia_d = $request['sucursal_id'];
-			$cia = $request['cliente_id'];
+		switch ($request['esManual']) {
+			case "SI":
+			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
+			    $canal = "MNL" ;
+			    break;
+			case "NO":
+				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
+			  	
+			    break;
+			case "SEMI":
+				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+			    $canal = "SML" ;
+			    
+			    break;
+			case "RETORNO":
+			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");
+				$canal = "RET" ;
+				$cia_d = $request['sucursal_id'];
+				$cia = $request['cliente_id'];
+			    break;
+			    
+		 	default:
+		    	Log::info("No se cargo ningun caso");
 		}
-
-		if ($request['esManual'] === "SI") {
-				$canal = "MNL" ;
-			}
 
 
 		$this->insert = array('usuario' => auth()->user()->name
@@ -97,27 +112,44 @@ class Guia {
 		$precio = 0;
 	
 		if ($canal === "WEB") {
-			
+			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CANAL WEB ");
 			$cia = $request['sucursal_id'];
 			$cia_d = $request['cliente_id'];
 
-			if ($request['esManual'] === "RETORNO") {
-				Log::info(__CLASS__." ".__FUNCTION__." SECCION RETORNO ");
-				$canal = "RET" ;
-				$cia_d = $request['sucursal_id'];
-				$cia = $request['cliente_id'];
+			$empresa_id = auth()->user()->empresa_id;
+			switch ($request['esManual']) {
+				case "SI":
+				    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
+				    $canal = "MNL" ;
+				    $empresa_id = $request['empresa_id'];
+				    break;
+				case "NO":
+					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
+				  	
+				    break;
+				case "SEMI":
+					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+				    $canal = "SML" ;
+				    
+				    break;
+				case "RETORNO":
+				    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");
+					$canal = "RET" ;
+					$cia_d = $request['sucursal_id'];
+					$cia = $request['cliente_id'];
+				    break;
+				    
+			 	default:
+			    	Log::info("No se cargo ningun caso");
 			}
-
-			if ($request['esManual'] === "SI") {
-				$canal = "MNL" ;
-			}
+			
 
 			$servicioId = $request['servicio_id'];
 			$peso = $request['peso_facturado'];
 			$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
 			$extendida = $request['extendida'];
 			$usuario = auth()->user()->name;
-			$empresa_id = auth()->user()->empresa_id;
+			
 			$piezas = $request['piezas'];
 			$precio = sprintf("%.2f",$request['precio']);
 			$contenido = empty($request['contenido']) ? "" :$request['contenido'];
@@ -181,6 +213,7 @@ class Guia {
 
  			);
 
+		Log::info(print_r($insert,true));
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ".$canal);
 		return $insert;
 	}

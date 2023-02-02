@@ -131,3 +131,17 @@
         ,'id'       => 'cp_manual' 
     ])
 !!}
+
+{!! Form::hidden('cp_d_manual'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'cp_d_manual' 
+    ])
+!!}
+
+{!! Form::hidden('empresa_id'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'empresa_id' 
+    ])
+!!}
