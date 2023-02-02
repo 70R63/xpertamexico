@@ -86,6 +86,9 @@ class Sucursal extends Model
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
 
         $empresa_id = auth()->user()->empresa_id;
+        if ($request['esManual'] === "SI") {
+            $empresa_id = $request['empresa_id'];
+        }
         $remitente = self::where('nombre', 'like', $request['nombre'])
                         ->where('empresa_id',$empresa_id)
                         ->pluck('id')

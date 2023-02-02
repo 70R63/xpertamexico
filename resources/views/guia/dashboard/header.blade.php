@@ -6,12 +6,6 @@
             <li class="breadcrumb-item active" aria-current="page">Guia</li>
         </ol>
     </div>
-    <div class="d-flex">
-        <div class="justify-content-center">
-            <a type="button" class="btn btn-primary my-2 btn-icon-text" href="{{ route('guia.create') }}" >
-                <i class="fe fe-download-cloud mr-2"> Nuevo</i>
-            </a>
-        </div>
-    </div>                          
+                            
 </div>
  

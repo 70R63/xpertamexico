@@ -130,7 +130,7 @@ class Guia {
 				case "SEMI":
 					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
 				    $canal = "SML" ;
-				    
+				    $empresa_id = $request['empresa_id'];
 				    break;
 				case "RETORNO":
 				    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");

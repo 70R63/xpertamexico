@@ -25,7 +25,7 @@ class CPController extends ApiController
             $resultado = CP::where('cp', 'like', $request['cp'].'%')
                     ->get();
 
-            Log::debug(print_r($resultado,true));
+            Log::debug(print_r($resultado->toArray(),true));
 
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
             $mensaje = "ok";

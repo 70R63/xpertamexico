@@ -336,6 +336,7 @@ class GuiaController extends Controller
             $this->rastreoEstafeta(true);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
+            
             Rastreo_peticion::where('id',$rastreoPeticionesID)
                 ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
                         ,"completado"=>true) 
@@ -525,12 +526,9 @@ class GuiaController extends Controller
      */
     private function consultaGuiaParaRastreoAutomatico(int $ltdId, int $empresaId = 1 ){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
-        $empresas = EmpresaEmpresas::where('id',$empresaId)
-                ->pluck('empresa_id')->toArray();
-
+        
         $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
-                    ->where('ltd_id',$ltdId)
-                    ->whereIN('guias.empresa_id',$empresas)
+                    ->where('ltd_id',$ltdId)            
                     ->whereIN('rastreo_estatus',array(1,2,3))
                     //->offset(0)->limit(50)
                     ->orderBy('id', 'DESC')

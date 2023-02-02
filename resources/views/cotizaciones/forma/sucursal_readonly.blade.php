@@ -1,9 +1,7 @@
 <!-- Campos para el sucursal con valor readonly -->
 <div class="card custom-card">
     <div class="card-body">
-    	<div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-            <label class="main-content-label mb-4">CLIENTE XPERTA {{$objeto['clienteXperta']}}</label>
-        </div>
+    	
         <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
             <label class="main-content-label mb-4">DETALLES DEL REMITENTE</label>
         </div>

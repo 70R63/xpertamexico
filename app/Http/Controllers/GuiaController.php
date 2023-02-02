@@ -116,6 +116,7 @@ class GuiaController extends Controller
                 if ( !$cliente->getExiste() ) {
                     $cliente->insertSemiManual($request);
                 }
+                
                 if ($request->esManual === "SI") {
                     Log::info(__CLASS__." ".__FUNCTION__." iniciando SI es manual ----------------------------");
                     $remitente = new Sucursal();

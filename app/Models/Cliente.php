@@ -53,6 +53,9 @@ class Cliente extends Model
         if ($request['esManual'] === "SI") {
             $empresa_id = $request['empresa_id'];
         }
+        if ($request['esManual'] === "SEMI") {
+            $empresa_id = $request['empresa_id'];
+        }
         
         
         $insert = array(
@@ -91,12 +94,30 @@ class Cliente extends Model
     public function validaCliente($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
 
-
-        $empresa_id = auth()->user()->empresa_id;
-        $cliente = self::where('nombre', 'like', $request['nombre_d'])
-                        ->where('empresa_id',$empresa_id)
-                        ->pluck('id')
-                        ->toArray();
+        switch ($request['esManual']) {
+            case "SI":
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
+                $canal = "MNL" ;
+                $empresa_id = $request['empresa_id'];
+                $cliente = self::where('nombre', 'like', $request['nombre_d'])
+                            ->where('empresa_id',$empresa_id)
+                            ->pluck('id')
+                            ->toArray();
+                break;
+            case "SEMI":
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+                $canal = "SML" ;
+                $empresa_id = $request['empresa_id'];
+                $cliente = self::where('nombre', 'like', $request['nombre_d'])
+                            ->where('empresa_id',$empresa_id)
+                            ->pluck('id')
+                            ->toArray();
+                
+                break;                
+            default:
+                Log::info("No se cargo ningun caso");
+        }
+        
 
         Log::debug(print_r($cliente,true));
 

@@ -10,13 +10,13 @@
             <div class="card-body">
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
                     <div>
-                        <label class="main-content-label mb-2">RESUMEN</label> <span class="d-block tx-12 mb-3 text-muted">A CONTINUACION SE MUENSTRA EL RESUMEN DE LA NUEVA GUIA</span>
+                        <label class="main-content-label mb-2">RESUMEN</label> <span class="d-block tx-12 mb-3 text-muted">A CONTINUACION SE MUESTRA EL RESUMEN DE LA NUEVA GUIA</span>
                     </div>
                     
                 </div>
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-                        <label class="main-content-label mb-4">PARA:  {{$objeto['clienteXperta']}}</label>
-                    </div>
+                    <label class="main-content-label mb-4">CLIENTE XPERTA: {{$objeto['clienteXperta']}}</label>
+                </div>
             </div>
         </div>
     </div>

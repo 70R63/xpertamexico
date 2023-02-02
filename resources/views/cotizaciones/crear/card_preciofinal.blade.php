@@ -32,7 +32,7 @@
                         <b>Seguro:</b>${{$objeto['costo_seguro']}} <span id="spanSeguro"></span>
                     </li>
                     <li>
-                        <b>Cotización Manual:</b>{{$objeto['esManual']}}<span id="spanCotizacionManual"></span>
+                        <b>Guia Manual:</b>{{$objeto['esManual']}}<span id="spanCotizacionManual"></span>
                     </li>
                 </ul>
             </div>
