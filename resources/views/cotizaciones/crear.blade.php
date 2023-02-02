@@ -26,7 +26,6 @@
 <!--Row-->
 {!! Form::open([ 'route' => 'guia.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
 <div class="row row-sm">
-    
     <div class="col-lg-12 col-xl-4 col-md-4">
 
         @if($objeto['esManual']==='SI' )
