@@ -25,9 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        //$schedule->call('App\Http\Controllers\API\GuiaController@rastreoActualizarAutomatico')->everyFiveMinutes();
-        $schedule->call('App\Http\Controllers\API\GuiaController@rastreoActualizarAutomatico')->twiceDaily(14, 22);
+        //$schedule->command('inspire')->hourly();
+        $schedule->command('rastreo:automatico')->hourly();
         
     }
 
