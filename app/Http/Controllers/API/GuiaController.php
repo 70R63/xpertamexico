@@ -225,7 +225,7 @@ class GuiaController extends Controller
                     ->join('rastreo_estatus', 'rastreo_estatus.id', '=', 'guias.rastreo_estatus')
                     ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
                     ->join('servicios','servicios.id', '=', 'guias.servicio_id')
-                    ->offset(0)->limit(10)
+                    //->offset(0)->limit(10)
                     //->toSql();
                     //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
                     ->get()->toArray();
