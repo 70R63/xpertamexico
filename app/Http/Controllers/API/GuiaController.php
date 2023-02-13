@@ -216,7 +216,7 @@ class GuiaController extends Controller
         $codeHttp = 404;
         try {
             
-            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT(guias.created_at, "%Y-%c-%d %H:%i:%S") as creada')
+            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT(guias.created_at, "%Y-%c-%d %H:%i:%S") as creada'), 'tiempo_entrega'
                 )
                 
                     ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
@@ -225,7 +225,7 @@ class GuiaController extends Controller
                     ->join('rastreo_estatus', 'rastreo_estatus.id', '=', 'guias.rastreo_estatus')
                     ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
                     ->join('servicios','servicios.id', '=', 'guias.servicio_id')
-                    //->offset(0)->limit(10)
+                    ->offset(0)->limit(10)
                     //->toSql();
                     //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
                     ->get()->toArray();
@@ -332,7 +332,7 @@ class GuiaController extends Controller
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
-            $this->rastreoFedex(true);
+            //$this->rastreoFedex(true);
             $this->rastreoEstafeta(true);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
@@ -476,6 +476,7 @@ class GuiaController extends Controller
                         ,'ancho' => $paquete['ancho'] 
                         ,'alto' => $paquete['alto']
                         ,'quien_recibio' =>  $sEstafeta->getQuienRecibio()
+                        ,'pickup_fecha' =>  $sEstafeta->getPickupFecha()
 
                     );
 
@@ -508,7 +509,7 @@ class GuiaController extends Controller
         $guias = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    //->offset(0)->limit(1)
+                    //->offset(0)->limit(20)
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
@@ -530,7 +531,7 @@ class GuiaController extends Controller
         $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)            
                     ->whereIN('rastreo_estatus',array(1,2,3))
-                    //->offset(0)->limit(50)
+                    //->offset(0)->limit(10)
                     ->orderBy('id', 'DESC')
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));

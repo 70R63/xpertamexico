@@ -7,18 +7,6 @@ $(document).ready(function() {
 }) 
 
 
-$("#rastroActualizarAjax").click(function(e) {
-    console.log("rastroActualizarAjax")
-    e.preventDefault();
-    rastreoActualizarAjax()
-    swal(
-        "Rastreo de guias",
-        "El proceso tomara 30 minutos",
-        "success"
-      )
-});
-
-
 function rastrearTabla(){
     $.ajax({
         url: 'api/rastreoTabla',
@@ -29,7 +17,6 @@ function rastrearTabla(){
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
-        console.log(response.data)
         table = $('#rastreoTabla').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
@@ -95,6 +82,26 @@ function rastrearTabla(){
                                 }
                             }
                         }
+                        ,{  
+                            targets: 8 
+                            ,"createdCell": function(td, cellData, rowData, row, col) {
+                                switch(cellData) {
+                                case "CREADA":
+                                        $(td).addClass('text-danger');
+                                        break;
+                                    case "RECOLECTADO":
+                                        $(td).addClass('text-warning');
+                                        break;
+                                    case "TRANSITO":
+                                        $(td).addClass('text-info');
+                                        break;
+                                    case "ENTREGADO":
+                                        $(td).addClass('text-success');
+                                        break;
+                                }
+                            }
+                        }
+                        
                     ]
                     ,"columns": [
                         { "data": "id" }
@@ -105,6 +112,11 @@ function rastrearTabla(){
                         ,{ "data": "ciudad" }
                         ,{ "data": "ciudad_d" }
                         ,{ "data": "rastreo_nombre" }
+                        ,{ "data": "tiempo_entrega"
+                            ,render: function(data, type, row){ 
+                                return garantia(row); 
+                            } 
+                        }
                         ,{ "data": "ultima_fecha" }
                         ,{ "data": "quien_recibio" }
                         ,{ "data": "rastreo_peso" }
@@ -155,4 +167,30 @@ $.ajax({
     }).always(function() {
             console.log( "complete" );
     });   
+}
+
+function garantia(row){
+    //console.log(row)
+    var ahora = new Date();
+    var pickupFecha = new Date(row.pickup_fecha);
+    var garantiaFecha = new Date(pickupFecha.setDate(pickupFecha.getDate() + row.tiempo_entrega))
+
+    var diaLaboral = 0
+    if (garantiaFecha.getDay() === 0 || garantiaFecha.getDay() === 6 )
+        diaLaboral = 2
+
+    var garantiaFechaLaboral = new Date(garantiaFecha.setDate(garantiaFecha.getDate() + diaLaboral))
+
+    if (row.rastreo_nombre != "CREADA"){
+        if (garantiaFechaLaboral < ahora){
+            html = '<i class="fe fe-download-cloud fs-29 text-danger"> DESFASADA</i>';
+        } else {
+            html = '<i class="fe fe-upload-cloud fs-29 text-success"> EN TIEMPO</i>';
+        }    
+    } else {
+        html = '<i class="fe fe-download-cloud fs-29 "> EN TIEMPO</i>';        
+    }
+    
+    return html;
+       
 }

@@ -27,6 +27,7 @@ class Estafeta {
     private $paquete = array();
     private $latestStatusDetail;
     private $ultimaFecha;
+    private $pickupFecha;
 
     public function __construct(int $ltd_id, $empresa_id= 1, $plataforma = 'WEB',int $servicioID = 1){
 
@@ -258,7 +259,10 @@ class Estafeta {
             $this->ultimaFecha = Carbon::parse($ultimaFecha)->format('Y-m-d H:i:s');
             
             Log::debug(print_r($this->ultimaFecha,true));
-            
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." pickupFecha");
+            Log::debug(print_r($trackingData->pickupData,true));
+            $this->pickupFecha = Carbon::parse($trackingData->pickupData->pickupDateTime)->format('Y-m-d H:i:s');
+
             $this->exiteSeguimiento = true;
         }else{
             Log::debug("Sin tracking");
@@ -267,7 +271,6 @@ class Estafeta {
 
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");
     }
-
 
     public static function getInstance( int $ltd_id, $empresaId = 1,$plataforma = "WEB", $servicioID=1 ){
         if (!self::$instance) {
@@ -312,6 +315,10 @@ class Estafeta {
 
     public function getUltimaFecha(){
         return $this->ultimaFecha;
+    }
+
+    public function getPickupFecha(){
+        return $this->pickupFecha;
     }
 }
 
