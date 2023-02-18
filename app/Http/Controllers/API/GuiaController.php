@@ -416,7 +416,7 @@ class GuiaController extends Controller
                         ,'ancho' => $paquete['ancho'] 
                         ,'alto' => $paquete['alto']
                         ,'quien_recibio' =>  $quienRecibio
-                        //,'pickup_fecha' =>  $sFedex->getPickupFecha()
+                        ,'pickup_fecha' =>  $sFedex->getPickupFecha()
 
                     );
 

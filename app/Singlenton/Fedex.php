@@ -197,7 +197,7 @@ class Fedex {
         $contenido = json_decode($response->getBody()->getContents());
         foreach ($contenido->output->completeTrackResults as $key => $value) {
             foreach ($value->trackResults as $key1 => $value1) {
-                //Log::debug(print_r($value1,true));
+                Log::debug(print_r($value1,true));
 
                 if ( isset($value1->error)) {
                     Log::debug("No se econtro seguimiento");
@@ -206,7 +206,7 @@ class Fedex {
                 } else{
                     Log::debug("Seguimientos scanEvents ".count($value1->scanEvents));
                     
-                    Log::debug(print_r($value1->dateAndTimes,true));
+                    //Log::debug(print_r($value1->dateAndTimes,true));
 
                     foreach ($value1->dateAndTimes as $key => $value) {
                         if ($value->type === "ACTUAL_PICKUP") {
