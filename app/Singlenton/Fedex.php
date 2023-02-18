@@ -30,7 +30,9 @@ class Fedex {
     private $paquete = array();
     private $exiteSeguimiento = false;
     private $quienRecibio = "No entregado aun"; 
-    private $latestStatusDetail; 
+    private $latestStatusDetail;
+    private $ultimaFecha; //Validar uso en la case Fedex y no en el controller
+    private $pickupFecha;
     
 
     private function __construct(int $ltd_id= 1, $empresa_id= 1, $plataforma = 'WEB'){
@@ -205,6 +207,13 @@ class Fedex {
                     Log::debug("Seguimientos scanEvents ".count($value1->scanEvents));
                     
                     Log::debug(print_r($value1->dateAndTimes,true));
+
+                    foreach ($value1->dateAndTimes as $key => $value) {
+                        if ($value->type === "ACTUAL_PICKUP") {
+                            $this->pickupFecha = Carbon::parse($value->dateTime)->format('Y-m-d H:i:s');
+                            break;
+                        }
+                    }
                     
                     $this->scanEvents = $value1->scanEvents[0];
                     $this->latestStatusDetail = $value1->latestStatusDetail;
@@ -285,6 +294,14 @@ class Fedex {
 
     public function getLatestStatusDetail(){
         return $this->latestStatusDetail;
+    }
+
+    public function getUltimaFecha(){
+        return $this->ultimaFecha;
+    }
+
+    public function getPickupFecha(){
+        return $this->pickupFecha;
     }
     
     
