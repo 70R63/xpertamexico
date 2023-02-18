@@ -332,7 +332,7 @@ class GuiaController extends Controller
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
-            //$this->rastreoFedex(true);
+            $this->rastreoFedex(true);
             $this->rastreoEstafeta(true);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
@@ -416,6 +416,7 @@ class GuiaController extends Controller
                         ,'ancho' => $paquete['ancho'] 
                         ,'alto' => $paquete['alto']
                         ,'quien_recibio' =>  $quienRecibio
+                        //,'pickup_fecha' =>  $sFedex->getPickupFecha()
 
                     );
 
