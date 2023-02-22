@@ -69,8 +69,8 @@ class CotizacionController extends BaseController
                   case "2":
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 2 = RANGO");
 
-                    $tablaTmp = $query->where('kg_ini', ">=", 1)
-                        ->where('kg_fin', "<=", 5)
+                    $tablaTmp = $query->where('kg_ini', ">=", $request['pesoFacturado'])
+                        ->where('kg_fin', "<=", $request['pesoFacturado'])
                         ->get()->toArray()
                         ;
                     break;
