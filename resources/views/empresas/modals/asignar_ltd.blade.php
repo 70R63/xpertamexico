@@ -2,7 +2,7 @@
 	<div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	    	<div class="modal-header">
-	            <h5 class="modal-title" id="exampleModalLabel">Asignar PROVEEDOR aL CLIENTE</h5>
+	            <h5 class="modal-title" id="exampleModalLabel">Asignar mensajeria al CLIENTE</h5>
 	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
 	            	<span aria-hidden="true">×</span>
 	            </button>
@@ -21,13 +21,36 @@
 					<div class="form-group ">
 						<div class="selectgroup selectgroup-pills">
 							@foreach ($ltds as $ltd)
-							    <label class="selectgroup-item ">
+
+							    <label class="selectgroup-item">
 									{{ Form::checkbox('value[]', $ltd->id
 										, isset($ltdActivo[$objeto->id][$ltd->id]) ? 1 : 0
 										, array('class'=>'selectgroup-input'
-											,'name'		=> $ltd->nombre) 
+											,'name'		=> $ltd->nombre
+											) 
 									)}}
 									<span class="selectgroup-button">{{ $ltd->nombre }}</span>
+
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="basic-addon1">CLASIFICACIÓN
+												<span class="tx-danger">*</span>
+											</span>
+										</div>
+
+										{!! Form::select('clasificacion['.$ltd->nombre.']'
+											, array("1"=>"FLAT", "2"=>"RANGO")
+											,isset($ltdActivo[$objeto->id][$ltd->id]['tarifa_clasificacion']) ? $ltdActivo[$objeto->id][$ltd->id]['tarifa_clasificacion'] : 0
+											,['class' 		=> 'form-control'
+												,'placeholder'	=> 'Seleccionar'
+												,'required'	=> 'true'
+												,"id"	=> 'clasificacion'
+
+												
+											]);
+										!!}
+									</div>
+									
 								</label>
 							@endforeach		
 						</div><!--Fin class="selectgroup selectgroup-pills -->

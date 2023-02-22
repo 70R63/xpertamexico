@@ -1,3 +1,23 @@
+function validaCheckAsignacion( elemento ){
+    
+    var check = elemento.is( ":checked" )
+
+        
+    var ltdName = elemento.attr("name"); 
+    var comboActivo=$("select[name='clasificacion["+ltdName+"]']")
+    console.log("validando combo")
+    console.log(comboActivo.val())
+
+    if ( check ) {
+        comboActivo.attr("required","true");
+    } else{
+        comboActivo.removeAttr("required");
+        comboActivo.prop('selectedIndex',0); 
+
+
+    }
+}
+
 $(".btnAsignarLtd").click(function(e) {
     console.log("btnAsignarLtd")
     e.preventDefault();
@@ -6,12 +26,17 @@ $(".btnAsignarLtd").click(function(e) {
     
     var data = $(idModal).find('Form').serialize();
     var accion = $(idModal).find('Form').attr("action");
-    var form = $('#generalForm').parsley().refresh();
+   
+    
+    $(idModal+" .selectgroup-input").each(function(){
+        validaCheckAsignacion( $(this) )
+    })
+    
 
-    $(".modalAsignarLtd").modal('hide');
-    console.log(accion)
+    var form = $(idModal+' #generalForm').parsley().refresh();
+
     if ( form.validate() ){ 
-
+        $(".modalAsignarLtd").modal('hide');
          $.ajax({
             /* Usar el route  */
             url: accion,
@@ -22,10 +47,10 @@ $(".btnAsignarLtd").click(function(e) {
             
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
-
+                console.log("done")
                 swal(
                     "Exito!",
-                    "Asignacion correcta!",
+                    response.data.mensaje,
                     "success"
                   )
 
@@ -35,17 +60,17 @@ $(".btnAsignarLtd").click(function(e) {
                 
                 swal(
                     "Error!",
-                    "Asignacion incorrecta!",
+                    "Asignacion incorrecta!. Consulte con su proveedor",
                     "error"
                   )
 
             }).always(function() {
                 console.log( "complete" );
             });
-
+        
     } else {
         console.log( "enviosForm con errores" );
-        return false;
+        //return false;
     }
     
 });
@@ -55,5 +80,12 @@ $("#asignarRcPG").click(function(e) {
     e.preventDefault();
 
     $("#rfc").val("XAXX010101000");
+
+});
+
+
+$('.selectgroup-input').change(function () {
+    
+    validaCheckAsignacion($(this))
 
 });

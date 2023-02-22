@@ -34,9 +34,12 @@ class EmpresaController extends Controller
 
             $tabla = Empresa::get();
             $empresaLtd = EmpresaLtd::get()->toArray();
+
             $ltdActivo = array();
             foreach ($empresaLtd as $key => $value) {
-                $ltdActivo[$value['empresa_id']][$value['ltd_id']]= "true";
+                $ltdActivo[ $value['empresa_id'] ] [$value['ltd_id']]['activo']= "true";
+                $ltdActivo[ $value['empresa_id'] ] [$value['ltd_id']]['tarifa_clasificacion']= $value['tarifa_clasificacion'];
+
             }
             Log::debug(print_r($ltdActivo,true));
             
