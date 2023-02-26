@@ -31,4 +31,45 @@ class Tarifa extends Model
 
         });
     }
+
+    /**
+     * Se crea un scope con la base del query para tarifas con difernetes forams de tarificar
+     */
+    public function scopeBase($query, $empresa_id, $cp_d, $ltdId )
+    {
+
+        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')
+                ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+                ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
+                ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
+                ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
+                ->where('tarifas.empresa_id', $empresa_id)
+                ->where('empresa_ltds.empresa_id', $empresa_id)
+                ->where('ltd_coberturas.cp', $cp_d)
+                ->where('ltds.id', $ltdId)
+                ;
+        
+    }
+
+    /**
+     * Cuandola clasificaion es Rango y no hay rango posible se toma como tarifa el rango mayor de cada servicio
+     */
+    public function scopeRangoMaximo($query, $empresa_id, $cp_d, $ltdId, $tarifaId)
+    {
+
+        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')
+                ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+                ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
+                ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
+                ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
+                ->where('tarifas.empresa_id', $empresa_id)
+                ->where('empresa_ltds.empresa_id', $empresa_id)
+                ->where('ltd_coberturas.cp', $cp_d)
+                //->where('ltds.id', $ltdId)
+                ->where('tarifas.id', $tarifaId)
+
+                ;
+        
+    }
+
 }

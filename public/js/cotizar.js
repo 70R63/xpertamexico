@@ -178,7 +178,9 @@ $("#cotizar").click(function(e) {
                     }
                     ,"processing": true,
                     "bDestroy": true,
-                    "data": response.data.data,
+                    order: [[1, 'desc']]
+
+                    ,"data": response.data.data,
                     "columns": [
                         { "data": "id" },
                         { "data": "nombre" },

@@ -6,6 +6,7 @@ use App\Http\Controllers\API\ApiController as BaseController;
 use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\HasApiTokens;
+use DB;
 
 use App\Models\Tarifa;
 use App\Models\Sucursal;
@@ -45,44 +46,65 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." validando empresaLTD");
         Log::debug($empresasLtd);
         $tabla = array();
-        foreach ($empresasLtd as $ltd => $clasificacion) {
-            Log::debug(" LTD $ltd => clasificacion $clasificacion");
-            Log::debug($tabla);
+        foreach ($empresasLtd as $ltdId => $clasificacion) {
+            Log::debug(" LTD $ltdId => clasificacion $clasificacion");
+            
             $tablaTmp = array();
-
-            $query = Tarifa::select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')
-                        ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
-                        ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
-                        ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
-                        ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
-                        ->where('tarifas.empresa_id', $empresa_id)
-                        ->where('empresa_ltds.empresa_id', $empresa_id)
-                        ->where('ltd_coberturas.cp', $request['cp_d'])
-                        ->where('ltds.id', $ltd)
-                        
-                        //->toSql()
-                        ;
+        
+            $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
             switch ($clasificacion) {
                 case "1":
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 1 = FLAT");
-                    $tablaTmp = $query->get()->toArray();        
+                    $tablaTmp = $query->get()->toArray();
+                    $tabla = array_merge($tabla, $tablaTmp);        
                     break;
-                  case "2":
+                case "2":
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 2 = RANGO");
 
-                    $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                    $servicioIds = Tarifa::select('servicio_id')
+                        ->where("ltds_id", $ltdId)
+                        ->distinct()->get()->pluck('servicio_id')->toArray();
+
+                    Log::debug(print_r($servicioIds,true));
+
+                    foreach ($servicioIds as $key => $value) {
+                        $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
                         ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                        ->where('servicio_id', $value)
                         ->get()->toArray()
                         ;
+
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 2 = RANGO con servicio_id =$value");
+                        if (empty($tablaTmp)) {
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
+
+                            $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
+                                ->where("empresa_id", $empresa_id)
+                                ->where("ltds_id", $ltdId)
+                                ->where("servicio_id", $value);
+
+                            $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
+
+                            $tarifaIds = $tarifaIdsGeneral
+                                ->where("kg_fin", $maxKgFin)
+                                ->get()->toArray();
+
+                            $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
+
+                            $tablaTmp = $query->get()->toArray();
+                
+                        }
+                        $tabla = array_merge($tabla, $tablaTmp);
+
+                    }
+                    
                     break;
-                  default:
+                default:
                     Log::debug("No se seleccion niguna clasificacion");
-                }
-            
-            $tabla = array_merge($tabla, $tablaTmp);
+            }
         }
         
-        
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
         Log::debug($tabla);
       
         $success['data'] = $tabla;
@@ -115,6 +137,13 @@ class CotizacionController extends BaseController
     }
 
     public function store(Request $request)
+    {
+        $success['name'] = "nombre";
+        
+        return $this->successResponse($success, 'User login successfully.');
+    }
+
+    private function queryBaseTarifa()
     {
         $success['name'] = "nombre";
         
