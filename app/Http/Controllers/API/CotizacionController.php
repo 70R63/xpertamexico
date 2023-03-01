@@ -54,12 +54,39 @@ class CotizacionController extends BaseController
             $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
             switch ($clasificacion) {
                 case "1":
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 1 = FLAT");
-                    $tablaTmp = $query->get()->toArray();
-                    $tabla = array_merge($tabla, $tablaTmp);        
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 1 = FLAT");
+                    switch ($ltdId) {
+                        case "1":
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
+                            $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
+
+                            if ($zona >=1 && $zona <= 4){
+                                Log::info("zONA 1 A 4");
+                                $costoZona = $query->min("costo");
+                                
+                            } else {
+                                Log::info("zONA 5 A 8");
+                                $costoZona = $query->max("costo");
+                                
+                            }
+                           
+                            $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
+
+
+                            
+                            $tabla = array_merge($tabla, $tablaTmp);
+                           
+                            break;
+                        default:
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd default");
+                            $tablaTmp = $query->get()->toArray();
+                            $tabla = array_merge($tabla, $tablaTmp);
+
+                    }
+                    //Fin switch ($ltdId) 
                     break;
                 case "2":
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 2 = RANGO");
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 2 = RANGO");
 
                     $servicioIds = Tarifa::select('servicio_id')
                         ->where("ltds_id", $ltdId)
@@ -74,7 +101,7 @@ class CotizacionController extends BaseController
                         ->get()->toArray()
                         ;
 
-                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." caso 2 = RANGO con servicio_id =$value");
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
                         if (empty($tablaTmp)) {
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
 
@@ -105,7 +132,7 @@ class CotizacionController extends BaseController
         }
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
-        Log::debug($tabla);
+        //Log::debug($tabla);
       
         $success['data'] = $tabla;
        

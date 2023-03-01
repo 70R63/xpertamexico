@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Log;
 
+use App\Models\PostalZona;
+use App\Models\PostalGrupo;
+
 class Tarifa extends Model
 {
     use HasFactory;
@@ -70,6 +73,33 @@ class Tarifa extends Model
 
                 ;
         
+    }
+
+
+    /**
+     * Se obtiene las zonas y grupos para saber cual tarifa entregar en Fedex con servicio Flat
+     */
+    public function scopeFedexZona($query, $cp, $cp_d)
+    {
+
+        $postalGrupoOrigen = PostalGrupo::where("cp_inicial", "<=", $cp)
+            ->where("cp_final", ">=", $cp)
+            ->pluck("grupo")->toArray();
+
+        $postalGrupoDestino = PostalGrupo::where("cp_inicial", "<=", $cp_d)
+            ->where("cp_final", ">=", $cp_d)
+            ->pluck("grupo")->toArray();
+
+        Log::info($postalGrupoOrigen);
+        Log::info($postalGrupoDestino);
+
+
+        $zona = PostalZona::where("grupo_origen", $postalGrupoOrigen)
+            ->where("grupo_destino", $postalGrupoDestino)
+            ->pluck("zona")->toArray();
+
+        return $zona[0]; 
+
     }
 
 }
