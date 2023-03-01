@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->unsignedMediumInteger('cp_inicial', 5)->nullable(false)->default('00000');
-            $table->unsignedMediumInteger('cp_final', 5)->nullable(false)->default('00000');
+            $table->unsignedMediumInteger('cp_inicial')->nullable(false)->default('00000');
+            $table->unsignedMediumInteger('cp_final')->nullable(false)->default('00000');
             $table->string('grupo', 2)->nullable(false)->default('A');
             $table->string('entidad_federativa', 50)->nullable(false)->default('entidad_federativa');
         });
