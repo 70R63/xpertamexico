@@ -58,24 +58,38 @@ class CotizacionController extends BaseController
                     switch ($ltdId) {
                         case "1":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
-                            $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
-                            if ($zona >=1 && $zona <= 4){
-                                Log::info("zONA 1 A 4");
-                                $costoZona = $query->min("costo");
+                            $servicioIds = Tarifa::select('servicio_id')
+                            ->where("ltds_id", $ltdId)
+                            ->where("empresa_id", $empresa_id)
+                            ->distinct()->get()->pluck('servicio_id')->toArray();
+
+                            $tablaTmp = array();
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ServiciosID");
+                            Log::debug(print_r($servicioIds,true));
+                            foreach ($servicioIds as $key => $value) {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
+
+                                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                                $query = $query->where('servicio_id', $value);
                                 
-                            } else {
-                                Log::info("zONA 5 A 8");
-                                $costoZona = $query->max("costo");
+                                $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
+
+                                if ($zona >=1 && $zona <= 4){
+                                    Log::info("zONA 1 A 4");
+                                    $costoZona = $query->min("costo");
+                                    
+                                } else {
+                                    Log::info("zONA 5 A 8");
+                                    $costoZona = $query->max("costo");
+                                    
+                                }
+                                $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
                                 
+                                $tabla = array_merge($tabla, $tablaTmp);
+                                       
                             }
-                           
-                            $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
-
-
-                            
-                            $tabla = array_merge($tabla, $tablaTmp);
-                           
+                            //FIN foreach ($servicioIds as $key => $value) {
                             break;
                         default:
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd default");
@@ -90,42 +104,85 @@ class CotizacionController extends BaseController
 
                     $servicioIds = Tarifa::select('servicio_id')
                         ->where("ltds_id", $ltdId)
+                        ->where("empresa_id", $empresa_id)
                         ->distinct()->get()->pluck('servicio_id')->toArray();
 
                     Log::debug(print_r($servicioIds,true));
 
-                    foreach ($servicioIds as $key => $value) {
-                        $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
-                        ->where('kg_fin', ">=", $request['pesoFacturado'] )
-                        ->where('servicio_id', $value)
-                        ->get()->toArray()
-                        ;
+                    switch ($ltdId) {
+                        case "1":
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
+                            foreach ($servicioIds as $key => $value) {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
 
-                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
-                        if (empty($tablaTmp)) {
-                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
+                                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                                $query = $query->where('servicio_id', $value);
+                                
+                                $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
-                            $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
-                                ->where("empresa_id", $empresa_id)
-                                ->where("ltds_id", $ltdId)
-                                ->where("servicio_id", $value);
+                                if ($zona >=1 && $zona <= 4){
+                                    Log::info("zONA 1 A 4");
+                                    $costoZona = $query->min("costo");
+                                    
+                                } else {
+                                    Log::info("zONA 5 A 8");
+                                    $costoZona = $query->max("costo");
+                                    
+                                }
+                                $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
+                                
+                                $tabla = array_merge($tabla, $tablaTmp);
+                                       
+                            }
+                            //FIN foreach ($servicioIds as $key => $value) {
+                        break;
+                        case "2":
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");
+                            foreach ($servicioIds as $key => $value) {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
+                                $tablaTmp = array();
 
-                            $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
-
-                            $tarifaIds = $tarifaIdsGeneral
-                                ->where("kg_fin", $maxKgFin)
-                                ->get()->toArray();
-
-                            $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
-
-                            $tablaTmp = $query->get()->toArray();
-                
-                        }
-                        $tabla = array_merge($tabla, $tablaTmp);
-
-                    }
+                                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                                $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                                ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                                ->where('servicio_id', $value)
+                                ->get()->toArray()
+                                ;
                     
-                    break;
+                                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");
+                                Log::debug(print_r($tablaTmp,true));
+
+                                        
+                                if (empty($tablaTmp)) {
+                                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
+                                    $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
+                                        ->where("empresa_id", $empresa_id)
+                                        ->where("ltds_id", $ltdId)
+                                        ->where("servicio_id", $value);
+
+                                    $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
+                                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." maxFin =$maxKgFin");
+                                    $tarifaIds = $tarifaIdsGeneral
+                                        ->where("kg_fin", $maxKgFin)
+                                        ->get()->toArray();
+                        
+                                    Log::debug(print_r($tarifaIds,true));
+                                    $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
+                                    $tablaTmp = $query->get()->toArray();
+                        
+                                }
+                                $tabla = array_merge($tabla, $tablaTmp);
+
+                            }
+                            //FIN foreach ($servicioIds as $key => $value)
+                        break;
+                        default:
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." DEFAULT");
+                    }
+                    //FIN switch ($ltdId) {
+
+                         
+                break;
                 default:
                     Log::debug("No se seleccion niguna clasificacion");
             }
@@ -145,8 +202,7 @@ class CotizacionController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function cp(Request $request)
-    {
+    public function cp(Request $request){
         Log::info(__CLASS__." ".__FUNCTION__);
         Log::info($request);
         $modelo = $request->get('modelo');
