@@ -80,6 +80,7 @@ return [
         ,'Tamaulipas'=>'TM'
         ,'Tlaxcala'=>'TL'
         ,'Veracruz'=>'VE'
+        ,'Veracruz de Ignacio de la Llave'=>'VE'
         ,'Yucatán'=>'YU'
         ,'Zacatecas'=>'ZA'
     ]
