@@ -1,5 +1,5 @@
 <div class="table-responsive">
-	<table id="exportGeneral" class="table table-striped table-bordered text-nowrap" >
+	<table id="tablaClienteDashboard" class="table table-striped table-bordered text-nowrap" >
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -8,9 +8,10 @@
 				<th>RFC</th>
 				<th>CLASIFICACIÓN</th>
 				<th>EMAIL</th>
+				<th>TELEFONO</th>
 				<th>REGISTRADO</th>
 				<th>MODIFICADO</th>
-				<th>ACCIONES</th>
+				<th class="notexport">ACCIONES</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -23,6 +24,7 @@
 					<td>{{ $objeto->rfc }}</td>
 					<td>{{ $objeto->clasificacion }}</td>
 					<td>{{ $objeto->email }}</td>
+					<td>{{ $objeto->telefono }}</td>
 					<td>{{ $objeto->created_at }}</td>
 					<td>{{ $objeto->updated_at }}</td>
 					<td>
