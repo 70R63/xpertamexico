@@ -1,5 +1,52 @@
 $(function() {
 	'use strict'
+
+
+   //Data tabla Clientes (empresa)
+   var tablaClienteDashboard = $('#tablaClienteDashboard').DataTable( {
+      procesing :true
+      ,serverSide:false
+      ,paging:true
+      ,pagingType: "full_numbers"
+      ,pageLength: 25
+      ,lengthChange: true
+      ,"deferRender": true
+      ,"paging": true
+      ,buttons: [ 
+                  { 
+                     extend: 'excelHtml5'
+                     , footer: true
+                     , charset: 'utf-8'
+                     , bom: true
+                     , fieldSeparator: ','
+                     ,fieldBoundary: ''
+                     ,exportOptions: {
+                        columns: ':not(.notexport)'
+                     }
+                     ,customizeData: function(data) {
+                       for(var i = 0; i < data.body.length; i++) {
+                        console.log("custom")
+                         data.body[i][12] = '\0' + data.body[i][12];
+                       }
+                     } 
+                  }
+                  ,{ 
+                     extend: 'pdf'
+                     ,orientation: 'landscape'
+                     , footer: true 
+                     ,exportOptions: {
+                        columns: ':not(.notexport)'
+                     } 
+                  }
+                  
+               ]
+      
+      , order: [[0, 'desc']],
+   } );
+
+   tablaClienteDashboard.buttons().container()
+   .appendTo( '#tablaClienteDashboard_wrapper .col-md-6:eq(0)' );
+
 	
 	//Data tabla general
    var exportGeneral = $('#exportGeneral').DataTable( {
@@ -168,3 +215,7 @@ $(function() {
 	});
 	
 });
+
+
+
+
