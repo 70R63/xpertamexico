@@ -10,6 +10,7 @@
                     <th>kg Inicial</th>
                     <th>kg Final</th> 
                     <th>$ kg Extra.</th>
+                    <th>OCURRE</th>
                     <th>APLICA A.E</th>
                     <th>$ Extendida</th>
                     <th>$ SEGURO</th>

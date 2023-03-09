@@ -193,6 +193,7 @@ $("#cotizar").click(function(e) {
                         { "data": "kg_ini" },
                         { "data": "kg_fin" },
                         { "data": "kg_extra" },
+                        { "data": "ocurre" },
                         { "data": "extendida_cobertura" },
                         { "data": "extendida" },
                         { "data": "seguro"
@@ -260,10 +261,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var contenido = $('#contenido').val();
     var esManual = $("#esManual").val();
     var empresaId = $("#clienteIdCombo").val();
-    //var esManual = $('#checkCotizacionManual').is( ":checked" ) ? "SEMI" : "NO";
-    //var esManual = $('#checkManual').is( ":checked" ) ? "SI" : "NO";
+    var ocurre  = dataRow['ocurre'];
 
-    console.log($(this).is( ":checked" ));
     //valores para el modal 
     $("#spanPrecio").text( precioIva );
     $("#spanMensajeria").text(ltd_nombre);
@@ -275,6 +274,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#spanValorEnvio").text(valorEnvio);
     $("#spanPeso").text(peso);
     $("#spanCotizacionManual").text(esManual);
+    $("#spanOcurre").text(ocurre);
 
     //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
     $("#precio").val(precioIva);

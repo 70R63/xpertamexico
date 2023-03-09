@@ -41,7 +41,7 @@ class Tarifa extends Model
     public function scopeBase($query, $empresa_id, $cp_d, $ltdId )
     {
 
-        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')
+        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
                 ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                 ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
                 ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
@@ -60,7 +60,7 @@ class Tarifa extends Model
     public function scopeRangoMaximo($query, $empresa_id, $cp_d, $ltdId, $tarifaId)
     {
 
-        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura')
+        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre')
                 ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                 ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
                 ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
@@ -81,7 +81,7 @@ class Tarifa extends Model
      */
     public function scopeFedexZona($query, $cp, $cp_d)
     {
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $postalGrupoOrigen = PostalGrupo::where("cp_inicial", "<=", $cp)
             ->where("cp_final", ">=", $cp)
             ->pluck("grupo")->toArray();
@@ -97,8 +97,9 @@ class Tarifa extends Model
         $zona = PostalZona::where("grupo_origen", $postalGrupoOrigen)
             ->where("grupo_destino", $postalGrupoDestino)
             ->pluck("zona")->toArray();
-
-        return $zona[0]; 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        //return $zona[0]; 
+        return 5;
 
     }
 

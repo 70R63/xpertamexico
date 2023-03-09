@@ -42,6 +42,7 @@
                             </li>
                             <li>
                                 <b>Cotización Manual:</b><span id="spanCotizacionManual"></span>
+                                <b>,   Ocurre:</b> <span id="spanOcurre"></span>
                             </li>
                         </ul>
                     </div>
