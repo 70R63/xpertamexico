@@ -16,7 +16,9 @@
                                 <th>CIUDAD ORIGEN</th>
                                 <th>ESTATUS <br> RASTREO</th>
                                 <th>GARANTIA</th>
-                                <th>ULTIMA FECHA <br>DE RASTREO</th>
+                                <th>FECHA CREACION</th>
+                                <th>FECHA PICKUP</th>
+                                <th>FECHA ENTREGA</th>
                                 <th>QUIEN <br>RECIBE</th>
                                 <th>PESO KG</th>
                                 <th>LARGO</th>
