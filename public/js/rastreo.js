@@ -117,7 +117,9 @@ function rastrearTabla(){
                                 return garantia(row); 
                             } 
                         }
-                        ,{ "data": "ultima_fecha" }
+                        ,{ "data": "creada" }
+                        ,{ "data": "pickup_fecha_f" }
+                        ,{ "data": "ultima_fecha_f" }
                         ,{ "data": "quien_recibio" }
                         ,{ "data": "rastreo_peso" }
                         ,{ "data": "largo" }
@@ -170,10 +172,7 @@ $.ajax({
 }
 
 function garantia(row){
-    console.log("--------------------------")
-    console.log( row )
-    
-   // console.log("ultima_fecha " + row.ultima_fecha) //fecha de entrega
+
     var ahora = new Date();
     var pickupFecha = new Date(row.pickup_fecha_f);
     var ultimaFecha = new Date(row.ultima_fecha_f);
