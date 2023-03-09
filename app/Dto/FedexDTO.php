@@ -49,13 +49,14 @@ class FedexDTO
 		$weight = new Weight(array('value'=> $request['peso_facturado']));
 
 		$contactShipper = New Contact( 
-			array("personName" 	=> ($request['contacto'])
+			array("personName" 	=> $this->quitar_acentos($request['contacto'])
 				,"phoneNumber"	=> $request['celular']
-				,"companyName"	=> $request['nombre']) 
+				,"companyName"	=> $this->quitar_acentos($request['nombre'])
+				) 
 			);
 
 		$direccion = sprintf("%s %s %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
-		$streetLines = str_split($direccion,35);
+		$streetLines = str_split($this->quitar_acentos($direccion),35);
 
 		//Validacion temporal Entidad Federativa
 
@@ -67,20 +68,20 @@ class FedexDTO
 
 		$addressShipper = New Address(
 			array("streetLines"     => $streetLines
-				,"city"	=> $request['colonia']
+				,"city"	=> $this->quitar_acentos($request['colonia'])
 				,"stateOrProvinceCode"	=> $stateOrProvinceCode
 				,"postalCode"	=> $request['cp']
 			));
 
 		$contactRecipients = New Contact( 
-			array("personName" 	=> $request['contacto_d']
+			array("personName" 	=> $this->quitar_acentos($request['contacto_d'])
 				,"phoneNumber"	=> $request['celular_d']
-				,"companyName"	=> $request['nombre_d']) 
+				,"companyName"	=> $this->quitar_acentos($request['nombre_d'])) 
 			);
 
 
 		$direccion_d = sprintf("%s %s %s,%s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'],$request['direccion2_d'] );
-		$streetLines_d = str_split($direccion_d,35);
+		$streetLines_d = str_split($this->quitar_acentos($direccion_d),35);
 
 		if (strlen($request['entidad_federativa_d']) ===2 ){
 			$stateOrProvinceCode_d = $request['entidad_federativa_d'];
@@ -89,7 +90,7 @@ class FedexDTO
 		}
 
 		$addressRecipients = New Address(
-			array("streetLines"     => $streetLines_d
+			array("streetLines"     => $this->quitar_acentos($streetLines_d)
 				,"city"	=> $request['colonia_d']
 				,"stateOrProvinceCode"	=> $stateOrProvinceCode_d
 				,"postalCode"	=> $request['cp_d']
@@ -102,7 +103,7 @@ class FedexDTO
 		$declaredValueWeight = array('declaredValue' => new DeclaredValue(["amount"=>$request['valor_envio']])
                                     ,'weight' => $weight
                                     ,'groupPackageCount' => $request['piezas'] 
-                                    ,'itemDescriptionForClearance' => $request['contenido']
+                                    ,'itemDescriptionForClearance' => $this->quitar_acentos($request['contenido'])
                                 );
 
 		$requestedPackageLineItems = New RequestedPackageLineItems($declaredValueWeight);
@@ -126,5 +127,48 @@ class FedexDTO
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO");
         return new Etiqueta($init);
 
+	}
+
+
+	/* Función que elimina los acantos y letras ñ*/
+	private function quitar_acentos($cadena){
+	    //Reemplazamos la A y a
+		$cadena = str_replace(
+		array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
+		array('A', 'A', 'A', 'A', 'a', 'a', 'a', 'a', 'a'),
+		$cadena
+		);
+
+		//Reemplazamos la E y e
+		$cadena = str_replace(
+		array('É', 'È', 'Ê', 'Ë', 'é', 'è', 'ë', 'ê'),
+		array('E', 'E', 'E', 'E', 'e', 'e', 'e', 'e'),
+		$cadena );
+
+		//Reemplazamos la I y i
+		$cadena = str_replace(
+		array('Í', 'Ì', 'Ï', 'Î', 'í', 'ì', 'ï', 'î'),
+		array('I', 'I', 'I', 'I', 'i', 'i', 'i', 'i'),
+		$cadena );
+
+		//Reemplazamos la O y o
+		$cadena = str_replace(
+		array('Ó', 'Ò', 'Ö', 'Ô', 'ó', 'ò', 'ö', 'ô'),
+		array('O', 'O', 'O', 'O', 'o', 'o', 'o', 'o'),
+		$cadena );
+
+		//Reemplazamos la U y u
+		$cadena = str_replace(
+		array('Ú', 'Ù', 'Û', 'Ü', 'ú', 'ù', 'ü', 'û'),
+		array('U', 'U', 'U', 'U', 'u', 'u', 'u', 'u'),
+		$cadena );
+
+		//Reemplazamos la N, n, C y c
+		$cadena = str_replace(
+		array('Ñ', 'ñ', 'Ç', 'ç'),
+		array('N', 'n', 'C', 'c'),
+		$cadena
+		);
+	    return $cadena;
 	}
 }
