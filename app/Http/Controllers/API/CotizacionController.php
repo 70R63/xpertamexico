@@ -180,8 +180,40 @@ class CotizacionController extends BaseController
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." DEFAULT");
                     }
                     //FIN switch ($ltdId) {
+         
+                break;
+                case 3:
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 3 = ".Config('tarifa.clasificacion.3') );
+                     $servicioIds = Tarifa::select('servicio_id')
+                        ->where("ltds_id", $ltdId)
+                        ->where("empresa_id", $empresa_id)
+                        ->distinct()->get()->pluck('servicio_id')->toArray();
 
-                         
+                    foreach ($servicioIds as $key => $value) {
+
+
+                       $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                                    $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                                    ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                                    ->where('servicio_id', $value);
+                        
+                        $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
+
+                        if ($zona >=1 && $zona <= 4){
+                            Log::info("zONA 1 A 4");
+                            $costoZona = $query->min("costo");
+                            
+                        } else {
+                            Log::info("zONA 5 A 8");
+                            $costoZona = $query->max("costo");
+                            
+                        }
+
+                        $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
+                        
+                        
+                        $tabla = array_merge($tabla, $tablaTmp);
+                    };
                 break;
                 default:
                     Log::debug("No se seleccion niguna clasificacion");

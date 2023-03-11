@@ -98,8 +98,7 @@ class Tarifa extends Model
             ->where("grupo_destino", $postalGrupoDestino)
             ->pluck("zona")->toArray();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //return $zona[0]; 
-        return 5;
+        return $zona[0]; 
 
     }
 

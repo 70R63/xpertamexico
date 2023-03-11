@@ -14,7 +14,8 @@
 	    	<div class="modal-body">
 	        	<p class="bigger-50 bolder center grey">
 					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-					Selecciona los proveedores para Cliente '{{ $objeto->nombre }}'.  	
+					Selecciona los proveedores para el Cliente 
+					<p>'{{ $objeto->nombre }}'.  	
 				</p>
 
 				<div class="col-lg-12">
@@ -39,7 +40,7 @@
 										</div>
 
 										{!! Form::select('clasificacion['.$ltd->nombre.']'
-											, array("1"=>"FLAT", "2"=>"RANGO")
+											, Config('tarifa.clasificacion')
 											,isset($ltdActivo[$objeto->id][$ltd->id]['tarifa_clasificacion']) ? $ltdActivo[$objeto->id][$ltd->id]['tarifa_clasificacion'] : 0
 											,['class' 		=> 'form-control'
 												,'placeholder'	=> 'Seleccionar'
