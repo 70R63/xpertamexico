@@ -107,18 +107,20 @@ class GuiaController extends Controller
         Log::debug(print_r($request->all(),true));
  
         if ($request->esManual != "NO") {
-            Log::info(__CLASS__." ".__FUNCTION__." iniciando es manual ----------------------------");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." iniciando no es manual ----------------------------");
             try{
 
                 $cliente = new Cliente();
                 $cliente->validaCliente($request);
 
                 if ( !$cliente->getExiste() ) {
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Cliente no existe");
+            
                     $cliente->insertSemiManual($request);
                 }
                 
                 if ($request->esManual === "SI") {
-                    Log::info(__CLASS__." ".__FUNCTION__." iniciando SI es manual ----------------------------");
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." iniciando SI es manual ----------------------------");
                     $remitente = new Sucursal();
                     $remitente->existe($request);
                     
@@ -215,7 +217,7 @@ class GuiaController extends Controller
      * @return \Illuminate\Http\Response
      */
     private function estafeta($request){
-        Log::info(__CLASS__." ".__FUNCTION__."estafeta iniciando ----------------------------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." estafeta iniciando ----------------------------");
         $mensaje = array();
         try {
             
@@ -332,7 +334,7 @@ class GuiaController extends Controller
      */
     private function fedex($request){
 
-        Log::info(__CLASS__." ".__FUNCTION__." iniciado ----------------------------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." iniciado ----------------------------");
         $mensaje = array();
         try {
             

@@ -46,7 +46,7 @@ class Guia {
 	 */
 
 	public function parser($request, $sFedex, $canal = "API"){
-		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO----- ");
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO----- ");
 		$dimensiones = sprintf("%sx%sx%s",$request->largo,$request->ancho,$request->alto);
 		$precio = sprintf("%.2f",$request['precio']);
 

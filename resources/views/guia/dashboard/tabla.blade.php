@@ -4,7 +4,7 @@
         <div class="card custom-card mg-b-20">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="guiasTabla" class="table table-striped table-bordered text-nowrap " >
+                    <table id="guiasTablaAjax" class="table table-striped table-bordered text-nowrap " >
                         <thead>
                             <tr>
                                 <th>ID</th>

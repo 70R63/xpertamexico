@@ -92,8 +92,9 @@ class Cliente extends Model
     */
 
     public function validaCliente($request){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO ---------");
 
+        $empresa_id = $request['empresa_id'];
         switch ($request['esManual']) {
             case "SI":
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
@@ -113,7 +114,12 @@ class Cliente extends Model
                             ->pluck('id')
                             ->toArray();
                 
-                break;                
+                break;     
+            case "RETORNO":
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = RETORNO ");
+                $cliente = self::where("id", $request['cliente_id'] )->pluck('id')
+                            ->toArray();;
+                break;           
             default:
                 Log::info("No se cargo ningun caso");
         }

@@ -18,6 +18,7 @@
                     
                 </tr>
             </thead>
+            
             <tfoot>
                 <tr>
                     <th>ID TARIFA</th>

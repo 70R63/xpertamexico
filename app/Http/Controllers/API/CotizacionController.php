@@ -114,27 +114,17 @@ class CotizacionController extends BaseController
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
                             foreach ($servicioIds as $key => $value) {
                                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
-
-                                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
-                                $query = $query->where('servicio_id', $value);
-                                
-                                $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
-
-                                if ($zona >=1 && $zona <= 4){
-                                    Log::info("zONA 1 A 4");
-                                    $costoZona = $query->min("costo");
-                                    
-                                } else {
-                                    Log::info("zONA 5 A 8");
-                                    $costoZona = $query->max("costo");
-                                    
+		
+    		              		$query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                                    $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                                    ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                                    ->where('servicio_id', $value)
+                                    ->get()->toArray()
+                                    ;
+                                    $tabla = array_merge($tabla, $tablaTmp);
+                                           
                                 }
-                                $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
-                                
-                                $tabla = array_merge($tabla, $tablaTmp);
-                                       
-                            }
-                            //FIN foreach ($servicioIds as $key => $value) {
+                                //FIN foreach ($servicioIds as $key => $value) {
                         break;
                         case "2":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");

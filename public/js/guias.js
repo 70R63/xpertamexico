@@ -1,11 +1,32 @@
+var table;
 $(document).ready(function() {
-    if ($('#guiasTabla').length) {
+    if ($('#guiasTablaAjax').length) {
         guiasTabla()     
     }
-   
+
+ 
+
 }) 
 
+function esRetornoRemitente(row){
+    var leyenda = row.contacto
+    if (row.canal === "RET")
+        leyenda = row.contacto_d
+
+    return leyenda
+}
+
+function esRetornoDestinatario(row){
+    var leyenda = row.contacto_d
+    if (row.canal === "RET")
+        leyenda = row.contacto
+
+    return leyenda
+}
+
+
 function guiasTabla(){
+
     $.ajax({
         url: 'api/rastreoTabla',
         type: 'GET',
@@ -15,8 +36,7 @@ function guiasTabla(){
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
-        console.log(response.data)
-        table = $('#guiasTabla').DataTable({
+        table = $('#guiasTablaAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
                     }
@@ -64,8 +84,7 @@ function guiasTabla(){
                     ,columns: [
                         { "data": "id" }
                         ,{ "data": "mensajeria"
-                                ,render: function(data, type, row){
-                                    
+                                ,render: function(data, type, row){   
                                 return documentoRetorno(row); 
                             }
                         }
@@ -74,13 +93,20 @@ function guiasTabla(){
                         ,{ "data": "servicio_nombre" }
                         ,{ "data": "usuario" }
                         ,{ "data": "nombre" }
-                        ,{ "data": "contacto" }
-                        ,{ "data": "contacto_d" }
+                        ,{ "data": "contacto"
+                                ,render: function(data, type, row){   
+                                return esRetornoRemitente(row); 
+                            }
+                        }
+                        ,{ "data": "contacto_d" 
+                                ,render: function(data, type, row){   
+                                return esRetornoDestinatario(row); 
+                            }
+                        }
                         ,{ "data": "cp" }
                         ,{ "data": "ciudad" }
                         ,{ "data": "cp_d" }
                         ,{ "data": "ciudad_d" }
-                         
                         ,{ "data": "creada"      }
                         ,{ "data": "canal" }
                         ,{ "data": "tracking_number" }
@@ -107,18 +133,16 @@ function guiasTabla(){
 
 
     }).always(function() {
-            console.log( "complete" );
+            console.log( "complete guiasTablaAjax" );
     });
 }
 
 function documentoRetorno(row){
 
     var doc = documento(row)
-    var htmlRetorno = '<a href="#" id="retorno" name="retorno" class="text-nowrap tx-20" data-toggle="modal" data-target="#myModal" > \
-        <i title="Retorno de la guia" class="si si-action-undo"> </i>       \
-        </a>'
 
-    return doc+htmlRetorno    
+    var htmlRetorno = '<span> <i title="Retorno de la guia" class="si si-action-undo text-warning tx-20"> </i> </span>';
+    return doc+htmlRetorno;
 }
 
 function documento(row){
@@ -136,3 +160,19 @@ function documento(row){
 }
 
 
+ $( "#guiasTablaAjax" ).on( "click", "span", function() {
+
+    var dataRow = table.row( $(this).parent().parent() ).data(); 
+
+    console.log(dataRow);
+
+    //valores para el modal 
+    $("#spanID").text( dataRow.id );
+    $("#spanRemitente").text( dataRow.cp );
+    $("#spanDestinatario").text( dataRow.cp_d );
+    $("#spanNuevoDestinatario").text( dataRow.cp );
+    $("#spanNuevoRemitente").text( dataRow.cp_d );
+    $("#guia_id").val( dataRow.id );
+    
+    $("#myModal").modal("show");
+});

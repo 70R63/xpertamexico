@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guia;
+use App\Models\Empresa;
 use App\Models\EmpresaLtd;
 use App\Models\Sucursal;
 use App\Models\Cliente;
@@ -58,21 +59,24 @@ class GuiaRetornoController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." INICIANDO -----");
+
             Log::debug(print_r($request->all(),true));
             $guia = Guia::where('id',$request['guia_id'])->get()->toArray()[0];   
             Log::debug($guia);
+            
             //retorno Invertir Cliente por Sucursal
             $ltd_id = $guia['ltd_id'];
             $sucursal = Cliente::findOrFail($guia['cia_d']);
             $cliente = Sucursal::findOrFail($guia['cia']);
             $servicio = Servicio::findOrFail($guia['servicio_id']);
             $ltd = Ltd::findOrFail($guia['ltd_id']);
-
-            
+            $empresa = Empresa::findOrFail($guia["empresa_id"]);
+           
             $ltd_nombre = $ltd['nombre'];
             $precio = $guia['precio'];
             $piezas = $guia['piezas'];
 
+            $objeto['clienteXperta'] = $empresa->nombre;
             $objeto['peso_facturado'] = $guia['peso'];
             $objeto['valor_envio_r'] = $guia['valor_envio'];
             $objeto['costo_seguro'] = $guia['seguro'];
@@ -84,6 +88,9 @@ class GuiaRetornoController extends Controller
             $objeto['extendida_r'] = $guia['extendida'];
 
             [$objeto['largos'],$objeto['anchos'], $objeto['altos']] = explode('x', $guia['dimensiones']);
+
+            //$objeto['cp_d_manual'] = "55555";
+            $objeto['empresa_id'] = $guia["empresa_id"];
 
 
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----");

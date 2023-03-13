@@ -42,7 +42,7 @@
     </div>
     
     <div class="col-lg-12 col-xl-4 col-md-4">
-        @if($objeto['esManual']==='NO' )
+        @if($objeto['esManual']==='NO' ||  $objeto['esManual']==='RETORNO')
             @include('cotizaciones.forma.cliente_readonly')
         @else
             @include('cotizaciones.forma.cliente_esmanual_readonly')
