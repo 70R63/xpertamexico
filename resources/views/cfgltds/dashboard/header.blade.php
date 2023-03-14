@@ -8,7 +8,7 @@
     </div>
     <div class="d-flex">
         <div class="justify-content-center">
-            <a type="button" class="btn btn-primary my-2 btn-icon-text" href="{{ route('cfgltds.create') }}" >
+            <a type="button" class="btn btn-primary my-2 btn-icon-text" href="{{ route('mensajerias.create') }}" >
                 <i class="fe fe-download-cloud mr-2"> Nuevo</i>
             </a>
         </div>

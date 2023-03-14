@@ -19,21 +19,11 @@
 <!-- Row end -->
 
 <!--Row-->
-<div class="row row-sm">
-    <div class="col-lg-12 col-xl-12  col-md-12">
-        <div class="card custom-card mg-b-20">
-            <div class="card-body">
-                <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-                    <label class="main-content-label mb-4">Servicios Activos</label>
-                </div>
-                <div>
-                    @for ($i = 0; $i < $row; $i++)
-                        @include('ltd.dashboard.lista')
-                    @endfor    
-                </div>    
-            </div>
-        </div>
-    </div>
+<div class="row row-sm">    
+    @foreach ($tabla as $row)
+        @include('ltd.dashboard.lista')
+    @endforeach
+
 </div>
 <!-- Row end -->
 <!--Row-->

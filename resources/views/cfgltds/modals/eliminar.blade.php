@@ -21,7 +21,7 @@
 		     <div class="modal-footer">
 		      	<button class="btn btn-primary" type="button" data-dismiss="modal">Cancelar</button>
 		      	
-		      	{!! Form::open([ 'route' => ['cfgltds.destroy', $objeto ], 'metdod' => 'PUT' ]) !!}
+		      	{!! Form::open([ 'route' => ['mensajerias.destroy', $objeto ], 'metdod' => 'PUT' ]) !!}
 		      		@csrf
 		      		{{method_field('DELETE')}}
 					<a class="btn badge-dark" onclick="$(this).closest('form').submit();">Eliminar</a>

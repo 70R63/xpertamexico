@@ -39,7 +39,7 @@ Route::get('/dashboard', function () {
 |- usuario
 */
 //Menu SysAdmin
-Route::resource('cfgltds','CfgLtdController')
+Route::resource('mensajerias','CfgLtdController')
     ->middleware(['roles:sysadmin,admin']);
 Route::resource('guiaretorno','GuiaRetornoController')
     ->middleware(['roles:sysadmin,admin']);

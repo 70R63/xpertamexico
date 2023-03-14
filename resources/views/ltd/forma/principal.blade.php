@@ -12,7 +12,7 @@
 					
 					{!! Form::select('nombre'
 						,$pluckLtd
-						,null
+						,isset($ltd->id) ? $ltd->id : 0
 						,['class' 		=> 'form-control'
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'

@@ -22,7 +22,7 @@
 						<img src="{{ asset($objeto->imagen_ruta) }}" alt="Girl in a jacket" width="80" height="60">
 					</td>
 					<td>
-						<a href=" {{ route('cfgltds.edit', $objeto->id) }} " class="text-info tx-20 ">
+						<a href=" {{ route('mensajerias.edit', $objeto->id) }} " class="text-info tx-20 ">
 							<i class="fe fe-edit" alt="Editar"></i>
 						</a>
 						@include('cfgltds.modals.eliminar')		

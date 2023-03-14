@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        {!! Form::model($objeto,['route' => ['cfgltds.update',$objeto], 'method' => 'PUT' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+        {!! Form::model($objeto,['route' => ['mensajerias.update',$objeto], 'method' => 'PUT' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
             <div class="row row-sm">
                 <div class="col-xl-12">
                     <div class="card custom-card">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <div>
-                        <a href="{{ route('cfgltds.index') }}" class="btn badge-dark" >Cancelar</a>
+                        <a href="{{ route('mensajerias.index') }}" class="btn badge-dark" >Cancelar</a>
                         <button type="submit" class="btn btn-primary ml-3" >Guardar</button>
                     </div>
                 </div>

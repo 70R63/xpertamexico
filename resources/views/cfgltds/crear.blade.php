@@ -16,11 +16,11 @@
             </div>
         </div>
     </div>
-    {!! Form::open([ 'route' => 'cfgltds.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+    {!! Form::open([ 'route' => 'mensajerias.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
         <div class="row row-sm">
             @include('cfgltds.forma.principal')
             <div>
-                <a href="{{ route('cfgltds.index') }}" class="btn badge-dark" >Cancelar</a>
+                <a href="{{ route('mensajerias.index') }}" class="btn badge-dark" >Cancelar</a>
                 <button type="submit" class="btn btn-primary ml-3" >Enviar</button>
             </div>
         </div>
