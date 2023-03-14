@@ -25,7 +25,7 @@
 						<a href=" {{ route('mensajerias.edit', $objeto->id) }} " class="text-info tx-20 ">
 							<i class="fe fe-edit" alt="Editar"></i>
 						</a>
-						@include('cfgltds.modals.eliminar')		
+						<!-- include('cfgltds.modals.eliminar')	-->
 					</td>
 				</tr>
 					

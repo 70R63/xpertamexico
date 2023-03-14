@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CfgLtdController extends Controller
 {
-    const INDEX_r = "cfgltds.index";
+    const INDEX_r = "mensajerias.index";
 
     const DASH_v = "cfgltds.dashboard";
     const CREAR_v = "cfgltds.crear";
