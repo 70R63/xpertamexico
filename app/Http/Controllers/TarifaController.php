@@ -30,7 +30,7 @@ class TarifaController extends Controller
     public function index()
     {
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);    
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
             $tabla = Tarifa::get();
 
             $pluckLtd = Ltd::where('estatus',1)
@@ -42,9 +42,9 @@ class TarifaController extends Controller
             $pluckEmpresa = Empresa::where('estatus',1)
                     ->pluck('nombre','id');
 
-            $registros = $tabla->count();
-            $row = ceil($registros/3);
-
+            Log::debug(print_r($tabla,true));
+            Log::debug(print_r($pluckLtd,true));
+            Log::debug(print_r($pluckServicio,true));
             return view(self::DASH_v 
                     ,compact("tabla", "pluckLtd", "pluckServicio", "pluckEmpresa")
                 );
