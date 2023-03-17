@@ -14,7 +14,7 @@
 					{!! Form::select('ltds_id'
 						, $pluckLtd
 						,$tarifa['ltds_id'] ?? '0'
-						,['class' 		=> 'form-control'
+						,['class' 		=> 'form-control '
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'
 						]);
@@ -46,7 +46,7 @@
 					{!! Form::select('empresa_id'
 						,$pluckEmpresa
 						,null
-						,['class' 		=> 'form-control'
+						,['class' 		=> 'form-control select2'
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'
 						]);
