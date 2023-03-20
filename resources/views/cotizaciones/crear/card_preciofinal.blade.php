@@ -71,24 +71,45 @@
     ])
 !!}
 
-{!! Form::hidden('largo'
-    , $objeto['largos']
-    ,['class'       => 'form-control'
-        ,'id'       => 'largo' 
-    ])
-!!}
-{!! Form::hidden('ancho'
-    , $objeto['anchos']
-    ,['class'       => 'form-control'
-        ,'id'       => 'ancho' 
-    ])
-!!}
-{!! Form::hidden('alto'
-    , $objeto['altos']
-    ,['class'       => 'form-control'
-        ,'id'       => 'alto' 
-    ])
-!!}
+
+    @foreach ($objeto['pesos'] as $peso)
+        {!! Form::hidden('pesos[]'
+            , $peso
+            ,['class'       => 'form-control'
+                ,'id'       => 'pesos' 
+            ])
+        !!}
+    @endforeach
+
+    @foreach ($objeto['largos'] as $largo)
+        {!! Form::hidden('largos[]'
+            , $largo
+            ,['class'       => 'form-control'
+                ,'id'       => 'largos' 
+            ])
+        !!}
+    @endforeach
+
+    @foreach ($objeto['anchos'] as $ancho)
+        {!! Form::hidden('anchos[]'
+            , $ancho
+            ,['class'       => 'form-control'
+                ,'id'       => 'anchos' 
+            ])
+        !!}
+    @endforeach
+
+    @foreach ($objeto['altos'] as $alto)
+        {!! Form::hidden('altos[]'
+            , $alto
+            ,['class'       => 'form-control'
+                ,'id'       => 'altos' 
+            ])
+        !!}
+    @endforeach
+
+
+
 
 {!! Form::hidden('bSeguro'
     , $objeto['bSeguro']

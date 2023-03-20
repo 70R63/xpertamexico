@@ -64,19 +64,29 @@
     ])
 !!}
 
-{!! Form::hidden('largos'
+
+{!! Form::hidden('pesos[]'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'pesos' 
+    ])
+!!} 
+
+{!! Form::hidden('largos[]'
     , null
     ,['class'       => 'form-control'
         ,'id'       => 'largos' 
     ])
 !!}
-{!! Form::hidden('anchos'
+
+
+{!! Form::hidden('anchos[]'
     , null
     ,['class'       => 'form-control'
         ,'id'       => 'anchos' 
     ])
 !!}
-{!! Form::hidden('altos'
+{!! Form::hidden('altos[]'
     , null
     ,['class'       => 'form-control'
         ,'id'       => 'altos' 

@@ -25,7 +25,7 @@ class CotizacionController extends BaseController
      */
     public function index(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug($request);
 
         
@@ -35,7 +35,7 @@ class CotizacionController extends BaseController
             $empresa_id= Sucursal::where('id',$request['sucursal'])
                     ->value('empresa_id');
         }
-        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." EmpresaEmpresas");
         $empresas = EmpresaEmpresas::where('id',$empresa_id)
                 ->pluck('empresa_id')->toArray();
         Log::debug($empresas);
@@ -47,8 +47,8 @@ class CotizacionController extends BaseController
         Log::debug($empresasLtd);
         $tabla = array();
         foreach ($empresasLtd as $ltdId => $clasificacion) {
-            Log::debug(" LTD $ltdId => clasificacion $clasificacion");
-            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => clasificacion $clasificacion");
+                        
             $tablaTmp = array();
         
             $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
@@ -166,6 +166,46 @@ class CotizacionController extends BaseController
                             }
                             //FIN foreach ($servicioIds as $key => $value)
                         break;
+                        case "3":
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd ".Config('ltd.redpack.id')."=".Config('ltd.redpack.nombre') );
+                            foreach ($servicioIds as $key => $value) {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
+                                $tablaTmp = array();
+
+                                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                                $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                                ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                                ->where('servicio_id', $value)
+                                ->get()->toArray()
+                                ;
+                    
+                                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");
+                                Log::debug(print_r($tablaTmp,true));
+
+                                        
+                                if (empty($tablaTmp)) {
+                                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
+                                    $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
+                                        ->where("empresa_id", $empresa_id)
+                                        ->where("ltds_id", $ltdId)
+                                        ->where("servicio_id", $value);
+
+                                    $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
+                                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." maxFin =$maxKgFin");
+                                    $tarifaIds = $tarifaIdsGeneral
+                                        ->where("kg_fin", $maxKgFin)
+                                        ->get()->toArray();
+                        
+                                    Log::debug(print_r($tarifaIds,true));
+                                    $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
+                                    $tablaTmp = $query->get()->toArray();
+                        
+                                }
+                                $tabla = array_merge($tabla, $tablaTmp);
+
+                            }
+                            //FIN foreach ($servicioIds as $key => $value)
+                        break;
                         default:
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." DEFAULT");
                     }
@@ -211,7 +251,6 @@ class CotizacionController extends BaseController
         }
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
-        //Log::debug($tabla);
       
         $success['data'] = $tabla;
        

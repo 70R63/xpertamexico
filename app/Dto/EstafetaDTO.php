@@ -141,9 +141,14 @@ class EstafetaDTO
         $itemDescription = new ItemDescription();
 
         $itemDescription->weight =$data['peso_facturado'];
-        $itemDescription->height =$data['alto'];
-        $itemDescription->length =$data['largo'];
-        $itemDescription->width  =$data['ancho'];
+
+        foreach ($data['pesos'] as $key => $value) {
+            
+            $itemDescription->length +=$data['largos'][$key];
+            $itemDescription->width  +=$data['anchos'][$key];
+            $itemDescription->height += $data['altos'][$key];
+        }
+        
 
         Log::debug(__CLASS__." ".__FUNCTION__." itemDescription FIN -----------------");
         return $itemDescription;

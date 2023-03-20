@@ -85,9 +85,9 @@ return [
         ,'pass'   => env('REDPACK_PASS')
         ,'uri_documentation' => env('REDPACK_URI_DOCUMENTATION')
         ,'servicio' => [
-            '1'     => '70'
-            ,'2'    => '60'
-            ,'3'    => 'D0'
+            '1'     => '2'
+            ,'2'    => '1'
+            ,'3'    => '1'
         ]
         ,'rastreoEstatus' => [
             'ON_TRANSIT' => '3'

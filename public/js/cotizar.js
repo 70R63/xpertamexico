@@ -5,15 +5,11 @@ var costoSeguro = 0;
 var valorEnvio = 0;
 
 
+
 function pesofacturado(){
 
     var peso = 0
     var piezas = $("#piezas").val()
-    /*
-    var alto = 0
-    var ancho = 0
-    var largo = 0
-    */
     var iteracionClone = 0
     var bascula = +0
     var dimensional =+0
@@ -286,9 +282,6 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#piezas_guia").val(piezas);
     $("#servicio_id").val(servicioId);
     $("#peso_facturado").val(peso);
-    $("#largos").val(largo);
-    $("#anchos").val(ancho);
-    $("#altos").val(alto);
     $("#bSeguro").val(bSeguro);
     $("#costo_seguro").val(costoSeguro);
     $("#contenido_r").val(contenido);
@@ -298,6 +291,38 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#cp_manual").val(cp);
     $("#cp_d_manual").val(cp_d);
     $("#empresa_id").val(empresaId);
+
+    var iteracionClone = 0
+    var pesos = []
+    var largos = []
+    var anchos = []
+    var altos = []
+
+    $('.registroMultipieza').each(function(){
+        console.log("--------------"+iteracionClone)
+        var control = +iteracionClone *4
+        var indexPeso = 0 +control
+        var indexLargo = 1 +control
+        var indexAncho = 2 +control
+        var indexAlto = 3 +control 
+        
+
+        var peso = $('.registroMultipieza .multi').get()[indexPeso].value
+        var largo = $('.registroMultipieza .multi').get()[indexLargo].value
+        var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
+        var alto = $('.registroMultipieza .multi').get()[indexAlto].value
+        
+        pesos.push(peso)
+        largos.push(largo)
+        anchos.push(ancho)
+        altos.push(alto)
+        iteracionClone++
+    })      
+
+    $("#pesos").val(pesos);
+    $("#largos").val(largos);
+    $("#anchos").val(anchos);
+    $("#altos").val(altos);
 
 
     $("#myModal").modal("show");

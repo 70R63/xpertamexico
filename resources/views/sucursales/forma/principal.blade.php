@@ -168,7 +168,7 @@
 					{!! Form::select('empresa_id'
 						, $pluckEmpresa
 						,null
-						,['class' 		=> 'form-control'
+						,['class' 		=> 'form-control select2'
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'
 							,'id'		=> 'empresa_id'

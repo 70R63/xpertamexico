@@ -58,7 +58,7 @@ class CotizadorController extends Controller
      */
     public function create(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
         try {
 
             $objeto = $request->all();           
@@ -87,6 +87,12 @@ class CotizadorController extends Controller
 
             }
 
+
+            $objeto['pesos'] = explode(",", $request['pesos'][0] );
+            $objeto['largos'] = explode(",", $request['largos'][0] );
+            $objeto['anchos'] = explode(",", $request['anchos'][0] );
+            $objeto['altos'] = explode(",", $request['altos'][0] );
+
             $empresa = Empresa::findOrFail($empresaId);
             Log::debug(print_r($empresa->nombre,true));
             $objeto['clienteXperta'] = $empresa->nombre;
@@ -99,7 +105,9 @@ class CotizadorController extends Controller
             $ltd_nombre = $request->get("ltd_nombre");
             $piezas = $request->get("piezas_guia");
             
-            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO CON EXITO-----------------");  
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO CON EXITO-----------------");  
+            Log::debug(print_r($objeto,true));
+            
             return view(self::CREAR_v
                 , compact('cliente', 'sucursal', 'precio', 'piezas', 'ltd_nombre','objeto','servicio') 
             );
