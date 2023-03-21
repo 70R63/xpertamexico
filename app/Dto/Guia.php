@@ -45,7 +45,7 @@ class Guia {
 	 * 
 	 */
 
-	public function parser($request, $sFedex, $canal = "API"){
+	public function parseoFedex($request, $sFedex, $canal = "API"){
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO----- ");
 		$dimensiones = sprintf("%sx%sx%s",$request->largo,$request->ancho,$request->alto);
 		$precio = sprintf("%.2f",$request['precio']);
@@ -85,8 +85,8 @@ class Guia {
 				,'cia' 		=> $cia
 				,'cia_d' 	=> $cia_d
 				,'piezas' 	=> $request->piezas
-				, 'documento' => $sFedex->documento
-				,'tracking_number' 	=>$sFedex->getTrackingNumber()
+				, 'documento' => ""
+				,'tracking_number' 	=>""
 				,'servicio_id'		=>$request->servicio_id
 				,'peso'			=> $request->peso_facturado
 				,'dimensiones'	=> $dimensiones
@@ -143,27 +143,24 @@ class Guia {
 			    	Log::info("No se cargo ningun caso");
 			}
 			
-
+			$usuario = auth()->user()->name;
 			$servicioId = $request['servicio_id'];
 			$peso = $request['peso_facturado'];
 
 			$dimensiones ="";
-			foreach ($request['pesos'] as $key => $value) {
+			/*foreach ($request['pesos'] as $key => $value) {
 	            $dimensiones = sprintf("%sx%sx%s,%s",$request['largos'][$key], $request['altos'][$key], $request['anchos'][$key], $dimensiones );
 	        }
-
+			*/
 			Log::debug( print_r($dimensiones,true) );
 
 			$extendida = $request['extendida'];
-			$usuario = auth()->user()->name;
-			
 			$piezas = $request['piezas'];
 			$precio = sprintf("%.2f",$request['precio']);
 			$contenido = empty($request['contenido']) ? "" :$request['contenido'];
 			
 		}
 
-		//Servicio 1= FEDEX, 2= ESTAFETA
 
 		if ($canal === "API") {
 			Log::debug(print_r($request['empresa_id'],true));
@@ -190,13 +187,6 @@ class Guia {
 			$contenido = $request['labelDefinition']['wayBillDocument']['content'];
 		}
 
-		$carbon = Carbon::parse();
-
-		$unique = bcrypt((string)$carbon);
-		$carbon->settings(['toStringFormat' => 'Y-m-d']);
-
-		$namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
-		Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 		
 		$insert = array('usuario' => $usuario
 				,'empresa_id' 	=> $empresa_id
@@ -204,8 +194,8 @@ class Guia {
 				,'cia' 		=> $cia
 				,'cia_d' 	=> $cia_d
 				,'piezas' 	=> $piezas
-				,'documento' => $namePdf
-				,'tracking_number' =>$sEstafeta->getTrackingNumber()
+				,'documento' => ""
+				,'tracking_number' =>""
 				,'canal'	=> $canal
 				,'servicio_id'	=> $servicioId
 				,'peso'			=> $peso
@@ -222,6 +212,103 @@ class Guia {
 		Log::info(print_r($insert,true));
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ".$canal);
 		return $insert;
+	}
+
+
+	/**
+     * redpack , Funcion para reasignar valores 
+     *
+     * @var $request
+     * @var 
+     * 
+     */
+
+	public function parseoRedpack($request, $singleton, $canal = "API", $namePdf= "sinnombre.pdf"){
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO ".$canal);
+
+		switch ($canal) {
+			case "WEB":
+			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+			    $usuario = auth()->user()->name;
+			    $empresa_id = auth()->user()->empresa_id;
+
+				$extendida = "NO";
+				$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
+				$valorEnvio = sprintf("%.2f",$request['valor_envio']);
+				$servicioId = $request['servicio_id'];
+				$peso = $request['peso_facturado'];
+				$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
+				$extendida = $request['extendida'];
+				$piezas = $request['piezas'];
+				$precio = sprintf("%.2f",$request['precio']);
+				$contenido = empty($request['contenido']) ? "" :$request['contenido'];
+				$cia = $request['sucursal_id'];
+				$cia_d = $request['cliente_id'];
+				$ltdId = $request['ltd_id'];
+
+				
+				switch ($request['esManual']) {
+					case "SI":
+					    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
+					    $canal = "MNL" ;
+					    $empresa_id = $request['empresa_id'];
+					    break;
+					case "NO":
+						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
+					  	
+					    break;
+					case "SEMI":
+						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+					    $canal = "SML" ;
+					    $empresa_id = $request['empresa_id'];
+					    break;
+					case "RETORNO":
+					    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");
+						$canal = "RET" ;
+						$cia_d = $request['sucursal_id'];
+						$cia = $request['cliente_id'];
+					    break;
+					    
+				 	default:
+				    	Log::info("No se cargo ningun caso");
+				}
+
+
+			    break;
+			case "API":
+				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
+			  	
+			    break;
+		 	default:
+		    	Log::info("No se cargo ningun caso");
+		}
+		//FIN switch ($canal) {
+
+		$this->insert = array('usuario' => $usuario
+				,'empresa_id' 	=> $empresa_id
+				,'ltd_id' 	=> $ltdId
+				,'cia' 		=> $cia
+				,'cia_d' 	=> $cia_d
+				,'piezas' 	=> $piezas
+				,'documento' => $namePdf
+				,'tracking_number' =>$singleton->getTrackingNumber()
+				,'canal'	=> $canal
+				,'servicio_id'	=> $servicioId
+				,'peso'			=> $peso
+				,'dimensiones'	=> $dimensiones
+				,'extendida'	=> $extendida
+				,'seguro'		=> $costoSeguro
+				,'valor_envio'	=> $valorEnvio
+				,'precio'		=> $precio
+				,'contenido'	=> $contenido
+				,'created_at'	=> Carbon::now()->toDateTimeString()
+
+ 			);
+
+		Log::info(print_r($this->insert,true));
+		Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO ".$canal);
+
 	}
 
 	/**
@@ -359,101 +446,67 @@ class Guia {
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ----");
 	}
 
+	
+
 	/**
-     * redpack , Funcion para reasignar valores 
+	 * Seccion para funcionalidad general de las guias
+	 * 
+	 * 
+	 */
+	
+	/**
+     * validaPiezasPaquete , Funciona para realizar inserts con valores de los datos del paquete 
      *
-     * @var nombre
+     * @var request
+     * @var key
+     * @var $boolPrecio
+     * 
+     * @return array 
      */
 
-	public function parseoRedpack($request, $singleton, $canal = "API", $namePdf){
-		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO ".$canal);
+	static public function validaPiezasPaquete($request, $key, $boolPrecio, $guiaId)
+	{
+		$precioUnitario = 0;
+        if ($boolPrecio ){
+            $precioUnitario = $request['precio'];
+        }
+        
+		if ( $request['piezas'] === 1 ) {
+            $guiaPaqueteInsert = array(
+                'peso' => $request['pesos'][$key]
+                ,'alto' => $request['altos'][$key]
+                ,'ancho' => $request['anchos'][$key]
+                ,'largo' => $request['largos'][$key]
+                ,'precio_unitario' => $precioUnitario
+                ,'guia_id' => $guiaId
+            );    
+            
+        } else {
+            if (count($request['pesos']) ===1) {
+                $key = 0;
+            }
+            $guiaPaqueteInsert = array(
+                'peso' => $request['pesos'][$key]
+                ,'alto' => $request['altos'][$key]
+                ,'ancho' => $request['anchos'][$key]
+                ,'largo' => $request['largos'][$key]
+                ,'precio_unitario' => $precioUnitario
+                ,'guia_id' => $guiaId
+            );    
 
-		switch ($canal) {
-			case "WEB":
-			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        }
 
-			    $usuario = auth()->user()->name;
-			    $empresa_id = auth()->user()->empresa_id;
-
-				$extendida = "NO";
-				$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
-				$valorEnvio = sprintf("%.2f",$request['valor_envio']);
-				$servicioId = $request['servicio_id'];
-				$peso = $request['peso_facturado'];
-				$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
-				$extendida = $request['extendida'];
-				$piezas = $request['piezas'];
-				$precio = sprintf("%.2f",$request['precio']);
-				$contenido = empty($request['contenido']) ? "" :$request['contenido'];
-				$cia = $request['sucursal_id'];
-				$cia_d = $request['cliente_id'];
-				$ltdId = $request['ltd_id'];
-
-				
-				switch ($request['esManual']) {
-					case "SI":
-					    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
-					    $canal = "MNL" ;
-					    $empresa_id = $request['empresa_id'];
-					    break;
-					case "NO":
-						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
-					  	
-					    break;
-					case "SEMI":
-						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
-					    $canal = "SML" ;
-					    $empresa_id = $request['empresa_id'];
-					    break;
-					case "RETORNO":
-					    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");
-						$canal = "RET" ;
-						$cia_d = $request['sucursal_id'];
-						$cia = $request['cliente_id'];
-					    break;
-					    
-				 	default:
-				    	Log::info("No se cargo ningun caso");
-				}
-
-
-			    break;
-			case "API":
-				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
-			  	
-			    break;
-		 	default:
-		    	Log::info("No se cargo ningun caso");
-		}
-		//FIN switch ($canal) {
-
-		$this->insert = array('usuario' => $usuario
-				,'empresa_id' 	=> $empresa_id
-				,'ltd_id' 	=> $ltdId
-				,'cia' 		=> $cia
-				,'cia_d' 	=> $cia_d
-				,'piezas' 	=> $piezas
-				,'documento' => $namePdf
-				,'tracking_number' =>$singleton->getTrackingNumber()
-				,'canal'	=> $canal
-				,'servicio_id'	=> $servicioId
-				,'peso'			=> $peso
-				,'dimensiones'	=> $dimensiones
-				,'extendida'	=> $extendida
-				,'seguro'		=> $costoSeguro
-				,'valor_envio'	=> $valorEnvio
-				,'precio'		=> $precio
-				,'contenido'	=> $contenido
-				,'created_at'	=> Carbon::now()->toDateTimeString()
-
- 			);
-
-		Log::info(print_r($this->insert,true));
-		Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO ".$canal);
+        return $guiaPaqueteInsert;
+		
 
 	}
 
-
+	/**
+	 * Seccion para funcionalidad getters y setters
+	 * 
+	 * 
+	 */
+	
 	public function getInsert(){
         return $this->insert;
     }

@@ -264,18 +264,45 @@ class GuiaController extends Controller
             $sEstafeta -> envio($body);
             $resultado = $sEstafeta->getResultado();
 
-            $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
-            $id = Guia::create($insert)->id;
+            Log::debug(print_r($sEstafeta->getTrackingNumber() ,true));
 
+            $trackingNumbers = explode("|", $sEstafeta->getTrackingNumber());
+            Log::debug(print_r($trackingNumbers ,true));            
             
+
+            $carbon = Carbon::parse();
+            $unique = crypt( (string)$carbon,'st');
+            $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
+            $namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
+            Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
+
+            $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
+
+            $notices = array();
+            $boolPrecio = true;
+            foreach ($trackingNumbers as $key => $trackingNumber) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $insert['tracking_number'] = $trackingNumber;
+                $insert['documento'] = $namePdf;
+                Log::debug(print_r($insert ,true));   
+                //dd("prueba");
+                $id = Guia::create($insert)->id;
+                $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $guiaPaqueteInsert = GuiaDTO::validaPiezasPaquete($request, $key, $boolPrecio, $id);
+                $boolPrecio = false;
+
+                $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
+            }
             
+
             /*
             * Mail::to($request->email)
             *    ->cc(Config("mail.cc"))
             *    ->send(new GuiaCreada($request, $id));
             */
-            $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
-            $notices = array($tmp);
+            
             
             Log::info(__CLASS__." ".__FUNCTION__." store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
@@ -370,30 +397,49 @@ class GuiaController extends Controller
             Log::debug($request);
 
             $requestInicial = $request->except(['_token']);
-            
-            $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
 
             $fedexDTO = new FedexDTO();
             $etiqueta = $fedexDTO->parser($request);
             
             Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
+            $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
             $fedex->envio( json_encode($etiqueta, JSON_UNESCAPED_UNICODE));
+
+            
 
             Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
             $guiaDTO = new GuiaDTO();
-            $guiaDTO->parser($request,$fedex, "WEB");
+            $guiaDTO->parseoFedex($request,$fedex, "WEB");
 
-            Log::info(__CLASS__." ".__FUNCTION__." Guia::create");
-            
-            $id = Guia::create($guiaDTO->insert)->id;
+            $insert = $guiaDTO->getInsert();
+
+            $notices = array();
+            $boolPrecio = true;
+            foreach ($fedex->getDocumentos() as $key => $documento) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                //dd( $documento->packageDocuments[0]->url );
+                $insert['tracking_number'] = $documento->trackingNumber;
+                $insert['documento'] = $documento->packageDocuments[0]->url;
+                Log::debug(print_r($insert ,true));   
+                
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
+                $id = Guia::create($insert)->id;
+                $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $guiaPaqueteInsert = GuiaDTO::validaPiezasPaquete($request, $key, $boolPrecio, $id);
+                $boolPrecio = false;
+
+                $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
+            }
+
             
             /*
             * Mail::to($request->email)
             *    ->cc(Config("mail.cc"))
             *    ->send(new GuiaCreada($request, $id));
             */
-            $tmp = sprintf("El registro de la guia con ID %d fue exitoso",$id);
-            $notices = array($tmp);
             
             Log::info(__CLASS__." ".__FUNCTION__."store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
@@ -510,10 +556,8 @@ class GuiaController extends Controller
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." GuiaDTO");
 
                 $carbon = Carbon::parse();
-                $carbon->settings(['toStringFormat' => 'Y-m-d']);
-
+                $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
                 $unique = crypt( (string)$carbon,'st');
-                
                 $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
 
                 Storage::disk('public')->put($namePdf,base64_decode( $value->label ));

@@ -24,7 +24,7 @@ class Fedex {
     private $token;
     private $baseUri;
 
-    public $documento = 0; 
+    private $documentos = array(); 
     private $trackingNumber = 0;
     private $scanEvents = array();
     private $paquete = array();
@@ -143,6 +143,7 @@ class Fedex {
             Log::debug(print_r($contenido,true));
             $transactionShipments = $contenido->output->transactionShipments[0];
 
+            /*
             $pieceResponses = $transactionShipments->pieceResponses;
        
             $documentos = "";
@@ -160,8 +161,9 @@ class Fedex {
                 }
 
             }
+            */
 
-            $this->documento = $documentos;
+            $this->documentos = $transactionShipments->pieceResponses;
             $this->trackingNumber = $transactionShipments->masterTrackingNumber;
             Log::debug(print_r($contenido->output,true));
        
@@ -302,6 +304,10 @@ class Fedex {
 
     public function getPickupFecha(){
         return $this->pickupFecha;
+    }
+
+     public function getDocumentos(){
+        return $this->documentos;
     }
     
     

@@ -136,7 +136,7 @@ class Estafeta {
      */
 
     public function envio($body){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIO ------------------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO ------------------");
         
         $client = new Client(['base_uri' => $this->baseUri]);
         $authorization = sprintf("Bearer %s",$this->token);
