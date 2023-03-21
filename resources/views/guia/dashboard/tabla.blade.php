@@ -25,7 +25,9 @@
                                 <th>PRECIO</th>
                                 <th>PIEZAS</th>
                                 <th>PESO KG</th>
-                                <th>DIMENSIONES</th>
+                                <th>ALTO</th>
+                                <th>ANCHO</th>
+                                <th>LARGO</th>
                                 <th>VALOR DEL ENVIO</th>
                                 <th>COSTO SEGURO</th>
                                 <th>APLICA A.E.</th>

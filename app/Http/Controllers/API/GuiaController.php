@@ -211,27 +211,32 @@ class GuiaController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function rastreoTabla(){
+    public function guiasTabla(){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $codeHttp = 404;
         try {
             
-            $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT(    guias.created_at, "%Y-%c-%d") as creada')
-                ,DB::raw('DATE_FORMAT(guias.ultima_fecha, "%Y-%c-%d") as ultima_fecha_f')
-                ,DB::raw('DATE_FORMAT(guias.pickup_fecha, "%Y-%c-%d") as pickup_fecha_f')
-                , 'tiempo_entrega'
+                $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT(    guias.created_at, "%Y-%c-%d %H:%i") as creada')
+                    ,DB::raw('DATE_FORMAT(guias.ultima_fecha, "%Y-%c-%d") as ultima_fecha_f')
+                    ,DB::raw('DATE_FORMAT(guias.pickup_fecha, "%Y-%c-%d") as pickup_fecha_f')
+                    , 'tiempo_entrega'
+                    , 'guias_paquetes.peso as peso_u'
+                    , 'guias_paquetes.alto as alto_u'
+                    , 'guias_paquetes.largo as largo_u'
+                    , 'guias_paquetes.ancho as ancho_u'
                 )
                 
-                    ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
-                    ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
-                    ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
-                    ->join('rastreo_estatus', 'rastreo_estatus.id', '=', 'guias.rastreo_estatus')
-                    ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
-                    ->join('servicios','servicios.id', '=', 'guias.servicio_id')
-                    //->offset(0)->limit(10)
-                    //->toSql();
-                    //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
-                    ->get()->toArray();
+                ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
+                ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
+                ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
+                ->join('rastreo_estatus', 'rastreo_estatus.id', '=', 'guias.rastreo_estatus')
+                ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
+                ->join('servicios','servicios.id', '=', 'guias.servicio_id')
+                ->leftJoin('guias_paquetes', 'guias_paquetes.guia_id', '=', 'guias.id' )
+                ->offset(0)->limit(10)
+                //->toSql();
+                //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
+                ->get()->toArray();
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
             return $this->successResponse($tabla, 'successfully.');
             

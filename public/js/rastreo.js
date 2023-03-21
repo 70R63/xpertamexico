@@ -9,7 +9,7 @@ $(document).ready(function() {
 
 function rastrearTabla(){
     $.ajax({
-        url: 'api/rastreoTabla',
+        url: 'api/guiasTabla',
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -122,9 +122,9 @@ function rastrearTabla(){
                         ,{ "data": "ultima_fecha_f" }
                         ,{ "data": "quien_recibio" }
                         ,{ "data": "rastreo_peso" }
-                        ,{ "data": "largo" }
-                        ,{ "data": "ancho" }
-                        ,{ "data": "alto" }
+                        ,{ "data": "largo_u" }
+                        ,{ "data": "ancho_u" }
+                        ,{ "data": "alto_u" }
                     ],
                 });
             

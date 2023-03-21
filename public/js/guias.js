@@ -4,8 +4,6 @@ $(document).ready(function() {
         guiasTabla()     
     }
 
- 
-
 }) 
 
 function esRetornoRemitente(row){
@@ -28,7 +26,7 @@ function esRetornoDestinatario(row){
 function guiasTabla(){
 
     $.ajax({
-        url: 'api/rastreoTabla',
+        url: 'api/guiasTabla',
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -36,6 +34,7 @@ function guiasTabla(){
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
+        console.log(response.data)
         table = $('#guiasTablaAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
@@ -82,7 +81,7 @@ function guiasTabla(){
                       
                    ]
                     ,columns: [
-                        { "data": "id" }
+                        { "data": "id" } //0
                         ,{ "data": "mensajeria"
                                 ,render: function(data, type, row){   
                                 return documentoRetorno(row); 
@@ -92,7 +91,7 @@ function guiasTabla(){
                         ,{ "data": "mensajeria" }
                         ,{ "data": "servicio_nombre" }
                         ,{ "data": "usuario" }
-                        ,{ "data": "nombre" }
+                        ,{ "data": "nombre" } //5
                         ,{ "data": "contacto"
                                 ,render: function(data, type, row){   
                                 return esRetornoRemitente(row); 
@@ -105,22 +104,24 @@ function guiasTabla(){
                         }
                         ,{ "data": "cp" }
                         ,{ "data": "ciudad" }
-                        ,{ "data": "cp_d" }
+                        ,{ "data": "cp_d" } //10
                         ,{ "data": "ciudad_d" }
-                        ,{ "data": "creada"      }
+                        ,{ "data": "creada" }
                         ,{ "data": "canal" }
                         ,{ "data": "tracking_number" }
-                        ,{ "data": "precio" }
+                        ,{ "data": "precio" }//15
                         ,{ "data": "piezas" }
-                        ,{ "data": "peso" }
-                        ,{ "data": "dimensiones" }
+                        ,{ "data": "peso_u" }
+                        ,{ "data": "alto_u" }
+                        ,{ "data": "ancho_u" }
+                        ,{ "data": "largo_u" }//20
                         ,{ "data": "valor_envio" }
                         ,{ "data": "seguro" }
                         ,{ "data": "extendida" }
 
                     ],
                 });
-        table.columns( [8,9,10,11,15,16,17,18,19,20,21] ).visible( false );
+        table.columns( [8,9,10,11,15,16,17,18,19,20,21,22] ).visible( false );
             
     }).fail( function( data,jqXHR, textStatus, errorThrown ) {
         console.log( "fail" );

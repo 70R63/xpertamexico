@@ -63,7 +63,7 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
         Route::apiResource('empresaltd', EmpresaLtdController::class);
 
         Route::controller(GuiaController::class)->group(function(){
-            Route::get('rastreoTabla', 'rastreoTabla');
+            Route::get('guiasTabla', 'guiasTabla');
             Route::post('rastreoActualizar', 'rastreoActualizar');
         });
 
@@ -85,7 +85,6 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 
 //ejecucion
  Route::controller(GuiaController::class)->group(function(){
-    //Route::get('rastreoTabla', 'rastreoTabla');
     Route::get('rastreoActualizar', 'rastreoActualizarAutomatico')->name("rastreoConsola");
 });
 
