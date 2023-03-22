@@ -85,6 +85,7 @@ class RedpackDTO
                       ,'final' => $rangoGuias[0]['final']
                       ,'actual'=> $trackingNumber
                       ,'ltd_id'=> Config('ltd.redpack.id')
+                      ,'servicio_id'=> $request['servicio_id']
                     )
                   );
         

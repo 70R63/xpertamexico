@@ -553,7 +553,8 @@ class GuiaController extends Controller
             $notices = array();
             $boolPrecio = true;
             foreach ($redpack->getDocumento() as $key => $value) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." GuiaDTO");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
+                Log::info(print_r($value,true));
 
                 $carbon = Carbon::parse();
                 $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
