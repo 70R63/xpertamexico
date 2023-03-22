@@ -66,7 +66,9 @@ class RedpackDTO
           }  
         }
 
-        $rangoGuiasGeneral = RangoGuias::where('ltd_id',Config('ltd.redpack.id'));
+        $rangoGuiasGeneral = RangoGuias::where('ltd_id',Config('ltd.redpack.id'))
+                        ->where('servicio_id', $request['servicio_id']);
+                      
 
         $actualTracking = $rangoGuiasGeneral->latest()->value('actual');
         $rangoGuias = $rangoGuiasGeneral->get()->toArray();
