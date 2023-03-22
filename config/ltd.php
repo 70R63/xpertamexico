@@ -84,7 +84,7 @@ return [
         ,'user'  =>  env('REDPACK_USER')
         ,'pass'   => env('REDPACK_PASS')
         ,'uri_documentation' => env('REDPACK_URI_DOCUMENTATION')
-        ,'idClient' => env(REDPACK_IDCLIENT)
+        ,'idClient' => env('REDPACK_IDCLIENT')
         ,'servicio' => [
             '1'     => '2'
             ,'2'    => '1'
