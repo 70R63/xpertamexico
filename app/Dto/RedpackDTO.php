@@ -99,7 +99,7 @@ class RedpackDTO
                 ),
                 'trackingNumber' => $trackingNumber,
                 'observations' => 'Observaciones D',
-                'idClient' => '119579',
+                'idClient' => Config('ltd.redpack.idClient'),
                 'nationalCurrency' => 'MXN',
                 'origin' => 
                 array (
