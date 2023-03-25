@@ -19,8 +19,9 @@ class RedpackDTO
      * @var nombre
      */
     public $insert;
-    private $rangoExedido = false;
-    
+    private $rangoExcedido = false;
+    private $body = array();
+      
     function __construct()
     {
         // code...
@@ -76,7 +77,7 @@ class RedpackDTO
         $trackingNumber = $actualTracking +1;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." VALIDANDO DISPONIBILIDAD DE RANGO");
         if ($trackingNumber > $rangoGuias[0]['final']){
-            $this->rangoExedido = true;
+            $this->rangoExcedido = true;
 
             return false;
         }
@@ -88,9 +89,6 @@ class RedpackDTO
                       ,'servicio_id'=> $request['servicio_id']
                     )
                   );
-        
-        
-        
 
         $body = array ( 
               array (
@@ -108,12 +106,12 @@ class RedpackDTO
                   'company' => $request['nombre'],
                   'country' => "Mexico",
                   'name' => $request['contacto'],
-                  'email' => 'test@test.com',
-                  'originRfc' => 'XAXX010101000',
+                  'email' => '',
+                  'originRfc' => '',
                   'phones' => 
                   array (
                     array (
-                      'phone' => $request['celular_d'],
+                      'phone' => $request['celular'],
                     ),
                   ),
                   'reference3' => 'REFERENCIA 3 D',
@@ -127,7 +125,7 @@ class RedpackDTO
                 'parcels' => $parcels
                
                 ,'reference2' => 'REFERENCIA 2 D',
-                'reference' => 'REFERENCIA 1 D',
+                'reference' => $request['direccion2'],
                 'printType' => 5,
                 'serviceType' => 
                 array (
@@ -144,8 +142,8 @@ class RedpackDTO
                   'company' => $request['nombre_d'],
                   'country' => "Mexico",
                   'name' => $request['contacto_d'],
-                  'email' => 'test@test.com',
-                  'originRfc' => 'XAXX010101000',
+                  'email' => '',
+                  'originRfc' => '',
                   'phones' => 
                   array (
                     array (
@@ -153,7 +151,8 @@ class RedpackDTO
                     ),
                   ),
                   'reference3' => 'REFERENCIA 3 D',
-                  'externalNumber'=> $request['no_ext_d'],
+                  'reference1'=> $request['direccion2_d']
+                  ,'externalNumber'=> $request['no_ext_d'],
                   'internalNumber'=> $request['no_int_d'],
                   'state' => $request['entidad_federativa_d'],
                   'street' => $request['direccion_d'],
@@ -168,9 +167,23 @@ class RedpackDTO
 
     }
 
+    public  function tracking($trackingNumber =1){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $this->body = array ( 
+              array (
+                'trackingNumber' => $trackingNumber
+              )
+            );
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+    }    
 
-    public function getRangoExedido(){
-        return $this->rangoExedido;
+
+    public function getRangoExcedido(){
+        return $this->rangoExcedido;
+    }
+
+    public function getBody(){
+        return $this->body;
     }
 }
 
