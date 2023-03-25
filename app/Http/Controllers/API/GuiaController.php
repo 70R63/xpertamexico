@@ -340,7 +340,6 @@ class GuiaController extends Controller
 
             $rastreoPeticionesID = Rastreo_peticion::create()->id;
 
-            $this->rastreoFedex(true);
             $this->rastreoEstafeta(true);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
@@ -382,6 +381,68 @@ class GuiaController extends Controller
 
         return $this->sendError($this->error,$this->mensaje, $codeHttp);
     }//fin reastreo, Global para actualizar el esatus de las guias
+
+
+
+    /**
+     * Funcion para actualizar los registros para la tabla de ratreo 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function rastreoAutomaticoFedex(){
+        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $codeHttp = 404;
+        try {
+
+            $rastreoPeticionesID = Rastreo_peticion::create()->id;
+
+            $this->rastreoFedex(true);
+            
+            
+            Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
+            
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>true) 
+                    );
+            
+            $tabla= array();
+            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            return $this->successResponse($tabla, 'successfully.');
+            
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+            
+
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
+            $resultado = $ex;
+
+            $this->error = "HttpException";
+            $this->mensaje =$ex->getMessage();
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            Log::debug(print_r($ex,true));
+            $this->error = "Exception";
+            $this->mensaje =$ex->getMessage();
+        }
+
+        return $this->sendError($this->error,$this->mensaje, $codeHttp);
+    }//fin reastreo, Global para actualizar el esatus de las guias
+
+    
 
     /**
      * Funcion para actualizar guias de Fedex ltd = 1 
