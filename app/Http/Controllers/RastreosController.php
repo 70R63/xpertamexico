@@ -31,13 +31,20 @@ class RastreosController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------"); 
-            $rastreoPeticion = Rastreo_peticion::where('completado',1)->latest()
-            ->toSql()
-            //->first()
-            ;
-            dd($rastreoPeticion);
-            Log::debug(print_r($rastreoPeticion->peticion_fin,true));
 
+            $rastreoPeticion = array();
+            foreach ( Config('ltd.general') as $key => $value) {
+                $rastreoPeticionLtd = Rastreo_peticion::where('completado',1)
+                    ->where("ltd_id",$key)
+                    ->latest()
+                    ->first()->toArray()
+                ;
+
+                $rastreoPeticion[]= $rastreoPeticionLtd;
+
+            }            
+
+            //dd($rastreoPeticion[0]);
             Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO----------------- ");
             return view(self::DASH_v 
                     ,compact("rastreoPeticion") 

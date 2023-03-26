@@ -18,7 +18,12 @@ return [
     |
     */
 
-    'estafeta'      => env('WSDL_ESTAFETA', 'Laravel'),
+    'general' =>[
+        1   => 'FEDEX'
+        ,2  => 'ESTAFETA'
+        ,3  => 'REDPACK'
+    ]
+    ,'estafeta'      => env('WSDL_ESTAFETA', 'Laravel'),
     'estafeta_tracking' => env('WSDL_ESTAFETA_TRACKING_DEV', 'tracking'),
     'fedex' => [
         'id'            => "1"
