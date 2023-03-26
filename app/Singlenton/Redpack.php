@@ -86,9 +86,11 @@ class Redpack {
                 ,'token'    => $this->token
                 ,'expira_en'=> Carbon::now()->addSeconds($contenido->expires_in)
                  );
-
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($insert,true));
             $id = LtdSesion::create($insert)->id;
-            Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ID LTD SESION $id");
 
         }
         
@@ -111,7 +113,7 @@ class Redpack {
         $bodyJson = json_encode($body);
         Log::debug(print_r($bodyJson,true));
         
-        Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
         return $client->request($metodo,$servicio , [
                     'headers'   => $headers
                     ,'body'     => $bodyJson
@@ -151,10 +153,68 @@ class Redpack {
        
     }
 
+    /**
+     * Rastreo busca los estatus con el LTD.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function trackingByNumber(array $body){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        $authorization = sprintf("Bearer %s",$this->token);
+
+        $headers = ['Authorization' => $authorization  
+                    ,'Content-Type' => 'application/json'
+                ];
+
+        $this->baseUri = Config('ltd.redpack.rastreo.uri');
+        $servicio = Config('ltd.redpack.rastreo.servicio');
+
+        $response = $this->clienteRest($body, 'POST', $servicio, $headers);
+
+        Log::debug(__CLASS__." ".__FUNCTION__." response ");
+        $contenido = json_decode($response->getBody()->getContents());
+
+        Log::debug(print_r($contenido,true));
+
+        $pesoDimension = array();
+        $objResponse = $contenido[0];
+        if ( $objResponse->consumptionResultWS[0]->status === 1 ) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+            foreach ($objResponse->parcel as $key => $value) {
+                Log::info(print_r($value,true));
+                $pesoDimension['largo'] = $value->length;
+                $pesoDimension['ancho'] = $value->width;
+                $pesoDimension['alto'] = $value->high;
+                $pesoDimension['peso'] = $value->weigth;
+
+            }
+            $this->paquete = $pesoDimension;
+
+            $this->latestStatusDetail = $objResponse->lastSituation->idDesc;
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $this->exiteSeguimiento = true;
+        }else{
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info("Sin seguimiento ");
+            $this->exiteSeguimiento = false;
+        }
+        
+        $ultimaFecha = Carbon::now();
+        $this->ultimaFecha = Carbon::parse($ultimaFecha)->format('Y-m-d H:i:s');
+    }
+
 
 
     public function getTrackingNumber(){
         return $this->trackingNumber;
+    }
+
+    public function getExiteSeguimiento(){
+        return $this->exiteSeguimiento;
     }
 
     public function getScanEvents(){
@@ -163,10 +223,6 @@ class Redpack {
 
     public function getPaquete(){
         return $this->paquete;
-    }
-
-    public function getExiteSeguimiento(){
-        return $this->exiteSeguimiento;
     }
 
     public function getQuienRecibio(){
@@ -187,5 +243,9 @@ class Redpack {
 
     public function getDocumento(){
         return $this->documento;
+    }
+
+     public function getUltimaFecha(){
+        return $this->ultimaFecha;
     }
 }

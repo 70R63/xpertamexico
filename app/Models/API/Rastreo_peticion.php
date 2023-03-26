@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Rastreo_peticion extends Model
 {
     use HasFactory;
+
+   protected $fillable = ['ltd_id'];
 }

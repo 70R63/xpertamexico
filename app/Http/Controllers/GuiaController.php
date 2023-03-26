@@ -540,7 +540,7 @@ class GuiaController extends Controller
           
             $redpackDTO = new RedpackDTO();
             $etiqueta = $redpackDTO->parser($request);
-            if($redpackDTO->getRangoExedido()){
+            if($redpackDTO->getRangoExcedido()){
                 return back()
                 ->with('dangers',array("No se cuentan con Guias, valida con tu proveedor"))
                 ->withInput();

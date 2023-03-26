@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRastreosRequest;
 use App\Http\Requests\UpdateRastreosRequest;
 use App\Models\Rastreos;
-use App\Models\Guia;
 use App\Models\API\Rastreo_peticion;
+use App\Models\API\Guia;
 
+use App\Dto\RedpackDTO; 
 
+use App\Singlenton\Redpack as sRedpack;
 //Generales 
 use Log;
+use Carbon\Carbon;
 
 class RastreosController extends Controller
 {
@@ -28,7 +31,11 @@ class RastreosController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------"); 
-            $rastreoPeticion = Rastreo_peticion::where('completado',1)->latest()->first();
+            $rastreoPeticion = Rastreo_peticion::where('completado',1)->latest()
+            ->toSql()
+            //->first()
+            ;
+            dd($rastreoPeticion);
             Log::debug(print_r($rastreoPeticion->peticion_fin,true));
 
             Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO----------------- ");
@@ -107,4 +114,85 @@ class RastreosController extends Controller
     {
         //
     }
+
+
+
+    /**
+     * Busca las guias que no esten entregadas par validar su estatus 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function redpackAutomatico(){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
+        
+        try {
+            $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.redpack.id')) )->id;
+
+            $guias = Guia::pendienteEntrega(Config('ltd.redpack.id'))->get()->toArray();
+
+            $totalGuias = count($guias);
+            Log::info("Total de guias revisar ".$totalGuias);
+
+            foreach ($guias as $key => $guia) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info("$key / $totalGuias");
+                Log::debug(print_r($guia,true));
+
+                $redpackDTO = new RedpackDTO();
+                $redpackDTO->tracking($guia['tracking_number']);
+
+                $sRedpack = new sRedpack();
+                $sRedpack->trackingByNumber($redpackDTO->getBody()); 
+
+                $update = array();
+            
+                if ($sRedpack->getExiteSeguimiento()) {   
+                    Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
+                    $paquete = $sRedpack->getPaquete();
+
+                    $update = array('ultima_fecha' => $sRedpack->getUltimaFecha()
+                            ,'rastreo_estatus' => Config('ltd.redpack.rastreoEstatus')[$sRedpack->getLatestStatusDetail()]
+                            ,'rastreo_peso' => $paquete['peso'] 
+                            ,'largo' => $paquete['largo'] 
+                            ,'ancho' => $paquete['ancho'] 
+                            ,'alto' => $paquete['alto']
+                            ,'quien_recibio' =>  $sRedpack->getQuienRecibio()
+                            ,'pickup_fecha' =>  $sRedpack->getPickupFecha()
+
+                        );
+
+                    Log::info(print_r($update,true));
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $affectedRows = Guia::where("id", $guia['id'])
+                            ->update($update);
+        
+                    Log::debug("affectedRows -> $affectedRows");
+                }else{
+                    Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
+                }
+    
+            }
+            
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>true
+                        ,"ltd_id" => Config('ltd.redpack.id')) 
+                    );
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
+            
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." QueryException");
+            Log::debug($ex->getMessage()); 
+
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
+            Log::debug(print_r($ex,true));
+
+        }
+
+    }//fin function redpackAutomatico()
 }

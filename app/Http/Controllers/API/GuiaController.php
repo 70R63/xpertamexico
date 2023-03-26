@@ -338,7 +338,7 @@ class GuiaController extends Controller
         $codeHttp = 404;
         try {
 
-            $rastreoPeticionesID = Rastreo_peticion::create()->id;
+            $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.estafeta.id')) )->id;
 
             $this->rastreoEstafeta(true);
             
@@ -397,7 +397,7 @@ class GuiaController extends Controller
         $codeHttp = 404;
         try {
 
-            $rastreoPeticionesID = Rastreo_peticion::create()->id;
+            $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.fedex.id')) )->id;
 
             $this->rastreoFedex(true);
             

@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Rastreos extends Model
 {
     use HasFactory;
+
 }

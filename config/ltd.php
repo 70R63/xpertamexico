@@ -91,17 +91,12 @@ return [
             ,'3'    => '1'
         ]
         ,'rastreoEstatus' => [
-            'ON_TRANSIT' => '3'
-            ,'DELIVERED'=> '4'
+            '93' => '1'
+            
         ]
         ,'rastreo' => [
-            'suscriberId' => env('ESTAFETA_SUSCRIBERID_TRACKING')
-            ,'login'=>env('ESTAFETA_LOGIN_TRACKING')
-            ,'pswd'=>env('ESTAFETA_PSWD_TRACKING')
-            ,'api_key'  =>  env('ESTAFETA_APIKEY_TRACKING') 
-            ,'secret'   => env('ESTAFETA_SECRET_TRACKING')
-            ,'base_uri'  =>  env('ESTAFETA_BASEURI_TRACKING')
-            ,'servicio'  =>  env('ESTAFETA_SERVICIO_TRACKING')
+            'uri'  =>  env('REDPACK_TRACKINGBYNUMBER_URI')
+            ,'servicio'  =>  env('REDPACK_TRACKINGBYNUMBER')
         ]
     ]
     ,'dhl' =>[
