@@ -186,20 +186,22 @@ class Fedex {
                     $this->exiteSeguimiento = false;
                     continue;
                 } else{
-                    Log::debug("Seguimientos scanEvents ".count($value1->scanEvents));
                     
-                    //Log::debug(print_r($value1->dateAndTimes,true));
-
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);       
+                    if ( isset($value1->scanEvents) ){
+                        Log::debug("Seguimientos scanEvents ".count($value1->scanEvents));
+                        $this->scanEvents = $value1->scanEvents[0];
+                            
+                    }
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     foreach ($value1->dateAndTimes as $key => $value) {
                         if ($value->type === "ACTUAL_PICKUP") {
                             $this->pickupFecha = Carbon::parse($value->dateTime)->format('Y-m-d H:i:s');
                             break;
                         }
                     }
-                    
-                    $this->scanEvents = $value1->scanEvents[0];
-                    $this->latestStatusDetail = $value1->latestStatusDetail;
-                    
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $this->latestStatusDetail = $value1->latestStatusDetail;                    
 
                     if (isset($value1->packageDetails->weightAndDimensions) ) {
                         foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
@@ -208,7 +210,7 @@ class Fedex {
                             }
                         }
                     }
-                    
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     if (isset($value1->packageDetails->weightAndDimensions->dimensions) ) {
                         foreach ($value1->packageDetails->weightAndDimensions->dimensions as $key => $value2) {
                             if ( $value2->units=== 'CM' ){
@@ -226,6 +228,7 @@ class Fedex {
                     }else {
                         $this->quienRecibio = "No entregado aun";
                     }
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     Log::debug(__CLASS__." ".__FUNCTION__." Asignando pesoDimension");
                     $this->paquete = $pesoDimension;
                     $this->exiteSeguimiento = true;
