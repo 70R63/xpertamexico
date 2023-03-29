@@ -148,6 +148,8 @@ class Redpack {
 
         $this->trackingNumber = $objResponse->trackingNumber;
         $this->documento = $objResponse->parcels;
+
+
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
        
@@ -192,11 +194,14 @@ class Redpack {
                 $pesoDimension['peso'] = $value->weigth;
 
             }
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $this->paquete = $pesoDimension;
-
             $this->latestStatusDetail = $objResponse->lastSituation->idDesc;
+            $this->pickupFecha = $objResponse->dateDocumentation;
+            $this->quienRecibio= $objResponse->personReceived;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $this->exiteSeguimiento = true;
+
         }else{
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info("Sin seguimiento ");

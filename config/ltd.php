@@ -97,6 +97,8 @@ return [
         ]
         ,'rastreoEstatus' => [
             '93' => '1'
+            ,'43' => '3'
+            ,'1' => '4'
             
         ]
         ,'rastreo' => [
