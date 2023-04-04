@@ -98,9 +98,16 @@ class EstafetaDTO
     public function parser(array $data, $canal = 'API'){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
 
+        $customerNumber = Config('ltd.estafeta.cred.customerNumber');
+        
+        if ($data['servicio_id'] == 3){
+            Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__);
+            $customerNumber = "5903898";//Config('ltd.estafeta.cred.customerNumber');//5903898
+        }
+
         $identification = new Identification([
                     'suscriberId' =>   Config('ltd.estafeta.cred.suscriberId')
-                    ,'customerNumber' =>   Config('ltd.estafeta.cred.customerNumber')
+                    ,'customerNumber' =>  $customerNumber 
                 ]
             );
         $systemInformation = new SystemInformation();
@@ -175,7 +182,14 @@ class EstafetaDTO
         
         $serviceConfiguration = new ServiceConfiguration();
         $serviceConfiguration->quantityOfLabels = $data['piezas'];
-        $serviceConfiguration->serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
+
+        $serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
+        if ($data['servicio_id'] == 3){
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $serviceTypeId = "D8";
+        }
+
+        $serviceConfiguration->serviceTypeId = $serviceTypeId;
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
         $serviceConfiguration->salesOrganization=Config('ltd.estafeta.cred.salesOrganization');
 
