@@ -148,10 +148,7 @@ class Guia {
 			$peso = $request['peso_facturado'];
 
 			$dimensiones ="";
-			/*foreach ($request['pesos'] as $key => $value) {
-	            $dimensiones = sprintf("%sx%sx%s,%s",$request['largos'][$key], $request['altos'][$key], $request['anchos'][$key], $dimensiones );
-	        }
-			*/
+			
 			Log::debug( print_r($dimensiones,true) );
 
 			$extendida = $request['extendida'];
@@ -455,7 +452,7 @@ class Guia {
 	 */
 	
 	/**
-     * validaPiezasPaquete , Funciona para realizar inserts con valores de los datos del paquete 
+     * validaPiezasPaquete , Funciona para realizar inserts con valores de los datos del paquete para la WEB
      *
      * @var request
      * @var key
@@ -464,8 +461,66 @@ class Guia {
      * @return array 
      */
 
-	static public function validaPiezasPaquete($request, $key, $boolPrecio, $guiaId)
+	static public function validaPiezasPaquete($request, $key, $boolPrecio, $guiaId, $plataforma="WEB")
 	{
+		switch ($plataforma) {
+			case 'API':
+				$guiaPaqueteInsert = self::paqueteAPI($request, $guiaId);
+				break;
+			
+			default:
+				$guiaPaqueteInsert = self::paqueteWeb($request, $key, $boolPrecio, $guiaId);
+				break;
+		}
+		
+        return $guiaPaqueteInsert;
+
+	}
+
+	/**
+     * PaqueteAPI , Funciona para realizar asiganar valores al insert via API
+     *
+     * @var request
+     * @var key
+     * @var $boolPrecio
+     * 
+     * @return array 
+     */
+
+	static private function paqueteAPI($request, $guiaId)
+	{
+		        
+		$paquete = $request["labelDefinition"]["itemDescription"];
+		$precioUnitario = 0;
+
+	    $guiaPaqueteInsert = array(
+            'peso' => $paquete["weight"]
+            ,'alto' => $paquete["height"]
+            ,'ancho' => $paquete["width"]
+            ,'largo' => $paquete["length"]
+            ,'precio_unitario' => $precioUnitario
+            ,'guia_id' => $guiaId
+        );    
+            
+        
+        return $guiaPaqueteInsert;
+		
+
+	}
+
+	/**
+     * PaqueteWeb , Funciona para realizar inserts con valores de los datos del paquete para la WEB
+     *
+     * @var request
+     * @var key
+     * @var $boolPrecio
+     * 
+     * @return array 
+     */
+
+	static public function paqueteWeb($request, $key, $boolPrecio, $guiaId)
+	{
+		        
 		$precioUnitario = 0;
         if ($boolPrecio ){
             $precioUnitario = $request['precio'];

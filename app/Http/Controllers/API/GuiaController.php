@@ -11,6 +11,7 @@ use GuzzleHttp\Psr7;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 #CLASES DE NEGOCIO 
 use App\Singlenton\Estafeta ; //PRODUCTION
@@ -20,6 +21,7 @@ use App\Models\Guia;
 use App\Models\API\Guia as GuiaAPI;
 use App\Models\API\Rastreo_peticion;
 use App\Models\EmpresaEmpresas;
+use App\Models\GuiasPaquete;
 
 /**
  * GuiaController
@@ -149,13 +151,47 @@ class GuiaController extends Controller
 
             $sEstafeta -> envio($data);
             $resultado = $sEstafeta->getResultado();
-            $trackingNumber = $sEstafeta->getTrackingNumber();
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::debug(print_r($resultado,true));
 
+            //$trackingNumber = $sEstafeta->getTrackingNumber();
+            $trackingNumbers = explode("|", $sEstafeta->getTrackingNumber());
+            Log::debug(print_r($trackingNumbers ,true)); 
+
+            $carbon = Carbon::parse();
+            $unique = crypt( (string)$carbon,'st');
+            $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
+            $namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
+            Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
+
             $insert = GuiaDTO::estafeta($sEstafeta, $request);
+
+            $notices = array();
+            $boolPrecio = true;
+            $ids = "";
+            foreach ($trackingNumbers as $key => $trackingNumber) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $insert['tracking_number'] = $trackingNumber;
+                $insert['documento'] = $namePdf;
+                Log::debug(print_r($insert ,true));   
+                //dd("prueba");
+                $id = Guia::create($insert)->id;
+                $ids = sprintf("%s,%s",$ids, $ids);
+                $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $plataforma = "API";
+                $guiaPaqueteInsert = GuiaDTO::validaPiezasPaquete($request, $key, $boolPrecio, $id, $plataforma);
+                $boolPrecio = false;
+
+                $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
+            }
+            $mensaje = array("La guia se creo con exito","Guia con IDs $ids");
+            /*
             $id = Guia::create($insert)->id;
             $mensaje = array("La guia se creo con exito","Guia con ID $id");
             Log::info(__CLASS__." ".__FUNCTION__." FIN");
+            */
             return $this->successResponse($resultado, $mensaje);
         
         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
