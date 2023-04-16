@@ -182,7 +182,7 @@ $("#cotizar").click(function(e) {
                         { "data": "nombre" },
                         { "data": "servicios_nombre" },
                         { "data": "costo" 
-                            ,render: function (data) {
+                            ,render: function (data,row) {
                                 return '$ '+data;
                             } 
                         },

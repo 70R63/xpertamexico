@@ -80,9 +80,7 @@
 							,'required'	=>	'true'
 						])
 					!!}
-				</div>
 
-				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">CLASIFICACIÓN
 							<span class="tx-danger">*</span>
@@ -99,6 +97,112 @@
 						]);
 					!!}
 				</div>
+
+				<div class="row row-sm">
+					<div class="col-lg-3">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									DESCUENTO %<span class="tx-danger">*</span>
+								</span>
+							</div>
+
+							{!! Form::text('descuento'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'descuento'
+								])
+							!!}
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									FSC %<span class="tx-danger">*</span>
+								</span>
+							</div>
+
+							{!! Form::text('fsc'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'fsc'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									ÁREA EXTENDIDA<span class="tx-danger">*</span> $
+								</span>
+							</div>
+
+							{!! Form::text('area_extendida'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'area_extendida'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-3">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									MULTIPIEZA<span class="tx-danger">*</span>$
+								</span>
+							</div>
+
+							{!! Form::text('precio_mulitpieza'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'precio_mulitpieza'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-3">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									PREMIUM 10:30 - $
+								</span>
+							</div>
+							{!! Form::text('premium10'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'premium10'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-3">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									PREMIUM 12:00 - $
+								</span>
+							</div>
+							{!! Form::text('premium12'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'premium12'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+				</div>
+				<!-- fin <div class="row row-sm"> -->
 			</div>
 			<!-- fin class="card-item" -->
 		</div>

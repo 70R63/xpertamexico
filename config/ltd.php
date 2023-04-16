@@ -110,14 +110,15 @@ return [
     ,'dhl' =>[
         'id'    => "4"
         ,'nombre'=>"DHL"
-        ,'base_uri'  =>  env('ESTAFETA_BASEURI')
+        ,'base_uri'  =>  env('DHL_BASEURI')
         ,'token_uri'    =>  env('ESTAFETA_TOKEN_URI')
-        ,'api_key'  =>  env('ESTAFETA_APIKEY')
-        ,'secret'   => env('ESTAFETA_SECRET')
+        ,'api_key'  =>  env('DHL_APIKEY')
+        ,'secret'   => env('DHL_SECRET')
         ,'servicio' => [
-            '1'     => '70'
-            ,'2'    => '60'
-            ,'3'    => 'D0'
+            '1'     => 'G'
+            ,'2'    => 'N'
+            ,'3'    => 'M'
+            ,'4'    => 'Y'
         ]
         ,'cred'     => [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID')
@@ -127,6 +128,9 @@ return [
         ,'rastreoEstatus' => [
             'ON_TRANSIT' => '3'
             ,'DELIVERED'=> '4'
+        ]
+        ,'shipment' => [
+            'uri' => env('DHL_URI_SHIPMENT')
         ]
         ,'rastreo' => [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID_TRACKING')

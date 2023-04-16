@@ -16,12 +16,14 @@ use App\Mail\GuiaCreada;
 use App\Dto\EstafetaDTO;
 use App\Dto\FedexDTO;
 use App\Dto\RedpackDTO;
+use App\Dto\DhlDTO;
 
 use App\Dto\Guia as GuiaDTO;
 
 use App\Singlenton\Estafeta as sEstafeta;
 use App\Singlenton\Fedex;
 use App\Singlenton\Redpack;
+use App\Singlenton\Dhl as sDhl;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -173,23 +175,20 @@ class GuiaController extends Controller
 
                 return $this->redpack($request);
 
-                
             break;
-
             case Config('ltd.dhl.id'):
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".Config('ltd.dhl.nombre') );
-                return back()
-                ->with('dangers',array("Redpack en implementacion"))
-                ->withInput();
+
+                $this->dhl($request);
+                return $this->dhl($request);
                 
             break;
-
             default:
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Validar ");
+                return back()
+                ->with('dangers',array("ERROR INESPERADO VALIDAR CON EL PORVEEDOR"))
+                ->withInput();
         }
-
-       
-
     }
 
     /**
@@ -666,5 +665,145 @@ class GuiaController extends Controller
         
     }
 
+    /**
+     * Caso de uso pra redpack 
+     *
+     * @param  \App\Models\Guia  $guia
+     * @param  LTD_ID = 4
+     * @return \Illuminate\Http\Response
+     */
+
+    private function dhl($request){
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." iniciado ----------------------------");
+        $mensaje = array();
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $empresa_id = auth()->user()->empresa_id;
+            
+            $dto = new DhlDTO();
+            $dto->parser($request);
+            $etiqueta = $dto->getBody();
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+            $sDhl = new sDhl();
+            $sDhl->documentation( $etiqueta );
+
+            $notices = array();
+            $boolPrecio = true;
+            foreach ($sDhl->getDocumento() as $key => $value) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
+                
+                $carbon = Carbon::parse();
+                $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
+                $unique = crypt( (string)$carbon,'st');
+                $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
+
+                Storage::disk('public')->put($namePdf,base64_decode( $value->content ));
+
+                $guiaDTO = new GuiaDTO();
+                $guiaDTO->parseoDhl($request,$sDhl, "WEB", $namePdf);
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
+
+                $id = Guia::create($guiaDTO->getInsert())->id;
+                $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." GuiasPaquete::create");
+
+                $precioUnitario = 0;
+                if ($boolPrecio ){
+                    $precioUnitario = $request['precio'];
+                }
+                $boolPrecio = false;
+
+                if ( $request['piezas'] === 1 ) {
+                    $guiaPaqueteInsert = array(
+                        'peso' => $request['pesos'][$key]
+                        ,'alto' => $request['altos'][$key]
+                        ,'ancho' => $request['anchos'][$key]
+                        ,'largo' => $request['largos'][$key]
+                        ,'precio_unitario' => $precioUnitario
+                        ,'guia_id' => $id
+                    );    
+                    
+                } else {
+                    if (count($request['pesos']) ===1) {
+                        $key = 0;
+                    }
+                    $guiaPaqueteInsert = array(
+                        'peso' => $request['pesos'][$key]
+                        ,'alto' => $request['altos'][$key]
+                        ,'ancho' => $request['anchos'][$key]
+                        ,'largo' => $request['largos'][$key]
+                        ,'precio_unitario' => $precioUnitario
+                        ,'guia_id' => $id
+                    );    
+
+                }
+                
+                $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
+
+            }
+           
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." store Fin ----------------------------");
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INDEX_r");
+            return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+            
+
+         } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("DataTransferObjectError - Consulte a su proveedor");
+            
+        } catch (\GuzzleHttp\Exception\ConnectException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ConnectException");
+            Log::debug(print_r($ex->getMessage(),true));
+            
+            $mensaje = array("No se pudo establecer la conexion con el LTD");
+       
+
+        } catch (\GuzzleHttp\Exception\RequestException $re) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." RequestException INICIO ------------------");
+            $response = ($re->getResponse());
+            Log::debug(print_r($re->getMessage(),true));
+            $mensaje = array("RequestException - Consulte a su proveedor");
+            
+            Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
+
+        } catch (\GuzzleHttp\Exception\ClientException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
+            $response = json_decode($ex->getResponse()->getBody());
+            Log::debug(print_r($response,true));
+            $mensaje = array($response->errors[0]->code);
+            
+        } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
+            Log::debug($ex->getBody());
+            $mensaje = array("Se ha producido un error interno favor de contactar al proveedor");
+
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug(print_r($ex->getMessage(),true)); 
+            Log::debug(print_r($guiaDTO->insert,true));
+            $mensaje= array($ex->errorInfo[2], "Tracking ".$guiaDTO->insert['tracking_number'], "Contactar a su proveedor para el registro");
+
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::debug( $e->getMessage() );
+            $mensaje= array($e->getMessage());
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__."FEDEX Finalizado ---------------------------- ");
+
+        return back()
+                ->with('dangers',$mensaje)
+                ->withInput();
+        
+    }
+    //FIN DHL
 
 }

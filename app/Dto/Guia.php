@@ -309,6 +309,103 @@ class Guia {
 	}
 
 	/**
+     * DHL , Funcion para reasignar valores para gaurdar la guia
+     *
+     * @var $request
+     * @var 
+     * 
+     */
+
+	public function parseoDhl($request, $singleton, $canal = "API", $namePdf= "sinnombre.pdf"){
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO ".$canal);
+
+		switch ($canal) {
+			case "WEB":
+			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+			    $usuario = auth()->user()->name;
+			    $empresa_id = auth()->user()->empresa_id;
+
+				$extendida = "NO";
+				$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
+				$valorEnvio = sprintf("%.2f",$request['valor_envio']);
+				$servicioId = $request['servicio_id'];
+				$peso = $request['peso_facturado'];
+				$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
+				$extendida = $request['extendida'];
+				$piezas = $request['piezas'];
+				$precio = sprintf("%.2f",$request['precio']);
+				$contenido = empty($request['contenido']) ? "" :$request['contenido'];
+				$cia = $request['sucursal_id'];
+				$cia_d = $request['cliente_id'];
+				$ltdId = $request['ltd_id'];
+
+				
+				switch ($request['esManual']) {
+					case "SI":
+					    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = si ");
+					    $canal = "MNL" ;
+					    $empresa_id = $request['empresa_id'];
+					    break;
+					case "NO":
+						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
+					  	
+					    break;
+					case "SEMI":
+						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+					    $canal = "SML" ;
+					    $empresa_id = $request['empresa_id'];
+					    break;
+					case "RETORNO":
+					    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");
+						$canal = "RET" ;
+						$cia_d = $request['sucursal_id'];
+						$cia = $request['cliente_id'];
+					    break;
+					    
+				 	default:
+				    	Log::info("No se cargo ningun caso");
+				}
+
+
+			    break;
+			case "API":
+				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = no ");
+			  	
+			    break;
+		 	default:
+		    	Log::info("No se cargo ningun caso");
+		}
+		//FIN switch ($canal) {
+
+		$this->insert = array('usuario' => $usuario
+				,'empresa_id' 	=> $empresa_id
+				,'ltd_id' 	=> $ltdId
+				,'cia' 		=> $cia
+				,'cia_d' 	=> $cia_d
+				,'piezas' 	=> $piezas
+				,'documento' => $namePdf
+				,'tracking_number' =>$singleton->getTrackingNumber()
+				,'canal'	=> $canal
+				,'servicio_id'	=> $servicioId
+				,'peso'			=> $peso
+				,'dimensiones'	=> $dimensiones
+				,'extendida'	=> $extendida
+				,'seguro'		=> $costoSeguro
+				,'valor_envio'	=> $valorEnvio
+				,'precio'		=> $precio
+				,'contenido'	=> $contenido
+				,'created_at'	=> Carbon::now()->toDateTimeString()
+
+ 			);
+
+		Log::info(print_r($this->insert,true));
+		Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO ".$canal);
+
+	}
+
+
+	/**
      * Insert , array que conse usara para insertar como si fuera un request
      *
      * @var nombre

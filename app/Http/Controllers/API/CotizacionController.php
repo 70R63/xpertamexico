@@ -13,6 +13,11 @@ use App\Models\Sucursal;
 use App\Models\Cliente;
 use App\Models\EmpresaEmpresas;
 use App\Models\EmpresaLtd;
+use App\Models\LtdCobertura;
+use App\Models\PostalGrupo;
+use App\Models\PostalZona;
+use App\Models\DhlTarifas;
+use App\Models\Empresa;
 
 
 
@@ -53,7 +58,7 @@ class CotizacionController extends BaseController
         
             $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
             switch ($clasificacion) {
-                case "1":
+                case "1": //FLAT
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 1 = FLAT");
                     switch ($ltdId) {
                         case "1":
@@ -99,7 +104,7 @@ class CotizacionController extends BaseController
                     }
                     //Fin switch ($ltdId) 
                     break;
-                case "2":
+                case "2"://RANGO
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 2 = RANGO");
 
                     $servicioIds = Tarifa::select('servicio_id')
@@ -210,9 +215,8 @@ class CotizacionController extends BaseController
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." DEFAULT");
                     }
                     //FIN switch ($ltdId) {
-         
                 break;
-                case 3:
+                case 3: //RANGO ZONA
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 3 = ".Config('tarifa.clasificacion.3') );
                      $servicioIds = Tarifa::select('servicio_id')
                         ->where("ltds_id", $ltdId)
@@ -245,13 +249,111 @@ class CotizacionController extends BaseController
                         $tabla = array_merge($tabla, $tablaTmp);
                     };
                 break;
+                case 4: //RANGO FLAT
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 4 = ".Config('tarifa.clasificacion.4') );
+
+                    $estadoCoberturaOrigen = LtdCobertura::select('estado')
+                            ->where('ltd_id',Config('ltd.dhl.id'))
+                            ->where('cp',$request['cp'])
+                            ->get()->pluck('estado')->toArray()
+                            ;
+
+                    $estadoCoberturaDestino = LtdCobertura::select('estado')
+                            ->where('ltd_id',Config('ltd.dhl.id'))
+                            ->where('cp',$request['cp_d'])
+                            ->get()->pluck('estado')->toArray()
+                            ;
+                    $postalGrupoOrigen = PostalGrupo::select('grupo')
+                            ->where('ltd_id',Config('ltd.dhl.id'))
+                            ->where('entidad_federativa',$estadoCoberturaOrigen[0])
+                            ->get()->pluck('grupo')->toArray()
+                            ;
+
+                    $postalGrupoDestino = PostalGrupo::select('grupo')
+                            ->where('ltd_id',Config('ltd.dhl.id'))
+                            ->where('entidad_federativa',$estadoCoberturaDestino[0])
+                            ->get()->pluck('grupo')->toArray()
+                            ;
+                    
+                    $zona = PostalZona::select('zona')
+                            ->where('ltd_id',Config('ltd.dhl.id'))
+                            ->where('grupo_origen',$postalGrupoOrigen[0])
+                            ->where('grupo_destino', $postalGrupoDestino[0])
+                            ->get()->pluck('zona')->toArray()
+                            ;
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $tarifa = DhlTarifas::select('precio', 'id')
+                            ->where('kg', $request['pesoFacturado'])
+                            ->where('zona',$zona[0] )
+                            ->get()->toArray()[0]
+                            ;
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    Log::debug(print_r($tarifa,true));  
+
+                    $empresa = Empresa::where('id', $empresa_id)->get()->toArray()[0];
+                    Log::debug(print_r($empresa,true));
+
+                    $descuentoPorcentaje = $empresa['descuento']/100;
+                    $costoDescuento = round($tarifa['precio'] *$descuentoPorcentaje,2);
+                    
+                    $subCosto = $tarifa['precio']-$costoDescuento;
+                    Log::debug(print_r($subCosto,true));
+
+                    $fscIncremento = $empresa['fsc']/100;
+                    Log::debug(print_r($fscIncremento,true)); 
+                    
+                    $costoFsc = round( $subCosto*$fscIncremento ,2);
+                    Log::debug(print_r($costoFsc,true)); 
+                    $costo = round( $subCosto*(1+$fscIncremento) ,2);
+
+                    if ($request['piezas']>1){
+                        $costo = $costo+ $empresa['precio_mulitpieza'];
+                    }
+
+
+                    $tablaTmp = array('id' => $tarifa['id']
+                        ,'costo'    => $costo
+                        ,'ltds_id' => Config('ltd.dhl.id')
+                        ,'nombre' => Config('ltd.dhl.nombre')
+                        ,'servicios_nombre' => 'Terrestre'
+                        ,'kg_ini' => $request['pesoFacturado']
+                        ,'kg_fin' => $request['pesoFacturado']
+                        ,'kg_extra' => 0
+                        ,'ocurre'   => 'NO'
+                        ,'extendida_cobertura'=>'NO'
+                        ,'extendida'    => $empresa['area_extendida']
+                        ,'servicio_id'  =>1
+                        
+
+                        );
+
+                    $tabla[] = $tablaTmp;
+
+                    if ($empresa['premium10'] > 0){
+                        $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium10'],2);
+                        $tablaTmp['servicios_nombre'] = "10:00";
+                        $tablaTmp['servicio_id'] = "3";
+
+                        $tabla[] = $tablaTmp;
+                    }
+
+                    if ($empresa['premium12'] > 0){
+                        $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium12'],2);
+                        $tablaTmp['servicios_nombre'] = "12:13";
+                        $tablaTmp['servicio_id'] = "4";
+                        $tabla[] = $tablaTmp;
+                    }
+                    
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+                break;
                 default:
                     Log::debug("No se seleccion niguna clasificacion");
             }
         }
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
-      
+        Log::debug(print_r($tabla,true));
         $success['data'] = $tabla;
        
         return $this->successResponse($success, 'Cotizacion exitosa.');
