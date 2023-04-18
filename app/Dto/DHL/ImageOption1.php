@@ -11,6 +11,6 @@ class ImageOption1 extends DataTransferObject {
 	public $typeCode = "label";
 
 	#[String]
-	public $templateName = "ECOM26_84_001";
+	public $templateName = "ECOM26_84_A4_001";
 
 }
