@@ -11,7 +11,7 @@ class ImageOption2 extends DataTransferObject {
 	public $typeCode = "waybillDoc";
 
 	#[String]
-	public $templateName = "ARCH_8X4";
+	public $templateName = "ARCH_8X4_A4_002";
 
 	#[Bool]
 	public $isRequested = true;
