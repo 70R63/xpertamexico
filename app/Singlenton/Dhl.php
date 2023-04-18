@@ -92,7 +92,7 @@ class Dhl {
 
         $packages = $objResponse->packages[0];
         
-        $this->trackingNumber = $packages->trackingNumber;
+        $this->trackingNumber = $objResponse->shipmentTrackingNumber;
         $this->documento = $objResponse->documents;
 
 

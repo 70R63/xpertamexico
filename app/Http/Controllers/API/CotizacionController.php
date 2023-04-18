@@ -274,13 +274,17 @@ class CotizacionController extends BaseController
                             ->where('entidad_federativa',$estadoCoberturaDestino[0])
                             ->get()->pluck('grupo')->toArray()
                             ;
-                    
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    Log::debug("Grupos Postales ".$postalGrupoOrigen[0]." ".$postalGrupoDestino[0]);
                     $zona = PostalZona::select('zona')
                             ->where('ltd_id',Config('ltd.dhl.id'))
                             ->where('grupo_origen',$postalGrupoOrigen[0])
                             ->where('grupo_destino', $postalGrupoDestino[0])
                             ->get()->pluck('zona')->toArray()
                             ;
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    Log::debug("Zona ".$zona[0]);
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $tarifa = DhlTarifas::select('precio', 'id')
                             ->where('kg', $request['pesoFacturado'])
@@ -316,14 +320,14 @@ class CotizacionController extends BaseController
                         ,'costo'    => $costo
                         ,'ltds_id' => Config('ltd.dhl.id')
                         ,'nombre' => Config('ltd.dhl.nombre')
-                        ,'servicios_nombre' => 'Terrestre'
+                        ,'servicios_nombre' => 'Dia Sig. '
                         ,'kg_ini' => $request['pesoFacturado']
                         ,'kg_fin' => $request['pesoFacturado']
                         ,'kg_extra' => 0
                         ,'ocurre'   => 'NO'
                         ,'extendida_cobertura'=>'NO'
                         ,'extendida'    => $empresa['area_extendida']
-                        ,'servicio_id'  =>1
+                        ,'servicio_id'  =>2
                         
 
                         );
@@ -332,7 +336,7 @@ class CotizacionController extends BaseController
 
                     if ($empresa['premium10'] > 0){
                         $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium10'],2);
-                        $tablaTmp['servicios_nombre'] = "10:00";
+                        $tablaTmp['servicios_nombre'] = "10:30";
                         $tablaTmp['servicio_id'] = "3";
 
                         $tabla[] = $tablaTmp;
@@ -340,7 +344,7 @@ class CotizacionController extends BaseController
 
                     if ($empresa['premium12'] > 0){
                         $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium12'],2);
-                        $tablaTmp['servicios_nombre'] = "12:13";
+                        $tablaTmp['servicios_nombre'] = "12:00";
                         $tablaTmp['servicio_id'] = "4";
                         $tabla[] = $tablaTmp;
                     }
