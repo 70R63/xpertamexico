@@ -56,7 +56,7 @@ class DhlDTO
 
     	$imageOption1 = new ImageOption1();
     	$imageOption2 = new ImageOption2();
-        $imageOption2->numberOfCopies = (int) $request['piezas'];
+        //$imageOption2->numberOfCopies = (int) $request['piezas'];
 
 
     	$imageOptions = array("imageOptions" => array($imageOption1, $imageOption2));
@@ -103,38 +103,9 @@ class DhlDTO
     			);
 
 
-        $customerReferences = new CustomerReferences();
+        $packages = $this->paquetes($request);
 
-
-        $length = 0;
-        foreach ($request["largos"] as $key => $value) {
-            $length = $length + $value;
-        }
-
-        $width = 0;
-        foreach ($request["anchos"] as $key => $value) {
-            $width = $width + $value;
-        }
-
-        $height = 0;
-        foreach ($request["altos"] as $key => $value) {
-            $height = $height + $value;
-        }
-        $dimensions = new Dimensions(
-                    array("length" => $length
-                        ,"width" => $width
-                        ,"height" => $height
-                    )
-                );
-
-        $packages = new Packages(
-                        array("customerReferences" => array($customerReferences) 
-                            ,"weight" => (float)$request["peso_facturado"]
-                            ,"dimensions" => $dimensions
-                        )
-                    );
-
-    	$content = new Content(array('packages' => array($packages)
+    	$content = new Content(array('packages' => $packages
                                // ,"declaredValue"=> (float)$request["costo_seguro"]
                             )
                         );
@@ -157,6 +128,48 @@ class DhlDTO
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
+
+    /**
+     * Metodo para asignar los valores del request a una etiqueta 
+     * para generar el envio a la api de dhl
+     * https://developer.dhl.com/api-reference/dhl-express-mydhl-api#operations-shipment-exp-api-shipments
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return array body
+     */
+
+    private function paquetes($request){
+
+        $customerReferences = new CustomerReferences();
+
+
+        foreach ($request["pesos"] as $key => $value) {
+
+            $dimensions = new Dimensions(
+                    array("length" => (float)$request["largos"][$key]
+                        ,"width" => (float)$request["anchos"][$key]
+                        ,"height" => (float)$request["altos"][$key]
+                    )
+                );
+
+            $package = new Packages(
+                    array("customerReferences" => array($customerReferences) 
+                        ,"weight" => (float)$value
+                        ,"dimensions" => $dimensions
+                    )
+                );
+            $packages[] = $package;
+        }
+        
+        if ($request['piezas'] > count($request['pesos']) ) {
+            for ($i=1; $i < $request['piezas']; $i++) { 
+                $packages[] = $packages[0];
+            }
+        }
+            
+        return $packages;
+        
+    }
 
     public function getBody(){
         return $this->body;

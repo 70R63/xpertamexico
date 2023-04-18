@@ -179,7 +179,6 @@ class GuiaController extends Controller
             case Config('ltd.dhl.id'):
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".Config('ltd.dhl.nombre') );
 
-                $this->dhl($request);
                 return $this->dhl($request);
                 
             break;

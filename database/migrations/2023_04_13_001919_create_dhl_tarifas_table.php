@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('kg')->default(0)->index();
             $table->string('zona', 1)->nullable(false)->default('A')->index();
             $table->float('precio', 6,2)->default(0);
+            $table->unsignedInteger('servicio_id')->default(2)->index();
 
         });
     }

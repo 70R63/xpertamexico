@@ -22,6 +22,7 @@ return [
         1   => 'FEDEX'
         ,2  => 'ESTAFETA'
         ,3  => 'REDPACK'
+        ,4  => 'DHL'
     ]
     ,'estafeta'      => env('WSDL_ESTAFETA', 'Laravel'),
     'estafeta_tracking' => env('WSDL_ESTAFETA_TRACKING_DEV', 'tracking'),
@@ -126,8 +127,8 @@ return [
         ,'servicio' => [
             '1'     => 'G'
             ,'2'    => 'N'
-            ,'3'    => 'M'
-            ,'4'    => 'Y'
+            ,'5'    => 'M'
+            ,'6'    => 'Y'
         ]
         ,'cred'     => [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID')
