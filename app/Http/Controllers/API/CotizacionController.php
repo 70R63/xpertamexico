@@ -252,17 +252,21 @@ class CotizacionController extends BaseController
                 case 4: //RANGO FLAT
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 4 = ".Config('tarifa.clasificacion.4') );
 
-                    $estadoCoberturaOrigen = LtdCobertura::select('estado')
+                    $estadoCoberturaOrigen = LtdCobertura::select('estado', 'extendida')
                             ->where('ltd_id',Config('ltd.dhl.id'))
                             ->where('cp',$request['cp'])
-                            ->get()->pluck('estado')->toArray()
+                            ->get()->toArray()
                             ;
 
-                    $estadoCoberturaDestino = LtdCobertura::select('estado')
+                   
+
+                    $estadoCoberturaDestino = LtdCobertura::select('estado', 'extendida' )
                             ->where('ltd_id',Config('ltd.dhl.id'))
                             ->where('cp',$request['cp_d'])
-                            ->get()->pluck('estado')->toArray()
+                            ->get()->toArray()
                             ;
+
+                     Log::debug(print_r($estadoCoberturaDestino,true));
                     $postalGrupoOrigen = PostalGrupo::select('grupo')
                             ->where('ltd_id',Config('ltd.dhl.id'))
                             ->where('entidad_federativa',$estadoCoberturaOrigen[0])
@@ -316,6 +320,9 @@ class CotizacionController extends BaseController
                             $costo = $costo+ $empresa['precio_mulitpieza'];
                         }
 
+                        if ($estadoCoberturaDestino[0]['extendida'] === "SI" ) {
+                            $costo = round( $costo + $empresa['area_extendida'] ,2);
+                        }
 
                         $servicioNombre = ($tarifa['servicio_id'] ===2) ? 'Dia Sig' : 'Terrestre' ;
                         $tablaTmp = array('id' => $tarifa['id']
@@ -351,7 +358,6 @@ class CotizacionController extends BaseController
                                 $tablaTmp['servicio_id'] = "6";
                                 $tabla[] = $tablaTmp;
                             }
-                            
                         }
                     }
                     
