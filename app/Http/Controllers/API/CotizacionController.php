@@ -334,7 +334,7 @@ class CotizacionController extends BaseController
                             ,'kg_fin' => $request['pesoFacturado']
                             ,'kg_extra' => 0
                             ,'ocurre'   => 'NO'
-                            ,'extendida_cobertura'=>'NO'
+                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida']
                             ,'extendida'    => $empresa['area_extendida']
                             ,'servicio_id'  =>$tarifa['servicio_id']
                             
