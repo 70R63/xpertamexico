@@ -2,6 +2,7 @@
 namespace App\Dto;
 
 use App\Dto\DHL\Label;
+use App\Dto\DHL\LabelSeguro;
 use App\Dto\DHL\Pickup;
 use App\Dto\DHL\Accounts;
 use App\Dto\DHL\OutputImageProperties;
@@ -11,9 +12,11 @@ use App\Dto\DHL\AddressDetails;
 use App\Dto\DHL\PostalAddress;
 use App\Dto\DHL\ContactInformation;
 use App\Dto\DHL\Content;
+use App\Dto\DHL\ContentSeguro;
 use App\Dto\DHL\CustomerReferences;
 use App\Dto\DHL\Packages;
 use App\Dto\DHL\Dimensions;
+use App\Dto\DHL\ValueAddedServices;
 
 
 use Log;
@@ -53,11 +56,10 @@ class DhlDTO
 
     	$pickup = new Pickup();
     	$accounts = new Accounts();
+        
 
     	$imageOption1 = new ImageOption1();
     	$imageOption2 = new ImageOption2();
-        //$imageOption2->numberOfCopies = (int) $request['piezas'];
-
 
     	$imageOptions = array("imageOptions" => array($imageOption1, $imageOption2));
     	$outputImageProperties = new OutputImageProperties($imageOptions);
@@ -105,25 +107,51 @@ class DhlDTO
 
         $packages = $this->paquetes($request);
 
-    	$content = new Content(array('packages' => $packages
-                               // ,"declaredValue"=> (float)$request["costo_seguro"]
-                            )
-                        );
+    	
 
         $plannedShipping = sprintf("%s GMT-06:00", Carbon::now()->addHours(24)->format('Y-m-d\TH:i:s') );
 
         $productCode = Config('ltd.dhl.servicio')[$request['servicio_id']];
-    	$this->body = new Label(
-    		array("productCode"=> $productCode
-                ,"plannedShippingDateAndTime" => $plannedShipping
-                ,"pickup"=> $pickup
-    			,"accounts"=> array($accounts)
-    			,"outputImageProperties" => $outputImageProperties
-    			,"customerDetails"	=> $customerDetails
-    			,"content"	=> $content
-    		)
-    	);
 
+        
+
+        if ($request['bSeguro']) {
+
+            $content = new Content(array("packages" => $packages
+                                //,"declaredValue" => (float)$request['valor_envio']
+                            )
+                        );
+
+            $valueAddedServices = new ValueAddedServices();
+            $valueAddedServices->value = (float)$request['valor_envio'];
+
+            $this->body = new LabelSeguro(
+                array("productCode"=> $productCode
+                    ,"plannedShippingDateAndTime" => $plannedShipping
+                    ,"pickup"=> $pickup
+                    ,"accounts"=> array($accounts)
+                    ,"outputImageProperties" => $outputImageProperties
+                    ,"customerDetails"  => $customerDetails
+                    ,"content"  => $content
+                    ,"valueAddedServices"  => array($valueAddedServices)
+                )
+            );  
+        } else{
+            $content = new Content(array('packages' => $packages
+                            )
+                        );
+            $this->body = new Label(
+                array("productCode"=> $productCode
+                    ,"plannedShippingDateAndTime" => $plannedShipping
+                    ,"pickup"=> $pickup
+                    ,"accounts"=> array($accounts)
+                    ,"outputImageProperties" => $outputImageProperties
+                    ,"customerDetails"  => $customerDetails
+                    ,"content"  => $content
+                )
+            );    
+        }
+    	
     	Log::debug(print_r(json_encode($this->body),true));
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }

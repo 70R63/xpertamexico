@@ -5,7 +5,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 use Spatie\DataTransferObject\FieldValidator as Validator;
 
 
-class Content extends DataTransferObject {
+class ContentSeguro extends DataTransferObject {
 
 	/** @var string */
     public $unitOfMeasurement = "metric";
@@ -25,5 +25,6 @@ class Content extends DataTransferObject {
 	#[String]
 	public $declaredValueCurrency  = "MXP";
 
-   
+    #[Double]
+    public $declaredValue;
 }
