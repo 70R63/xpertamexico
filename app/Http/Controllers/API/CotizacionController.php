@@ -258,15 +258,14 @@ class CotizacionController extends BaseController
                             ->get()->toArray()
                             ;
 
-                   
 
-                    $estadoCoberturaDestino = LtdCobertura::select('estado', 'extendida' )
+                    $estadoCoberturaDestino = LtdCobertura::select('estado', 'extendida', 'ocurre' )
                             ->where('ltd_id',Config('ltd.dhl.id'))
                             ->where('cp',$request['cp_d'])
                             ->get()->toArray()
                             ;
 
-                     Log::debug(print_r($estadoCoberturaDestino,true));
+                    Log::debug(print_r($estadoCoberturaDestino,true));
                     $postalGrupoOrigen = PostalGrupo::select('grupo')
                             ->where('ltd_id',Config('ltd.dhl.id'))
                             ->where('entidad_federativa',$estadoCoberturaOrigen[0])
@@ -334,10 +333,10 @@ class CotizacionController extends BaseController
                             ,'kg_fin' => $request['pesoFacturado']
                             ,'kg_extra' => 0
                             ,'ocurre'   => 'NO'
-                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida']
+                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
                             ,'extendida'    => $empresa['area_extendida']
                             ,'servicio_id'  =>$tarifa['servicio_id']
-                            
+                            ,'seguro'   => $empresa['seguro']
 
                             );
 

@@ -14,12 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('empresas', function (Blueprint $table) {
-            $table->unsignedTinyInteger('descuento')->default(0);
-            $table->unsignedTinyInteger('fsc')->default(0);
-            $table->unsignedTinyInteger('area_extendida')->default(0);
-            $table->unsignedTinyInteger('precio_mulitpieza')->default(0);
-            $table->unsignedTinyInteger('premium10')->default(0);
-            $table->unsignedTinyInteger('premium12')->default(0);
+            
+            $table->float('descuento', 6,2)->default(0);
+            $table->float('fsc', 6,2)->default(0);
+            $table->float('area_extendida', 6,2)->default(0);
+            $table->float('precio_mulitpieza', 6,2)->default(0);
+            $table->float('premium10', 6,2)->default(0);
+            $table->float('premium12', 6,2)->default(0);
+            
         });
     }
 

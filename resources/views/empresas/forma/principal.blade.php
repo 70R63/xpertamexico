@@ -99,7 +99,7 @@
 				</div>
 
 				<div class="row row-sm">
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">
@@ -115,7 +115,7 @@
 							!!}
 						</div>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">
@@ -132,7 +132,7 @@
 							!!}
 						</div>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">
@@ -150,7 +150,7 @@
 						</div>
 					</div>
 
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">
@@ -168,7 +168,7 @@
 						</div>
 					</div>
 
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">
@@ -185,7 +185,7 @@
 						</div>
 					</div>
 
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="basic-addon1">
@@ -196,6 +196,23 @@
 								, null
 								,['class' 		=> 'form-control'
 									,'id'		=> 'premium12'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-2">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									SEGURO %
+								</span>
+							</div>
+							{!! Form::text('seguro'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'seguro'
 									,'required'	=>	'true'
 								])
 							!!}
