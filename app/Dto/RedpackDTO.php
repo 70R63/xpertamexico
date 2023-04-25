@@ -167,6 +167,7 @@ class RedpackDTO
 
     }
 
+/*
     public  function tracking($trackingNumber =1){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->body = array ( 
@@ -177,14 +178,15 @@ class RedpackDTO
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }    
 
-
+*/
     public function getRangoExcedido(){
         return $this->rangoExcedido;
     }
-
+/*
     public function getBody(){
         return $this->body;
     }
+    */
 }
 
 ?>

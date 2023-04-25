@@ -11,6 +11,7 @@ use App\Models\API\Guia;
 use App\Dto\RedpackDTO; 
 
 use App\Singlenton\Redpack as sRedpack;
+use App\Singlenton\Dhl as sDhl;
 //Generales 
 use Log;
 use Carbon\Carbon;
@@ -189,6 +190,84 @@ class RastreosController extends Controller
                         ,"ltd_id" => Config('ltd.redpack.id')) 
                     );
             
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
+            
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." QueryException");
+            Log::debug($ex->getMessage()); 
+
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
+            Log::debug(print_r($ex,true));
+
+        }
+
+    }//fin function redpackAutomatico()
+
+
+    /**
+     * Busca las guias que no esten entregadas par validar su estatus 
+     * 
+     * @param 
+     * @var 
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function dhlAutomatico(){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
+        
+        try {
+            $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.dhl.id')) )->id;
+
+            $guias = Guia::pendienteEntrega(Config('ltd.dhl.id'))->get()->toArray();
+
+            $totalGuias = count($guias);
+            Log::info("Total de guias revisar ".$totalGuias);
+
+            foreach ($guias as $key => $guia) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info("$key / $totalGuias");
+                Log::debug(print_r($guia,true));
+
+                $sDhl = new sDhl();
+                $sDhl->trackingByNumber($guia['tracking_number']); 
+  
+                $update = array();
+            
+                if ($sDhl->getExiteSeguimiento()) {   
+                    Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
+                    $paquete = $sDhl->getPaquete();
+
+                    $update = array('ultima_fecha' => $sDhl->getUltimaFecha()
+                            ,'rastreo_estatus' => 1
+                            ,'rastreo_peso' => $paquete['peso'] 
+                            ,'largo' => $paquete['largo'] 
+                            ,'ancho' => $paquete['ancho'] 
+                            ,'alto' => $paquete['alto']
+                            ,'quien_recibio' =>  $sDhl->getQuienRecibio()
+                            ,'pickup_fecha' =>  $sDhl->getPickupFecha()
+
+                        );
+
+                    Log::info(print_r($update,true));
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $affectedRows = Guia::where("id", $guia['id'])
+                            ->update($update);
+        
+                    Log::debug("affectedRows -> $affectedRows");
+                }else{
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
+                }
+                
+    
+            }
+            /*
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>true
+                        ,"ltd_id" => Config('ltd.redpack.id')) 
+                    );
+            */
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
             
         } catch(\Illuminate\Database\QueryException $ex){ 

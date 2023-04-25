@@ -143,7 +143,6 @@ class Redpack {
         Log::debug(__CLASS__." ".__FUNCTION__." response ");
         $contenido = json_decode($response->getBody()->getContents());
         
-        //Log::debug(print_r($contenido[0],true) );
         $objResponse = $contenido[0];
 
         $this->trackingNumber = $objResponse->trackingNumber;

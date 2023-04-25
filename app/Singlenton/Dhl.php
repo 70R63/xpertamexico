@@ -107,43 +107,56 @@ class Dhl {
      * @return \Illuminate\Http\Response
      */
 
-    public function trackingByNumber(array $body){
+    public function trackingByNumber( $id ){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-        $authorization = sprintf("Bearer %s",$this->token);
+        $basic = sprintf("%s:%s", Config('ltd.dhl.api_key'), Config('ltd.dhl.secret') );
+        $authorization = sprintf("Basic %s",base64_encode($basic));
 
         $headers = ['Authorization' => $authorization  
                     ,'Content-Type' => 'application/json'
                 ];
 
-        $this->baseUri = Config('ltd.redpack.rastreo.uri');
-        $servicio = Config('ltd.redpack.rastreo.servicio');
+        $uri = sprintf("%sshipments/%s/tracking",Config('ltd.dhl.base_uri'), $id );
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug(print_r($uri,true));
+        $client = new Client();
 
-        $response = $this->clienteRest($body, 'POST', $servicio, $headers);
+        $reponse = $client->request("GET", $uri, [
+                    'headers'   => $headers
+        
+                ]);
 
-        Log::debug(__CLASS__." ".__FUNCTION__." response ");
-        $contenido = json_decode($response->getBody()->getContents());
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $contenido = json_decode($reponse->getBody()->getContents());
 
         Log::debug(print_r($contenido,true));
+        $pesoDimension = array();
+        foreach ($contenido->shipments as $key => $value) {
+            Log::info(print_r($value,true));
+            $pesoDimension['largo'] = (isset($value->length)) ? $value->length : 0 ;
+            $pesoDimension['ancho'] = (isset($value->width)) ? $value->width : 0 ;
+            $pesoDimension['alto'] = (isset($value->high)) ? $value->high : 0 ;
+            $pesoDimension['peso'] = $value->totalWeight;
 
+        }
+        $this->paquete = $pesoDimension;
+
+        $this->ultimaFecha = "1999-12-31 23:59:59";
+
+        $this->exiteSeguimiento = true;
+/*
         $pesoDimension = array();
         $objResponse = $contenido[0];
         if ( $objResponse->consumptionResultWS[0]->status === 1 ) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-            foreach ($objResponse->parcel as $key => $value) {
-                Log::info(print_r($value,true));
-                $pesoDimension['largo'] = $value->length;
-                $pesoDimension['ancho'] = $value->width;
-                $pesoDimension['alto'] = $value->high;
-                $pesoDimension['peso'] = $value->weigth;
-
-            }
+           
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $this->paquete = $pesoDimension;
             $this->latestStatusDetail = $objResponse->lastSituation->idDesc;
 
-            $this->ultimaFecha = "1999-12-31 23:59:59";
+            
             if ($this->latestStatusDetail === 1) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $this->ultimaFecha = Carbon::parse($objResponse->dateSituation)->format('Y-m-d H:i:s');
@@ -151,7 +164,7 @@ class Dhl {
             $this->pickupFecha = $objResponse->dateDocumentation;
             $this->quienRecibio= $objResponse->personReceived;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $this->exiteSeguimiento = true;
+           
 
         }else{
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -159,7 +172,7 @@ class Dhl {
             $this->exiteSeguimiento = false;
         }
         
-       
+       */
     }
 
 
@@ -172,5 +185,24 @@ class Dhl {
         return $this->documento;
     }
 
+    public function getExiteSeguimiento(){
+        return $this->exiteSeguimiento;
+    }
+
+    public function getPaquete(){
+        return $this->paquete;
+    }
+
+    public function getUltimaFecha(){
+        return $this->ultimaFecha;
+    }
+
+    public function getQuienRecibio(){
+        return $this->quienRecibio;
+    }
+
+    public function getPickupFecha(){
+        return $this->pickupFecha;
+    }
     
 }

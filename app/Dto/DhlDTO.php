@@ -157,6 +157,7 @@ class DhlDTO
     }
 
 
+
     /**
      * Metodo para asignar los valores del request a una etiqueta 
      * para generar el envio a la api de dhl
@@ -202,4 +203,6 @@ class DhlDTO
     public function getBody(){
         return $this->body;
     }
+
+    
 }
