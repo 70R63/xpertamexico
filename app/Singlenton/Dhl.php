@@ -235,4 +235,7 @@ $this->latestStatusDetail = $evento->typeCode;
         return $this->pickupFecha;
     }
     
+    public function getLatestStatusDetail(){
+        return $this->latestStatusDetail;
+    }
 }
