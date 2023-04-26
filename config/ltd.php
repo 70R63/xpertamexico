@@ -127,8 +127,8 @@ return [
         ,'servicio' => [
             '1'     => 'G'
             ,'2'    => 'N'
-            ,'5'    => 'M'
-            ,'6'    => 'Y'
+            ,'5'    => '0'
+            ,'6'    => '1'
         ]
         ,'cred'     => [
             'suscriberId' => env('ESTAFETA_SUSCRIBERID')
@@ -136,8 +136,14 @@ return [
             ,'salesOrganization'=>env('ESTAFETA_SALESORGANIZATION')
         ]
         ,'rastreoEstatus' => [
-            'ON_TRANSIT' => '3'
-            ,'DELIVERED'=> '4'
+            'SA' => '1'
+            ,'PU'=> '2'
+            ,'PL' =>  '2'
+            ,'DF' =>  '2'
+            ,'AF' =>  '3'
+            ,'AR' =>  '3'
+            ,'WC' =>  '3'
+            ,'OK' =>  '4'
         ]
         ,'shipment' => [
             'uri' => env('DHL_URI_SHIPMENT')

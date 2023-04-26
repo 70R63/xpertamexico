@@ -130,8 +130,9 @@ class Dhl {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $contenido = json_decode($reponse->getBody()->getContents());
 
-        Log::debug(print_r($contenido,true));
         $pesoDimension = array();
+        $this->ultimaFecha = "1999-12-31 23:59:59";
+
         foreach ($contenido->shipments as $key => $value) {
             Log::info(print_r($value,true));
             $pesoDimension['largo'] = (isset($value->length)) ? $value->length : 0 ;
@@ -139,14 +140,43 @@ class Dhl {
             $pesoDimension['alto'] = (isset($value->high)) ? $value->high : 0 ;
             $pesoDimension['peso'] = $value->totalWeight;
 
+            if ( count($value->events) ) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                
+                foreach ($value->events as $keyI => $evento) {
+                    switch ($evento->typeCode) {
+                        case 'PU':
+                            $this->pickupFecha = sprintf("%s %s", $evento->date,$evento->time);  
+                            $this->latestStatusDetail = $evento->typeCode;
+                            break;
+                        
+                        case 'OK':
+                            $this->ultimaFecha = sprintf("%s %s", $evento->date,$evento->time);
+                            $this->latestStatusDetail = $evento->typeCode;
+                            $this->quienRecibio = $evento->signedBy;
+                            break;
+                        default:
+                            $this->latestStatusDetail = $evento->typeCode;
+                            $this->ultimaFecha = sprintf("%s %s", $evento->date,$evento->time);
+                            break;
+                    }
+                }
+                    
+
+                $this->exiteSeguimiento = true;
+
+            } else {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $this->exiteSeguimiento = false;
+            }
+
         }
         $this->paquete = $pesoDimension;
 
-        $this->ultimaFecha = "1999-12-31 23:59:59";
-
-        $this->exiteSeguimiento = true;
+        
 /*
         $pesoDimension = array();
+$this->latestStatusDetail = $evento->typeCode;
         $objResponse = $contenido[0];
         if ( $objResponse->consumptionResultWS[0]->status === 1 ) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -161,7 +191,7 @@ class Dhl {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $this->ultimaFecha = Carbon::parse($objResponse->dateSituation)->format('Y-m-d H:i:s');
             }
-            $this->pickupFecha = $objResponse->dateDocumentation;
+            
             $this->quienRecibio= $objResponse->personReceived;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
            
