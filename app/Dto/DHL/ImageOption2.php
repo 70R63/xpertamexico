@@ -17,7 +17,7 @@ class ImageOption2 extends DataTransferObject {
 	public $isRequested = true;
 
 	#[Bool]
-	public $hideAccountNumber = false;
+	public $hideAccountNumber = true;
 
 	#[Int]
 	public $numberOfCopies = 1;	

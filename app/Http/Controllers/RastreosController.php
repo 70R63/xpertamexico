@@ -45,7 +45,6 @@ class RastreosController extends Controller
 
             }            
 
-            //dd($rastreoPeticion[0]);
             Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO----------------- ");
             return view(self::DASH_v 
                     ,compact("rastreoPeticion") 
@@ -261,13 +260,7 @@ class RastreosController extends Controller
                 
     
             }
-            /*
-            Rastreo_peticion::where('id',$rastreoPeticionesID)
-                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
-                        ,"completado"=>true
-                        ,"ltd_id" => Config('ltd.redpack.id')) 
-                    );
-            */
+            
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
             
         } catch(\Illuminate\Database\QueryException $ex){ 

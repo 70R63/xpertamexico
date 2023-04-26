@@ -66,10 +66,16 @@ class DhlDTO
 
         //Origen
         $addressLine1 = sprintf("%s %s %s",$request["direccion"], $request["no_int"], $request["no_ext"] );
+
+
+        $addressLine2 = str_split($request["direccion2"],44)[0];
+
+        $addressLine2 = ( strlen($addressLine2) > 0 ) ? $addressLine2 : "Sin referencia" ;
     	$postalAddress = new PostalAddress(
                 array("cityName"    => $request["ciudad"]
                     ,"postalCode"   => $request["cp"]
                     ,"addressLine1" => $addressLine1
+                    ,"addressLine2"  => $addressLine2
                 )
             );
     	$contactInformation = new ContactInformation(
@@ -83,10 +89,16 @@ class DhlDTO
 
         //Destino
         $addressLine1 = sprintf("%s %s %s",$request["direccion_d"], $request["no_int_d"], $request["no_ext_d"] );
+
+        $addressLine2_d = str_split($request["direccion2_d"],44)[0];
+
+        $addressLine2_d = ( strlen($addressLine2_d) > 0 ) ? $addressLine2_d : "Sin referencia" ;
+
     	$postalAddress = new PostalAddress(
                 array("cityName"    => $request["ciudad_d"]
                     ,"postalCode"   => $request["cp_d"]
                     ,"addressLine1" => $addressLine1
+                    ,"addressLine2"  =>$addressLine2_d
                 )
             );
     	$contactInformation = new ContactInformation(

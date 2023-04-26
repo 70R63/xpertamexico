@@ -18,6 +18,9 @@ class PostalAddress extends DataTransferObject {
 
 	#[String]
 	public $addressLine1 = "";
+
+	#[String]
+	public $addressLine2 = "";
 	
 }
 
