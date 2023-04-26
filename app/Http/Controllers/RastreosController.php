@@ -239,7 +239,7 @@ class RastreosController extends Controller
                     $paquete = $sDhl->getPaquete();
 
                     $update = array('ultima_fecha' => $sDhl->getUltimaFecha()
-                            ,'rastreo_estatus' => 1
+                            ,'rastreo_estatus' => Config('ltd.dhl.rastreoEstatus')[$sDhl->getLatestStatusDetail()]
                             ,'rastreo_peso' => $paquete['peso'] 
                             ,'largo' => $paquete['largo'] 
                             ,'ancho' => $paquete['ancho'] 
