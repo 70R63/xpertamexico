@@ -153,7 +153,7 @@ class Dhl {
                         case 'OK':
                             $this->ultimaFecha = sprintf("%s %s", $evento->date,$evento->time);
                             $this->latestStatusDetail = $evento->typeCode;
-                            $this->quienRecibio = $evento->signedBy;
+                            $this->quienRecibio = isset($evento->signedBy) ? $evento->signedBy : "No Documentado"  ;
                             break;
                         default:
                             $this->latestStatusDetail = $evento->typeCode;
