@@ -35,6 +35,10 @@
                                     <b>Piezas:</b> <span id="spanPieza"></span>,
                                     <b>Peso Facturado:</b> <span id="spanPeso"></span> Kg.
                                 </li>
+                                <li>
+                                    <b>Área Extendida:</b><span id="spanAreaExtendida"></span> Genera costo adicional
+                                    
+                                </li>
                             </h4>
                             <li>
                                 <b>Valor de Envio:</b>$ <span id="spanValorEnvio"></span>
@@ -44,6 +48,7 @@
                                 <b>Cotización Manual:</b><span id="spanCotizacionManual"></span>
                                 <b>,   Ocurre:</b> <span id="spanOcurre"></span>
                             </li>
+                            
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">

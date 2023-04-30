@@ -25,6 +25,11 @@
                                 <b>Piezas: {{$piezas}}</b> <span id="spanPieza"></span>,
                                 <b>Peso Facturado: {{$objeto['peso_facturado']}}</b> <span id="spanPeso"></span> Kg.
                             </li>
+                            <li>
+                                <b>Área Extendida: {{$objeto['extendida_r']}}</b><span id="spanAreaExtendida"></span> Genera costo adicional
+                                
+                            </li>
+                            
                         </li>
                     </h4>
                     <li>
@@ -32,7 +37,8 @@
                         <b>Seguro:</b>${{$objeto['costo_seguro']}} <span id="spanSeguro"></span>
                     </li>
                     <li>
-                        <b>Guia Manual:</b>{{$objeto['esManual']}}<span id="spanCotizacionManual"></span>
+                        <b>Cotización Manual:</b>{{$objeto['esManual']}}<span id="spanCotizacionManual"></span>
+                        <b>,   Ocurre:</b>{{$objeto['ocurre']}} <span id="spanOcurre"></span>
                     </li>
                 </ul>
             </div>
@@ -72,43 +78,41 @@
 !!}
 
 
-    @foreach ($objeto['pesos'] as $peso)
-        {!! Form::hidden('pesos[]'
-            , $peso
-            ,['class'       => 'form-control'
-                ,'id'       => 'pesos' 
-            ])
-        !!}
-    @endforeach
+@foreach ($objeto['pesos'] as $peso)
+    {!! Form::hidden('pesos[]'
+        , $peso
+        ,['class'       => 'form-control'
+            ,'id'       => 'pesos' 
+        ])
+    !!}
+@endforeach
 
-    @foreach ($objeto['largos'] as $largo)
-        {!! Form::hidden('largos[]'
-            , $largo
-            ,['class'       => 'form-control'
-                ,'id'       => 'largos' 
-            ])
-        !!}
-    @endforeach
+@foreach ($objeto['largos'] as $largo)
+    {!! Form::hidden('largos[]'
+        , $largo
+        ,['class'       => 'form-control'
+            ,'id'       => 'largos' 
+        ])
+    !!}
+@endforeach
 
-    @foreach ($objeto['anchos'] as $ancho)
-        {!! Form::hidden('anchos[]'
-            , $ancho
-            ,['class'       => 'form-control'
-                ,'id'       => 'anchos' 
-            ])
-        !!}
-    @endforeach
+@foreach ($objeto['anchos'] as $ancho)
+    {!! Form::hidden('anchos[]'
+        , $ancho
+        ,['class'       => 'form-control'
+            ,'id'       => 'anchos' 
+        ])
+    !!}
+@endforeach
 
-    @foreach ($objeto['altos'] as $alto)
-        {!! Form::hidden('altos[]'
-            , $alto
-            ,['class'       => 'form-control'
-                ,'id'       => 'altos' 
-            ])
-        !!}
-    @endforeach
-
-
+@foreach ($objeto['altos'] as $alto)
+    {!! Form::hidden('altos[]'
+        , $alto
+        ,['class'       => 'form-control'
+            ,'id'       => 'altos' 
+        ])
+    !!}
+@endforeach
 
 
 {!! Form::hidden('bSeguro'
@@ -164,5 +168,12 @@
     , $objeto['empresa_id']
     ,['class'       => 'form-control'
         ,'id'       => 'empresa_id' 
+    ])
+!!}
+
+{!! Form::hidden('ocurre'
+    , $objeto['ocurre']
+    ,['class'       => 'form-control'
+        ,'id'       => 'ocurre' 
     ])
 !!}

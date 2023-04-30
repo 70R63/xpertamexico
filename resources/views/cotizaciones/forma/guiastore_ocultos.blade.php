@@ -155,3 +155,10 @@
         ,'id'       => 'empresa_id' 
     ])
 !!}
+
+{!! Form::hidden('ocurre'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'ocurre' 
+    ])
+!!}
