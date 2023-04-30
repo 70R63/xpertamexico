@@ -261,6 +261,11 @@ class RastreosController extends Controller
     
             }
             
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>true
+                        ,"ltd_id" => Config('ltd.dhl.id')) 
+                    );
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
             
         } catch(\Illuminate\Database\QueryException $ex){ 
