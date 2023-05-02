@@ -265,6 +265,13 @@ class CotizacionController extends BaseController
                             ->get()->toArray()
                             ;
 
+                    if ( !(count($estadoCoberturaOrigen) * count($estadoCoberturaDestino) )  ) {
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                        Log::debug("No se cuenta con cobertura");
+                        break;
+                    }
+                    
+
                     Log::debug(print_r($estadoCoberturaDestino,true));
                     $postalGrupoOrigen = PostalGrupo::select('grupo')
                             ->where('ltd_id',Config('ltd.dhl.id'))
