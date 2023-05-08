@@ -15,12 +15,12 @@
                                 <th>CLIENTE XPERTA</th>
                                 <th>REMITENTE <br>(CONTACTO)</th>
                                 <th>DESTINATATIO <br>(CONTACTO)</th>
-                                <th >CP ORIGEN</th>
-                                <th >CIUDAD ORIGEN</th>
+                                <th>CP ORIGEN</th>
+                                <th>CIUDAD ORIGEN</th>
                                 <th>CP DESTINO</th>
                                 <th>CIUDAD DESTINO</th>
-                                <th >CREACION</th>
-                                <th >CANAL</th>
+                                <th>CREACION</th>
+                                <th>CANAL</th>
                                 <th>TRACKING</th>
                                 <th>PRECIO</th>
                                 <th>PIEZAS</th>
@@ -31,12 +31,13 @@
                                 <th>VALOR DEL ENVIO</th>
                                 <th>COSTO SEGURO</th>
                                 <th>APLICA A.E.</th>
+                                <th>ZONA</th>
                             </tr>
                         </thead>
                                                 
                         <tfoot>
                             <tr>
-                              <td colspan="22">Los datos son responsalidad del usuario</td>
+                              <td colspan="25">Los datos son responsalidad del usuario</td>
                             </tr>
                         </tfoot>
                     </table>

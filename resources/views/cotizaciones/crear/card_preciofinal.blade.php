@@ -27,19 +27,21 @@
                             </li>
                             <li>
                                 <b>Área Extendida: {{$objeto['extendida_r']}}</b><span id="spanAreaExtendida"></span> Genera costo adicional
-                                
                             </li>
                             
                         </li>
                     </h4>
-                    <li>
+                    <div>
                         <b>Valor de Envio:</b>${{$objeto['valor_envio_r']}} <span id="spanValorEnvio"></span>
                         <b>Seguro:</b>${{$objeto['costo_seguro']}} <span id="spanSeguro"></span>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <b>Cotización Manual:</b>{{$objeto['esManual']}}<span id="spanCotizacionManual"></span>
                         <b>,   Ocurre:</b>{{$objeto['ocurre']}} <span id="spanOcurre"></span>
-                    </li>
+                    </div>
+                    <div>
+                        <b>Zona:</b> {{$objeto['zona']}} <span id="spanZona"></span>
+                    </div>
                 </ul>
             </div>
             <div class="pricing-plans  bg-primary">
@@ -175,5 +177,12 @@
     , $objeto['ocurre']
     ,['class'       => 'form-control'
         ,'id'       => 'ocurre' 
+    ])
+!!}
+
+{!! Form::hidden('zona'
+    , $objeto['zona']
+    ,['class'       => 'form-control'
+        ,'id'       => 'zona' 
     ])
 !!}

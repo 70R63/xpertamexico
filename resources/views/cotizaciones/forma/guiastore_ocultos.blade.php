@@ -162,3 +162,10 @@
         ,'id'       => 'ocurre' 
     ])
 !!}
+
+{!! Form::hidden('zona'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'zona' 
+    ])
+!!}

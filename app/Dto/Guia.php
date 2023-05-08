@@ -29,7 +29,7 @@ class Guia {
 				,'cia' 		=> ""
 				,'cia_d' 	=> ""
 				,'piezas' 	=> ""
-				, 'documento' => ""
+				,'documento' => ""
 				,'tracking_number'=>""
 				,'servicio_id'	=>""
 				,'peso'			=> ""
@@ -38,6 +38,10 @@ class Guia {
 				,'seguro'		=> ""
 				,'valor_envio'	=> ""
 				,'precio'		=> ""
+				,'contenido'	=> ""
+				,'canal'		=> ""
+				,'created_at'	=> ""
+				,'zona'	=> ""
 			);
 	}
 
@@ -97,6 +101,7 @@ class Guia {
 				,'contenido'	=> empty($request['contenido']) ? "" :$request['contenido']
 				,'canal'		=> $canal
 				,'created_at'	=> Carbon::now()->toDateTimeString()
+				,'zona'	=> $request['zona']
 
 			);
 		Log::debug(print_r($this->insert,true));
@@ -203,6 +208,7 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
+				,'zona'	=> $request['zona']
 
  			);
 
@@ -300,6 +306,7 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
+				,'zona'	=> $request['zona']
 
  			);
 
@@ -396,6 +403,7 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
+				,'zona'	=> $request['zona']
 
  			);
 

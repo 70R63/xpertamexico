@@ -181,6 +181,7 @@ $("#cotizar").click(function(e) {
                         { "data": "id" },
                         { "data": "nombre" },
                         { "data": "servicios_nombre" },
+                        { "data": "zona" },
                         { "data": "costo" 
                             ,render: function (data,row) {
                                 return '$ '+data;
@@ -259,8 +260,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var empresaId = $("#clienteIdCombo").val();
     var ocurre  = dataRow['ocurre'];
     var areaExtendida  = dataRow['extendida_cobertura'];
+    var zona  = dataRow['zona'];
 
-    //valores para el modal 
+    //valores para el modal resumen_cotizacion.blade
     $("#spanPrecio").text( precioIva );
     $("#spanMensajeria").text(ltd_nombre);
     $("#spanservicioId").text(servicioNombre);
@@ -273,6 +275,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#spanCotizacionManual").text(esManual);
     $("#spanOcurre").text(ocurre);
     $("#spanAreaExtendida").text(areaExtendida);
+    $("#spanZona").text(zona);
 
     //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
     $("#precio").val(precioIva);
@@ -294,6 +297,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#cp_d_manual").val(cp_d);
     $("#empresa_id").val(empresaId);
     $("#ocurre").val(ocurre);
+    $("#zona").val(zona);
 
     var iteracionClone = 0
     var pesos = []

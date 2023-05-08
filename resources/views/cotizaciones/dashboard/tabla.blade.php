@@ -6,6 +6,7 @@
                     <th>ID TARIFA</th>
                     <th>PROVEEDOR</th>
                     <th>SERVICIO</th>
+                    <th>ZONA</th>
                     <th>COSTO</th>
                     <th>kg Inicial</th>
                     <th>kg Final</th> 
@@ -24,6 +25,7 @@
                     <th>ID TARIFA</th>
                     <th>PROVEEDOR</th>
                     <th>SERVICIO</th>
+                    <th>ZONA</th>
                     <th>COSTO</th>
                     <th>kg Inicial</th>
                     <th>kg Final</th>

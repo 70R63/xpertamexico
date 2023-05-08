@@ -390,6 +390,7 @@ class GuiaController extends Controller
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." iniciado ----------------------------");
         $mensaje = array();
+        $insert = array();
         try {
             
             Log::debug($request);
@@ -415,7 +416,7 @@ class GuiaController extends Controller
             $boolPrecio = true;
             foreach ($fedex->getDocumentos() as $key => $documento) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                //dd( $documento->packageDocuments[0]->url );
+                
                 $insert['tracking_number'] = $documento->trackingNumber;
                 $insert['documento'] = $documento->packageDocuments[0]->url;
                 Log::debug(print_r($insert ,true));   
@@ -497,9 +498,10 @@ class GuiaController extends Controller
 
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+
             Log::debug(print_r($ex->getMessage(),true)); 
-            Log::debug(print_r($guiaDTO->insert,true));
-            $mensaje= array($ex->errorInfo[2], "Tracking ".$guiaDTO->insert['tracking_number'], "Contactar a su proveedor para el registro");
+            Log::debug(print_r($insert,true));
+            $mensaje= array($ex->errorInfo[2], "Tracking ".$insert['tracking_number'], "Contactar a su proveedor para el registro");
 
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." "."Exception");

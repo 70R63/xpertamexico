@@ -118,6 +118,7 @@ function guiasTabla(){
                         ,{ "data": "valor_envio" }
                         ,{ "data": "seguro" }
                         ,{ "data": "extendida" }
+                        ,{ "data": "zona" }
 
                     ],
                 });

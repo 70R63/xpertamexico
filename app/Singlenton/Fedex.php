@@ -145,8 +145,7 @@ class Fedex {
 
             $this->documentos = $transactionShipments->pieceResponses;
             $this->trackingNumber = $transactionShipments->masterTrackingNumber;
-            Log::debug(print_r($contenido->output,true));
-       
+            
     }
 
 

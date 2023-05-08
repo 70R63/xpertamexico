@@ -40,14 +40,17 @@
                                     
                                 </li>
                             </h4>
-                            <li>
+                            <div>
                                 <b>Valor de Envio:</b>$ <span id="spanValorEnvio"></span>
                                 <b>Seguro:</b>$ <span id="spanSeguro"></span>
-                            </li>
-                            <li>
+                            </div>
+                            <div>
                                 <b>Cotización Manual:</b><span id="spanCotizacionManual"></span>
                                 <b>,   Ocurre:</b> <span id="spanOcurre"></span>
-                            </li>
+                            </div>
+                            <div>
+                                <b>Zona:</b><span id="spanZona"></span>
+                            </div>
                             
                         </ul>
                     </div>

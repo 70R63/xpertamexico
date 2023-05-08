@@ -52,7 +52,7 @@ class CotizacionController extends BaseController
         Log::debug($empresasLtd);
         $tabla = array();
         foreach ($empresasLtd as $ltdId => $clasificacion) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => clasificacion $clasificacion");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => clasificacion $clasificacion ------------------------------------");
                         
             $tablaTmp = array();
         
@@ -91,6 +91,7 @@ class CotizacionController extends BaseController
                                 }
                                 $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
                                 
+                                $tablaTmp[0]['zona']=$zona;
                                 $tabla = array_merge($tabla, $tablaTmp);
                                        
                             }
@@ -99,11 +100,16 @@ class CotizacionController extends BaseController
                         default:
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd default");
                             $tablaTmp = $query->get()->toArray();
+
+                            foreach ($tablaTmp as $key => $value) {
+                                $tablaTmp[$key]['zona'] = "NA";
+                            }
+
                             $tabla = array_merge($tabla, $tablaTmp);
 
                     }
                     //Fin switch ($ltdId) 
-                    break;
+                break;
                 case "2"://RANGO
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 2 = RANGO");
 
@@ -121,12 +127,17 @@ class CotizacionController extends BaseController
                                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
 		
     		              		$query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
-                                    $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
-                                    ->where('kg_fin', ">=", $request['pesoFacturado'] )
-                                    ->where('servicio_id', $value)
-                                    ->get()->toArray()
-                                    ;
-                                    $tabla = array_merge($tabla, $tablaTmp);
+                                $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                                ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                                ->where('servicio_id', $value)
+                                ->get()->toArray()
+                                ;
+
+                                foreach ($tablaTmp as $key => $value) {
+                                    $tablaTmp[$key]['zona'] = "NA";
+                                }
+
+                                $tabla = array_merge($tabla, $tablaTmp);
                                            
                                 }
                                 //FIN foreach ($servicioIds as $key => $value) {
@@ -165,6 +176,10 @@ class CotizacionController extends BaseController
                                     $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
                                     $tablaTmp = $query->get()->toArray();
                         
+                                }
+
+                                foreach ($tablaTmp as $key => $value) {
+                                    $tablaTmp[$key]['zona'] = "NA";
                                 }
                                 $tabla = array_merge($tabla, $tablaTmp);
 
@@ -206,6 +221,10 @@ class CotizacionController extends BaseController
                                     $tablaTmp = $query->get()->toArray();
                         
                                 }
+                                foreach ($tablaTmp as $key => $value) {
+                                    $tablaTmp[$key]['zona'] = "NA";
+                                }
+
                                 $tabla = array_merge($tabla, $tablaTmp);
 
                             }
@@ -225,11 +244,10 @@ class CotizacionController extends BaseController
 
                     foreach ($servicioIds as $key => $value) {
 
-
-                       $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
-                                    $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
-                                    ->where('kg_fin', ">=", $request['pesoFacturado'] )
-                                    ->where('servicio_id', $value);
+                        $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                        $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                        ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                        ->where('servicio_id', $value);
                         
                         $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
@@ -244,8 +262,9 @@ class CotizacionController extends BaseController
                         }
 
                         $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
-                        
-                        
+                        foreach ($tablaTmp as $key => $value) {
+                            $tablaTmp[$key]['zona'] = "NA";
+                        }
                         $tabla = array_merge($tabla, $tablaTmp);
                     };
                 break;
@@ -344,6 +363,7 @@ class CotizacionController extends BaseController
                             ,'extendida'    => $empresa['area_extendida']
                             ,'servicio_id'  =>$tarifa['servicio_id']
                             ,'seguro'   => $empresa['seguro']
+                            ,'zona'     => $zona[0]
 
                             );
 
