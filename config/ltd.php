@@ -130,11 +130,6 @@ return [
             ,'5'    => '0'
             ,'6'    => '1'
         ]
-        ,'cred'     => [
-            'suscriberId' => env('ESTAFETA_SUSCRIBERID')
-            ,'customerNumber' => env('ESTAFETA_CUSTOMERNUMBER')
-            ,'salesOrganization'=>env('ESTAFETA_SALESORGANIZATION')
-        ]
         ,'rastreoEstatus' => [
             'SA' => '1'
             ,'PU'=> '2'
@@ -148,15 +143,20 @@ return [
         ,'shipment' => [
             'uri' => env('DHL_URI_SHIPMENT')
         ]
-        ,'rastreo' => [
-            'suscriberId' => env('ESTAFETA_SUSCRIBERID_TRACKING')
-            ,'login'=>env('ESTAFETA_LOGIN_TRACKING')
-            ,'pswd'=>env('ESTAFETA_PSWD_TRACKING')
-            ,'api_key'  =>  env('ESTAFETA_APIKEY_TRACKING') 
-            ,'secret'   => env('ESTAFETA_SECRET_TRACKING')
-            ,'base_uri'  =>  env('ESTAFETA_BASEURI_TRACKING')
-            ,'servicio'  =>  env('ESTAFETA_SERVICIO_TRACKING')
+        ,'kgmas70'  => [
+            'base'  => 320
+            ,'zona'=> [
+                'A'  => '37.14'
+                ,'B'  => '42.86'
+                ,'C'  => '48.68'
+                ,'D'  => '51.4'
+                ,'E'  => '120.2'
+                ,'F'  => '125.44'
+                ,'G'  => '134.4'
+                ,'H'  => '141.38'
+            ]
         ]
+        
     ]
 
 ];

@@ -242,6 +242,8 @@ class CotizacionController extends BaseController
                         ->where("empresa_id", $empresa_id)
                         ->distinct()->get()->pluck('servicio_id')->toArray();
 
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    Log::debug( print_r($servicioIds,true) );
                     foreach ($servicioIds as $key => $value) {
 
                         $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
@@ -315,12 +317,30 @@ class CotizacionController extends BaseController
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     Log::debug("Zona ".$zona[0]);
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    
                     $tarifas = DhlTarifas::select('precio', 'id', 'servicio_id')
-                            ->where('kg', $request['pesoFacturado'])
                             ->where('zona',$zona[0] )
-                            ->get()->toArray()
                             ;
 
+                    if ($request['pesoFacturado'] >70) {
+                        $maxPrecio = $tarifas->max('precio');
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                        Log::debug(print_r($maxPrecio,true));
+                        $tarifas = $tarifas->where('precio',$maxPrecio)
+                                        ->get()->toArray()
+                                        ;
+                        
+                    } else {
+                        $tarifas = $tarifas->where('kg', $request['pesoFacturado'])
+                            ->get()->toArray()
+                            ;
+                    }
+                    
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+                    Log::debug(print_r($tarifas,true));  
+                    
                     foreach ($tarifas as $key => $tarifa) {
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                         Log::debug(print_r($tarifa,true));  
@@ -369,24 +389,48 @@ class CotizacionController extends BaseController
 
                         $tabla[] = $tablaTmp;
 
-                        if ($tarifa['servicio_id']===2) {
-                            if ($empresa['premium10'] > 0){
-                                $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium10'],2);
-                                $tablaTmp['servicios_nombre'] = "10:30";
-                                $tablaTmp['servicio_id'] = "5";
+                        if ($request['pesoFacturado'] >70) { 
 
-                                $tabla[] = $tablaTmp;
-                            }
+                            $kgAdicional = $request['pesoFacturado'] -70;
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                            $kgCosto = Config('ltd.dhl.kgmas70.zona')[$zona[0]];
+                            $kgAdicional = ($kgAdicional* $kgCosto  );  
+                            Log::info($kgAdicional);
+                            $descuentoKgAdicional = $kgAdicional *$descuentoPorcentaje;
+                            $precioAdicional=round($kgAdicional-$descuentoKgAdicional,2);
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                            Log::info($precioAdicional);
 
-                            if ($empresa['premium12'] > 0){
-                                $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium12'],2);
-                                $tablaTmp['servicios_nombre'] = "12:00";
-                                $tablaTmp['servicio_id'] = "6";
-                                $tabla[] = $tablaTmp;
+                            $incrementoKgAdicional = round($precioAdicional *(1+$fscIncremento),2);
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                            Log::info($incrementoKgAdicional);
+
+                            $tabla[0]['costo'] = round( $tabla[0]['costo']+ Config('ltd.dhl.kgmas70.base')+$incrementoKgAdicional ,2);
+                            $tabla[0]['kg_extra'] = $incrementoKgAdicional;
+                        } else {
+
+                            if ($tarifa['servicio_id']===2) {
+                                if ($empresa['premium10'] > 0){
+                                    $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium10'],2);
+                                    $tablaTmp['servicios_nombre'] = "10:30";
+                                    $tablaTmp['servicio_id'] = "5";
+
+                                    $tabla[] = $tablaTmp;
+                                }
+
+                                if ($empresa['premium12'] > 0){
+                                    $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium12'],2);
+                                    $tablaTmp['servicios_nombre'] = "12:00";
+                                    $tablaTmp['servicio_id'] = "6";
+                                    $tabla[] = $tablaTmp;
+                                }
                             }
+                            //fin $tarifa['servicio_id']===2
                         }
+                        //fin if else $request['pesoFacturado'] >70
                     }
-                    
+                    //Fin foreach
+
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
                 break;
                 default:
