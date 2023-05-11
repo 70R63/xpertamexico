@@ -177,7 +177,22 @@ $("#cotizar").click(function(e) {
                     order: [[1, 'desc']]
 
                     ,"data": response.data.data,
-                    "columns": [
+                    columnDefs: [
+                        {  
+                            targets: 9 
+                            ,"createdCell": function(td, cellData, rowData, row, col) {
+                                switch(cellData) {
+                                    case "SI":
+                                        $(td).addClass('text-danger si si-info');
+                                        break;
+                                    case "NO":
+                                        $(td).addClass('text-success');
+
+                                }
+                            }
+                        }
+                    ]
+                    ,"columns": [
                         { "data": "id" },
                         { "data": "nombre" },
                         { "data": "servicios_nombre" },
