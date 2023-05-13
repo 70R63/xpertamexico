@@ -41,7 +41,7 @@ class Guia {
 				,'contenido'	=> ""
 				,'canal'		=> ""
 				,'created_at'	=> ""
-				,'zona'	=> ""
+				,'zona'	=> "NA"
 			);
 	}
 
@@ -115,6 +115,7 @@ class Guia {
 		$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
 		$valorEnvio = sprintf("%.2f",$request['valor_envio']);
 		$precio = 0;
+		$zona = "NA";
 	
 		if ($canal === "WEB") {
 			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CANAL WEB ");
@@ -160,6 +161,7 @@ class Guia {
 			$piezas = $request['piezas'];
 			$precio = sprintf("%.2f",$request['precio']);
 			$contenido = empty($request['contenido']) ? "" :$request['contenido'];
+			$zona = $request['zona'];
 			
 		}
 
@@ -187,6 +189,7 @@ class Guia {
 			$empresa_id = $request['empresa_id'];
 			$piezas = $request['labelDefinition']['serviceConfiguration']['quantityOfLabels'];
 			$contenido = $request['labelDefinition']['wayBillDocument']['content'];
+			$zona = "NA";
 		}
 
 		
@@ -208,7 +211,7 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
-				,'zona'	=> $request['zona']
+				,'zona'	=> $zona
 
  			);
 
