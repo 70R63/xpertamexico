@@ -154,7 +154,6 @@ class GuiaController extends Controller
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::debug(print_r($resultado,true));
 
-            //$trackingNumber = $sEstafeta->getTrackingNumber();
             $trackingNumbers = explode("|", $sEstafeta->getTrackingNumber());
             Log::debug(print_r($trackingNumbers ,true)); 
 
