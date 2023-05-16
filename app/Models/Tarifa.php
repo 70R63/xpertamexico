@@ -9,6 +9,10 @@ use Log;
 
 use App\Models\PostalZona;
 use App\Models\PostalGrupo;
+use App\Models\LtdCobertura;
+use App\Models\Servicio;
+
+
 
 class Tarifa extends Model
 {
@@ -41,6 +45,29 @@ class Tarifa extends Model
     public function scopeBase($query, $empresa_id, $cp_d, $ltdId )
     {
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        //1 indica que puede enviar en todas los servicios de las tarifas
+        $prioridad = 1;
+        //LTD 2= estafeta
+        if ($ltdId == 2 ) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $ltdCobertura = LtdCobertura::select('garantia','id')
+                    ->where('ltd_id',$ltdId)
+                    ->where('cp',$cp_d)
+                    ->get()->toArray()[0];
+            Log::debug(print_r($ltdCobertura,true));
+
+            $servicio = Servicio::where('nombre', 'like',$ltdCobertura['garantia'] )
+                    ->where('estatus',1)
+                    ->get()->toArray()[0];
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($servicio,true));
+            $prioridad = $servicio['prioridad'];
+        }
+
+
         return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
                 ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                 ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
@@ -50,6 +77,8 @@ class Tarifa extends Model
                 ->where('empresa_ltds.empresa_id', $empresa_id)
                 ->where('ltd_coberturas.cp', $cp_d)
                 ->where('ltds.id', $ltdId)
+                ->where('servicios.prioridad','>=', $prioridad)
+                
                 ;
         
     }
@@ -68,7 +97,6 @@ class Tarifa extends Model
                 ->where('tarifas.empresa_id', $empresa_id)
                 ->where('empresa_ltds.empresa_id', $empresa_id)
                 ->where('ltd_coberturas.cp', $cp_d)
-                //->where('ltds.id', $ltdId)
                 ->where('tarifas.id', $tarifaId)
 
                 ;

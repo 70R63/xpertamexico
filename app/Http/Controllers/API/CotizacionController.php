@@ -90,19 +90,30 @@ class CotizacionController extends BaseController
                                     
                                 }
                                 $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
-                                
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                                Log::debug(print_r($tablaTmp,true));
                                 $tablaTmp[0]['zona']=$zona;
                                 $tabla = array_merge($tabla, $tablaTmp);
                                        
                             }
                             //FIN foreach ($servicioIds as $key => $value) {
                             break;
+                        case "2":
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
+                            $tablaTmp = $query->get()->toArray();
+                            
+                            foreach ($tablaTmp as $key => $value) {
+                                $tablaTmp[$key]['zona'] = "NA";
+                            }
+
+                            $tabla = array_merge($tabla, $tablaTmp);
+                        break;
                         default:
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd default");
                             $tablaTmp = $query->get()->toArray();
-
+                            
                             foreach ($tablaTmp as $key => $value) {
-                                $tablaTmp[$key]['zona'] = "NA";
+                                //$tablaTmp[$key]['zona'] = "NA";
                             }
 
                             $tabla = array_merge($tabla, $tablaTmp);
