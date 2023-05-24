@@ -67,7 +67,7 @@ class Tarifa extends Model
             $prioridad = $servicio['prioridad'];
         }
 
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
                 ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                 ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')

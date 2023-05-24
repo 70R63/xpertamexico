@@ -99,7 +99,7 @@ class CotizacionController extends BaseController
                             //FIN foreach ($servicioIds as $key => $value) {
                             break;
                         case "2":
-                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");
                             $tablaTmp = $query->get()->toArray();
                             
                             foreach ($tablaTmp as $key => $value) {
@@ -113,7 +113,7 @@ class CotizacionController extends BaseController
                             $tablaTmp = $query->get()->toArray();
                             
                             foreach ($tablaTmp as $key => $value) {
-                                //$tablaTmp[$key]['zona'] = "NA";
+                                $tablaTmp[$key]['zona'] = "NA";
                             }
 
                             $tabla = array_merge($tabla, $tablaTmp);
@@ -155,14 +155,14 @@ class CotizacionController extends BaseController
                         break;
                         case "2":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");
-                            foreach ($servicioIds as $key => $value) {
-                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." servicio_id =$value");
+                            //foreach ($servicioIds as $key => $value) {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);//." servicio_id =$value");
                                 $tablaTmp = array();
 
                                 $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
                                 $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
                                 ->where('kg_fin', ">=", $request['pesoFacturado'] )
-                                ->where('servicio_id', $value)
+                                //->where('servicio_id', $value)
                                 ->get()->toArray()
                                 ;
                     
@@ -194,7 +194,7 @@ class CotizacionController extends BaseController
                                 }
                                 $tabla = array_merge($tabla, $tablaTmp);
 
-                            }
+                            //}
                             //FIN foreach ($servicioIds as $key => $value)
                         break;
                         case "3":
