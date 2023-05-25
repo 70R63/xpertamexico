@@ -72,8 +72,23 @@ class Tarifa extends Model
                 //Se genera la prioridad 100 cuando no hay cobertura o servicio
                 $prioridad = 100;
             }
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
+                ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+                ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
+                ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
+                ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
+                ->where('tarifas.empresa_id', $empresa_id)
+                ->where('empresa_ltds.empresa_id', $empresa_id)
+                ->where('ltd_coberturas.cp', $cp_d)
+                ->where('ltds.id', $ltdId)
+                ->where('servicios.prioridad','>=', $prioridad)
+                
+                ;
         
-        }
+        } 
+        //fin Estafeta
         
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
