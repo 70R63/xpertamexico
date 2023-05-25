@@ -42,8 +42,7 @@ class Tarifa extends Model
     /**
      * Se crea un scope con la base del query para tarifas con difernetes forams de tarificar
      */
-    public function scopeBase($query, $empresa_id, $cp_d, $ltdId )
-    {
+    public function scopeBase($query, $empresa_id, $cp_d, $ltdId ){
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
@@ -55,17 +54,27 @@ class Tarifa extends Model
             $ltdCobertura = LtdCobertura::select('garantia','id')
                     ->where('ltd_id',$ltdId)
                     ->where('cp',$cp_d)
-                    ->get()->toArray()[0];
+                    ->get()->toArray();
             Log::debug(print_r($ltdCobertura,true));
 
-            $servicio = Servicio::where('nombre', 'like',$ltdCobertura['garantia'] )
+            if ( count($ltdCobertura) === 1){
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $ltdCobertura = $ltdCobertura[0];
+                $servicio = Servicio::where('nombre', 'like',$ltdCobertura['garantia'] )
                     ->where('estatus',1)
                     ->get()->toArray()[0];
 
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            Log::debug(print_r($servicio,true));
-            $prioridad = $servicio['prioridad'];
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::debug(print_r($servicio,true)); 
+                $prioridad = $servicio['prioridad'];
+            } else {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                //Se genera la prioridad 100 cuando no hay cobertura o servicio
+                $prioridad = 100;
+            }
+        
         }
+        
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )

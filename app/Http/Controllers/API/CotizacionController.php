@@ -155,47 +155,44 @@ class CotizacionController extends BaseController
                         break;
                         case "2":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");
-                            //foreach ($servicioIds as $key => $value) {
-                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);//." servicio_id =$value");
-                                $tablaTmp = array();
+                           
+                            $tablaTmp = array();
 
-                                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
-                                $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
-                                ->where('kg_fin', ">=", $request['pesoFacturado'] )
-                                //->where('servicio_id', $value)
-                                ->get()->toArray()
-                                ;
+                            $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                            $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
+                            ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                            ->get()->toArray()
+                            ;
+                
+                            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");
+                            Log::debug(print_r($tablaTmp,true));
+
+                                    
+                            if (empty($tablaTmp)) {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
+                                $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
+                                    ->where("empresa_id", $empresa_id)
+                                    ->where("ltds_id", $ltdId)
+                                    ->where("servicio_id", $value);
+
+                                $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
+                                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." maxFin =$maxKgFin");
+                                $tarifaIds = $tarifaIdsGeneral
+                                    ->where("kg_fin", $maxKgFin)
+                                    ->get()->toArray();
                     
-                                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");
-                                Log::debug(print_r($tablaTmp,true));
+                                Log::debug(print_r($tarifaIds,true));
+                                $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
+                                $tablaTmp = $query->get()->toArray();
+                    
+                            }
 
-                                        
-                                if (empty($tablaTmp)) {
-                                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
-                                    $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
-                                        ->where("empresa_id", $empresa_id)
-                                        ->where("ltds_id", $ltdId)
-                                        ->where("servicio_id", $value);
+                            foreach ($tablaTmp as $key => $value) {
+                                $tablaTmp[$key]['zona'] = "NA";
+                            }
+                            $tabla = array_merge($tabla, $tablaTmp);
 
-                                    $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
-                                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." maxFin =$maxKgFin");
-                                    $tarifaIds = $tarifaIdsGeneral
-                                        ->where("kg_fin", $maxKgFin)
-                                        ->get()->toArray();
-                        
-                                    Log::debug(print_r($tarifaIds,true));
-                                    $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
-                                    $tablaTmp = $query->get()->toArray();
-                        
-                                }
-
-                                foreach ($tablaTmp as $key => $value) {
-                                    $tablaTmp[$key]['zona'] = "NA";
-                                }
-                                $tabla = array_merge($tabla, $tablaTmp);
-
-                            //}
-                            //FIN foreach ($servicioIds as $key => $value)
+                            
                         break;
                         case "3":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd ".Config('ltd.redpack.id')."=".Config('ltd.redpack.nombre') );
