@@ -129,6 +129,7 @@ class CotizacionController extends BaseController
                         ->where("empresa_id", $empresa_id)
                         ->distinct()->get()->pluck('servicio_id')->toArray();
 
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Serviciosd lciente");
                     Log::debug(print_r($servicioIds,true));
 
                     switch ($ltdId) {
@@ -150,8 +151,8 @@ class CotizacionController extends BaseController
 
                                 $tabla = array_merge($tabla, $tablaTmp);
                                            
-                                }
-                                //FIN foreach ($servicioIds as $key => $value) {
+                            }
+                            //FIN foreach ($servicioIds as $key => $value) {
                         break;
                         case "2":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");
@@ -170,21 +171,27 @@ class CotizacionController extends BaseController
                                     
                             if (empty($tablaTmp)) {
                                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Buscando el ultimo rango");
-                                $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
-                                    ->where("empresa_id", $empresa_id)
-                                    ->where("ltds_id", $ltdId)
-                                    ->where("servicio_id", $value);
 
-                                $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
-                                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." maxFin =$maxKgFin");
-                                $tarifaIds = $tarifaIdsGeneral
-                                    ->where("kg_fin", $maxKgFin)
-                                    ->get()->toArray();
+                                foreach ($servicioIds as $key => $value) {
+                                    $tarifaIdsGeneral = Tarifa::select("id", "servicio_id", "kg_fin" )
+                                        ->where("empresa_id", $empresa_id)
+                                        ->where("ltds_id", $ltdId)
+                                        ->where("servicio_id", $value);
+
+                                    $maxKgFin = $tarifaIdsGeneral->max("kg_fin");
+                                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." maxFin =$maxKgFin");
+                                    $tarifaIds = $tarifaIdsGeneral
+                                        ->where("kg_fin", $maxKgFin)
+                                        ->get()->toArray();
+                        
+                                    Log::debug(print_r($tarifaIds,true));
+                                    $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
+                                    $tablaTmp = $query->get()->toArray();
+                                }
+                                //fin foreach ($servicioIds as $key => $value) {
                     
-                                Log::debug(print_r($tarifaIds,true));
-                                $query = Tarifa::rangoMaximo($empresa_id, $request['cp_d'], $ltdId, $tarifaIds[0]['id']);
-                                $tablaTmp = $query->get()->toArray();
-                    
+                            } else {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tabla con resultado no se busca ultimo rango ");
                             }
 
                             foreach ($tablaTmp as $key => $value) {

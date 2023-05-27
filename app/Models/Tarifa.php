@@ -57,7 +57,7 @@ class Tarifa extends Model
                     ->get()->toArray();
             Log::debug(print_r($ltdCobertura,true));
 
-            if ( count($ltdCobertura) === 1){
+            if ( count($ltdCobertura) >= 1){
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $ltdCobertura = $ltdCobertura[0];
                 $servicio = Servicio::where('nombre', 'like',$ltdCobertura['garantia'] )
@@ -101,7 +101,7 @@ class Tarifa extends Model
                 ->where('empresa_ltds.empresa_id', $empresa_id)
                 ->where('ltd_coberturas.cp', $cp_d)
                 ->where('ltds.id', $ltdId)
-                ->where('servicios.prioridad','>=', $prioridad)
+                //->where('servicios.prioridad','>=', $prioridad)
                 
                 ;
         
