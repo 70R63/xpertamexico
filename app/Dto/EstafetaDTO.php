@@ -100,11 +100,6 @@ class EstafetaDTO
 
         $customerNumber = Config('ltd.estafeta.cred.customerNumber');
         
-        if ($data['servicio_id'] == 3){
-            Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__);
-            $customerNumber = "5903898";//Config('ltd.estafeta.cred.customerNumber');//5903898
-        }
-
         $identification = new Identification([
                     'suscriberId' =>   Config('ltd.estafeta.cred.suscriberId')
                     ,'customerNumber' =>  $customerNumber 
