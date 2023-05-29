@@ -13,7 +13,6 @@ use App\Models\LtdCobertura;
 use App\Models\Servicio;
 
 
-
 class Tarifa extends Model
 {
     use HasFactory;
