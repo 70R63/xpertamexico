@@ -388,24 +388,7 @@ class CotizacionController extends BaseController
                         }
 
                         $servicioNombre = ($tarifa['servicio_id'] ===2) ? 'Dia Sig' : 'Terrestre' ;
-                        $tablaTmp = array('id' => $tarifa['id']
-                            ,'costo'    => $costo
-                            ,'ltds_id' => Config('ltd.dhl.id')
-                            ,'nombre' => Config('ltd.dhl.nombre')
-                            ,'servicios_nombre' => $servicioNombre
-                            ,'kg_ini' => $request['pesoFacturado']
-                            ,'kg_fin' => $request['pesoFacturado']
-                            ,'kg_extra' => 0
-                            ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
-                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
-                            ,'extendida'    => $empresa['area_extendida']
-                            ,'servicio_id'  =>$tarifa['servicio_id']
-                            ,'seguro'   => $empresa['seguro']
-                            ,'zona'     => $zona[0]
-
-                            );
-
-                        //$tabla[] = $tablaTmp;
+                        
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
 
@@ -425,8 +408,29 @@ class CotizacionController extends BaseController
 
                             $tablaTmp['costo'] = round( $tablaTmp['costo']+ Config('ltd.dhl.kgmas70.base')+$incrementoKgAdicional ,2);
                             $tablaTmp['kg_extra'] = $incrementoKgAdicional;
+
+                            Log::debug(print_r($tablaTmp,true));
                             $tabla[] = $tablaTmp;
                         } else {
+
+                            $tablaTmp = array('id' => $tarifa['id']
+                            ,'costo'    => $costo
+                            ,'ltds_id' => Config('ltd.dhl.id')
+                            ,'nombre' => Config('ltd.dhl.nombre')
+                            ,'servicios_nombre' => $servicioNombre
+                            ,'kg_ini' => $request['pesoFacturado']
+                            ,'kg_fin' => $request['pesoFacturado']
+                            ,'kg_extra' => 0
+                            ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
+                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
+                            ,'extendida'    => $empresa['area_extendida']
+                            ,'servicio_id'  =>$tarifa['servicio_id']
+                            ,'seguro'   => $empresa['seguro']
+                            ,'zona'     => $zona[0]
+
+                            );
+
+                            $tabla[] = $tablaTmp;
 
                             if ($tarifa['servicio_id']===2) {
                                 if ($empresa['premium10'] > 0){
