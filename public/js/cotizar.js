@@ -51,7 +51,8 @@ function pesofacturado(){
 function costoSeguroValidar(seguro){
     costoSeguro = 0;
     valorEnvio = 0;
-
+    console.log("costoSeguroValidar "+seguro)
+    
     if ($('#checkSeguro').is(":checked")) {
         valorEnvio = $("#valor_envio").val();
         costoSeguro = (valorEnvio * seguro)/100;  
