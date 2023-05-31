@@ -94,7 +94,7 @@ class CotizacionController extends BaseController
 
                                 foreach ($tablaTmp as $key => $value) {
                                     $value['zona']=$zona;
-                                    $tabla = array_merge($tabla, $value);
+                                    $tabla[] = array_merge($tabla, $value);
                                 }
                                 
                                        
@@ -405,7 +405,7 @@ class CotizacionController extends BaseController
 
                             );
 
-                        $tabla[] = $tablaTmp;
+                        //$tabla[] = $tablaTmp;
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
 
@@ -423,8 +423,9 @@ class CotizacionController extends BaseController
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                             Log::info($incrementoKgAdicional);
 
-                            $tabla[0]['costo'] = round( $tabla[0]['costo']+ Config('ltd.dhl.kgmas70.base')+$incrementoKgAdicional ,2);
-                            $tabla[0]['kg_extra'] = $incrementoKgAdicional;
+                            $tablaTmp['costo'] = round( $tablaTmp['costo']+ Config('ltd.dhl.kgmas70.base')+$incrementoKgAdicional ,2);
+                            $tablaTmp['kg_extra'] = $incrementoKgAdicional;
+                            $tabla[] = $tablaTmp;
                         } else {
 
                             if ($tarifa['servicio_id']===2) {
