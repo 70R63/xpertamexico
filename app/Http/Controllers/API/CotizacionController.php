@@ -406,7 +406,7 @@ class CotizacionController extends BaseController
                             );
 
                         $tabla[] = $tablaTmp;
-
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
 
                             $kgAdicional = $request['pesoFacturado'] -70;
