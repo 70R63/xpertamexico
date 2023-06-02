@@ -392,6 +392,23 @@ class CotizacionController extends BaseController
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
 
+                            $tablaTmp = array('id' => $tarifa['id']
+                            ,'costo'    => $costo
+                            ,'ltds_id' => Config('ltd.dhl.id')
+                            ,'nombre' => Config('ltd.dhl.nombre')
+                            ,'servicios_nombre' => $servicioNombre
+                            ,'kg_ini' => $request['pesoFacturado']
+                            ,'kg_fin' => $request['pesoFacturado']
+                            ,'kg_extra' => 0
+                            ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
+                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
+                            ,'extendida'    => $empresa['area_extendida']
+                            ,'servicio_id'  =>$tarifa['servicio_id']
+                            ,'seguro'   => $empresa['seguro']
+                            ,'zona'     => $zona[0]
+
+                            );
+
                             $kgAdicional = $request['pesoFacturado'] -70;
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                             $kgCosto = Config('ltd.dhl.kgmas70.zona')[$zona[0]];
