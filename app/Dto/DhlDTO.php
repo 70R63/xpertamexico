@@ -65,12 +65,14 @@ class DhlDTO
     	$outputImageProperties = new OutputImageProperties($imageOptions);
 
         //Origen
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $addressLine1 = sprintf("%s %s %s",$request["direccion"], $request["no_int"], $request["no_ext"] );
 
         $addressLine2 = sprintf("Col. %s",$request["colonia"]); 
         $referencia = str_split($request["direccion2"],44)[0];
 
         $referencia = ( strlen($referencia) > 0 ) ? $referencia : "Sin referencia" ;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     	$postalAddress = new PostalAddress(
                 array("cityName"    => $request["ciudad"]
                     ,"postalCode"   => $request["cp"]
@@ -89,6 +91,7 @@ class DhlDTO
     					, 'contactInformation' => $contactInformation);
 
         //Destino
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $addressLine1 = sprintf("%s %s %s",$request["direccion_d"], $request["no_int_d"], $request["no_ext_d"] );
 
         $addressLine2_d = sprintf("Col. %s",$request["colonia_d"]);
@@ -130,10 +133,11 @@ class DhlDTO
 
         
 
-        if ($request['bSeguro']) {
-
+        if ( $request['bSeguro'] == 'true' ) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $content = new Content(array("packages" => $packages
-                                //,"declaredValue" => (float)$request['valor_envio']
+                                ,"declaredValueCurrency" => $request['valor_envio']
+                                ,'description'      => ( strlen($request['contenido']) > 0 ) ? $request['contenido'] : "Sin referencia"
                             )
                         );
 
@@ -152,7 +156,9 @@ class DhlDTO
                 )
             );  
         } else{
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $content = new Content(array('packages' => $packages
+                                ,'description'      => ( strlen($request['contenido']) > 0 ) ? $request['contenido'] : "Sin referencia"
                             )
                         );
             $this->body = new Label(

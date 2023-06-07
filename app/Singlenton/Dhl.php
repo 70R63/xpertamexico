@@ -174,35 +174,6 @@ class Dhl {
         $this->paquete = $pesoDimension;
 
         
-/*
-        $pesoDimension = array();
-$this->latestStatusDetail = $evento->typeCode;
-        $objResponse = $contenido[0];
-        if ( $objResponse->consumptionResultWS[0]->status === 1 ) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-
-           
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $this->paquete = $pesoDimension;
-            $this->latestStatusDetail = $objResponse->lastSituation->idDesc;
-
-            
-            if ($this->latestStatusDetail === 1) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                $this->ultimaFecha = Carbon::parse($objResponse->dateSituation)->format('Y-m-d H:i:s');
-            }
-            
-            $this->quienRecibio= $objResponse->personReceived;
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-           
-
-        }else{
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            Log::info("Sin seguimiento ");
-            $this->exiteSeguimiento = false;
-        }
-        
-       */
     }
 
 
