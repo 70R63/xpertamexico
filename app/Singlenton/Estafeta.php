@@ -147,10 +147,9 @@ class Estafeta {
             ,'Accept'    => 'application/json'
             ,'apiKey'   => Config('ltd.estafeta.api_key')
         ];
-        Log::debug(print_r("Armando Peticion",true));
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
+	Log::debug(print_r("Armando Peticion",true));
+	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
         Log::debug(print_r($headers,true));
-
 
         $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
             'headers'   => $headers
