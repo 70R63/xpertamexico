@@ -66,9 +66,17 @@ class DhlDTO
 
         //Origen
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $addressLine1 = sprintf("%s %s %s",$request["direccion"], $request["no_int"], $request["no_ext"] );
+        $addressLine1Full = sprintf("%s %s %s",$request["direccion"], $request["no_int"], $request["no_ext"] );
 
+        $addressLineArray = str_split($addressLine1Full,44);
+        $addressLine1 = $addressLineArray[0];
         $addressLine2 = sprintf("Col. %s",$request["colonia"]); 
+        if (count($addressLineArray) === 2){
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $addressLine2 = sprintf("%s Col. %s",$addressLineArray[1],$request["colonia"] ); 
+        }        
+
+
         $referencia = str_split($request["direccion2"],44)[0];
 
         $referencia = ( strlen($referencia) > 0 ) ? $referencia : "Sin referencia" ;
@@ -92,17 +100,24 @@ class DhlDTO
 
         //Destino
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $addressLine1 = sprintf("%s %s %s",$request["direccion_d"], $request["no_int_d"], $request["no_ext_d"] );
+        $addressLine1Full = sprintf("%s %s %s",$request["direccion_d"], $request["no_int_d"], $request["no_ext_d"] );
 
-        $addressLine2_d = sprintf("Col. %s",$request["colonia_d"]);
+        $addressLineArray = str_split($addressLine1Full,44);
+        $addressLine1_d = $addressLineArray[0];
+        $addressLine2_d = sprintf("Col. %s",$request["colonia_d"]); 
+        if (count($addressLineArray) === 2){
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $addressLine2 = sprintf("%s Col. %s",$addressLineArray[1],$request["colonia_d"] ); 
+        }     
+
+      
         $referencia_d = str_split($request["direccion2_d"],44)[0];
-
         $referencia_d = ( strlen($referencia_d) > 0 ) ? $referencia_d : "Sin referencia" ;
 
     	$postalAddress = new PostalAddress(
                 array("cityName"    => $request["ciudad_d"]
                     ,"postalCode"   => $request["cp_d"]
-                    ,"addressLine1" => $addressLine1
+                    ,"addressLine1" => $addressLine1_d
                     ,"addressLine2"  =>$addressLine2_d
                     ,"addressLine3"  => $referencia_d
                 )
