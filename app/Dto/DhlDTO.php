@@ -151,7 +151,6 @@ class DhlDTO
         if ( $request['bSeguro'] == 'true' ) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $content = new Content(array("packages" => $packages
-                                ,"declaredValueCurrency" => $request['valor_envio']
                                 ,'description'      => ( strlen($request['contenido']) > 0 ) ? $request['contenido'] : "Sin referencia"
                             )
                         );
