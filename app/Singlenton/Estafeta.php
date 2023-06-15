@@ -67,6 +67,7 @@ class Estafeta {
         } else {
             Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
             $credenciales = $ltdCredencial->where('recurso',"TRACKING")->get()->toArray();
+
             if ( count($credenciales) < 1)
                 throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
 

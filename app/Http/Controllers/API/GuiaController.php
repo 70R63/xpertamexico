@@ -552,7 +552,7 @@ class GuiaController extends Controller
         $servicioID = 2;
         
         if ($automatico){
-            $empresaId = 1;
+            $empresaId = 2;
         }else{
             $empresaId = auth()->user()->empresa_id;    
         }
