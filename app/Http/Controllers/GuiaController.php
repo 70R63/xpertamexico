@@ -247,8 +247,6 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." estafeta iniciando ----------------------------");
         $mensaje = array();
         try {
-            
-            Log::debug($request);
 
             $requestInicial = $request->except(['_token']);
 

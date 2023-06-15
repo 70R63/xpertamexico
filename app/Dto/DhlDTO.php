@@ -141,7 +141,6 @@ class DhlDTO
         $packages = $this->paquetes($request);
 
     	
-
         $plannedShipping = sprintf("%s GMT-06:00", Carbon::now()->addHours(24)->format('Y-m-d\TH:i:s') );
 
         $productCode = Config('ltd.dhl.servicio')[$request['servicio_id']];

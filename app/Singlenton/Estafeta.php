@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
+use App\Models\LtdCredencial;
 
 class Estafeta {
 
@@ -18,6 +19,10 @@ class Estafeta {
 
     private $token;
     private $baseUri;
+    private $keyId;
+    private $secret;
+    private $keyIdRastreo;
+    private $secretRastreo;
 
     public $documento = 0; 
     private $resultado = array();
@@ -38,6 +43,43 @@ class Estafeta {
             $empresa_id = auth()->user()->empresa_id;
         } 
         
+
+        $ltdCredencial = LtdCredencial::where('ltd_id',2)
+                                ->where('empresa_id',$empresa_id);
+
+        if ($servicioID === 1) {
+            Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
+            $credenciales = $ltdCredencial->where('recurso','LABEL')->get()->toArray();
+
+            
+            if ( count($credenciales) < 1)
+                throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
+
+            $this->keyId = $credenciales[0]['key_id'];
+            $this->secret = $credenciales[0]['secret'];
+
+            
+        } else {
+            Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
+            $credenciales = $ltdCredencial->where('recurso',"TRACKING")->get()->toArray();
+            if ( count($credenciales) < 1)
+                throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
+
+            $this->keyId = $credenciales[0]['key_id'];
+            $this->secret = $credenciales[0]['secret'];
+
+            $this->keyIdRastreo = $credenciales[0]['key_id'];
+            $this->secretRastreo = $credenciales[0]['secret'];
+            
+        }
+
+        $formParams = [
+                'client_id' => $this->keyId,
+                'client_secret' => $this->secret,
+                'grant_type' => 'client_credentials'
+                ,'scope' => 'execute'
+            ];
+
         $sesion = LtdSesion::where('ltd_id', $ltd_id)
                 ->where('servicio',$servicioID)
                 ->where('empresa_id',$empresa_id)
@@ -50,29 +92,13 @@ class Estafeta {
 
         }else {
             Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
-
-
+            
             $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
 
-            if ($servicioID === 1) {
-                Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
-                $formParams = [
-                    'client_id' => Config('ltd.estafeta.api_key'),
-                    'client_secret' => Config('ltd.estafeta.secret'),
-                    'grant_type' => 'client_credentials'
-                    ,'scope' => 'execute'
-                ];
-            } else {
-                Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
-                $formParams = [
-                    'client_id' => Config('ltd.estafeta.rastreo.api_key'),
-                    'client_secret' => Config('ltd.estafeta.rastreo.secret'),
-                    'grant_type' => 'client_credentials'
-                    ,'scope' => 'execute'
-                ];
-            }
             
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." formParams");
+            Log::debug(print_r($formParams,true));
 
             $response = $client->request('POST', 'auth/oauth/v2/token',
                 ['form_params' => $formParams
@@ -90,6 +116,7 @@ class Estafeta {
                     ,'servicio'    => $servicioID
                     ,'expira_en'=> Carbon::now()->addMinutes(1380)
                      );
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." insert token");
                 Log::debug(print_r($insert,true));
                 $id = LtdSesion::create($insert)->id;
                 Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
@@ -111,13 +138,14 @@ class Estafeta {
         $client = new Client(['base_uri' => $baseUri]);
         $authorization = sprintf("Bearer %s",$this->token);
 
-        $apiKey = ($servicioID === 1) ? Config('ltd.estafeta.api_key') : Config('ltd.estafeta.rastreo.api_key');
+        $apiKey = ($servicioID === 1) ? $this->keyId : $this->keyIdRastreo;
         $headers = ['Authorization' => $authorization
                     ,'Content-Type' => 'application/json'
                     ,'charset' => 'utf-8'
                     ,'apiKey'   => $apiKey
                 ];
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Body ");
         $bodyJson = json_encode($body);
         Log::debug(print_r($bodyJson,true));
         
@@ -145,10 +173,10 @@ class Estafeta {
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
             ,'Accept'    => 'application/json'
-            ,'apiKey'   => Config('ltd.estafeta.api_key')
+            ,'apiKey'   => $this->keyId // Config('ltd.estafeta.api_key')
         ];
-	Log::debug(print_r("Armando Peticion",true));
-	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
+	    Log::debug(print_r("Armando Peticion",true));
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
         Log::debug(print_r($headers,true));
 
         $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
@@ -213,7 +241,7 @@ class Estafeta {
 
         $response = $this->clienteRest($body, 'POST',Config('ltd.estafeta.rastreo.base_uri'),Config('ltd.estafeta.rastreo.servicio'), 2);
 
-        #Log::debug(print_r($response->getBody()->getContents(),true));
+    
         $tmp = $response->getBody()->getContents();
         Log::debug(print_r($tmp,true));
         $contenido = json_decode($tmp);
