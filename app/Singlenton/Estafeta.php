@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
 use App\Models\LtdCredencial;
+use App\Models\EmpresaEmpresas;
 
 class Estafeta {
 
@@ -44,8 +45,12 @@ class Estafeta {
         } 
         
 
+        $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
+        
+
         $ltdCredencial = LtdCredencial::where('ltd_id',2)
-                                ->where('empresa_id',$empresa_id);
+                                ->whereIn('empresa_id',$empresas);
+
 
         if ($servicioID === 1) {
             Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
