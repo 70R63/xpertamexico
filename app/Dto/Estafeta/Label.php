@@ -10,7 +10,7 @@ class Label extends DataTransferObject
 {
 
     /** @var string */
-    public $suscriberId = "28";
+    public $suscriberId = "00";
     
     /** @var string */
     public $customerNumber = "0000000";

@@ -24,6 +24,8 @@ class Estafeta {
     private $secret;
     private $keyIdRastreo;
     private $secretRastreo;
+    private $clientID;
+    private $customerNumber;
 
     public $documento = 0; 
     private $resultado = array();
@@ -56,13 +58,8 @@ class Estafeta {
             Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
             $credenciales = $ltdCredencial->where('recurso','LABEL')->get()->toArray();
 
-            
             if ( count($credenciales) < 1)
                 throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
-
-            $this->keyId = $credenciales[0]['key_id'];
-            $this->secret = $credenciales[0]['secret'];
-
             
         } else {
             Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
@@ -71,13 +68,18 @@ class Estafeta {
             if ( count($credenciales) < 1)
                 throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
 
-            $this->keyId = $credenciales[0]['key_id'];
-            $this->secret = $credenciales[0]['secret'];
-
             $this->keyIdRastreo = $credenciales[0]['key_id'];
             $this->secretRastreo = $credenciales[0]['secret'];
             
         }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Token para rastreo");
+        $this->keyId = $credenciales[0]['key_id'];
+        $this->secret = $credenciales[0]['secret'];
+        $this->clientID = $credenciales[0]['client_id'];
+        $this->customerNumber = $credenciales[0]['customer_number'];
+
+
 
         $formParams = [
                 'client_id' => $this->keyId,
@@ -185,6 +187,12 @@ class Estafeta {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
         Log::debug(print_r($headers,true));
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CREDENCIALES POR CLIENTE MACRO");
+        $body->identification->suscriberId = $this->clientID;
+        $body->identification->customerNumber = $this->customerNumber;
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
+        Log::debug(print_r(json_encode($body),true));
         $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
             'headers'   => $headers
             ,'body'     => json_encode($body)

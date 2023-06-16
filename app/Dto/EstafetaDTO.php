@@ -98,11 +98,11 @@ class EstafetaDTO
     public function parser(array $data, $canal = 'API'){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
 
-        $customerNumber = Config('ltd.estafeta.cred.customerNumber');
+        $customerNumber = "";//Config('ltd.estafeta.cred.customerNumber');
         
         $identification = new Identification([
-                    'suscriberId' =>   Config('ltd.estafeta.cred.suscriberId')
-                    ,'customerNumber' =>  $customerNumber 
+                    'suscriberId' => "" // Config('ltd.estafeta.cred.suscriberId')
+                    ,'customerNumber' =>  "" //$customerNumber 
                 ]
             );
         $systemInformation = new SystemInformation();
@@ -129,9 +129,6 @@ class EstafetaDTO
                 ,"labelDefinition"  => $labelDefinition
             ]
         );
-
-        Log::debug("Label armada--------------------------");
-        Log::debug(print_r(json_encode($body),true));
 
         Log::debug(__CLASS__." ".__FUNCTION__." FIN");
         return $body;
@@ -198,8 +195,6 @@ class EstafetaDTO
         }
 
         $serviceConfiguration->effectiveDate=Carbon::now()->addMonth()->format('Ymd');
-
-        Log::debug(print_r($serviceConfiguration,true)); 
 
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration FIN -----------------");
         return $serviceConfiguration;
