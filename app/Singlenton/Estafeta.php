@@ -171,7 +171,7 @@ class Estafeta {
      * @return \Illuminate\Http\Response
      */
 
-    public function envio($body){
+    public function envio($body,$plataforma= "WEB"){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO ------------------");
         
         $client = new Client(['base_uri' => $this->baseUri]);
@@ -189,9 +189,24 @@ class Estafeta {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CREDENCIALES POR CLIENTE MACRO");
 
+        Log::debug(print_r($body->identification,true));
+        switch ($plataforma) {
+            case 'WEB':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." WEB");
+                $body->identification->suscriberId = $this->clientID;
+                $body->identification->customerNumber = $this->customerNumber;
+                break;
+            
+            case 'API':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." API");
+                $body->identification['suscriberId'] = $this->clientID;
+                $body->identification['customerNumber'] = $this->customerNumber;
+                break;
+            default:
+                // code...
+                break;
+        }
         
-        $body->identification['suscriberId'] = $this->clientID;
-        $body->identification['customerNumber'] = $this->customerNumber;
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
         Log::debug(print_r(json_encode($body),true));

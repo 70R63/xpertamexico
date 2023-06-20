@@ -149,7 +149,7 @@ class GuiaController extends Controller
             Log::debug(__CLASS__." ".__FUNCTION__." sEstafeta -> envio()");
             Log::debug( json_encode($data) );
 
-            $sEstafeta -> envio((object)$data);
+            $sEstafeta -> envio((object)$data, "API");
             $resultado = $sEstafeta->getResultado();
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::debug(print_r($resultado,true));
