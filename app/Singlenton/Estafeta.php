@@ -188,8 +188,10 @@ class Estafeta {
         Log::debug(print_r($headers,true));
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CREDENCIALES POR CLIENTE MACRO");
-        $body->identification->suscriberId = $this->clientID;
-        $body->identification->customerNumber = $this->customerNumber;
+
+        
+        $body->identification['suscriberId'] = $this->clientID;
+        $body->identification['customerNumber'] = $this->customerNumber;
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
         Log::debug(print_r(json_encode($body),true));
