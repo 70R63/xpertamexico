@@ -149,6 +149,11 @@ class Dhl {
                             $this->pickupFecha = sprintf("%s %s", $evento->date,$evento->time);  
                             $this->latestStatusDetail = $evento->typeCode;
                             break;
+
+                        case 'RT':
+                            $this->quienRecibio = "DEVUELTO";
+                            $this->latestStatusDetail = $evento->typeCode;
+                            break;
                         
                         case 'OK':
                             $this->ultimaFecha = sprintf("%s %s", $evento->date,$evento->time);
