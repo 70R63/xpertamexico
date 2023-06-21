@@ -186,10 +186,9 @@ function garantia(row){
 
     var garantiaFechaLaboral = new Date(garantiaFecha.setDate(garantiaFecha.getDate() + diaLaboral))
 
-
     if (row.rastreo_nombre != "CREADA"){
 
-        if ( ultimaFecha > garantiaFechaLaboral){
+        if ( ahora > garantiaFechaLaboral){
             html = '<i class="fe fe-download-cloud fs-29 text-danger"> DESFASADA</i>';
         } else {
             html = '<i class="fe fe-upload-cloud fs-29 text-success"> EN TIEMPO</i>';
