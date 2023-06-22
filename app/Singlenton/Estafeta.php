@@ -37,49 +37,13 @@ class Estafeta {
     private $ultimaFecha;
     private $pickupFecha;
 
-    public function __construct(int $ltd_id, $empresa_id= 1, $plataforma = 'WEB',int $servicioID = 1){
+    public function __construct( $empresa_id= 1, $plataforma = 'WEB',int $recursoId = 1){
 
         Log::info(__CLASS__." ".__FUNCTION__);
         $this->baseUri = Config('ltd.estafeta.base_uri');
         
-        if ($plataforma == 'WEB'){
-            $empresa_id = auth()->user()->empresa_id;
-        } 
         
-
-        $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
-        
-
-        $ltdCredencial = LtdCredencial::where('ltd_id',2)
-                                ->whereIn('empresa_id',$empresas);
-
-
-        if ($servicioID === 1) {
-            Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
-            $credenciales = $ltdCredencial->where('recurso','LABEL')->get()->toArray();
-
-            if ( count($credenciales) < 1)
-                throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
-            
-        } else {
-            Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
-            $credenciales = $ltdCredencial->where('recurso',"TRACKING")->get()->toArray();
-
-            if ( count($credenciales) < 1)
-                throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
-
-            $this->keyIdRastreo = $credenciales[0]['key_id'];
-            $this->secretRastreo = $credenciales[0]['secret'];
-            
-        }
-
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Token para rastreo");
-        $this->keyId = $credenciales[0]['key_id'];
-        $this->secret = $credenciales[0]['secret'];
-        $this->clientID = $credenciales[0]['client_id'];
-        $this->customerNumber = $credenciales[0]['customer_number'];
-
-
+        $this->credenciales( $empresa_id, $plataforma, $recursoId );
 
         $formParams = [
                 'client_id' => $this->keyId,
@@ -88,8 +52,8 @@ class Estafeta {
                 ,'scope' => 'execute'
             ];
 
-        $sesion = LtdSesion::where('ltd_id', $ltd_id)
-                ->where('servicio',$servicioID)
+        $sesion = LtdSesion::where('ltd_id', Config('ltd.estafeta.id') )
+                ->where('servicio',$recursoId)
                 ->where('empresa_id',$empresa_id)
                 ->where('expira_en','>', Carbon::now())
                 ->first();
@@ -119,9 +83,9 @@ class Estafeta {
                 $this->token = $json->access_token;
 
                 $insert = array('empresa_id' => $empresa_id
-                    ,'ltd_id'   => $ltd_id
+                    ,'ltd_id'   => Config('ltd.estafeta.id')
                     ,'token'    => $this->token
-                    ,'servicio'    => $servicioID
+                    ,'servicio'    => $recursoId
                     ,'expira_en'=> Carbon::now()->addMinutes(1380)
                      );
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." insert token");
@@ -189,18 +153,19 @@ class Estafeta {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CREDENCIALES POR CLIENTE MACRO");
 
-        Log::debug(print_r($body->identification,true));
+        
+        
         switch ($plataforma) {
             case 'WEB':
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." WEB");
-                $body->identification->suscriberId = $this->clientID;
-                $body->identification->customerNumber = $this->customerNumber;
+                //$body->identification->suscriberId = $this->clientID;
+                //$body->identification->customerNumber = $this->customerNumber;
                 break;
             
             case 'API':
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." API");
-                $body->identification['suscriberId'] = $this->clientID;
-                $body->identification['customerNumber'] = $this->customerNumber;
+                //$body->identification['suscriberId'] = $this->clientID;
+                //$body->identification['customerNumber'] = $this->customerNumber;
                 break;
             default:
                 // code...
@@ -342,6 +307,54 @@ class Estafeta {
         return self::$instance;
     }
 
+    /**
+     * Se busca obtener credenciales y datos sencibles de Estafeta basado en Clientes Globales.
+     *
+     * @param  
+     * @return 
+     */
+
+    private function credenciales($empresa_id, $plataforma="WEB", $recursoId=1){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO");
+        
+
+        $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
+        
+
+        $ltdCredencial = LtdCredencial::where('ltd_id',2)
+                                ->whereIn('empresa_id',$empresas);
+
+
+        if ($recursoId === 1) {
+            Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
+            $credenciales = $ltdCredencial->where('recurso','LABEL')->get()->toArray();
+
+            if ( count($credenciales) < 1)
+                throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
+            
+        } else {
+            Log::info(__CLASS__." ".__FUNCTION__." Token para rastreo");
+            $credenciales = $ltdCredencial->where('recurso',"TRACKING")->get()->toArray();
+
+            if ( count($credenciales) < 1)
+                throw ValidationException::withMessages(['No exiten credenciales para el LTD, Valida con tu proveedor']);
+
+            $this->keyIdRastreo = $credenciales[0]['key_id'];
+            $this->secretRastreo = $credenciales[0]['secret'];
+            
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Token para rastreo");
+        $this->keyId = $credenciales[0]['key_id'];
+        $this->secret = $credenciales[0]['secret'];
+        $this->clientID = $credenciales[0]['client_id'];
+        $this->customerNumber = $credenciales[0]['customer_number'];
+
+
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINAL");
+    }
+
     public function setToken($value){
         $this->token = $value;
     }
@@ -380,6 +393,14 @@ class Estafeta {
 
     public function getPickupFecha(){
         return $this->pickupFecha;
+    }
+
+    public function getClientID(){
+        return $this->clientID;
+    }
+
+    public function getCustomerNumber(){
+        return $this->customerNumber;
     }
 }
 

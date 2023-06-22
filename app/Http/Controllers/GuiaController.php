@@ -9,6 +9,8 @@ use App\Models\Cliente;
 use App\Models\Cfg_ltd;
 use App\Models\Servicio;
 use App\Models\GuiasPaquete;
+use App\Models\EmpresaEmpresas;
+
 
 
 use App\Mail\GuiaCreada;
@@ -249,14 +251,22 @@ class GuiaController extends Controller
         try {
 
             $requestInicial = $request->except(['_token']);
+            $empresa_id = auth()->user()->empresa_id;
+            $plataforma = 'WEB';
 
-            Log::debug("Singlento Estafeta");
+            
+            $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Singlento Estafeta ");
+            $sEstafeta = new sEstafeta($empresa_id,$plataforma );
 
             $dto = new EstafetaDTO();
-            $body = $dto->parser($requestInicial,"WEB");
+            $body = $dto->parser($requestInicial,"WEB",$empresas);
 
-            $sEstafeta = new sEstafeta(Config('ltd.estafeta.id'));
-            Log::debug("sEstafeta -> envio()");
+            $body->identification->suscriberId = $sEstafeta->getClientID();
+            $body->identification->customerNumber = $sEstafeta->getCustomerNumber();
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $sEstafeta -> envio($body);
             $resultado = $sEstafeta->getResultado();
 

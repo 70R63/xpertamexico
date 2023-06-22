@@ -20,6 +20,9 @@ use App\Dto\Estafeta\API\V3\Address;
 
 use Carbon\Carbon;
 
+#CLASES DE NEGOCIO 
+use App\Models\LtdTipoServicio;
+
 /**
  * 
  */
@@ -95,14 +98,12 @@ class EstafetaDTO
      * @return App\Dto\Fedex\Etiqueta Etiqueta
      */
 
-    public function parser(array $data, $canal = 'API'){
+    public function parser(array $data, $canal = 'API', array $empresas){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
-
-        $customerNumber = "";//Config('ltd.estafeta.cred.customerNumber');
         
         $identification = new Identification([
-                    'suscriberId' => "" // Config('ltd.estafeta.cred.suscriberId')
-                    ,'customerNumber' =>  "" //$customerNumber 
+                    'suscriberId' => "" 
+                    ,'customerNumber' =>  ""
                 ]
             );
         $systemInformation = new SystemInformation();
@@ -113,7 +114,7 @@ class EstafetaDTO
             $labelDefinition = new labelDefinition([
                 'wayBillDocument'   => $this->wayBillDocument($data)
                 ,'itemDescription'  => $this->itemDescription($data)
-                ,'serviceConfiguration'=> $this->serviceConfiguration($data)
+                ,'serviceConfiguration'=> $this->serviceConfiguration($data, $empresas)
                 ,'location'         => $this->locationLabel($data)
                 ]
             );
@@ -169,19 +170,24 @@ class EstafetaDTO
     }
 
 
-    private function serviceConfiguration($data){
+    private function serviceConfiguration($data, $empresas){
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration INICIO -----------------");
         
         $serviceConfiguration = new ServiceConfiguration();
         $serviceConfiguration->quantityOfLabels = $data['piezas'];
 
+        /*
         $serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
         if ($data['servicio_id'] == 3){
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $serviceTypeId = "D8";
         }
-
-        $serviceConfiguration->serviceTypeId = $serviceTypeId;
+        */
+        $ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
+                                ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
+                                ->first();
+        
+        $serviceConfiguration->serviceTypeId = $ltdTipoServicio->service_id_ltd;
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
         $serviceConfiguration->salesOrganization=Config('ltd.estafeta.cred.salesOrganization');
 

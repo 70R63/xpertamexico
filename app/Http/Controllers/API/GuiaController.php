@@ -144,7 +144,7 @@ class GuiaController extends Controller
             $data['labelDefinition']['serviceConfiguration']['salesOrganization']=$salesOrganization; 
 
             Log::debug("Se intancia el Singlento Estafeta");
-            $sEstafeta = new Estafeta(Config('ltd.estafeta.id'), $data['empresa_id'], "API");
+            $sEstafeta = new Estafeta( $data['empresa_id'], "API", 2);
 
             Log::debug(__CLASS__." ".__FUNCTION__." sEstafeta -> envio()");
             Log::debug( json_encode($data) );

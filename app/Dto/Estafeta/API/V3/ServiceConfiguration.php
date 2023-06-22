@@ -9,7 +9,7 @@ class ServiceConfiguration extends DataTransferObject {
 	public int $quantityOfLabels=1;
 	
 	#[Max(2)]	
-	public string $serviceTypeId="70";
+	public string $serviceTypeId="00";
 
 	public string $salesOrganization = "000";
 
