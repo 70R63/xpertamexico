@@ -559,7 +559,7 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." empresaId $empresaId");
 
         $guias = $this->consultaGuiaParaRastreoAutomatico( Config('ltd.estafeta.id'), $empresaId);
-        $sEstafeta = Estafeta::getInstance(Config('ltd.estafeta.id'),$empresaId,$plataforma, $servicioID);
+        $sEstafeta = Estafeta::getInstance($empresaId,$plataforma, $servicioID);
 
         $guiaCantidad = count($guias);
         $i = 0;

@@ -277,7 +277,7 @@ class GuiaController extends Controller
             
 
             $carbon = Carbon::parse();
-            $unique = crypt( (string)$carbon,'st');
+            $unique = md5( (string)$carbon);
             $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
             $namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
             Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));

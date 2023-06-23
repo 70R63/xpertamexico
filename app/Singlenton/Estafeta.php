@@ -151,28 +151,6 @@ class Estafeta {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
         Log::debug(print_r($headers,true));
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CREDENCIALES POR CLIENTE MACRO");
-
-        
-        
-        switch ($plataforma) {
-            case 'WEB':
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." WEB");
-                //$body->identification->suscriberId = $this->clientID;
-                //$body->identification->customerNumber = $this->customerNumber;
-                break;
-            
-            case 'API':
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." API");
-                //$body->identification['suscriberId'] = $this->clientID;
-                //$body->identification['customerNumber'] = $this->customerNumber;
-                break;
-            default:
-                // code...
-                break;
-        }
-        
-
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
         Log::debug(print_r(json_encode($body),true));
         $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
@@ -298,10 +276,10 @@ class Estafeta {
         Log::info(__CLASS__." ".__FUNCTION__." FIN ------------------");
     }
 
-    public static function getInstance( int $ltd_id, $empresaId = 1,$plataforma = "WEB", $servicioID=1 ){
+    public static function getInstance( $empresaId = 1,$plataforma = "WEB", $servicioID=1 ){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
-            self::$instance = new self($ltd_id, $empresaId, $plataforma, $servicioID);
+            self::$instance = new self($empresaId, $plataforma, $servicioID);
         }
         Log::debug(__CLASS__." ".__FUNCTION__." return intancia");
         return self::$instance;
