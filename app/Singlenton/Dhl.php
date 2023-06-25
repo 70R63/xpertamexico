@@ -28,7 +28,7 @@ class Dhl {
     private $scanEvents = array();
     private $paquete = array();
     private $exiteSeguimiento = false;
-    private $quienRecibio = "No entregado aun"; 
+    private $quienRecibio = "--------"; 
     private $latestStatusDetail;
     private $fechaEntrega; //Validar uso en la case redpack y no en el controller
     private $pickupFecha;

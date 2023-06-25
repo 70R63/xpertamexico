@@ -10,16 +10,16 @@
                                 <th>ID</th>
                                 <th>MENSAJERIA</th>
                                 <th>TRACKING</th>
-                                <th>SERVICIO</th>
-                                <th>CLIENTE XPERTA</th>
-                                <th>CIUDAD DESTINO</th>
-                                <th>CIUDAD ORIGEN</th>
                                 <th>ESTATUS <br> RASTREO</th>
-                                <th>GARANTIA</th>
+                                <th>SERVICIO</th>
                                 <th>FECHA CREACION</th>
                                 <th>FECHA PICKUP</th>
                                 <th>FECHA ENTREGA</th>
+                                <th>GARANTIA</th>
                                 <th>QUIEN <br>RECIBE</th>
+                                <th>CLIENTE XPERTA</th>
+                                <th>CIUDAD DESTINO</th>
+                                <th>CIUDAD ORIGEN</th>
                                 <th>PESO KG</th>
                                 <th>LARGO</th>
                                 <th>ANCHO</th>

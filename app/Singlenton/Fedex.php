@@ -29,7 +29,7 @@ class Fedex {
     private $scanEvents = array();
     private $paquete = array();
     private $exiteSeguimiento = false;
-    private $quienRecibio = "No entregado aun"; 
+    private $quienRecibio = "--------"; 
     private $latestStatusDetail;
     private $ultimaFecha; //Validar uso en la case Fedex y no en el controller
     private $pickupFecha;

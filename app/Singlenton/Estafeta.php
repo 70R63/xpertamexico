@@ -31,7 +31,7 @@ class Estafeta {
     private $resultado = array();
     private $trackingNumber = "trackingNumber";
     private $exiteSeguimiento = false;
-    private $quienRecibio = "No entregado aun";
+    private $quienRecibio = "--------";
     private $paquete = array();
     private $latestStatusDetail;
     private $ultimaFecha = "1999-12-31 23:59:59";

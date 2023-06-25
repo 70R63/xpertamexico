@@ -64,7 +64,7 @@ function rastrearTabla(){
                    ]
                     ,columnDefs: [
                         {  
-                            targets: 7 
+                            targets: 3 
                             ,"createdCell": function(td, cellData, rowData, row, col) {
                                 switch(cellData) {
                                 case "CREADA":
@@ -107,20 +107,22 @@ function rastrearTabla(){
                         { "data": "id" }
                         ,{ "data": "mensajeria" }
                         ,{ "data": "tracking_number" }
-                        ,{ "data": "servicio_nombre" }
-                        ,{ "data": "nombre" }
-                        ,{ "data": "ciudad" }
-                        ,{ "data": "ciudad_d" }
                         ,{ "data": "rastreo_nombre" }
+                        ,{ "data": "servicio_nombre" }
+                        ,{ "data": "creada" }
+                        ,{ "data": "pickup_fecha_f" }
+                        ,{ "data": "ultima_fecha_f" }
                         ,{ "data": "tiempo_entrega"
                             ,render: function(data, type, row){ 
                                 return garantia(row); 
                             } 
                         }
-                        ,{ "data": "creada" }
-                        ,{ "data": "pickup_fecha_f" }
-                        ,{ "data": "ultima_fecha_f" }
                         ,{ "data": "quien_recibio" }
+                        ,{ "data": "nombre" }
+                        ,{ "data": "ciudad" }
+                        ,{ "data": "ciudad_d" }
+                        
+                       
                         ,{ "data": "rastreo_peso" }
                         ,{ "data": "largo_u" }
                         ,{ "data": "ancho_u" }
