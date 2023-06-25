@@ -176,26 +176,44 @@ function garantia(row){
     var ahora = new Date();
     var pickupFecha = new Date(row.pickup_fecha_f);
     var ultimaFecha = new Date(row.ultima_fecha_f);
-    var garantiaFecha = new Date(pickupFecha.setDate(pickupFecha.getDate() + row.tiempo_entrega))
+    var diaExtraControl = 1
+    var garantiaFecha = new Date(pickupFecha.setDate(pickupFecha.getDate() + diaExtraControl+ row.tiempo_entrega))
 
    
     var diaLaboral = 0
     if (garantiaFecha.getDay() === 0 || garantiaFecha.getDay() === 6 )
         diaLaboral = 2
 
-
     var garantiaFechaLaboral = new Date(garantiaFecha.setDate(garantiaFecha.getDate() + diaLaboral))
 
-    if (row.rastreo_nombre != "CREADA"){
+    console.log("---------------------")
+    console.log(garantiaFecha)
+    console.log(diaLaboral)
+    console.log(ahora)
+    console.log(garantiaFechaLaboral)
+    console.log(ultimaFecha)
 
+
+
+    switch (row.rastreo_nombre) {
+      case 'CREADA':
+        html = '<i class="fe fe-download-cloud fs-29 "> EN TIEMPO</i>'; 
+        break;
+      case 'ENTREGADO':
+        if ( ultimaFecha > garantiaFechaLaboral){
+            html = '<i class="fe fe-download-cloud fs-29 text-danger"> DESFASADA</i>';
+        } else {
+            html = '<i class="fe fe-upload-cloud fs-29 text-success"> EN TIEMPO</i>';
+        } 
+        break;
+      default:
         if ( ahora > garantiaFechaLaboral){
             html = '<i class="fe fe-download-cloud fs-29 text-danger"> DESFASADA</i>';
         } else {
             html = '<i class="fe fe-upload-cloud fs-29 text-success"> EN TIEMPO</i>';
-        }    
-    } else {
-        html = '<i class="fe fe-download-cloud fs-29 "> EN TIEMPO</i>';        
+        } 
     }
+
     
     return html;
        

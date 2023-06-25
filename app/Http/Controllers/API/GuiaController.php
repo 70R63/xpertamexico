@@ -268,7 +268,8 @@ class GuiaController extends Controller
                 ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
                 ->join('servicios','servicios.id', '=', 'guias.servicio_id')
                 ->leftJoin('guias_paquetes', 'guias_paquetes.guia_id', '=', 'guias.id' )
-                //->offset(0)->limit(10)
+                ->offset(0)->limit(10)
+                ->where('guias.ltd_id',1)
                 //->toSql();
                 //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
                 ->get()->toArray();

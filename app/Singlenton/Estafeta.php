@@ -34,7 +34,7 @@ class Estafeta {
     private $quienRecibio = "No entregado aun";
     private $paquete = array();
     private $latestStatusDetail;
-    private $ultimaFecha;
+    private $ultimaFecha = "1999-12-31 23:59:59";
     private $pickupFecha;
 
     public function __construct( $empresa_id= 1, $plataforma = 'WEB',int $recursoId = 1){
