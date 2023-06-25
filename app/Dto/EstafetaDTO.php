@@ -176,13 +176,6 @@ class EstafetaDTO
         $serviceConfiguration = new ServiceConfiguration();
         $serviceConfiguration->quantityOfLabels = $data['piezas'];
 
-        /*
-        $serviceTypeId = Config('ltd.estafeta.servicio')[$data['servicio_id']];
-        if ($data['servicio_id'] == 3){
-            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $serviceTypeId = "D8";
-        }
-        */
         $ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
                                 ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
                                 ->first();
