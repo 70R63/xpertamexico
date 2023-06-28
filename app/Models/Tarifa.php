@@ -45,6 +45,16 @@ class Tarifa extends Model
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
+        $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
+        ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+        ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
+        ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
+        ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
+        ->where('tarifas.empresa_id', $empresa_id)
+        ->where('empresa_ltds.empresa_id', $empresa_id)
+        ->where('ltd_coberturas.cp', $cp_d)
+        ->where('ltds.id', $ltdId)
+        ;
         //1 indica que puede enviar en todas los servicios de las tarifas
         $prioridad = 1;
         //LTD 2= estafeta
@@ -73,36 +83,14 @@ class Tarifa extends Model
             }
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
-                ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
-                ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
-                ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
-                ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
-                ->where('tarifas.empresa_id', $empresa_id)
-                ->where('empresa_ltds.empresa_id', $empresa_id)
-                ->where('ltd_coberturas.cp', $cp_d)
-                ->where('ltds.id', $ltdId)
-                ->where('servicios.prioridad','>=', $prioridad)
-                
-                ;
+            return $query->where('servicios.prioridad','>=', $prioridad);
         
         } 
         //fin Estafeta
         
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
-                ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
-                ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
-                ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
-                ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
-                ->where('tarifas.empresa_id', $empresa_id)
-                ->where('empresa_ltds.empresa_id', $empresa_id)
-                ->where('ltd_coberturas.cp', $cp_d)
-                ->where('ltds.id', $ltdId)
-                //->where('servicios.prioridad','>=', $prioridad)
-                
-                ;
+        return $query;
         
     }
 

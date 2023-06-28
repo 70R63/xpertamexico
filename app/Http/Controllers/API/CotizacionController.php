@@ -132,7 +132,7 @@ class CotizacionController extends BaseController
                         ->where("empresa_id", $empresa_id)
                         ->distinct()->get()->pluck('servicio_id')->toArray();
 
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Serviciosd lciente");
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Serviciosd cliente");
                     Log::debug(print_r($servicioIds,true));
 
                     switch ($ltdId) {
@@ -336,7 +336,8 @@ class CotizacionController extends BaseController
                     Log::debug("Zona ".$zona[0]);
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     
-                    $tarifas = DhlTarifas::select('precio', 'id', 'servicio_id')
+                    $tarifas = DhlTarifas::select('precio', 'dhl_tarifas.id', 'dhl_tarifas.servicio_id','servicios.nombre as servicios_nombre','servicios.tiempo_entrega')
+                            ->join('servicios','servicios.id', '=', 'dhl_tarifas.servicio_id')
                             ->where('zona',$zona[0] )
                             ;
 
@@ -357,13 +358,14 @@ class CotizacionController extends BaseController
 
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-                    Log::debug(print_r($tarifas,true));  
+                    //Log::debug(print_r($tarifas,true));  
                     
                     foreach ($tarifas as $key => $tarifa) {
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                         Log::debug(print_r($tarifa,true));  
 
                         $empresa = Empresa::where('id', $empresa_id)->get()->toArray()[0];
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                         Log::debug(print_r($empresa,true));
 
                         $descuentoPorcentaje = $empresa['descuento']/100;
@@ -389,25 +391,38 @@ class CotizacionController extends BaseController
 
                         $servicioNombre = ($tarifa['servicio_id'] ===2) ? 'Dia Sig' : 'Terrestre' ;
                         
+                        $tablaTmp = $tarifa;
+                        $tablaTmp['costo'] =$costo;
+                        $tablaTmp['ltds_id'] =Config('ltd.dhl.id');
+                        $tablaTmp['nombre'] =Config('ltd.dhl.nombre');
+                        $tablaTmp['kg_ini'] =$request['pesoFacturado'];
+                        $tablaTmp['kg_fin'] =$request['pesoFacturado'];
+                        $tablaTmp['kg_extra'] = 0;
+                        $tablaTmp['ocurre'] = $estadoCoberturaDestino[0]['ocurre'];
+                        $tablaTmp['extendida_cobertura'] = $estadoCoberturaDestino[0]['extendida'] ;
+                        $tablaTmp['extendida'] = $empresa['area_extendida'];
+                        $tablaTmp['seguro'] = $empresa['seguro'];
+                        $tablaTmp['zona'] = $zona[0];
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
+                            /*
+                                $tablaTmp = array('id' => $tarifa['id']
+                                ,'costo'    => $costo
+                                ,'ltds_id' => Config('ltd.dhl.id')
+                                ,'nombre' => Config('ltd.dhl.nombre')
+                                ,'servicios_nombre' => $servicioNombre
+                                ,'kg_ini' => $request['pesoFacturado']
+                                ,'kg_fin' => $request['pesoFacturado']
+                                ,'kg_extra' => 0
+                                ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
+                                ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
+                                ,'extendida'    => $empresa['area_extendida']
+                                ,'servicio_id'  =>$tarifa['servicio_id']
+                                ,'seguro'   => $empresa['seguro']
+                                ,'zona'     => $zona[0]
 
-                            $tablaTmp = array('id' => $tarifa['id']
-                            ,'costo'    => $costo
-                            ,'ltds_id' => Config('ltd.dhl.id')
-                            ,'nombre' => Config('ltd.dhl.nombre')
-                            ,'servicios_nombre' => $servicioNombre
-                            ,'kg_ini' => $request['pesoFacturado']
-                            ,'kg_fin' => $request['pesoFacturado']
-                            ,'kg_extra' => 0
-                            ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
-                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
-                            ,'extendida'    => $empresa['area_extendida']
-                            ,'servicio_id'  =>$tarifa['servicio_id']
-                            ,'seguro'   => $empresa['seguro']
-                            ,'zona'     => $zona[0]
-
-                            );
+                                );
+                            */
 
                             $kgAdicional = $request['pesoFacturado'] -70;
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -429,26 +444,12 @@ class CotizacionController extends BaseController
                             Log::debug(print_r($tablaTmp,true));
                             $tabla[] = $tablaTmp;
                         } else {
-
-                            $tablaTmp = array('id' => $tarifa['id']
-                            ,'costo'    => $costo
-                            ,'ltds_id' => Config('ltd.dhl.id')
-                            ,'nombre' => Config('ltd.dhl.nombre')
-                            ,'servicios_nombre' => $servicioNombre
-                            ,'kg_ini' => $request['pesoFacturado']
-                            ,'kg_fin' => $request['pesoFacturado']
-                            ,'kg_extra' => 0
-                            ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
-                            ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
-                            ,'extendida'    => $empresa['area_extendida']
-                            ,'servicio_id'  =>$tarifa['servicio_id']
-                            ,'seguro'   => $empresa['seguro']
-                            ,'zona'     => $zona[0]
-
-                            );
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                            
+                            
 
                             $tabla[] = $tablaTmp;
-
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                             if ($tarifa['servicio_id']===2) {
                                 if ($empresa['premium10'] > 0){
                                     $tablaTmp['costo'] = round($tablaTmp['costo']+$empresa['premium10'],2);

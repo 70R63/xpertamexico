@@ -84,6 +84,21 @@ function preciofinal(dataRow){
     return dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida;
 }
 
+function fechaTentativa(row){
+    
+    var ahora = new Date();
+    var diaLaboral = 0
+    
+    ahora.setDate(ahora.getDate()+row.tiempo_entrega)
+
+    if (ahora.getDay() === 0 || ahora.getDay() === 6 )
+        diaLaboral = 2
+
+    ahora.setDate(ahora.getDate()+diaLaboral)
+    return ahora.toLocaleDateString('es-MX');
+}
+
+
 function obtenerCP(id, modelo) {
 
     $.ajax({
@@ -180,7 +195,7 @@ $("#cotizar").click(function(e) {
                     ,"data": response.data.data,
                     columnDefs: [
                         {  
-                            targets: 9 
+                            targets: 10 
                             ,"createdCell": function(td, cellData, rowData, row, col) {
                                 switch(cellData) {
                                     case "SI":
@@ -197,6 +212,11 @@ $("#cotizar").click(function(e) {
                         { "data": "id" },
                         { "data": "nombre" },
                         { "data": "servicios_nombre" },
+                        { "data": "zona" 
+                            ,render: function (data, type, row) {
+                                return fechaTentativa(row);   
+                            } 
+                        },
                         { "data": "zona" },
                         { "data": "costo" 
                             ,render: function (data,row) {
