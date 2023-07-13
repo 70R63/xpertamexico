@@ -94,6 +94,7 @@
                             @include('menu.usuario')
                             @include('menu.guia')
                             @include('menu.roles')
+                            @include('menu.reportes')
                         @endcanany
 
                         @canany(['isContraloria'])
@@ -131,11 +132,12 @@
                             @include('menu.direcciones')
                             @include('menu.usuario')
                             @include('menu.guia')
+                            @include('menu.reportes')
                         @endcanany
 
                         @canany(['isUsuario'])
                             @include('menu.guia')
-                            
+                            @include('menu.reportes')
                         @endcanany                      
                         
                     </ul>
@@ -258,6 +260,12 @@
         <script src="{{url('spruha/plugins/darggable/jquery-ui-darggable.min.js') }}"></script>
         <script src="{{url('spruha/plugins/darggable/darggable.js') }}"></script>
         <script src="{{url('spruha/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+        <!-- Jquery-Ui js-->
+        <script src="{{url('spruha/plugins/jquery-ui/ui/widgets/datepicker.js') }}"></script>
+
+        <!-- Internal Daternagepicker js-->
+        <script src="{{url('spruha/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+        <script src="{{url('spruha/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
         
         <!-- Personalizacion -->
         <script src="{{ asset('js/guardar.js') }}" ></script> 
@@ -272,6 +280,7 @@
         <script src="{{ asset('js/destinatario.js') }}" ></script>
         @routes
         <script src="{{ asset('js/direcciones.js') }}" ></script>
+        <script src="{{ asset('js/reportesVentas.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')
