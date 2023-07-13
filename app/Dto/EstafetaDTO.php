@@ -182,7 +182,8 @@ class EstafetaDTO
         
         $serviceConfiguration->serviceTypeId = $ltdTipoServicio->service_id_ltd;
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
-        $serviceConfiguration->salesOrganization=Config('ltd.estafeta.cred.salesOrganization');
+        $serviceConfiguration->salesOrganization= $ltdTipoServicio->sales_organization ;
+        //Config('ltd.estafeta.cred.salesOrganization');
 
         $serviceConfiguration->isInsurance=false;
         if ($data['bSeguro']==="true"){
