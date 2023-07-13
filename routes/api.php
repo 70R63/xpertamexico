@@ -10,6 +10,7 @@ use App\Http\Controllers\API\EmpresaLtdController;
 use App\Http\Controllers\API\DireccionController;
 use App\Http\Controllers\API\CPController;
 use App\Http\Controllers\API\ClienteController;
+use App\Http\Controllers\API\ReportesController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
 //MIDDLEWARE PARA AJAX DESDE WEB
 Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {
+        //Carga los metodos basicos index, store, update , etc
         Route::apiResource('cotizaciones', CotizacionController::class);
 
         Route::controller(CotizacionController::class)->group(function(){
@@ -79,6 +81,14 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
         Route::controller(ClienteController::class)->group(function(){
             Route::get('clientes', 'clientes')->name("clientes");    
         });
+
+        Route::group(['prefix'=>'reportes','as'=>'reportes.'], function(){          
+            Route::controller(ReportesController::class)->group(function(){
+                Route::get('ventas', 'ventas')->name("ventas");    
+            });
+        });
+
+        
     });
 });
 //Fin Middileware

@@ -78,5 +78,9 @@ Route::resource('rastreos','RastreosController')
 Route::resource('roles','Roles\RolesController')
     ->middleware(['roles:sysadmin,admin']);
 
+//Menu Ventas
+Route::resource('reportes/ventas','ReportesController')
+    ->middleware(['roles:sysadmin,admin']);    
+
 
 require __DIR__.'/auth.php';
