@@ -263,8 +263,8 @@ class GuiaController extends Controller
             $dto = new EstafetaDTO();
             $body = $dto->parser($requestInicial,"WEB",$empresas);
 
-            $body->identification->suscriberId = $sEstafeta->getClientID();
-            $body->identification->customerNumber = $sEstafeta->getCustomerNumber();
+            //$body->identification->suscriberId = $sEstafeta->getClientID();
+            //$body->identification->customerNumber = $sEstafeta->getCustomerNumber();
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $sEstafeta -> envio($body);

@@ -23,9 +23,10 @@ return new class extends Migration
 
             $table->string('key_id', 100)->nullable(false)->default('NA');
             $table->string('secret', 100)->nullable(false)->default('NA');
+            //20230714 Validar si se elimina de esta tabla se usa en ltd_tipo
             $table->string('customer_number', 50)->nullable(false)->default('NA');
             $table->string('organization', 50)->nullable(false)->default('NA');
-
+            //20230714 Validar si se elimina de esta tabla se usa en ltd_tipo
             $table->string('client_id', 50)->nullable(false)->default('NA');
             $table->string('passwd', 100)->nullable(false)->default('NA');
             $table->string('user', 100)->nullable(false)->default('NA');

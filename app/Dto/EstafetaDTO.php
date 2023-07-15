@@ -29,6 +29,7 @@ use App\Models\LtdTipoServicio;
 class EstafetaDTO 
 {
     public $data = null;
+    private $ltdTipoServicio = null; 
 	
 	function __construct()
 	{
@@ -100,10 +101,14 @@ class EstafetaDTO
 
     public function parser(array $data, $canal = 'API', array $empresas){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
+
+        $this->ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
+                                ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
+                                ->first();
         
         $identification = new Identification([
-                    'suscriberId' => "" 
-                    ,'customerNumber' =>  ""
+                    'suscriberId' => $this->ltdTipoServicio->client_id 
+                    ,'customerNumber' =>  $this->ltdTipoServicio->customer_number
                 ]
             );
         $systemInformation = new SystemInformation();
@@ -175,15 +180,11 @@ class EstafetaDTO
         
         $serviceConfiguration = new ServiceConfiguration();
         $serviceConfiguration->quantityOfLabels = $data['piezas'];
-
-        $ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
-                                ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
-                                ->first();
-        
-        $serviceConfiguration->serviceTypeId = $ltdTipoServicio->service_id_ltd;
+ 
+        $serviceConfiguration->serviceTypeId = $this->ltdTipoServicio->service_id_ltd;
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
-        $serviceConfiguration->salesOrganization= $ltdTipoServicio->sales_organization ;
-        //Config('ltd.estafeta.cred.salesOrganization');
+        $serviceConfiguration->salesOrganization= $this->ltdTipoServicio->sales_organization ;
+        
 
         $serviceConfiguration->isInsurance=false;
         if ($data['bSeguro']==="true"){
