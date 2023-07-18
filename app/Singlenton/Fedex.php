@@ -193,10 +193,12 @@ class Fedex {
                             
                     }
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                    foreach ($value1->dateAndTimes as $key => $value) {
-                        if ($value->type === "ACTUAL_PICKUP") {
+                    if ( isset($value1->dateAndTimes)) {
+                        foreach ($value1->dateAndTimes as $key => $value) {
+                            if ($value->type === "ACTUAL_PICKUP") {
                             $this->pickupFecha = Carbon::parse($value->dateTime)->format('Y-m-d H:i:s');
                             break;
+                            }
                         }
                     }
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
