@@ -48,6 +48,9 @@
 
         <link href="{{ url('spruha/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet" />
 
+        <!-- Internal Daterangepicker css-->
+        <link href="{{ url('spruha/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+
 
         @yield('css_rol_page')
 
@@ -212,6 +215,8 @@
         <!-- Bootstrap js-->
         <script src="{{ url('spruha/plugins/bootstrap/js/popper.min.js') }}"></script>
         <script src="{{ url('spruha/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+        <!-- Bootstrap js-->
+        <script src="{{ url('spruha/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
         <!-- Internal Chart.Bundle js-->
         <script src="{{ url('spruha/plugins/chart.js/Chart.bundle.min.js') }}"></script>
@@ -260,6 +265,7 @@
         <script src="{{url('spruha/plugins/darggable/jquery-ui-darggable.min.js') }}"></script>
         <script src="{{url('spruha/plugins/darggable/darggable.js') }}"></script>
         <script src="{{url('spruha/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+
         <!-- Jquery-Ui js-->
         <script src="{{url('spruha/plugins/jquery-ui/ui/widgets/datepicker.js') }}"></script>
 

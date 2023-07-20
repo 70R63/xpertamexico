@@ -9,7 +9,7 @@
         <div class="card custom-card">
             <div class="card-header bg-transparent border-bottom-0">
                 <div>
-                    <label class="main-content-label mb-2">Creacion de Guia</label> <span class="d-block tx-12 mb-0 text-muted">Introduce los datos del remitente y destino</span>
+                    <label class="main-content-label mb-2">Creacion de Reportes de Ventas</label> <span class="d-block tx-12 mb-0 text-muted">Reporte de Ventas</span>
                 </div>
             </div>
         </div>

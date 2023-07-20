@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReportesRequest;
 use App\Http\Requests\UpdateReportesRequest;
+use App\Models\Empresa;
 
 use Log;
 
@@ -30,6 +31,8 @@ class ReportesController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
             $tabla = array();
 
+            //$comboEmpresa = Empresa::select("id","nombre")->get()->toArray();
+            //dd($comboEmpresa);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return view("reportes.ventas.index"
                     ,compact("tabla")

@@ -84,7 +84,8 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 
         Route::group(['prefix'=>'reportes','as'=>'reportes.'], function(){          
             Route::controller(ReportesController::class)->group(function(){
-                Route::get('ventas', 'ventas')->name("ventas");    
+                Route::get('ventas', 'ventas')->name("ventas");
+                Route::post('ventas', 'creacion')->name("creacion");    
             });
         });
 
