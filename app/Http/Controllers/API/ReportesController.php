@@ -75,13 +75,15 @@ class ReportesController extends ApiController
         Log::debug(print_r($parametros,true));
 
 
-        $reporteVentas = Reportes_ventas::filtro( $parametros )->get()->toArray();
+        $reporteVentas = Reportes_ventas::filtro( $parametros )
+            ->get()->toArray()
+            
+        ;
+
+        //Log::debug($reporteVentas->toSql());
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //Log::debug(print_r($reporteVentas,true));
         
-        //Storage::disk('public')->put($namePdf,base64_decode( $value->label ));
-
         $headers = array(
             'Content-Type' => 'text/csv'
         );
