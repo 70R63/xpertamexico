@@ -5,6 +5,7 @@ $(document).ready(function() {
     }
 
     $( ".datepicker" ).datepicker();
+    
     // cotizar.js
     obtenerClientes();
 
@@ -13,9 +14,66 @@ $(document).ready(function() {
 
 function documento(row){
     
-    html = '<a href="../'+row.ruta_csv+'" target="_blank" rel="noopener noreferrer"><i class="text-info tx-20 fa fa-archive" data-toggle="tooltip" title="" data-original-title="fa fa-archive"></i></a>'
+    html = '<a href="../'+row.ruta_csv+'" target="_blank"> \
+                <i class="text-info tx-24 fa fa-archive" data-toggle="tooltip" \
+                title="'+row.registros_cantidad+'" \
+                data-original-title="fa fa-archive"> \
+                    <span class="badge badge-danger nav-link-badge">'+ row.registros_cantidad +'</span>\
+                </i>\
+            </a>\
+                ';
+                
+                            
+                        
     return html;
 }
+
+
+function obtenerProveedor(row){
+    
+    var proveedor = "Todos";
+    console.log(row.ltd_id)
+    switch (row.ltd_id) {
+        case 1:
+            proveedor = "FEDEX"
+            break;
+        case 2:
+            proveedor = "ESTAFETA_MEXICANA"
+            break;
+        case 3:
+            proveedor = "REDPACK"
+            break;
+        case 4:
+            proveedor = "DHL"
+            break;
+        default:
+            proveedor = "Todos"
+        }
+    return proveedor ;
+}
+
+function obtenerServicio(row){
+    
+    var proveedor = "Todos";
+    switch (row.servicio_id) {
+        case 1:
+            proveedor = "TERRESTRE"
+            break;
+        case 2:
+            proveedor = "2 DIAS"
+            break;
+        case 3:
+            proveedor = "DIA SIG."
+            break;
+        case 4:
+            proveedor = "09:30"
+            break;
+        default:
+            proveedor = "Todos"
+        }
+    return proveedor;    
+}
+
 
 $("#generarReporte").click(function(e) {
     console.log("generarReporte")
@@ -42,11 +100,15 @@ $("#generarReporte").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
-                swal
 
                 tablaReporteVentas();
             }).fail( function( data,jqXHR, textStatus, errorThrown ) {
                 console.log( "fail" );
+                swal(
+                    "Error!",
+                    textStatus,
+                    "error"
+                  )
 
             }).always(function() {
                 console.log( "complete" );
@@ -66,7 +128,7 @@ function tablaReporteVentas(){
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        //data: $('#reporteVentasForm').serialize()
+        data: $('#reporteVentasForm').serialize()
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
@@ -121,19 +183,27 @@ function tablaReporteVentas(){
                         ,{ "data": "created_at" 
                             ,render: function(data){
                                 var ahora = new Date(data);   
-                                return ahora.toLocaleDateString('es-MX'); 
+                                return ahora.toLocaleDateString('es-MX')+" "+ ahora.toLocaleTimeString('es-MX'); 
                             }
                         }
-                        ,{ "data": "cia" }
-                        ,{ "data": "ltd_id" }//4
-                        ,{ "data": "servicio_id" }
+                        ,{ "data": "nombre" }
+                        ,{ "data": "ltd_id" 
+                            ,render: function(data, type, row){   
+                                return obtenerProveedor(row); 
+                            }
+                        }//4
+                        ,{ "data": "servicio_id" 
+                            ,render: function(data, type, row){   
+                                return obtenerServicio(row); 
+                            }
+                        }
                         ,{ "data": "fecha_ini" }
                         ,{ "data": "fecha_fin" }
                         
 
                     ],
                 });
-        table.columns( [12] ).visible( false );
+        //table.columns( [12] ).visible( false );
             
     }).fail( function( data,jqXHR, textStatus, errorThrown ) {
         console.log( "fail" );

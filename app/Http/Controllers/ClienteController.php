@@ -125,7 +125,7 @@ class ClienteController extends Controller
                
             $pluckEmpresa = Empresa::pluck('nombre','id');
             
-            Log::debug($objeto);
+            //Log::debug($objeto);
             return view(self::EDITAR_v
                 , compact('objeto',"pluckEmpresa") 
             );

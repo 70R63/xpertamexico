@@ -29,7 +29,7 @@ class ClienteController extends ApiController
             $resultado = Empresa::whereIN('id',$empresas)
                     ->get()->toArray();
            
-            Log::debug(print_r($resultado,true));
+            //Log::debug(print_r($resultado,true));
             //$resultado = array();
             $mensaje = "ok";
             return $this->successResponse($resultado, $mensaje);    

@@ -8,6 +8,7 @@ use App\Http\Requests\StoreReportesRequest;
 use App\Http\Requests\UpdateReportesRequest;
 use App\Models\API\Reportes_ventas;
 use App\Models\API\Reportes;
+use App\Models\Sucursal;
 
 use Log;
 use File;
@@ -24,12 +25,19 @@ class ReportesController extends ApiController
     
     public function ventas(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::debug(print_r($request->all(),true));
-
-        $reporteVentas = Reportes::get()->toArray();
-
         try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($request->all(),true));
+
+            $reporteVentas = Reportes::select("reportes.*","sucursals.nombre")
+                            ->join('sucursals', 'sucursals.id', '=', 'reportes.cia')
+                            ->get()->toArray()
+                            //->toSql()
+                            ;
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($reporteVentas,true));
+            
 
             $resultado = array();
             $mensaje = "ok";
@@ -70,71 +78,108 @@ class ReportesController extends ApiController
     
     public function creacion(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $parametros = $request->all();
-        Log::debug(print_r($parametros,true));
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $parametros = $request->all();
+            Log::debug(print_r($parametros,true));
 
+            $empresa = Sucursal::select("nombre")->where('id',$parametros['clienteIdCombo'])->first();
 
-        $reporteVentas = Reportes_ventas::filtro( $parametros )
-            ->get()->toArray()
+            Log::info(print_r($empresa->nombre,true));
+
+            $reporteVentas = Reportes_ventas::filtro( $parametros )
+                ->get()->toArray()
+                
+            ;
+
+            //Log::debug($reporteVentas->toSql());
             
-        ;
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            
+            /*
+            $headers = array(
+                'Content-Type' => 'text/csv'
+            );
 
-        //Log::debug($reporteVentas->toSql());
-        
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
-        $headers = array(
-            'Content-Type' => 'text/csv'
-        );
+*/
+            $carbon = Carbon::parse();
+            $unique = md5( (string)$carbon);
+            $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
+            $nameCsv = sprintf("csv/%s-%s.csv",(string)$carbon,$unique);
 
-        $carbon = Carbon::parse();
-        $unique = md5( (string)$carbon);
-        $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
-        $nameCsv = sprintf("csv/%s-%s.csv",(string)$carbon,$unique);
+            $filename =  public_path($nameCsv);
+            $handle = fopen($filename, 'w');
 
-        $filename =  public_path($nameCsv);
-        $handle = fopen($filename, 'w');
-
-
-        fputcsv($handle, [
-            "id",
-            "empresa_id"
-            ,"usuario"
-            ,"ltd_id"
-            ,"trackingNumber"
-            ,"servicio_id"
-            ,"empresa"
-            ,"creacion"
-
-
-        ]);
-
-        foreach ($reporteVentas as $venta) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             fputcsv($handle, [
-                $venta['id'],
-                $venta['empresa_id'],
-                $venta['usuario']
-                ,$venta['ltd_id']
-                ,$venta['tracking_number']
-                ,$venta['servicio_id']
-                ,$venta['cia']
-                ,$venta['created_at']
+                "id",
+                "empresa_id"
+                ,"usuario"
+                ,"ltd_id"
+                ,"trackingNumber"
+                ,"servicio_id"
+                ,"empresa"
+                ,"creacion"
+
+                ,"FECHA ENVIO"
+                ,"PESO BASCUAL"
+                ,"LARGO"
+                ,"ANCHO"
+                ,"ALTO"
+                ,"PESO DIMENSIONAL"
+                ,"CIUDAD ORIGEN"
+                ,"ESTADO ORIGEN"
+                ,"CP ORIGEN"
+                ,"CONTACTO REMITENTE"
+                ,"CIUDAD DESTINO"
+                ,"ESTADO DESTINO"
+                ,"CP DESTINO"
+                ,"CONTACTO DESTINO"
+                ,"REFERENCIA"
+                ,"NOTAS"
+                ,"KGS EXTRA"
+                ,"ZONA"
+                ,"COSTO BASE"
+                ,"COSTO KGS EXTRA"
+                ,"COSTO A.E."
+                ,"COSTO EXCESO DIMENSION Y/0 VOL IRREGULAR"
+                ,"COSTO SERVICIO PREMIUM"
+                ,"COSTO MULTIPIEZA"
+                ,"COSTO SEGURO"
+                ,"SUBTOTAL"
+                ,"TOTAL"
+                ,"ESTATUS RASTREO"
+
+
             ]);
 
-        }
-        fclose($handle);
-
-        Reportes::create(array('cia' => $parametros['clienteIdCombo']
-                            ,'ltd_id' => $parametros['ltdId']
-                            ,'servicio_id'=>$parametros['servicio_id']
-                            ,'fecha_ini' => $startTime = Carbon::parse( $parametros['fecha_ini'] )
-                            ,'fecha_fin' => Carbon::parse( $parametros['fecha_fin'] )
-                            ,'ruta_csv' => sprintf("public/%s",$nameCsv)
-                            )
-                        );
+            $contador = 0;
+            foreach ($reporteVentas as $venta) {
+                fputcsv($handle, [
+                    $venta['id'],
+                    $venta['empresa_id'],
+                    $venta['usuario']
+                    ,$venta['ltd_id']
+                    ,$venta['tracking_number']
+                    ,$venta['servicio_id']
+                    ,$venta['nombre']
+                    ,$venta['created_at']
+                ]);
+                $contador++;
+            }
+            fclose($handle);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Reportes::create(array('cia' => $parametros['clienteIdCombo']
+                                ,'ltd_id' => $parametros['ltdId']
+                                ,'servicio_id'=>$parametros['servicio_id']
+                                ,'fecha_ini' => $startTime = Carbon::parse( $parametros['fecha_ini'] )
+                                ,'fecha_fin' => Carbon::parse( $parametros['fecha_fin'] )
+                                ,'ruta_csv' => sprintf("public/%s",$nameCsv)
+                                ,'registros_cantidad' => $contador
+                                )
+                            );
      
-        try {
+        
 
             $resultado = array();
             $mensaje = "ok";

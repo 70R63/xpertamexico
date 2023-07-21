@@ -20,7 +20,7 @@ return [
 
     'general' =>[
         1   => 'FEDEX'
-        ,2  => 'ESTAFETA'
+        ,2  => 'ESTAFETA_MEXICANA'
         ,3  => 'REDPACK'
         ,4  => 'DHL'
     ]
