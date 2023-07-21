@@ -8,7 +8,7 @@ use App\Http\Requests\StoreReportesRequest;
 use App\Http\Requests\UpdateReportesRequest;
 use App\Models\API\Reportes_ventas;
 use App\Models\API\Reportes;
-use App\Models\Sucursal;
+use App\Models\API\Empresa;
 
 use Log;
 use File;
@@ -29,8 +29,8 @@ class ReportesController extends ApiController
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::debug(print_r($request->all(),true));
 
-            $reporteVentas = Reportes::select("reportes.*","sucursals.nombre")
-                            ->join('sucursals', 'sucursals.id', '=', 'reportes.cia')
+            $reporteVentas = Reportes::select("reportes.*","empresas.nombre")
+                            ->join('empresas', 'empresas.id', '=', 'reportes.cia')
                             ->get()->toArray()
                             //->toSql()
                             ;
@@ -83,9 +83,11 @@ class ReportesController extends ApiController
             $parametros = $request->all();
             Log::debug(print_r($parametros,true));
 
-            $empresa = Sucursal::select("nombre")->where('id',$parametros['clienteIdCombo'])->first();
+            $empresa = Empresa::select("nombre")->where('id',$parametros['clienteIdCombo'])
+                ->first()
+                ;
 
-            Log::info(print_r($empresa->nombre,true));
+            //Log::info(print_r($empresa,true));
 
             $reporteVentas = Reportes_ventas::filtro( $parametros )
                 ->get()->toArray()
@@ -96,12 +98,11 @@ class ReportesController extends ApiController
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             
-            /*
+            
             $headers = array(
                 'Content-Type' => 'text/csv'
             );
 
-*/
             $carbon = Carbon::parse();
             $unique = md5( (string)$carbon);
             $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
@@ -164,6 +165,35 @@ class ReportesController extends ApiController
                     ,$venta['servicio_id']
                     ,$venta['nombre']
                     ,$venta['created_at']
+                    ,""
+                    ,""
+                    ,""
+                    ,""
+                    ,""
+                    ,""
+                    ,$venta['ciudad_origen']
+                    ,$venta['entidad_federativa_origen']
+                    ,$venta['cp_origen']
+                    ,$venta['contacto_origen']
+                    ,$venta['ciudad_origen']
+                    ,$venta['entidad_federativa_destino']
+                    ,$venta['cp_destino']
+                    ,$venta['contacto_destino']
+                    ,""
+                    ,""
+                    ,""
+                    ,$venta['zona']
+                    ,""
+                    ,""
+                    ,""
+                    ,""
+                    ,""
+                    ,""
+                    ,$venta['seguro']
+                    ,""
+                    ,""
+                    ,$venta['rastreo_nombre']
+
                 ]);
                 $contador++;
             }
