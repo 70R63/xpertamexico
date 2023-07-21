@@ -12,7 +12,7 @@ $(document).ready(function() {
 });
 
 
-function documento(row){
+function documentoVentaCsv(row){
     
     html = '<a href="../'+row.ruta_csv+'" target="_blank"> \
                 <i class="text-info tx-24 fa fa-archive" data-toggle="tooltip" \
@@ -177,7 +177,7 @@ function tablaReporteVentas(){
                         { "data": "id" } //0
                         ,{ "data": "ruta_csv"
                             ,render: function(data, type, row){   
-                                return documento(row); 
+                                return documentoVentaCsv(row); 
                             }
                         }
                         ,{ "data": "created_at" 
