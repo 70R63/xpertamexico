@@ -154,6 +154,7 @@ return [
 	    ,'BA' => '3'
 	    ,'RD' => '3'
 	    ,'RT' => '5'
+	    ,'CM' => '3'
         ]
         ,'shipment' => [
             'uri' => env('DHL_URI_SHIPMENT')
