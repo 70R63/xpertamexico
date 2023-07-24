@@ -56,6 +56,7 @@ return [
         ,'Chiapas'=>'CS'
         ,'Chihuahua'=>'CH'
         ,'Ciudad de México'=>'DF'
+        ,'CDMX'=>'DF'
 	,'Coahuila'=>'CO'
 	,'Coahuila de Zaragoza'=>'CO'
         ,'Colima'=>'CL'
