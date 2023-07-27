@@ -19,6 +19,8 @@ use App\Models\PostalZona;
 use App\Models\DhlTarifas;
 use App\Models\Empresa;
 
+use App\Negocio\Fedex_tarifas;
+
 
 class CotizacionController extends BaseController
 {
@@ -49,11 +51,18 @@ class CotizacionController extends BaseController
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." validando empresaLTD");
         Log::debug($empresasLtd);
+        
+
         $tabla = array();
         foreach ($empresasLtd as $ltdId => $clasificacion) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => clasificacion $clasificacion ------------------------------------");
                         
             $tablaTmp = array();
+
+            $servicioIds = Tarifa::select('servicio_id')
+                            ->where("ltds_id", $ltdId)
+                            ->where("empresa_id", $empresa_id)
+                            ->distinct()->get()->pluck('servicio_id')->toArray();
         
             $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
             switch ($clasificacion) {
@@ -200,9 +209,7 @@ class CotizacionController extends BaseController
                             foreach ($tablaTmp as $key => $value) {
                                 $tablaTmp[$key]['zona'] = "NA";
                             }
-                            $tabla = array_merge($tabla, $tablaTmp);
-
-                            
+                            $tabla = array_merge($tabla, $tablaTmp);            
                         break;
                         case "3":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd ".Config('ltd.redpack.id')."=".Config('ltd.redpack.nombre') );
@@ -474,6 +481,14 @@ class CotizacionController extends BaseController
 
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
                 break;
+                case 5: //ZONA
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 5 = ".Config('tarifa.clasificacion.5') );
+
+                        $fedexTarifas = new Fedex_tarifas();
+                        $fedexTarifas->zona($request, $servicioIds,$empresa_id,$ltdId);
+                        $tabla = array_merge($tabla, $fedexTarifas->getTarifa());
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    break;
                 default:
                     Log::debug("No se seleccion niguna clasificacion");
             }

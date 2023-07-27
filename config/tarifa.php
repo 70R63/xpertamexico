@@ -20,5 +20,6 @@ return [
         ,'2'=>'RANGO'
         ,'3'=>'RANGO ZONA'
         ,'4'=>'RANGO FLAT'
+        ,'5'=>'ZONA'
     ]
 ];

@@ -58,6 +58,7 @@
 
 
     <body class="main-body leftmenu main-sidebar-hide">
+        
         <!-- Page -->
         <div class="page">
             <!-- Sidemenu -->

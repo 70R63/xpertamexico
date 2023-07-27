@@ -247,7 +247,12 @@ $("#cotizar").click(function(e) {
                 console.log( "fail" );
                 console.log(textStatus);
                 
-                alert( data.responseJSON.message);
+                swal(
+                    "Error!",
+                    data.responseJSON.message,
+                    "error"
+                  )
+
 
             }).always(function() {
                 console.log( "complete" );
@@ -423,7 +428,12 @@ function obtenerClientes() {
             console.log( "fail" );
             console.log(textStatus);
             
-            alert( data.responseJSON.message);
+            swal(
+                "Error!",
+                data.responseJSON.message,
+                "error"
+              );
+            
 
         }).always(function() {
             console.log( "complete" );
