@@ -31,8 +31,6 @@ class ReportesController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
             $tabla = array();
 
-            //$comboEmpresa = Empresa::select("id","nombre")->get()->toArray();
-            //dd($comboEmpresa);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return view("reportes.ventas.index"
                     ,compact("tabla")

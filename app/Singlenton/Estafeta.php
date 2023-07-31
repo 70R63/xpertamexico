@@ -145,7 +145,7 @@ class Estafeta {
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
             ,'Accept'    => 'application/json'
-            ,'apiKey'   => $this->keyId // Config('ltd.estafeta.api_key')
+            ,'apiKey'   => $this->keyId 
         ];
 	    Log::debug(print_r("Armando Peticion",true));
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");

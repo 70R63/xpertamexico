@@ -186,3 +186,38 @@
         ,'id'       => 'zona' 
     ])
 !!}
+
+{!! Form::hidden('costo_base'
+    , $objeto['costo_base']
+    ,['class'       => 'form-control'
+        ,'id'       => 'costo_base' 
+    ])
+!!}
+
+{!! Form::hidden('costo_kg_extra'
+    , $objeto['costo_kg_extra']
+    ,['class'       => 'form-control'
+        ,'id'       => 'costo_kg_extra' 
+    ])
+!!}
+
+{!! Form::hidden('peso_dimensional'
+    , $objeto['peso_dimensional']
+    ,['class'       => 'form-control'
+        ,'id'       => 'peso_dimensional' 
+    ])
+!!}
+
+{!! Form::hidden('peso_bascula'
+    , $objeto['peso_bascula']
+    ,['class'       => 'form-control'
+        ,'id'       => 'peso_bascula' 
+    ])
+!!}
+
+{!! Form::hidden('sobre_peso_kg'
+    , $objeto['sobre_peso_kg']
+    ,['class'       => 'form-control'
+        ,'id'       => 'sobre_peso_kg' 
+    ])
+!!}

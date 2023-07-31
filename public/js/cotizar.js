@@ -3,18 +3,57 @@ var peso;
 var piezas = 0;
 var costoSeguro = 0;
 var valorEnvio = 0;
+var costoPesoExtra = 0;
+var dimensional = 0;
+var bascula = 0;
+var sobrePesoKg = 0;
 
 
+function pesoDimensionalyBascula(){
+
+    var piezas = $("#piezas").val()
+    var iteracionClone = 0
+    $('.registroMultipieza').each(function(){
+        console.log("--------------"+iteracionClone)
+        var control = +iteracionClone *4
+        var indexPeso = 0 +control
+        var indexLargo = 1 +control
+        var indexAncho = 2 +control
+        var indexAlto = 3 +control 
+        
+
+        var peso = $('.registroMultipieza .multi').get()[indexPeso].value
+        var largo = $('.registroMultipieza .multi').get()[indexLargo].value
+        var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
+        var alto = $('.registroMultipieza .multi').get()[indexAlto].value
+        
+        if ($('.registroMultipieza').length == 1){
+            pesoBascula = peso*piezas
+            pesoDimensional = (((alto*ancho*largo)/5000)*piezas)    
+            
+        }else{
+            pesoBascula = peso
+            pesoDimensional = ((alto*ancho*largo)/5000)
+        }
+        
+        console.log("bascula "+pesoBascula+ ">"+ pesoDimensional+" dimensional")
+        iteracionClone++
+
+    })  
+
+    pesoFacturado = pesoFacturado + ((bascula > dimensional) ? Math.ceil(bascula) : Math.ceil(dimensional));
+    return pesoFacturado;
+}
 
 function pesofacturado(){
 
     var peso = 0
     var piezas = $("#piezas").val()
     var iteracionClone = 0
-    var bascula = +0
-    var dimensional =+0
     var pesoFacturado =+0
 
+    bascula = +0
+    dimensional =+0
 
     $('.registroMultipieza').each(function(){
         console.log("--------------"+iteracionClone)
@@ -65,13 +104,13 @@ function preciofinal(dataRow){
     piezas = $('#piezas').val();
     peso = $('#pesoFacturado').val();
     var costoCoberturaExtendida = 0;
-    var costoPesoExtra = 0;
+    costoPesoExtra = 0;
 
     costoSeguroValidar(dataRow.seguro);
 
     if (peso > dataRow.kg_fin) {
-        sobrepeso = peso - dataRow.kg_fin ;
-        costoPesoExtra = sobrepeso * dataRow.kg_extra ;
+        sobrePesoKg = peso - dataRow.kg_fin ;
+        costoPesoExtra = sobrePesoKg * dataRow.kg_extra ;
     }
 
     console.log(dataRow.extendida_cobertura);
@@ -212,7 +251,7 @@ $("#cotizar").click(function(e) {
                         { "data": "id" },
                         { "data": "nombre" },
                         { "data": "servicios_nombre" },
-                        { "data": "zona" 
+                        { "data": "fecha_tentativa" 
                             ,render: function (data, type, row) {
                                 return fechaTentativa(row);   
                             } 
@@ -275,19 +314,21 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var dataRow = table.row(this).data(); 
 
     console.log(dataRow);
-    //Valores de la cotizacion
+    //Valores de la cotizacion de la Forma Cotizacion
     var sucursal_id = $('#sucursal').val();
     var cliente_id = $('#cliente').val();
     var cp = $('#cp').val();
     var cp_d = $('#cp_d').val();
-    var costoPesoExtra = 0;
     var largo = $('#largo').val();
     var ancho = $('#ancho').val();
     var alto = $('#alto').val();
     var bSeguro = ( $('#checkSeguro').is(":checked") ? true : false);
     var valorEnvio = $('#valor_envio').val();
+    var contenido = $('#contenido').val();
+    var esManual = $("#esManual").val();
+    var empresaId = $("#clienteIdCombo").val();
 
-    //Inicializacion de variables
+    //Inicializacion de variables del renglon de la cotizacion
     var tarifa_id = table.row(this).data()['id'];
     var ltd_nombre = table.row(this).data()['nombre'];
     var ltd_id = table.row(this).data()['ltds_id'];
@@ -296,12 +337,11 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var precio =  preciofinal(dataRow);
     var iva = precio*0.16;
     var precioIva = (precio+iva).toFixed(2);
-    var contenido = $('#contenido').val();
-    var esManual = $("#esManual").val();
-    var empresaId = $("#clienteIdCombo").val();
     var ocurre  = dataRow['ocurre'];
     var areaExtendida  = dataRow['extendida_cobertura'];
     var zona  = dataRow['zona'];
+    var costoBase  = dataRow['costo'];
+    var kgExtra  = dataRow['kg_extra'];
 
     //valores para el modal resumen_cotizacion.blade
     $("#spanPrecio").text( precioIva );
@@ -319,6 +359,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#spanZona").text(zona);
 
     //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
+    pesofacturado()
     $("#precio").val(precioIva);
     $("#tarifa_id").val(tarifa_id);
     $("#sucursal_id").val(sucursal_id);
@@ -339,7 +380,13 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#empresa_id").val(empresaId);
     $("#ocurre").val(ocurre);
     $("#zona").val(zona);
-
+    $("#costo_base").val(costoBase);
+    $("#costo_kg_extra").val(kgExtra);
+    $("#peso_dimensional").val(dimensional);
+    $("#peso_bascula").val(bascula);
+    $("#sobre_peso_kg").val(sobrePesoKg);
+    
+    
     var iteracionClone = 0
     var pesos = []
     var largos = []

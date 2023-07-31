@@ -9,7 +9,7 @@
                             <table id="tablaReporteVentasAjax" class="table table-striped table-bordered text-nowrap " >
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>ID REPORTE </th>
                                         <th class='notexport'>REPORTE</th>
                                         <th>FECHA <br>CREACION</th>
                                         <th>CLIENTE</th>

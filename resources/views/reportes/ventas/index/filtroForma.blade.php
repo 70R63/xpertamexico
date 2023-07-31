@@ -29,7 +29,7 @@
                         </div>
                         {!! Form::select('ltdId'
                             , Config('ltd.general')
-                            ,null
+                            ,0
                             ,['class'       => 'form-control select2'
                                 ,'placeholder'  => 'Seleccionar'
                                 ,'id'       => 'ltdId'
@@ -48,8 +48,8 @@
                         </div>
 
                         {!! Form::select('servicio_id'
-                            , ['1' => 'Terrestre', '2'=>'Dia Sig.', '3'=>'2 Dias']
-                            ,null
+                            , ['0' => 'TODOS','1' => 'Terrestre', '2'=>'Dia Sig.', '3'=>'2 Dias']
+                            ,0
                             ,['class'       => 'form-control select2'
                                 ,'placeholder'  => 'Seleccionar'
                                 ,'id'       => 'servicio_id'

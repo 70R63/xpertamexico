@@ -20,6 +20,11 @@ class Guia {
      * @var nombre
      */
     private $insert;
+    private $zona = "NA";
+	private $costoBase = 0;
+	private $costoKgExtra = 0;
+	private $pesoDimension = 0;
+	private $pesoBascula = 0;
 	
 	function __construct()
 	{
@@ -42,6 +47,11 @@ class Guia {
 				,'canal'		=> ""
 				,'created_at'	=> ""
 				,'zona'	=> "NA"
+				,'costo_base'	=>	0
+				,'costo_kg_extra'	=>	0
+				,'peso_dimensional'	=>	0
+				,'peso_bascula'	=>	0
+				,'sobre_peso_kg'	=>	0
 			);
 	}
 
@@ -102,9 +112,13 @@ class Guia {
 				,'canal'		=> $canal
 				,'created_at'	=> Carbon::now()->toDateTimeString()
 				,'zona'	=> $request['zona']
+				,'costo_base'	=>	$request['costo_base']
+				,'costo_kg_extra'	=>	$request['costo_kg_extra']
+				,'peso_dimensional'	=>	$request['peso_dimensional']
+				,'peso_bascula'	=>	$request['peso_bascula']
+				,'sobre_peso_kg'	=>	$request['sobre_peso_kg']
 
 			);
-		Log::debug(print_r($this->insert,true));
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO----- ");
 	}
 
@@ -116,6 +130,11 @@ class Guia {
 		$valorEnvio = sprintf("%.2f",$request['valor_envio']);
 		$precio = 0;
 		$zona = "NA";
+		$costoBase = 0;
+		$costoKgExtra = 0;
+		$pesoDimension = 0;
+		$pesoBascula = 0;
+		$sobrePesoKg = 0;
 	
 		if ($canal === "WEB") {
 			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CANAL WEB ");
@@ -161,7 +180,12 @@ class Guia {
 			$piezas = $request['piezas'];
 			$precio = sprintf("%.2f",$request['precio']);
 			$contenido = empty($request['contenido']) ? "" :$request['contenido'];
-			$zona = $request['zona'];
+			$costoBase = $request['costo_base'];
+			$costoKgExtra = $request['costo_kg_extra'];
+			$pesoDimension = $request['peso_dimensional'];
+			$pesoBascula = $request['peso_bascula'];
+			$sobrePesoKg = $request['sobre_peso_kg'];
+			//,'sobre_peso_kg'	=>	0
 			
 		}
 
@@ -212,11 +236,17 @@ class Guia {
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
 				,'zona'	=> $zona
+				,'costo_base'	=>	$costoBase
+				,'costo_kg_extra'	=>	$costoKgExtra
+				,'peso_dimensional'	=>	$pesoDimension
+				,'peso_bascula'	=>	$pesoBascula
+				,'sobre_peso_kg'	=>	$sobrePesoKg
+				
 
  			);
 
 		Log::info(print_r($insert,true));
-		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO ".$canal);
+		Log::info(__CLASS__." ".__FUNCTION__." FINALIZADO ".$canal);
 		return $insert;
 	}
 
@@ -329,6 +359,13 @@ class Guia {
 	public function parseoDhl($request, $singleton, $canal = "API", $namePdf= "sinnombre.pdf"){
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO ".$canal);
 
+		$zona = "NA";
+		$costoBase = 0;
+		$costoKgExtra = 0;
+		$pesoDimension = 0;
+		$pesoBascula = 0;
+		$sobrePesoKg = 0;
+
 		switch ($canal) {
 			case "WEB":
 			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -349,6 +386,8 @@ class Guia {
 				$cia = $request['sucursal_id'];
 				$cia_d = $request['cliente_id'];
 				$ltdId = $request['ltd_id'];
+
+
 
 				
 				switch ($request['esManual']) {
@@ -377,6 +416,12 @@ class Guia {
 				    	Log::info("No se cargo ningun caso");
 				}
 
+				$zona = $request['zona'];
+				$costoBase = $request['costo_base'];
+				$costoKgExtra = $request['costo_kg_extra'];
+				$pesoDimension = $request['peso_dimensional'];
+				$pesoBascula = $request['peso_bascula'];
+				$sobrePesoKg = $request['sobre_peso_kg'];
 
 			    break;
 			case "API":
@@ -406,7 +451,12 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
-				,'zona'	=> $request['zona']
+				,'zona'	=> $zona
+				,'costo_base'	=>	$costoBase
+				,'costo_kg_extra'	=>	$costoKgExtra
+				,'peso_dimensional'	=>	$pesoDimension
+				,'peso_bascula'	=>	$pesoBascula
+				,'sobre_peso_kg'	=>	$sobrePesoKg
 
  			);
 
@@ -571,6 +621,7 @@ class Guia {
 
 	static public function validaPiezasPaquete($request, $key, $boolPrecio, $guiaId, $plataforma="WEB")
 	{
+		Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		switch ($plataforma) {
 			case 'API':
 				$guiaPaqueteInsert = self::paqueteAPI($request, $guiaId);
@@ -580,7 +631,8 @@ class Guia {
 				$guiaPaqueteInsert = self::paqueteWeb($request, $key, $boolPrecio, $guiaId);
 				break;
 		}
-		
+
+		Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $guiaPaqueteInsert;
 
 	}
@@ -628,7 +680,7 @@ class Guia {
 
 	static public function paqueteWeb($request, $key, $boolPrecio, $guiaId)
 	{
-		        
+		Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$precioUnitario = 0;
         if ($boolPrecio ){
             $precioUnitario = $request['precio'];
@@ -658,7 +710,7 @@ class Guia {
             );    
 
         }
-
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $guiaPaqueteInsert;
 		
 

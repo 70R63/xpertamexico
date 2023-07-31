@@ -14,6 +14,7 @@ $(document).ready(function() {
 
 function documentoVentaCsv(row){
     
+    
     html = '<a href="../'+row.ruta_csv+'" target="_blank"> \
                 <i class="text-info tx-24 fa fa-archive" data-toggle="tooltip" \
                 title="'+row.registros_cantidad+'" \

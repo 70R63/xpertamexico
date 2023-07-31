@@ -253,8 +253,7 @@ class GuiaController extends Controller
             $requestInicial = $request->except(['_token']);
             $empresa_id = auth()->user()->empresa_id;
             $plataforma = 'WEB';
-
-            
+     
             $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Singlento Estafeta ");
@@ -297,6 +296,7 @@ class GuiaController extends Controller
                 $boolPrecio = false;
 
                 $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquite =$idGuiaPaquite");
             }
             
 
@@ -409,8 +409,6 @@ class GuiaController extends Controller
             $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
             $fedex->envio( json_encode($etiqueta, JSON_UNESCAPED_UNICODE));
 
-            
-
             Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
             $guiaDTO = new GuiaDTO();
             $guiaDTO->parseoFedex($request,$fedex, "WEB");
@@ -436,6 +434,7 @@ class GuiaController extends Controller
                 $boolPrecio = false;
 
                 $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquite =$idGuiaPaquite");
             }
 
             
@@ -774,9 +773,12 @@ class GuiaController extends Controller
 
         } catch (\GuzzleHttp\Exception\RequestException $re) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." RequestException INICIO ------------------");
+
             $response = ($re->getResponse());
+            $content = json_decode($response->getBody()->getContents() );
+            Log::debug(print_r($content,true));
             Log::debug(print_r($re->getMessage(),true));
-            $mensaje = array("RequestException - Consulte a su proveedor");
+            $mensaje = array("RequestException - ".$content -> detail);
             
             Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
 

@@ -36,7 +36,7 @@ class ReportesController extends ApiController
                             ;
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            Log::debug(print_r($reporteVentas,true));
+            //Log::debug(print_r($reporteVentas,true));
             
 
             $resultado = array();
@@ -87,7 +87,7 @@ class ReportesController extends ApiController
                 ->first()
                 ;
 
-            //Log::info(print_r($empresa,true));
+            Log::info(print_r($empresa,true));
 
             $reporteVentas = Reportes_ventas::filtro( $parametros )
                 ->get()->toArray()
@@ -113,15 +113,14 @@ class ReportesController extends ApiController
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             fputcsv($handle, [
-                "id",
-                "empresa_id"
-                ,"usuario"
-                ,"ltd_id"
-                ,"trackingNumber"
-                ,"servicio_id"
-                ,"empresa"
-                ,"creacion"
-
+                "ID GUIA",
+                "EMPRESA_ID"
+                ,"USUARIO"
+                ,"LTD_ID"
+                ,"TRACKINGNUMBER"
+                ,"SERVICIO_ID"
+                ,"EMPRESA"
+                ,"CREACION"
                 ,"FECHA ENVIO"
                 ,"PESO BASCUAL"
                 ,"LARGO"
@@ -161,16 +160,16 @@ class ReportesController extends ApiController
                     $venta['empresa_id'],
                     $venta['usuario']
                     ,$venta['ltd_id']
-                    ,$venta['tracking_number']
+                    ,sprintf("'%s'",trim($venta['tracking_number']))
                     ,$venta['servicio_id']
                     ,$venta['nombre']
                     ,$venta['created_at']
                     ,""
-                    ,""
-                    ,""
-                    ,""
-                    ,""
-                    ,""
+                    ,$venta['peso_bascula']
+                    ,$venta['largo']
+                    ,$venta['ancho']
+                    ,$venta['alto']
+                    ,$venta['peso_dimensional']
                     ,$venta['ciudad_origen']
                     ,$venta['entidad_federativa_origen']
                     ,$venta['cp_origen']
@@ -181,17 +180,17 @@ class ReportesController extends ApiController
                     ,$venta['contacto_destino']
                     ,""
                     ,""
-                    ,""
+                    ,$venta['sobre_peso_kg']
                     ,$venta['zona']
-                    ,""
-                    ,""
+                    ,$venta['costo_base']
+                    ,$venta['costo_kg_extra']
                     ,""
                     ,""
                     ,""
                     ,""
                     ,$venta['seguro']
-                    ,""
-                    ,""
+                    ,$venta['costo_base']+($venta['costo_kg_extra']*$venta['sobre_peso_kg'])
+                    ,$venta['precio']
                     ,$venta['rastreo_nombre']
 
                 ]);
@@ -213,6 +212,7 @@ class ReportesController extends ApiController
 
             $resultado = array();
             $mensaje = "ok";
+            header('Content-Type: text/csv');
             return $this->successResponse($reporteVentas, $mensaje);    
 
         } catch (\InvalidArgumentException $ex) {
