@@ -44,7 +44,6 @@ class RastreosController extends Controller
                 $rastreoPeticion[]= $rastreoPeticionLtd;
 
             }            
-
             Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO----------------- ");
             return view(self::DASH_v 
                     ,compact("rastreoPeticion") 
