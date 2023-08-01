@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('guias', function (Blueprint $table) {
-            $table->float('costo_base', 10,4)->nullable(false)->default(0.0);
-            $table->float('costo_kg_extra', 8,2)->nullable(false)->default(0.0);
-            $table->float('peso_dimensional', 10,4)->nullable(false)->default(0.0);
-            $table->float('peso_bascula', 10,4)->nullable(false)->default(0.0);
-            $table->integer('sobre_peso_kg')->nullable(false)->default(0);
+            $table->float('costo_base', 10,4)->nullable(true)->default(0.0);
+            $table->float('costo_kg_extra', 8,2)->nullable(true)->default(0.0);
+            $table->float('peso_dimensional', 10,4)->nullable(true)->default(0.0);
+            $table->float('peso_bascula', 10,4)->nullable(true)->default(0.0);
+            $table->integer('sobre_peso_kg')->nullable(true)->default(0);
         });
     }
 

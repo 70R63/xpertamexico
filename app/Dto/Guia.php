@@ -25,6 +25,7 @@ class Guia {
 	private $costoKgExtra = 0;
 	private $pesoDimension = 0;
 	private $pesoBascula = 0;
+
 	
 	function __construct()
 	{
@@ -52,6 +53,7 @@ class Guia {
 				,'peso_dimensional'	=>	0
 				,'peso_bascula'	=>	0
 				,'sobre_peso_kg'	=>	0
+				,'costo_extendida'	=>	0
 			);
 	}
 
@@ -116,7 +118,8 @@ class Guia {
 				,'costo_kg_extra'	=>	$request['costo_kg_extra']
 				,'peso_dimensional'	=>	$request['peso_dimensional']
 				,'peso_bascula'	=>	$request['peso_bascula']
-				,'sobre_peso_kg'	=>	$request['sobre_peso_kg']
+				,'sobre_peso_kg'	=> $request['sobre_peso_kg']
+				,'costo_extendida'	=> $request['costo_extendida']
 
 			);
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO----- ");
@@ -185,7 +188,7 @@ class Guia {
 			$pesoDimension = $request['peso_dimensional'];
 			$pesoBascula = $request['peso_bascula'];
 			$sobrePesoKg = $request['sobre_peso_kg'];
-			//,'sobre_peso_kg'	=>	0
+			$costoExtendida	=> $request['costo_extendida'];
 			
 		}
 
@@ -240,7 +243,8 @@ class Guia {
 				,'costo_kg_extra'	=>	$costoKgExtra
 				,'peso_dimensional'	=>	$pesoDimension
 				,'peso_bascula'	=>	$pesoBascula
-				,'sobre_peso_kg'	=>	$sobrePesoKg
+				,'sobre_peso_kg'	=> $sobrePesoKg
+				,'costo_extendida'	=> $costoExtendida
 				
 
  			);
@@ -269,7 +273,6 @@ class Guia {
 			    $usuario = auth()->user()->name;
 			    $empresa_id = auth()->user()->empresa_id;
 
-				$extendida = "NO";
 				$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
 				$valorEnvio = sprintf("%.2f",$request['valor_envio']);
 				$servicioId = $request['servicio_id'];
@@ -282,6 +285,7 @@ class Guia {
 				$cia = $request['sucursal_id'];
 				$cia_d = $request['cliente_id'];
 				$ltdId = $request['ltd_id'];
+				$costoExtendida = $request['costo_extendida'];
 
 				
 				switch ($request['esManual']) {
@@ -339,7 +343,12 @@ class Guia {
 				,'precio'		=> $precio
 				,'contenido'	=> $contenido
 				,'created_at'	=> Carbon::now()->toDateTimeString()
-				,'zona'	=> $request['zona']
+				,'zona'	=> $zona
+				,'costo_base'	=>	$costoBase
+				,'costo_kg_extra'	=>	$costoKgExtra
+				,'peso_dimensional'	=>	$pesoDimension
+				,'peso_bascula'	=>	$pesoBascula
+				,'sobre_peso_kg'	=>	$sobrePesoKg
 
  			);
 

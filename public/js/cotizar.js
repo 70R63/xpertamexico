@@ -7,6 +7,7 @@ var costoPesoExtra = 0;
 var dimensional = 0;
 var bascula = 0;
 var sobrePesoKg = 0;
+var costoCoberturaExtendida = 0;
 
 
 function pesoDimensionalyBascula(){
@@ -103,7 +104,7 @@ function preciofinal(dataRow){
     //Variable Global;
     piezas = $('#piezas').val();
     peso = $('#pesoFacturado').val();
-    var costoCoberturaExtendida = 0;
+    costoCoberturaExtendida = 0;
     costoPesoExtra = 0;
 
     costoSeguroValidar(dataRow.seguro);
@@ -385,6 +386,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#peso_dimensional").val(dimensional);
     $("#peso_bascula").val(bascula);
     $("#sobre_peso_kg").val(sobrePesoKg);
+    $("#costo_extendida").val(costoCoberturaExtendida);
+    
     
     
     var iteracionClone = 0

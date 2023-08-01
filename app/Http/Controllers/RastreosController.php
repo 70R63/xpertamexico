@@ -35,6 +35,8 @@ class RastreosController extends Controller
 
             $rastreoPeticion = array();
             foreach ( Config('ltd.general') as $key => $value) {
+                if ($key == 0) 
+                    continue;
                 $rastreoPeticionLtd = Rastreo_peticion::where('completado',1)
                     ->where("ltd_id",$key)
                     ->latest()

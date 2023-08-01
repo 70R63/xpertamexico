@@ -221,3 +221,10 @@
         ,'id'       => 'sobre_peso_kg' 
     ])
 !!}
+
+{!! Form::hidden('costo_extendida'
+    , $objeto['costo_extendida']
+    ,['class'       => 'form-control'
+        ,'id'       => 'costo_extendida' 
+    ])
+!!}
