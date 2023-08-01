@@ -286,7 +286,7 @@ class Guia {
 				$cia_d = $request['cliente_id'];
 				$ltdId = $request['ltd_id'];
 				$costoExtendida = $request['costo_extendida'];
-
+				$zona = $request['zona'];
 				
 				switch ($request['esManual']) {
 					case "SI":
