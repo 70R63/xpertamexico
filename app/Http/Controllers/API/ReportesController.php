@@ -189,7 +189,7 @@ class ReportesController extends ApiController
                     ,""
                     ,""
                     ,$venta['seguro']
-                    ,$venta['costo_base']+($venta['costo_kg_extra']*$venta['sobre_peso_kg'])
+                    ,$venta['costo_base']+($venta['costo_kg_extra']*$venta['sobre_peso_kg'])+$venta['costo_extendida']
                     ,$venta['precio']
                     ,$venta['rastreo_nombre']
 
