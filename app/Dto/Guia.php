@@ -189,6 +189,7 @@ class Guia {
 			$pesoBascula = $request['peso_bascula'];
 			$sobrePesoKg = $request['sobre_peso_kg'];
 			$costoExtendida	= $request['costo_extendida'];
+			$zona = $request['zona'];
 			
 		}
 
@@ -292,6 +293,7 @@ class Guia {
 				$pesoBascula = $request['peso_bascula'];
 				$sobrePesoKg = $request['sobre_peso_kg'];
 				$costoExtendida	= $request['costo_extendida'];
+				$zona = $request['zona'];
 				
 				switch ($request['esManual']) {
 					case "SI":
