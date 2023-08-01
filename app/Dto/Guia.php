@@ -286,7 +286,12 @@ class Guia {
 				$cia_d = $request['cliente_id'];
 				$ltdId = $request['ltd_id'];
 				$costoExtendida = $request['costo_extendida'];
-				$zona = $request['zona'];
+				$costoBase = $request['costo_base'];
+				$costoKgExtra = $request['costo_kg_extra'];
+				$pesoDimension = $request['peso_dimensional'];
+				$pesoBascula = $request['peso_bascula'];
+				$sobrePesoKg = $request['sobre_peso_kg'];
+				$costoExtendida	= $request['costo_extendida'];
 				
 				switch ($request['esManual']) {
 					case "SI":
