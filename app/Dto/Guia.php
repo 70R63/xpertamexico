@@ -188,7 +188,7 @@ class Guia {
 			$pesoDimension = $request['peso_dimensional'];
 			$pesoBascula = $request['peso_bascula'];
 			$sobrePesoKg = $request['sobre_peso_kg'];
-			$costoExtendida	=> $request['costo_extendida'];
+			$costoExtendida	= $request['costo_extendida'];
 			
 		}
 
@@ -349,6 +349,7 @@ class Guia {
 				,'peso_dimensional'	=>	$pesoDimension
 				,'peso_bascula'	=>	$pesoBascula
 				,'sobre_peso_kg'	=>	$sobrePesoKg
+				,'costo_extendida'	=> $costoExtendida
 
  			);
 
@@ -382,7 +383,6 @@ class Guia {
 			    $usuario = auth()->user()->name;
 			    $empresa_id = auth()->user()->empresa_id;
 
-				$extendida = "NO";
 				$costoSeguro = sprintf("%.2f",$request['costo_seguro']);
 				$valorEnvio = sprintf("%.2f",$request['valor_envio']);
 				$servicioId = $request['servicio_id'];
@@ -395,7 +395,13 @@ class Guia {
 				$cia = $request['sucursal_id'];
 				$cia_d = $request['cliente_id'];
 				$ltdId = $request['ltd_id'];
-
+				$zona = $request['zona'];
+				$costoBase = $request['costo_base'];
+				$costoKgExtra = $request['costo_kg_extra'];
+				$pesoDimension = $request['peso_dimensional'];
+				$pesoBascula = $request['peso_bascula'];
+				$sobrePesoKg = $request['sobre_peso_kg'];
+				$costoExtendida	= $request['costo_extendida'];
 
 
 				
@@ -425,12 +431,7 @@ class Guia {
 				    	Log::info("No se cargo ningun caso");
 				}
 
-				$zona = $request['zona'];
-				$costoBase = $request['costo_base'];
-				$costoKgExtra = $request['costo_kg_extra'];
-				$pesoDimension = $request['peso_dimensional'];
-				$pesoBascula = $request['peso_bascula'];
-				$sobrePesoKg = $request['sobre_peso_kg'];
+				
 
 			    break;
 			case "API":
@@ -466,7 +467,7 @@ class Guia {
 				,'peso_dimensional'	=>	$pesoDimension
 				,'peso_bascula'	=>	$pesoBascula
 				,'sobre_peso_kg'	=>	$sobrePesoKg
-
+				,'costo_extendida'	=> $costoExtendida
  			);
 
 		Log::info(print_r($this->insert,true));

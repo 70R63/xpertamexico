@@ -184,7 +184,7 @@ class ReportesController extends ApiController
                     ,$venta['zona']
                     ,$venta['costo_base']
                     ,$venta['costo_kg_extra']
-                    ,""
+                    ,$venta['costo_extendida']
                     ,""
                     ,""
                     ,""
