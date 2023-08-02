@@ -30,14 +30,13 @@ class ReportesController extends ApiController
             Log::debug(print_r($request->all(),true));
 
             $reporteVentas = Reportes::select("reportes.*","empresas.nombre")
-                            ->join('empresas', 'empresas.id', '=', 'reportes.cia')
+                            ->leftJoin('empresas', 'empresas.id', '=', 'reportes.cia')
                             ->get()->toArray()
                             //->toSql()
                             ;
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             //Log::debug(print_r($reporteVentas,true));
-            
 
             $resultado = array();
             $mensaje = "ok";
@@ -83,12 +82,6 @@ class ReportesController extends ApiController
             $parametros = $request->all();
             Log::debug(print_r($parametros,true));
 
-            $empresa = Empresa::select("nombre")->where('id',$parametros['clienteIdCombo'])
-                ->first()
-                ;
-
-            Log::info(print_r($empresa,true));
-
             $reporteVentas = Reportes_ventas::filtro( $parametros )
                 ->get()->toArray()
                 
@@ -97,11 +90,19 @@ class ReportesController extends ApiController
             //Log::debug($reporteVentas->toSql());
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info(print_r($reporteVentas,true));
             
-            
+            /*
             $headers = array(
                 'Content-Type' => 'text/csv'
             );
+            */
+
+            $fechaIni = Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
+            $fechaFin = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
+
+            $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
+
 
             $carbon = Carbon::parse();
             $unique = md5( (string)$carbon);
@@ -122,11 +123,12 @@ class ReportesController extends ApiController
                 ,"EMPRESA"
                 ,"CREACION"
                 ,"FECHA ENVIO"
-                ,"PESO BASCUAL"
                 ,"LARGO"
                 ,"ANCHO"
                 ,"ALTO"
+                ,"PESO FACTURADO"
                 ,"PESO DIMENSIONAL"
+                ,"PESO BASCUAL"
                 ,"CIUDAD ORIGEN"
                 ,"ESTADO ORIGEN"
                 ,"CP ORIGEN"
@@ -137,9 +139,9 @@ class ReportesController extends ApiController
                 ,"CONTACTO DESTINO"
                 ,"REFERENCIA"
                 ,"NOTAS"
-                ,"KGS EXTRA"
                 ,"ZONA"
                 ,"COSTO BASE"
+                ,"KGS EXTRA"
                 ,"COSTO KGS EXTRA"
                 ,"COSTO A.E."
                 ,"COSTO EXCESO DIMENSION Y/0 VOL IRREGULAR"
@@ -165,11 +167,12 @@ class ReportesController extends ApiController
                     ,$venta['nombre']
                     ,$venta['created_at']
                     ,""
-                    ,$venta['peso_bascula']
                     ,$venta['largo']
                     ,$venta['ancho']
                     ,$venta['alto']
+                    ,$venta['peso_facturado']
                     ,$venta['peso_dimensional']
+                    ,$venta['peso_bascula']
                     ,$venta['ciudad_origen']
                     ,$venta['entidad_federativa_origen']
                     ,$venta['cp_origen']
@@ -180,9 +183,9 @@ class ReportesController extends ApiController
                     ,$venta['contacto_destino']
                     ,""
                     ,""
-                    ,$venta['sobre_peso_kg']
                     ,$venta['zona']
                     ,$venta['costo_base']
+                    ,$venta['sobre_peso_kg']
                     ,$venta['costo_kg_extra']
                     ,$venta['costo_extendida']
                     ,""
@@ -198,19 +201,23 @@ class ReportesController extends ApiController
             }
             fclose($handle);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $fechaIni = empty($parametros['fecha_ini']) ? "0000-00-00" : Carbon::parse($parametros['fecha_ini']);
+
+            $fechaFin = empty($parametros['fecha_fin']) ? "0000-00-00" : Carbon::parse($parametros['fecha_fin']);
+
+            
             Reportes::create(array('cia' => $parametros['clienteIdCombo']
                                 ,'ltd_id' => $parametros['ltdId']
                                 ,'servicio_id'=>$parametros['servicio_id']
-                                ,'fecha_ini' => $startTime = Carbon::parse( $parametros['fecha_ini'] )
-                                ,'fecha_fin' => Carbon::parse( $parametros['fecha_fin'] )
+                                ,'fecha_ini' => $fechaIni
+                                ,'fecha_fin' => $fechaFin
                                 ,'ruta_csv' => sprintf("public/%s",$nameCsv)
                                 ,'registros_cantidad' => $contador
                                 )
                             );
-     
         
 
-            $resultado = array();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $mensaje = "ok";
             header('Content-Type: text/csv');
             return $this->successResponse($reporteVentas, $mensaje);    

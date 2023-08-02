@@ -8,7 +8,7 @@ var dimensional = 0;
 var bascula = 0;
 var sobrePesoKg = 0;
 var costoCoberturaExtendida = 0;
-
+var costoKgExtra = 0;
 
 function pesoDimensionalyBascula(){
 
@@ -112,6 +112,7 @@ function preciofinal(dataRow){
     if (peso > dataRow.kg_fin) {
         sobrePesoKg = peso - dataRow.kg_fin ;
         costoPesoExtra = sobrePesoKg * dataRow.kg_extra ;
+        costoKgExtra = dataRow.kg_extra;
     }
 
     console.log(dataRow.extendida_cobertura);
@@ -342,7 +343,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     var areaExtendida  = dataRow['extendida_cobertura'];
     var zona  = dataRow['zona'];
     var costoBase  = dataRow['costo'];
-    var kgExtra  = dataRow['kg_extra'];
+    //var kgExtra  = dataRow['kg_extra'];
 
     //valores para el modal resumen_cotizacion.blade
     $("#spanPrecio").text( precioIva );
@@ -382,7 +383,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#ocurre").val(ocurre);
     $("#zona").val(zona);
     $("#costo_base").val(costoBase);
-    $("#costo_kg_extra").val(kgExtra);
+    $("#costo_kg_extra").val(costoKgExtra);
     $("#peso_dimensional").val(dimensional);
     $("#peso_bascula").val(bascula);
     $("#sobre_peso_kg").val(sobrePesoKg);
@@ -467,7 +468,7 @@ function obtenerClientes() {
             console.log(response.data);
            
             $('#clienteIdCombo').empty();
-            $("#clienteIdCombo").append('<option> Seleccionar</option>');
+            $("#clienteIdCombo").append('<option selector="0" value="0"> TODOS</option>');
             
             $.each(response.data,function(key, empresa) {
                 $("#clienteIdCombo").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');

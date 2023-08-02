@@ -48,7 +48,7 @@ function obtenerProveedor(row){
             proveedor = "DHL"
             break;
         default:
-            proveedor = "Todos"
+            proveedor = "TODOS"
         }
     return proveedor ;
 }
@@ -70,9 +70,22 @@ function obtenerServicio(row){
             proveedor = "09:30"
             break;
         default:
-            proveedor = "Todos"
+            proveedor = "TODOS"
         }
     return proveedor;    
+}
+
+function obtenerCliente(row){
+    
+    var cliente = "TODOS";
+    switch (row.cia) {
+        case 0:
+            cliente = "TODOS"
+            break;
+        default:
+            cliente = row.nombre
+        }
+    return cliente;    
 }
 
 
@@ -187,7 +200,11 @@ function tablaReporteVentas(){
                                 return ahora.toLocaleDateString('es-MX')+" "+ ahora.toLocaleTimeString('es-MX'); 
                             }
                         }
-                        ,{ "data": "nombre" }
+                        ,{ "data": "nombre" 
+                            ,render: function(data, type, row){   
+                                return obtenerCliente(row); 
+                            }
+                        }
                         ,{ "data": "ltd_id" 
                             ,render: function(data, type, row){   
                                 return obtenerProveedor(row); 

@@ -12,7 +12,7 @@
                             , array()
                             ,null
                             ,['class'       => 'form-control select2'
-                                ,'placeholder'  => 'Seleccionar'
+                                ,'placeholder'  => 'TODOS'
                                 ,'id'       => 'clienteIdCombo'
                                 
                             ]);
