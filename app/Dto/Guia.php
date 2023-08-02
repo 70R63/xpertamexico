@@ -138,6 +138,7 @@ class Guia {
 		$pesoDimension = 0;
 		$pesoBascula = 0;
 		$sobrePesoKg = 0;
+		$costoExtendida = 0;
 	
 		if ($canal === "WEB") {
 			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CANAL WEB ");
@@ -222,33 +223,32 @@ class Guia {
 
 		
 		$insert = array('usuario' => $usuario
-				,'empresa_id' 	=> $empresa_id
-				,'ltd_id' 	=> Config('ltd.estafeta.id')
-				,'cia' 		=> $cia
-				,'cia_d' 	=> $cia_d
-				,'piezas' 	=> $piezas
-				,'documento' => ""
-				,'tracking_number' =>""
-				,'canal'	=> $canal
-				,'servicio_id'	=> $servicioId
-				,'peso'			=> $peso
-				,'dimensiones'	=> $dimensiones
-				,'extendida'	=> $extendida
-				,'seguro'		=> $costoSeguro
-				,'valor_envio'	=> $valorEnvio
-				,'precio'		=> $precio
-				,'contenido'	=> $contenido
-				,'created_at'	=> Carbon::now()->toDateTimeString()
-				,'zona'	=> $zona
-				,'costo_base'	=>	$costoBase
-				,'costo_kg_extra'	=>	$costoKgExtra
-				,'peso_dimensional'	=>	$pesoDimension
-				,'peso_bascula'	=>	$pesoBascula
-				,'sobre_peso_kg'	=> $sobrePesoKg
-				,'costo_extendida'	=> $costoExtendida
-				
-
- 			);
+			,'empresa_id' 	=> $empresa_id
+			,'ltd_id' 	=> Config('ltd.estafeta.id')
+			,'cia' 		=> $cia
+			,'cia_d' 	=> $cia_d
+			,'piezas' 	=> $piezas
+			,'documento' => ""
+			,'tracking_number' =>""
+			,'canal'	=> $canal
+			,'servicio_id'	=> $servicioId
+			,'peso'			=> $peso
+			,'dimensiones'	=> $dimensiones
+			,'extendida'	=> $extendida
+			,'seguro'		=> $costoSeguro
+			,'valor_envio'	=> $valorEnvio
+			,'precio'		=> $precio
+			,'contenido'	=> $contenido
+			,'created_at'	=> Carbon::now()->toDateTimeString()
+			,'zona'	=> $zona
+			,'costo_base'	=>	$costoBase
+			,'costo_kg_extra'	=>	$costoKgExtra
+			,'peso_dimensional'	=>	$pesoDimension
+			,'peso_bascula'	=>	$pesoBascula
+			,'sobre_peso_kg'	=> $sobrePesoKg
+			,'costo_extendida'	=> $costoExtendida
+			
+		);
 
 		Log::info(print_r($insert,true));
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZADO ".$canal);
