@@ -19,7 +19,6 @@ function documentoVentaCsv(row){
                 <i class="text-info tx-24 fa fa-archive" data-toggle="tooltip" \
                 title="'+row.registros_cantidad+'" \
                 data-original-title="fa fa-archive"> \
-                    <span class="badge badge-danger nav-link-badge">'+ row.registros_cantidad +'</span>\
                 </i>\
             </a>\
                 ';
