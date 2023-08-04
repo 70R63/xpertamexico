@@ -92,8 +92,6 @@ class ReportesController extends ApiController
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(print_r($reporteVentas,true));
 
-            //$fechaIni = Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
-            //$fechaFin = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
 
             $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
 
@@ -160,7 +158,7 @@ class ReportesController extends ApiController
             foreach ($reporteVentas as $venta) {
                 fputcsv($handle, [
                     $venta['id'],
-                    $venta['empresa_id'],
+                    $venta['empresa_nombre'],
                     $venta['usuario']
                     ,$venta['ltd_nombre']
                     ,$venta['numero_solicitud']
