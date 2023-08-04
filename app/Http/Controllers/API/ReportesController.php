@@ -92,16 +92,22 @@ class ReportesController extends ApiController
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(print_r($reporteVentas,true));
 
-            $fechaIni = Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
-            $fechaFin = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
+            //$fechaIni = Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
+            //$fechaFin = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
 
             $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
 
 
             $carbon = Carbon::parse();
-            $unique = md5( (string)$carbon);
-            $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
-            $nameCsv = sprintf("csv/%s-%s.csv",(string)$carbon,$unique);
+            
+            $carbon->settings(['toStringFormat' => 'Y-m-d']);
+
+            $fechaIni = empty($parametros['fecha_ini']) ? "0000-00-00" : Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
+
+            $fechaFin = empty($parametros['fecha_fin']) ? "0000-00-00" : Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
+
+            $nameCsv = sprintf("csv/%s-cliente_%s-ltd_%s-servicio_%s-de_%s-a_%s.csv"
+                ,(string)$carbon,$parametros['clienteIdCombo'],$parametros['ltdId'],$parametros['servicio_id'], $fechaIni, $fechaFin );
 
             $filename =  public_path($nameCsv);
             $handle = fopen($filename, 'w');
@@ -197,11 +203,6 @@ class ReportesController extends ApiController
             }
             fclose($handle);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $fechaIni = empty($parametros['fecha_ini']) ? "0000-00-00" : Carbon::parse($parametros['fecha_ini']);
-
-            $fechaFin = empty($parametros['fecha_fin']) ? "0000-00-00" : Carbon::parse($parametros['fecha_fin']);
-
-            
             Reportes::create(array('cia' => $parametros['clienteIdCombo']
                                 ,'ltd_id' => $parametros['ltdId']
                                 ,'servicio_id'=>$parametros['servicio_id']

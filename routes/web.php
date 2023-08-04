@@ -80,7 +80,7 @@ Route::resource('roles','Roles\RolesController')
 
 //Menu Ventas
 Route::resource('reportes/ventas','ReportesController')
-    ->middleware(['roles:sysadmin,admin,adminops,operaciones,auditoria']);    
+    ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,cliente']);    
 
 
 require __DIR__.'/auth.php';
