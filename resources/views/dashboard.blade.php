@@ -123,6 +123,7 @@
                             @include('menu.direcciones')
                             @include('menu.usuario')
                             @include('menu.guia')
+                            @include('menu.reportes')
 
                         @endcanany
 
@@ -130,18 +131,19 @@
                             @include('menu.empresas')
                             @include('menu.direcciones')
                             @include('menu.guia')
+                            @include('menu.reportes')
                         @endcanany
 
                         @canany(['isCliente'])
                             @include('menu.direcciones')
                             @include('menu.usuario')
                             @include('menu.guia')
-                            @include('menu.reportes')
+                           
                         @endcanany
 
                         @canany(['isUsuario'])
                             @include('menu.guia')
-                            @include('menu.reportes')
+                            
                         @endcanany                      
                         
                     </ul>

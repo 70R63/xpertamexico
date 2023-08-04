@@ -91,12 +91,6 @@ class ReportesController extends ApiController
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(print_r($reporteVentas,true));
-            
-            /*
-            $headers = array(
-                'Content-Type' => 'text/csv'
-            );
-            */
 
             $fechaIni = Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
             $fechaFin = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
@@ -118,9 +112,10 @@ class ReportesController extends ApiController
                 "EMPRESA_ID"
                 ,"USUARIO"
                 ,"LTD_ID"
+                ,"NO SOLICITUD"
                 ,"TRACKINGNUMBER"
                 ,"SERVICIO_ID"
-                ,"EMPRESA"
+                ,"CLIENTE EXPERTA"
                 ,"CREACION"
                 ,"FECHA ENVIO"
                 ,"LARGO"
@@ -140,8 +135,8 @@ class ReportesController extends ApiController
                 ,"REFERENCIA"
                 ,"NOTAS"
                 ,"ZONA"
-                ,"COSTO BASE"
                 ,"KGS EXTRA"
+                ,"COSTO BASE"
                 ,"COSTO KGS EXTRA"
                 ,"COSTO A.E."
                 ,"COSTO EXCESO DIMENSION Y/0 VOL IRREGULAR"
@@ -161,10 +156,11 @@ class ReportesController extends ApiController
                     $venta['id'],
                     $venta['empresa_id'],
                     $venta['usuario']
-                    ,$venta['ltd_id']
+                    ,$venta['ltd_nombre']
+                    ,$venta['numero_solicitud']
                     ,sprintf("'%s'",trim($venta['tracking_number']))
-                    ,$venta['servicio_id']
-                    ,$venta['nombre']
+                    ,$venta['servicio_nombre']
+                    ,$venta['clilente_xperta']
                     ,$venta['created_at']
                     ,""
                     ,$venta['largo']
@@ -184,15 +180,15 @@ class ReportesController extends ApiController
                     ,""
                     ,""
                     ,$venta['zona']
-                    ,$venta['costo_base']
                     ,$venta['sobre_peso_kg']
+                    ,$venta['costo_base']
                     ,$venta['costo_kg_extra']
                     ,$venta['costo_extendida']
                     ,""
                     ,""
                     ,""
                     ,$venta['seguro']
-                    ,$venta['costo_base']+($venta['costo_kg_extra']*$venta['sobre_peso_kg'])+$venta['costo_extendida']
+                    ,$venta['costo_base']+$venta['costo_kg_extra']+$venta['costo_extendida']
                     ,$venta['precio']
                     ,$venta['rastreo_nombre']
 

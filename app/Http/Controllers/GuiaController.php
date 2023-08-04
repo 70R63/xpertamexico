@@ -37,6 +37,8 @@ use Redirect;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
+use App\Negocio\Guia as nGuia;
+
 class GuiaController extends Controller
 {
 
@@ -280,14 +282,21 @@ class GuiaController extends Controller
 
             $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
 
-            $notices = array();
             $boolPrecio = true;
+            $i=1;
+            $numeroDeSolicitud = Carbon::now()->timestamp;
+            $notices = array("Número de Solicitud: $numeroDeSolicitud ");
             foreach ($trackingNumbers as $key => $trackingNumber) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $insert['tracking_number'] = $trackingNumber;
                 $insert['documento'] = $namePdf;
-                Log::debug(print_r($insert ,true));   
-                //dd("prueba");
+                $insert['numero_solicitud'] = $numeroDeSolicitud;
+                Log::debug(print_r($insert ,true));
+
+                if ($i > 1) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Limpiar costos");
+                    $insert = nGuia::costosEnCero( $insert );
+                }   
                 $id = Guia::create($insert)->id;
                 $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
 
@@ -297,6 +306,7 @@ class GuiaController extends Controller
 
                 $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquite =$idGuiaPaquite");
+                $i++;
             }
             
 
@@ -414,15 +424,23 @@ class GuiaController extends Controller
             $guiaDTO->parseoFedex($request,$fedex, "WEB");
 
             $insert = $guiaDTO->getInsert();
-
-            $notices = array();
+           
             $boolPrecio = true;
+            $i=1;
+            $numeroDeSolicitud = Carbon::now()->timestamp;
+            $notices = array("Número de Solicitud: $numeroDeSolicitud ");
             foreach ($fedex->getDocumentos() as $key => $documento) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 
                 $insert['tracking_number'] = $documento->trackingNumber;
                 $insert['documento'] = $documento->packageDocuments[0]->url;
-                Log::debug(print_r($insert ,true));   
+                $insert['numero_solicitud'] = $numeroDeSolicitud;
+                Log::debug(print_r($insert ,true));
+
+                if ($i > 1) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Limpiar costos");
+                    $insert = nGuia::costosEnCero( $insert );
+                }   
                 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
                 $id = Guia::create($insert)->id;
@@ -435,6 +453,7 @@ class GuiaController extends Controller
 
                 $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquite =$idGuiaPaquite");
+                $i++;
             }
 
             
@@ -554,8 +573,10 @@ class GuiaController extends Controller
             $redpack = new Redpack( $empresa_id );
             $redpack->documentation( $etiqueta );
 
-            $notices = array();
             $boolPrecio = true;
+            $i=1;
+            $numeroDeSolicitud = Carbon::now()->timestamp;
+            $notices = array("Número de Solicitud: $numeroDeSolicitud ");
             foreach ($redpack->getDocumento() as $key => $value) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
                 Log::info(print_r($value,true));
@@ -569,10 +590,18 @@ class GuiaController extends Controller
 
                 $guiaDTO = new GuiaDTO();
                 $guiaDTO->parseoRedpack($request,$redpack, "WEB", $namePdf);
+                $insert = $guiaDTO->getInsert();
 
+                $insert['numero_solicitud'] = $numeroDeSolicitud;
+                Log::debug(print_r($insert ,true));
+
+                if ($i > 1) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Limpiar costos");
+                    $insert = nGuia::costosEnCero( $insert );
+                } 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
 
-                $id = Guia::create($guiaDTO->getInsert())->id;
+                $id = Guia::create($insert)->id;
                 $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." GuiasPaquete::create");
@@ -609,7 +638,7 @@ class GuiaController extends Controller
                 }
                 
                 $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
-
+                $i++;
             }
            
             
@@ -695,8 +724,10 @@ class GuiaController extends Controller
             $sDhl = new sDhl();
             $sDhl->documentation( $etiqueta );
 
-            $notices = array();
             $boolPrecio = true;
+            $i=1;
+            $numeroDeSolicitud = Carbon::now()->timestamp;
+            $notices = array("Número de Solicitud: $numeroDeSolicitud ");
             foreach ($sDhl->getDocumento() as $key => $value) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
                 
@@ -709,10 +740,19 @@ class GuiaController extends Controller
 
                 $guiaDTO = new GuiaDTO();
                 $guiaDTO->parseoDhl($request,$sDhl, "WEB", $namePdf);
+                $insert = $guiaDTO->getInsert();
+
+                $insert['numero_solicitud'] = $numeroDeSolicitud;
+                Log::debug(print_r($insert ,true));
+
+                if ($i > 1) {
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Limpiar costos");
+                    $insert = nGuia::costosEnCero( $insert );
+                }   
 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
 
-                $id = Guia::create($guiaDTO->getInsert())->id;
+                $id = Guia::create($insert)->id;
                 $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." GuiasPaquete::create");
@@ -749,7 +789,7 @@ class GuiaController extends Controller
                 }
                 
                 $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
-
+                $i++;
             }
            
             

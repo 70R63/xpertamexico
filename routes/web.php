@@ -58,9 +58,9 @@ Route::resource('sucursales','SucursalController')
 
 //Menu Proveedores
 Route::resource('ltds','LtdController')
-    ->middleware(['roles:sysadmin,admin,auditoria.comercial']);
+    ->middleware(['roles:sysadmin,admin,auditoria,comercial']);
 Route::resource('coberturas','CoberturasController')
-    ->middleware(['roles:sysadmin,admin,auditoria.comercial']);
+    ->middleware(['roles:sysadmin,admin,auditoria,comercial']);
 
 //Menu Usuario
 Route::resource('users','Roles\UsersController')
@@ -80,7 +80,7 @@ Route::resource('roles','Roles\RolesController')
 
 //Menu Ventas
 Route::resource('reportes/ventas','ReportesController')
-    ->middleware(['roles:sysadmin,admin']);    
+    ->middleware(['roles:sysadmin,admin,adminops,operaciones,auditoria']);    
 
 
 require __DIR__.'/auth.php';

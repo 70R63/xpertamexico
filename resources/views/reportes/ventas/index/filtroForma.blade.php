@@ -48,7 +48,7 @@
                         </div>
 
                         {!! Form::select('servicio_id'
-                            , ['0' => 'TODOS','1' => 'Terrestre', '2'=>'Dia Sig.', '3'=>'2 Dias']
+                            , $servicioCombo
                             ,0
                             ,['class'       => 'form-control select2'
                                 ,'placeholder'  => 'Seleccionar'

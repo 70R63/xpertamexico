@@ -54,6 +54,7 @@ class Guia {
 				,'peso_bascula'	=>	0
 				,'sobre_peso_kg'	=>	0
 				,'costo_extendida'	=>	0
+				,'numero_solicitud' => 0
 			);
 	}
 

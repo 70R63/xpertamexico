@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateReportesRequest;
 use App\Models\Empresa;
 
 use Log;
+use App\Models\Servicio;
 
 class ReportesController extends Controller
 {
@@ -30,10 +31,14 @@ class ReportesController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
             $tabla = array();
+            $servicioCombo = Servicio::pluck("nombre","id")->toArray();
+            $servicioCombo[0] = "TODOS";
+            //dd($servicioCombo);
+            ksort($servicioCombo);
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return view("reportes.ventas.index"
-                    ,compact("tabla")
+                    ,compact("servicioCombo")
                 );
 
         } catch (Exception $e) {

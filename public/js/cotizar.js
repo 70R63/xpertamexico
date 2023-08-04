@@ -383,7 +383,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     $("#ocurre").val(ocurre);
     $("#zona").val(zona);
     $("#costo_base").val(costoBase);
-    $("#costo_kg_extra").val(costoKgExtra);
+    $("#costo_kg_extra").val(costoPesoExtra); //costoKgExtra
     $("#peso_dimensional").val(dimensional);
     $("#peso_bascula").val(bascula);
     $("#sobre_peso_kg").val(sobrePesoKg);
