@@ -102,6 +102,7 @@
                         @endcanany
 
                         @canany(['isContraloria'])
+                            @include('menu.empresas')
                             @include('menu.reportes')
                         @endcanany
 

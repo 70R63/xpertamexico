@@ -46,9 +46,9 @@ Route::resource('guiaretorno','GuiaRetornoController')
 
 //Menu Clientes
 Route::resource('empresas','EmpresaController')
-    ->middleware(['roles:sysadmin,admin,comercial,adminops,operaciones']);
+    ->middleware(['roles:sysadmin,admin,contraloria,comercial,adminops,operaciones']);
 Route::resource('tarifas','TarifaController')
-    ->middleware(['roles:sysadmin,admin,comercial,adminops,operaciones']);
+    ->middleware(['roles:sysadmin,admin,contraloria,comercial,adminops,operaciones']);
 
 //Menu Direcciones
 Route::resource('clientes','ClienteController')
