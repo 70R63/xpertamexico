@@ -28,7 +28,7 @@ class Guia extends Model
         
         $query->select('id','ltd_id', 'tracking_number')
                 ->where('ltd_id',$ltdId)            
-                ->whereIN('rastreo_estatus',array(1,2,3))
+                ->whereIN('rastreo_estatus',array(1,2,3,6))
                 //->offset(0)->limit(10)
                 ;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
