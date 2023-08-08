@@ -229,38 +229,55 @@ class RastreosController extends Controller
                 Log::info("$key / $totalGuias");
                 Log::debug(print_r($guia,true));
 
-                $sDhl = new sDhl();
-                $sDhl->trackingByNumber($guia['tracking_number']); 
-  
-                $update = array();
-            
-                if ($sDhl->getExiteSeguimiento()) {   
-                    Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
-                    $paquete = $sDhl->getPaquete();
-
-                    $update = array('ultima_fecha' => $sDhl->getUltimaFecha()
-                            ,'rastreo_estatus' => Config('ltd.dhl.rastreoEstatus')[$sDhl->getLatestStatusDetail()]
-                            ,'rastreo_peso' => $paquete['peso'] 
-                            ,'largo' => $paquete['largo'] 
-                            ,'ancho' => $paquete['ancho'] 
-                            ,'alto' => $paquete['alto']
-                            ,'quien_recibio' =>  $sDhl->getQuienRecibio()
-                            ,'pickup_fecha' =>  $sDhl->getPickupFecha()
-
-                        );
-
-                    Log::info(print_r($update,true));
+                try {
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $sDhl = new sDhl();
+                    $sDhl->trackingByNumber($guia['tracking_number']); 
+      
+                    $update = array();
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+                    if ($sDhl->getExiteSeguimiento()) {   
+                        Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
+                        $paquete = $sDhl->getPaquete();
+
+                        $update = array('ultima_fecha' => $sDhl->getUltimaFecha()
+                                ,'rastreo_estatus' => Config('ltd.dhl.rastreoEstatus')[$sDhl->getLatestStatusDetail()]
+                                ,'rastreo_peso' => $paquete['peso'] 
+                                ,'largo' => $paquete['largo'] 
+                                ,'ancho' => $paquete['ancho'] 
+                                ,'alto' => $paquete['alto']
+                                ,'quien_recibio' =>  $sDhl->getQuienRecibio()
+                                ,'pickup_fecha' =>  $sDhl->getPickupFecha()
+
+                            );
+
+                        Log::info(print_r($update,true));
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                        $affectedRows = Guia::where("id", $guia['id'])
+                                ->update($update);
+            
+                        Log::debug("affectedRows -> $affectedRows");
+                    }else{
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
+                    }
+                    
+                } catch (\GuzzleHttp\Exception\ClientException $ex) {
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $update = array('rastreo_estatus' => 6);
+                    
                     $affectedRows = Guia::where("id", $guia['id'])
-                            ->update($update);
-        
+                                ->update($update);
+                    
                     Log::debug("affectedRows -> $affectedRows");
-                }else{
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                     
                 }
                 
+                
     
-            }
+            }//fin foreach
             
             Rastreo_peticion::where('id',$rastreoPeticionesID)
                 ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
@@ -268,7 +285,13 @@ class RastreosController extends Controller
                         ,"ltd_id" => Config('ltd.dhl.id')) 
                     );
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
-            
+        
+        } catch (\GuzzleHttp\Exception\ClientException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ClientException");
+            $response = json_decode($ex->getResponse()->getBody());
+            Log::debug(print_r($response,true));
+            //$mensaje = array($response->errors[0]->code);
+
         } catch(\Illuminate\Database\QueryException $ex){ 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." QueryException");
             Log::debug($ex->getMessage()); 
