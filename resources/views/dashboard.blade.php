@@ -139,7 +139,7 @@
                             @include('menu.direcciones')
                             @include('menu.usuario')
                             @include('menu.guia')
-                            @include('menu.reportes')
+                            
                         @endcanany
 
                         @canany(['isUsuario'])
