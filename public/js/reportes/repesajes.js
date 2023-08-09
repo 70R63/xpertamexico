@@ -1,13 +1,12 @@
 $(document).ready(function() {
-    console.log("document ready reportes ventas")
-    if ($('#tablaReporteVentasAjax').length) {
-        tablaReporteVentas()  
-        // cotizar.js   
-        obtenerClientes();
+    console.log("document ready reportes repesajes")
+    if ($('#tablaReporteRepesajesAjax').length) {
+        tablaReporteRepesajes()
+         // cotizar.js
+        obtenerClientes();     
     }
 
     $( ".datepicker" ).datepicker();
-    
     
    
 
@@ -90,12 +89,12 @@ function obtenerCliente(row){
 }
 
 
-$("#generarReporte").click(function(e) {
-    console.log("generarReporte")
+$("#generarReporteRepesajes").click(function(e) {
+    console.log("generarReporteRepesajes")
     e.preventDefault();
 
-    var form = $('#reporteVentasForm').parsley().refresh();
-    var action = $('#reporteVentasForm').attr("action"); 
+    var form = $('#reporteRepesajesForm').parsley().refresh();
+    var action = $('#reporteRepesajesForm').attr("action"); 
     console.log(action);
 
     swal(
@@ -110,13 +109,13 @@ $("#generarReporte").click(function(e) {
             type: 'POST',
             /* send the csrf-token and the input to the controller */
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data: $('#reporteVentasForm').serialize()
+            data: $('#reporteRepesajesForm').serialize()
             
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
 
-                tablaReporteVentas();
+                tablaReporteRepesajes();
             }).fail( function( data,jqXHR, textStatus, errorThrown ) {
                 console.log( "fail" );
                 swal(
@@ -136,19 +135,19 @@ $("#generarReporte").click(function(e) {
 
 });
 
-function tablaReporteVentas(){
+function tablaReporteRepesajes(){
 
     $.ajax({
         url: '../api/reportes/ventas',
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        data: $('#reporteVentasForm').serialize()
+        data: $('#reporteRepesajesForm').serialize()
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
         console.log(response.data)
-        table = $('#tablaReporteVentasAjax').DataTable({
+        table = $('#tablaReporteRepesajesAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
                     }
@@ -235,6 +234,6 @@ function tablaReporteVentas(){
 
 
     }).always(function() {
-            console.log( "complete guiasTablaAjax" );
+            console.log( "complete tablaReporteRepesajesAjax" );
     });
 } 

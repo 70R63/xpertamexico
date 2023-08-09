@@ -11,6 +11,7 @@ use App\Http\Controllers\API\DireccionController;
 use App\Http\Controllers\API\CPController;
 use App\Http\Controllers\API\ClienteController;
 use App\Http\Controllers\API\ReportesController;
+use App\Http\Controllers\API\Reportes\RepesajeController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -84,8 +85,15 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 
         Route::group(['prefix'=>'reportes','as'=>'reportes.'], function(){          
             Route::controller(ReportesController::class)->group(function(){
-                Route::get('ventas', 'ventas')->name("ventas");
+                Route::get('ventas', 'reportes')->name("ventas");
                 Route::post('ventas', 'creacion')->name("creacion");    
+            });
+
+            Route::group(['prefix'=>'repesajes','as'=>'repesajes.'], function(){
+                Route::controller(RepesajeController::class)->group(function(){
+                    Route::get('repesajes', 'reportes')->name("repensajes");
+                    Route::post('repesajes', 'creacion')->name("creacion");    
+                });
             });
         });
 

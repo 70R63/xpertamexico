@@ -14,7 +14,7 @@
 
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('ventas.index') }}">Repesaje </a>
+			<a class="nav-sub-link" href="{{ route('repesajes.index') }}">Repesaje </a>
 		</li>
 	</ul>
 </li>

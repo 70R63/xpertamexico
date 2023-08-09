@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use App\Models\API\Sucursal;
 use App\Models\EmpresaEmpresas;
 
-class Reportes_ventas extends Model
+class Reportes_repesajes extends Model
 {
     use HasFactory;
 
@@ -58,7 +58,6 @@ class Reportes_ventas extends Model
         if ( !empty($parametros['fecha_fin']) ) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $carbon = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
-            //$carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
             Log::debug($carbon);
             $query->where('created_at','<=', $carbon." 23:59:59");
         }

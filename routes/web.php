@@ -78,8 +78,11 @@ Route::resource('rastreos','RastreosController')
 Route::resource('roles','Roles\RolesController')
     ->middleware(['roles:sysadmin,admin']);
 
-//Menu Ventas
+//Menu Reportes
 Route::resource('reportes/ventas','ReportesController')
+    ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,cliente']);
+
+Route::resource('reportes/repesajes','Reportes\RepesajeController')
     ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,cliente']);    
 
 

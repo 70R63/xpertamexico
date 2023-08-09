@@ -264,8 +264,8 @@ class RastreosController extends Controller
                     
                 } catch (\GuzzleHttp\Exception\ClientException $ex) {
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                    $update = array('rastreo_estatus' => 6);
-                    
+                    $update = array('rastreo_estatus' => 7);
+
                     $affectedRows = Guia::where("id", $guia['id'])
                                 ->update($update);
                     

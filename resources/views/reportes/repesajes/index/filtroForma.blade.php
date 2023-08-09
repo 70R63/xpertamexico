@@ -1,5 +1,5 @@
 <!-- Row -->
-{!! Form::open([ 'route' => 'api.reportes.ventas', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'reporteVentasForm' ]) !!}
+{!! Form::open([ 'route' => 'api.reportes.ventas', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'reporteRepesajesForm' ]) !!}
     <div class="card custom-card">
         <div class="card-body">
             <div class="row row-sm">
@@ -90,13 +90,13 @@
     <div class="col-lg-12">
     <div class="form-group row justify-content-around">     
         <div>
-            <a id="generarReporte" class="btn btn-primary" >Generar</a>    
+            <a id="generarReporteRepesajes" class="btn btn-primary" >Generar</a>    
             <a id="limpiar" class="btn badge-dark" >Limpiar</a>
             
         </div>   
-    </div>  
+    </div>
     {!! Form::hidden('tipo'
-        , 1
+        , 2
         ,['class'       => 'form-control'
             ,'id'       => 'tipo'
             

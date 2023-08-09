@@ -291,6 +291,7 @@
         @routes
         <script src="{{ asset('js/direcciones.js') }}" ></script>
         <script src="{{ asset('js/reportesVentas.js') }}" ></script>
+        <script src="{{ asset('js/reportes/repesajes.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')
