@@ -322,7 +322,7 @@ class Estafeta {
             
         }
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Token para rastreo");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." asignar credenciales");
         $this->keyId = $credenciales[0]['key_id'];
         $this->secret = $credenciales[0]['secret'];
         $this->clientID = $credenciales[0]['client_id'];

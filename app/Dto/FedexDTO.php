@@ -42,7 +42,7 @@ class FedexDTO
 	 */
 
 	public function parser($request){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO");
 		Log::info(utf8_encode($request['contacto']));
 		Log::info(($request['contacto']));
 		
@@ -89,9 +89,12 @@ class FedexDTO
 			$stateOrProvinceCode_d = config('general.stateOrProvinceCode')[$request['entidad_federativa_d']];
 		}
 
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO");
+		Log::debug(print_r($streetLines_d,true));
+
 		$addressRecipients = New Address(
 			array("streetLines"     => $this->quitar_acentos($streetLines_d)
-				,"city"	=> $request['colonia_d']
+				,"city"	=> $this->quitar_acentos($request['colonia_d'])
 				,"stateOrProvinceCode"	=> $stateOrProvinceCode_d
 				,"postalCode"	=> $request['cp_d']
 			));
