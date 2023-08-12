@@ -1,7 +1,6 @@
 @extends('dashboard')
 @section('content')
 
-
 @include('cotizaciones.dashboard.header')
 <!--Row-->
 <div class="row row-sm">

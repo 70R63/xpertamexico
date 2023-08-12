@@ -57,7 +57,15 @@
     </head>
 
 
+
     <body class="main-body leftmenu main-sidebar-hide">
+        <script>
+        function disableButton() {
+            var btn = document.getElementById('btnEnviar');
+            btn.disabled = true;
+            btn.innerText = 'Enviando...'
+        }
+        </script>
         
         <!-- Page -->
         <div class="page">

@@ -24,7 +24,7 @@
 <!-- Row end -->
 
 <!--Row-->
-{!! Form::open([ 'route' => 'guia.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+{!! Form::open([ 'route' => 'guia.store', 'method' => 'POST' , 'class'=>'parsley-style-1', 'id'=>'generalForm', 'onsubmit' => 'disableButton()' ]) !!}
 <div class="row row-sm">
     <div class="col-lg-12 col-xl-4 col-md-4">
 
@@ -37,7 +37,7 @@
         
         <div>
             <a href="{{ route('cotizaciones.index') }}" class="btn badge-dark" >Cancelar</a>
-            <button type="submit" class="btn btn-primary ml-3" >Crear Guia</button>
+            <button type="submit" class="btn btn-primary ml-3" id="btnEnviar">Crear Guia</button>
         </div>    
     </div>
     
