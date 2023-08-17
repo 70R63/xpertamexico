@@ -255,6 +255,7 @@ class GuiaController extends Controller
             $requestInicial = $request->except(['_token']);
             $empresa_id = auth()->user()->empresa_id;
             $plataforma = 'WEB';
+            
      
             $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
             
@@ -274,10 +275,10 @@ class GuiaController extends Controller
             Log::debug(print_r($trackingNumbers ,true));            
             
 
-            $carbon = Carbon::parse();
+            $carbon = Carbon::now();
             $unique = md5( (string)$carbon);
-            $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
-            $namePdf = sprintf("%s-%s.pdf",(string)$carbon,$unique);
+            $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
+            $namePdf = sprintf("%s-%s-%s.pdf",(string)$carbon,$empresa_id,$unique);
             Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 
             $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
@@ -582,8 +583,8 @@ class GuiaController extends Controller
                 Log::info(print_r($value,true));
 
                 $carbon = Carbon::parse();
-                $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
-                $unique = crypt( (string)$carbon,'st');
+                $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
+                $unique = md5( (string)$carbon);
                 $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
 
                 Storage::disk('public')->put($namePdf,base64_decode( $value->label ));
@@ -732,7 +733,7 @@ class GuiaController extends Controller
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
                 
                 $carbon = Carbon::parse();
-                $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
+                $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
                 $unique = md5( (string)$carbon);
                 $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
 
