@@ -12,6 +12,7 @@ use App\Http\Controllers\API\CPController;
 use App\Http\Controllers\API\ClienteController;
 use App\Http\Controllers\API\ReportesController;
 use App\Http\Controllers\API\Reportes\RepesajeController;
+use App\Http\Controllers\API\Saldos\PagosController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -83,6 +84,7 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
             Route::get('clientes', 'clientes')->name("clientes");    
         });
 
+        //MENU REPORTES
         Route::group(['prefix'=>'reportes','as'=>'reportes.'], function(){          
             Route::controller(ReportesController::class)->group(function(){
                 Route::get('ventas', 'reportes')->name("ventas");
@@ -95,6 +97,20 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
                     Route::post('repesajes', 'creacion')->name("creacion");    
                 });
             });
+        });
+
+        //MENU REPORTES
+        Route::group(['prefix'=>'saldos','as'=>'saldos.'], function(){          
+            Route::controller(PagosController::class)->group(function(){
+                Route::get('pagos/resumen', 'tablaPagosResumen')->name("pagos_resumen");
+                   
+            });
+
+            Route::controller(PagosController::class)->group(function(){
+                Route::get('pagos/{empresa_id}', 'tablaPagos')->name("pagos");
+                   
+            });
+
         });
 
         

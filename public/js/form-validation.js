@@ -8,7 +8,7 @@ $(function() {
 	
 	$('#generalForm').parsley();
 	$('#enviosForm').parsley();
-	
+	$('#saldosPagosForm').parsley();
 	
 
 });

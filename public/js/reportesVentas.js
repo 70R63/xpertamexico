@@ -1,6 +1,7 @@
 $(document).ready(function() {
     console.log("document ready reportes ventas")
     if ($('#tablaReporteVentasAjax').length) {
+        console.log("document ready tablaReporteVentasAjax")
         tablaReporteVentas()  
         // cotizar.js   
         obtenerClientes();

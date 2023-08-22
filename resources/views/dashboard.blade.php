@@ -95,7 +95,9 @@
                             @include('menu.ltd')
                             @include('menu.usuario')
                             @include('menu.guia')
-                            @include('menu.roles')  
+                            @include('menu.roles')
+                            @include('menu.reportes')
+                            @include('menu.saldos')  
                         @endcanany
 
                         @canany(['isAdmin'])
@@ -107,6 +109,7 @@
                             @include('menu.guia')
                             @include('menu.roles')
                             @include('menu.reportes')
+                            @include('menu.saldos')
                         @endcanany
 
                         @canany(['isContraloria'])
@@ -162,28 +165,54 @@
 
             <!-- Main Header-->
             <div class="main-header side-header sticky">
-
                 <div class="container-fluid">
-                    <div class="main-header-left">
-                        <a class="main-header-menu-icon" href="#" id="mainSidebarToggle"><span></span></a>
-                    </div>
+                    <a class="main-header-menu-icon" href="#" id="mainSidebarToggle"><span></span></a>
                     <div class="main-header-center">
-                        @include('dashboard.header')
+                        <div class="input-group">
+                            @include("dashboard.header")
+
+                            
+                        </div>
                     </div>
+                    
+                    <div class="main-header-left ">
+                        <p class="mb-0 text-white tx-20 ">  </p>
+                        <span class="badge badge-danger badge-pill tx-22">Saldo -$ 3800.00</span>
+                        
+                    </div>
+
                     <div class="main-header-right">
-                        @include('perfil.index')
+                        
+                            @include('perfil.index')
+                        
                         <button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
                         </button><!-- Navresponsive closed -->
                     </div>
+                    
                 </div>
             </div>
-            <!--End  Main Header-->
+
+            <!--End Main Header-->
 
             <!-- Mobile-header -->
             <div class="mobile-main-header">
+                <div class="input-group">
+                           
+                    <div class="tx-left">
+                        Monto : $123.12    
+                    </div>
+                    
+                     <input type="search" class="form-control rounded-0" placeholder="Search for anything...">
+                </div>
+
                 <div class="mb-1 navbar navbar-expand-lg  nav nav-item  navbar-nav-right responsive-navbar navbar-dark  ">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+
+                        <div class="d-flex order-lg-2 ml-auto">
+                            <b class="tx-18 text">HOLA {{ Auth::user()->name }}, BIENVENIDO AL PORTAL DE '{{ Session::get('empresa_nombre') }}'</b>
+                        </div>
+                    
                         @include('perfil.index')
                         
                     </div>
@@ -300,6 +329,7 @@
         <script src="{{ asset('js/direcciones.js') }}" ></script>
         <script src="{{ asset('js/reportesVentas.js') }}" ></script>
         <script src="{{ asset('js/reportes/repesajes.js') }}" ></script>
+        <script src="{{ asset('js/saldos/pagos.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')

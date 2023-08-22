@@ -4,7 +4,7 @@
 		<i class="ace-icon fa fa-times"></i>
 	</button>
 	<p>
-		Favor de validar los datos ingresados :
+		Favor de validar los datos :
 	</p>
 	<ul>
 		@foreach($errors->all() as $error)

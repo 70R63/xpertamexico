@@ -22,7 +22,7 @@ class RolesMiddleware
     {
 
      if(auth()->user() == null){
-        Log::info("nulo");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
         return redirect('login');
      }else {
          foreach($roles as $rol){
