@@ -71,12 +71,9 @@ class PagosController extends ApiController
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $currenturl = url()->current();
-            //$segment = Request::segment(1);
-            Log::info($currenturl);
            
-            $pagos = Pagos::select("*","empresas.nombre AS empresa_nombre", "bancos.nombre AS banco_nombre")
-                ->where("empresa_id",$empresa_id)
+            $pagos = Pagos::select("*","pagos.id AS pago_id","empresas.nombre AS empresa_nombre", "bancos.nombre AS banco_nombre")
+                ->where("pagos.empresa_id",$empresa_id)
                 ->joinEmpresa()
                 ->joinBancos()
                 ->get()->toArray()

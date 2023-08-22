@@ -117,11 +117,16 @@ $('input.search').on('keyup change', function () {
 
 
 function tablaSaldosPagos(){
-    var url_params = new URLSearchParams(window.location.search);
-    var url_params = window.location;
-    console.log(url_params)
+    
+    var url_params = window.location.pathname;
+    
+    var empresa_id = url_params.split("/")[3];
+    console.log(empresa_id )
+    var uri = '../../api/saldos/pagos/'+empresa_id;
+    
+    console.log(uri )
  $.ajax({
-        url: '../../api/saldos/pagos/88',
+        url: uri,
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -148,7 +153,8 @@ function tablaSaldosPagos(){
                     [ 10, 25, 50, -1 ],
                     [ '10', '25', '50', 'Todo' ]
                 ]
-                ,dom: 'Bfrtip'
+
+                ,dom: 'Brtip'
                 ,buttons: [ 
                     'pageLength'
                   ,{ 
@@ -174,9 +180,10 @@ function tablaSaldosPagos(){
                ]
 
                 ,columns: [
-                    { "data": "empresa_nombre" }
-                    ,{ "data": "importe" }
+                    { "data": "pago_id" }
+                    ,{ "data": "empresa_nombre" }
                     ,{ "data": "banco_nombre" }
+                    ,{ "data": "importe" }
                     ,{ "data": "referencia" }
                     ,{ "data": "fecha_deposito" }
                     

@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 
-@include('saldos.pagos.dashboard.header')
+@include('saldos.pagos.show.header')
 
 <!-- Row -->
 <div class="row">
