@@ -17,11 +17,18 @@ $(document).ready(function() {
 function linkPagos(row){
 
     //var htmlRetorno = '<span> '+ row.nombre+'  </span>';
-    html='<a href="pagos/'+row.empresa_id+'" rel="noopener noreferrer" class="text-dark"> \
-            '+row.nombre +'</a>';
+    if (row.monto >= 0){
+        html='<a href="pagos/'+row.empresa_id+'" rel="noopener noreferrer" class="text-dark"> \
+            <span class="badge badge-info badge-pill tx-14">'+ row.nombre +'</span></a>';
+    } else {
+        html='<a href="pagos/'+row.empresa_id+'" rel="noopener noreferrer" class="text-dark"> \
+            <span class="badge badge-danger badge-pill tx-14">'+ row.nombre +'</span></a>';
+    }
+    
 
     return html;
 }
+
 
 function tablaSaldosPagosResumen(){
  $.ajax({
@@ -33,7 +40,7 @@ function tablaSaldosPagosResumen(){
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
-        console.log(response.data)
+        
         table = $('#tablaSaldosPagosResumenAjax').DataTable({
                 "oLanguage": {
                     "sEmptyTable": "No se puede mostrar los registros"
@@ -52,7 +59,7 @@ function tablaSaldosPagosResumen(){
                     [ 10, 25, 50, -1 ],
                     [ '10', '25', '50', 'Todo' ]
                 ]
-                ,dom: 'lrt'
+                ,dom: 'Brtip'
                 ,buttons: [ 
                     'pageLength'
                   ,{ 
@@ -83,6 +90,7 @@ function tablaSaldosPagosResumen(){
                                 return linkPagos(row); 
                             }
                     }
+                    ,{ "data": "monto" }
                     ,{ "data": "importe" }
                     ,{ "data": "importe7" }
                     ,{ "data": "importe15" }

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamps();
             $table->boolean('estatus')->default(1);
             
-            $table->float('monto', 10,00)->nullable(false)->default('0.00');
-            $table->float('monto_anterior', 10,00)->nullable(false)->default('0.00');
+            $table->float('monto', 10,4)->nullable(false)->default('0.00');
+            $table->float('monto_anterior', 10,4)->nullable(false)->default('0.00');
             $table->unsignedInteger('empresa_id')->nullable(false)->default(1)->index();
             
         });

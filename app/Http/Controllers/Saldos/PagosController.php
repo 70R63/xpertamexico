@@ -103,7 +103,7 @@ class PagosController extends Controller
      * @param  \App\Models\Saldos\Pagos  $pagos
      * @return \Illuminate\Http\Response
      */
-    public function show(int $empresa_id)
+    public function show()
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    

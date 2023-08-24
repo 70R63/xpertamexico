@@ -9,5 +9,13 @@
             <li class="breadcrumb-item active">Crear</li>
         </ol>
     </div>
+
+    <div class="d-flex">
+        <div class="justify-content-center">
+            <a type="button" class="btn btn-primary my-2 btn-icon-text" href="{{ route('pagos.index') }}" >
+                <i class="fa fa-chevron-left"> Regresar</i>           
+            </a>
+        </div>
+    </div>
 </div>
  

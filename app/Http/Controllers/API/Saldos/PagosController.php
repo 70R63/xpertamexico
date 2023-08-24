@@ -26,10 +26,14 @@ class PagosController extends ApiController
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
            
-            $pagoResumens = PagoResumens::orderBy('nombre')->get()->toArray();
+            $pagoResumens = PagoResumens::orderBy('nombre')
+                            ->empresas()
+                            ->get()->toArray();
+                            
             #Log::debug(print_r($pagoResumens, true));
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-
+            Log::info(auth()->user()->empresa_id);
+            
             $resultado = array();
             $mensaje = "ok";
             return $this->successResponse($pagoResumens, $mensaje);    
