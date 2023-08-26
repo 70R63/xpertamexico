@@ -20,6 +20,7 @@ use App\Models\DhlTarifas;
 use App\Models\Empresa;
 
 use App\Negocio\Fedex_tarifas;
+use App\Negocio\Saldos\Saldos;
 
 
 class CotizacionController extends BaseController
@@ -44,7 +45,7 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." EmpresaEmpresas");
         $empresas = EmpresaEmpresas::where('id',$empresa_id)
                 ->pluck('empresa_id')->toArray();
-        Log::debug($empresas);
+        //Log::debug($empresas);
         
         $empresasLtd = EmpresaLtd::where('empresa_id',$empresa_id)
                 ->pluck('tarifa_clasificacion', 'ltd_id')->toArray();
@@ -412,24 +413,7 @@ class CotizacionController extends BaseController
                         $tablaTmp['zona'] = $zona[0];
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
-                            /*
-                                $tablaTmp = array('id' => $tarifa['id']
-                                ,'costo'    => $costo
-                                ,'ltds_id' => Config('ltd.dhl.id')
-                                ,'nombre' => Config('ltd.dhl.nombre')
-                                ,'servicios_nombre' => $servicioNombre
-                                ,'kg_ini' => $request['pesoFacturado']
-                                ,'kg_fin' => $request['pesoFacturado']
-                                ,'kg_extra' => 0
-                                ,'ocurre'   => $estadoCoberturaDestino[0]['ocurre']
-                                ,'extendida_cobertura'=>$estadoCoberturaDestino[0]['extendida'] 
-                                ,'extendida'    => $empresa['area_extendida']
-                                ,'servicio_id'  =>$tarifa['servicio_id']
-                                ,'seguro'   => $empresa['seguro']
-                                ,'zona'     => $zona[0]
-
-                                );
-                            */
+                            
 
                             $kgAdicional = $request['pesoFacturado'] -70;
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -497,6 +481,12 @@ class CotizacionController extends BaseController
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
         Log::debug(print_r($tabla,true));
         $success['data'] = $tabla;
+
+        $saldo = new Saldos();
+        $success['saldo'] = $saldo->porEmpresa($empresa_id);
+
+        $empresa = Empresa::select("tipo_pago_id")->where("id", $empresa_id)->firstOrFail();
+        $success['tipoPagoId'] = $empresa->tipo_pago_id;
        
         return $this->successResponse($success, 'Cotizacion exitosa.');
         

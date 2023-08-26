@@ -175,15 +175,9 @@
                         </div>
                     </div>
                     
-                    <div class="main-header-left ">
-                        <p class="mb-0 text-white tx-20 ">  </p>
-                        <span class="badge badge-danger badge-pill tx-22">Saldo -$ 3800.00</span>
-                        
-                    </div>
-
                     <div class="main-header-right">
                         
-                            @include('perfil.index')
+                        @include('perfil.index')
                         
                         <button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
                             <i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>

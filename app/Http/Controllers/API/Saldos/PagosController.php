@@ -29,8 +29,7 @@ class PagosController extends ApiController
             $pagoResumens = PagoResumens::orderBy('nombre')
                             ->empresas()
                             ->get()->toArray();
-                            
-            #Log::debug(print_r($pagoResumens, true));
+
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(auth()->user()->empresa_id);
             

@@ -11,7 +11,7 @@ use App\Models\Servicio;
 use App\Models\GuiasPaquete;
 use App\Models\EmpresaEmpresas;
 
-
+use App\Negocio\Saldos\Saldos;
 
 use App\Mail\GuiaCreada;
 
@@ -164,7 +164,8 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__."finalizando es manual ----------------------------");
         }//FIN if$request->esManual != "NO"
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Case para mnsajeria");
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Case para mensajeria");
         switch ($request['ltd_id']) {
             case Config('ltd.fedex.id'):
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".Config('ltd.fedex.nombre') );
@@ -317,7 +318,14 @@ class GuiaController extends Controller
             *    ->send(new GuiaCreada($request, $id));
             */
             
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($request->all(),true));
             
+            $saldo = new Saldos();
+            $saldo->menosPrecio($request["sucursal_id"], $request["precio"]);
+
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
             Log::info(__CLASS__." ".__FUNCTION__." store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
@@ -463,7 +471,13 @@ class GuiaController extends Controller
             *    ->cc(Config("mail.cc"))
             *    ->send(new GuiaCreada($request, $id));
             */
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($request->all(),true));
             
+            $saldo = new Saldos();
+            $saldo->menosPrecio($request["sucursal_id"], $request["precio"]);
+
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(__CLASS__." ".__FUNCTION__."store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
@@ -642,7 +656,13 @@ class GuiaController extends Controller
                 $i++;
             }
            
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($request->all(),true));
             
+            $saldo = new Saldos();
+            $saldo->menosPrecio($request["sucursal_id"], $request["precio"]);
+
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
@@ -793,7 +813,13 @@ class GuiaController extends Controller
                 $i++;
             }
            
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($request->all(),true));
             
+            $saldo = new Saldos();
+            $saldo->menosPrecio($request["sucursal_id"], $request["precio"]);
+
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." store Fin ----------------------------");
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

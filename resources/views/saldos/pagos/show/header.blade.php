@@ -17,5 +17,13 @@
             </a>
         </div>
     </div>
+
+    <div class="d-flex">
+        <div class="justify-content-center">
+            <a type="button" class="btn btn-primary my-2 btn-icon-text" href="{{ route('pagos.create') }}" >
+                <i class="fas fa-user-cog"> Nuevo Pago</i>           
+            </a>
+        </div>
+    </div> 
 </div>
  

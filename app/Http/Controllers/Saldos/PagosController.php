@@ -7,10 +7,14 @@ use App\Http\Requests\Saldos\StorePagosRequest;
 use App\Http\Requests\Saldos\UpdatePagosRequest;
 use App\Models\Saldos\Pagos;
 
-use Log;
 use App\Models\Empresa;
 use App\Models\Saldos\Bancos;
 use App\Models\Saldos\TipoPagos;
+
+use App\Negocio\Saldos\Saldos;
+
+use Log;
+
 
 class PagosController extends Controller
 {
@@ -72,8 +76,11 @@ class PagosController extends Controller
         Log::info(print_r($inputs,true));
         $mensaje = "";
         try {
-            
+
             Pagos::create($inputs);
+            
+            $saldo = new Saldos();
+            $saldo->calcular($inputs);
 
             $tmp = sprintf("El registro de Pago '%s'", "fue exitoso");
             $notices = array($tmp);

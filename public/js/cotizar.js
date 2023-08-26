@@ -9,6 +9,7 @@ var bascula = 0;
 var sobrePesoKg = 0;
 var costoCoberturaExtendida = 0;
 var costoKgExtra = 0;
+var saldoNegativo = false;
 
 function pesoDimensionalyBascula(){
 
@@ -183,6 +184,37 @@ function obtenerCP(id, modelo) {
 
 }
 
+function validaSaldo(response){
+    console.log("validaSaldo")
+
+    if (response.data.tipoPagoId == 2) {
+        if (response.data.saldo <0) {
+            saldoNegativo = true;
+            swal(
+                "Saldo Negativo: $"+response.data.saldo ,
+                "Revisar con tu Administrador!",
+                "error"
+              )    
+        }
+
+        if (response.data.saldo <105) {
+            saldoNegativo = true;
+            swal(
+                "El Saldo: "+response.data.saldo +" es menor al limite permitido",
+                "Revisar con tu Administrador!",
+                "error"
+              )    
+        }
+    } else {
+
+    }
+
+    //tipo_pago_id
+}
+
+
+//actividades al vuelo
+
 $("#limpiar").click(function() {
     $('#cotizacionesForm').trigger('reset');
     table.clear().draw();
@@ -211,7 +243,7 @@ $("#cotizar").click(function(e) {
     var form = $('#cotizacionesForm').parsley().refresh();
     var action = $('#cotizacionesForm').attr("action"); 
     console.log(action)
-
+    saldoNegativo = false;
     if ( form.validate() ){
         $.ajax({
             /* Usar el route  */
@@ -224,7 +256,10 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
+
+                validaSaldo(response)
                 
+
                 table = $('#cotizacionAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No exiten tarifas con los datos para cotizar"
@@ -313,118 +348,131 @@ table = $('#cotizacionAjax').DataTable({
 
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
    
-    var dataRow = table.row(this).data(); 
 
-    console.log(dataRow);
-    //Valores de la cotizacion de la Forma Cotizacion
-    var sucursal_id = $('#sucursal').val();
-    var cliente_id = $('#cliente').val();
-    var cp = $('#cp').val();
-    var cp_d = $('#cp_d').val();
-    var largo = $('#largo').val();
-    var ancho = $('#ancho').val();
-    var alto = $('#alto').val();
-    var bSeguro = ( $('#checkSeguro').is(":checked") ? true : false);
-    var valorEnvio = $('#valor_envio').val();
-    var contenido = $('#contenido').val();
-    var esManual = $("#esManual").val();
-    var empresaId = $("#clienteIdCombo").val();
+    if (saldoNegativo) {
+        swal(
+            "Por el monento no puede hacer guias",
+            "Revisar con tu Administrador!",
+            "error"
+          ) 
 
-    //Inicializacion de variables del renglon de la cotizacion
-    var tarifa_id = table.row(this).data()['id'];
-    var ltd_nombre = table.row(this).data()['nombre'];
-    var ltd_id = table.row(this).data()['ltds_id'];
-    var servicioNombre = dataRow['servicios_nombre'];
-    var servicioId  = dataRow['servicio_id'];
-    var precio =  preciofinal(dataRow);
-    var iva = precio*0.16;
-    var precioIva = (precio+iva).toFixed(2);
-    var ocurre  = dataRow['ocurre'];
-    var areaExtendida  = dataRow['extendida_cobertura'];
-    var zona  = dataRow['zona'];
-    var costoBase  = dataRow['costo'];
-    //var kgExtra  = dataRow['kg_extra'];
+    } else {
 
-    //valores para el modal resumen_cotizacion.blade
-    $("#spanPrecio").text( precioIva );
-    $("#spanMensajeria").text(ltd_nombre);
-    $("#spanservicioId").text(servicioNombre);
-    $("#spanRemitente").text(cp);
-    $("#spanDestinatario").text(cp_d);
-    $("#spanPieza").text(piezas);
-    $("#spanSeguro").text(costoSeguro);
-    $("#spanValorEnvio").text(valorEnvio);
-    $("#spanPeso").text(peso);
-    $("#spanCotizacionManual").text(esManual);
-    $("#spanOcurre").text(ocurre);
-    $("#spanAreaExtendida").text(areaExtendida);
-    $("#spanZona").text(zona);
+        var dataRow = table.row(this).data(); 
 
-    //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
-    pesofacturado()
-    $("#precio").val(precioIva);
-    $("#tarifa_id").val(tarifa_id);
-    $("#sucursal_id").val(sucursal_id);
-    $("#cliente_id").val(cliente_id);
-    $("#ltd_nombre").val(ltd_nombre);
-    $("#ltd_id").val(ltd_id);
-    $("#piezas_guia").val(piezas);
-    $("#servicio_id").val(servicioId);
-    $("#peso_facturado").val(peso);
-    $("#bSeguro").val(bSeguro);
-    $("#costo_seguro").val(costoSeguro);
-    $("#contenido_r").val(contenido);
-    $("#extendida_r").val(areaExtendida);
-    $("#valor_envio_r").val(valorEnvio);
-    $("#esManual").val(esManual);
-    $("#cp_manual").val(cp);
-    $("#cp_d_manual").val(cp_d);
-    $("#empresa_id").val(empresaId);
-    $("#ocurre").val(ocurre);
-    $("#zona").val(zona);
-    $("#costo_base").val(costoBase);
-    $("#costo_kg_extra").val(costoPesoExtra); //costoKgExtra
-    $("#peso_dimensional").val(dimensional);
-    $("#peso_bascula").val(bascula);
-    $("#sobre_peso_kg").val(sobrePesoKg);
-    $("#costo_extendida").val(costoCoberturaExtendida);
-    
-    
-    
-    var iteracionClone = 0
-    var pesos = []
-    var largos = []
-    var anchos = []
-    var altos = []
+        console.log(dataRow);
+        //Valores de la cotizacion de la Forma Cotizacion
+        var sucursal_id = $('#sucursal').val();
+        var cliente_id = $('#cliente').val();
+        var cp = $('#cp').val();
+        var cp_d = $('#cp_d').val();
+        var largo = $('#largo').val();
+        var ancho = $('#ancho').val();
+        var alto = $('#alto').val();
+        var bSeguro = ( $('#checkSeguro').is(":checked") ? true : false);
+        var valorEnvio = $('#valor_envio').val();
+        var contenido = $('#contenido').val();
+        var esManual = $("#esManual").val();
+        var empresaId = $("#clienteIdCombo").val();
 
-    $('.registroMultipieza').each(function(){
-        console.log("--------------"+iteracionClone)
-        var control = +iteracionClone *4
-        var indexPeso = 0 +control
-        var indexLargo = 1 +control
-        var indexAncho = 2 +control
-        var indexAlto = 3 +control 
+        //Inicializacion de variables del renglon de la cotizacion
+        var tarifa_id = table.row(this).data()['id'];
+        var ltd_nombre = table.row(this).data()['nombre'];
+        var ltd_id = table.row(this).data()['ltds_id'];
+        var servicioNombre = dataRow['servicios_nombre'];
+        var servicioId  = dataRow['servicio_id'];
+        var precio =  preciofinal(dataRow);
+        var iva = precio*0.16;
+        var precioIva = (precio+iva).toFixed(2);
+        var ocurre  = dataRow['ocurre'];
+        var areaExtendida  = dataRow['extendida_cobertura'];
+        var zona  = dataRow['zona'];
+        var costoBase  = dataRow['costo'];
+        //var kgExtra  = dataRow['kg_extra'];
+
+        //valores para el modal resumen_cotizacion.blade
+        $("#spanPrecio").text( precioIva );
+        $("#spanMensajeria").text(ltd_nombre);
+        $("#spanservicioId").text(servicioNombre);
+        $("#spanRemitente").text(cp);
+        $("#spanDestinatario").text(cp_d);
+        $("#spanPieza").text(piezas);
+        $("#spanSeguro").text(costoSeguro);
+        $("#spanValorEnvio").text(valorEnvio);
+        $("#spanPeso").text(peso);
+        $("#spanCotizacionManual").text(esManual);
+        $("#spanOcurre").text(ocurre);
+        $("#spanAreaExtendida").text(areaExtendida);
+        $("#spanZona").text(zona);
+
+        //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
+        pesofacturado()
+        $("#precio").val(precioIva);
+        $("#tarifa_id").val(tarifa_id);
+        $("#sucursal_id").val(sucursal_id);
+        $("#cliente_id").val(cliente_id);
+        $("#ltd_nombre").val(ltd_nombre);
+        $("#ltd_id").val(ltd_id);
+        $("#piezas_guia").val(piezas);
+        $("#servicio_id").val(servicioId);
+        $("#peso_facturado").val(peso);
+        $("#bSeguro").val(bSeguro);
+        $("#costo_seguro").val(costoSeguro);
+        $("#contenido_r").val(contenido);
+        $("#extendida_r").val(areaExtendida);
+        $("#valor_envio_r").val(valorEnvio);
+        $("#esManual").val(esManual);
+        $("#cp_manual").val(cp);
+        $("#cp_d_manual").val(cp_d);
+        $("#empresa_id").val(empresaId);
+        $("#ocurre").val(ocurre);
+        $("#zona").val(zona);
+        $("#costo_base").val(costoBase);
+        $("#costo_kg_extra").val(costoPesoExtra); //costoKgExtra
+        $("#peso_dimensional").val(dimensional);
+        $("#peso_bascula").val(bascula);
+        $("#sobre_peso_kg").val(sobrePesoKg);
+        $("#costo_extendida").val(costoCoberturaExtendida);
         
-
-        var peso = $('.registroMultipieza .multi').get()[indexPeso].value
-        var largo = $('.registroMultipieza .multi').get()[indexLargo].value
-        var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
-        var alto = $('.registroMultipieza .multi').get()[indexAlto].value
         
-        pesos.push(peso)
-        largos.push(largo)
-        anchos.push(ancho)
-        altos.push(alto)
-        iteracionClone++
-    })      
+        
+        var iteracionClone = 0
+        var pesos = []
+        var largos = []
+        var anchos = []
+        var altos = []
 
-    $("#pesos").val(pesos);
-    $("#largos").val(largos);
-    $("#anchos").val(anchos);
-    $("#altos").val(altos);
+        $('.registroMultipieza').each(function(){
+            console.log("--------------"+iteracionClone)
+            var control = +iteracionClone *4
+            var indexPeso = 0 +control
+            var indexLargo = 1 +control
+            var indexAncho = 2 +control
+            var indexAlto = 3 +control 
+            
+
+            var peso = $('.registroMultipieza .multi').get()[indexPeso].value
+            var largo = $('.registroMultipieza .multi').get()[indexLargo].value
+            var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
+            var alto = $('.registroMultipieza .multi').get()[indexAlto].value
+            
+            pesos.push(peso)
+            largos.push(largo)
+            anchos.push(ancho)
+            altos.push(alto)
+            iteracionClone++
+        })      
+
+        $("#pesos").val(pesos);
+        $("#largos").val(largos);
+        $("#anchos").val(anchos);
+        $("#altos").val(altos);
 
 
-    $("#myModal").modal("show");
+        $("#myModal").modal("show");
+
+    }
+    
 });
 
 
