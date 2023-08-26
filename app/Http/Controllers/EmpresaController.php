@@ -8,7 +8,8 @@ use App\Models\Empresa;
 use App\Models\EmpresaEmpresas;
 use App\Models\Ltd;
 use App\Models\EmpresaLtd;
-
+use App\Models\Saldos\TipoPagos;
+use App\Models\PlazoCreditos;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -64,9 +65,11 @@ class EmpresaController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
             $tabla = array();
+            $pluckTipoPagos = TipoPagos::orderBy('id')->pluck("nombre", "id");
+            $pluckPlazoCreditos = PlazoCreditos::orderBy('id')->pluck("nombre", "id");
 
             return view(self::CREAR_v 
-                    ,compact("tabla")
+                    ,compact("tabla","pluckTipoPagos", "pluckPlazoCreditos")
                 );
         } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__);
@@ -137,10 +140,12 @@ class EmpresaController extends Controller
         try {
             Log::info(__CLASS__." ".__FUNCTION__."");
             $objeto = Empresa::findOrFail($id);
-               
+            $pluckTipoPagos = TipoPagos::orderBy('id')->pluck("nombre", "id");
+            $pluckPlazoCreditos = PlazoCreditos::orderBy('id')->pluck("nombre", "id");
+
             Log::debug($objeto);
             return view(self::EDITAR_v
-                , compact('objeto') 
+                , compact('objeto',"pluckTipoPagos", "pluckPlazoCreditos") 
             );
        
         } catch (ModelNotFoundException $e) {
@@ -173,7 +178,7 @@ class EmpresaController extends Controller
             $objeto = Empresa::findOrFail($id);
             $objeto->fill($request->post())->save();
   
-            $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$objeto->id);
+            $tmp = sprintf("Actualizacion del id %s, '%s', fue exitoso",$objeto->id, $objeto->nombre);
             $notices = array($tmp);
 
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

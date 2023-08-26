@@ -1,3 +1,9 @@
+$(document).ready(function() {
+    console.log("document ready empreesa")
+   
+    validaTipoPago()
+});
+
 function validaCheckAsignacion( elemento ){
     
     var check = elemento.is( ":checked" )
@@ -89,3 +95,30 @@ $('.selectgroup-input').change(function () {
     validaCheckAsignacion($(this))
 
 });
+
+function ocultarMostrarHtmlPago(tipoPagoId){
+    if ( tipoPagoId  ==2 ){
+        $( ".tipo_pago" ).hide();
+        
+            $('#limite_credito').removeAttr('required')
+            $('#plazo_credito_id').removeAttr('required')
+
+    } else {
+        $( ".tipo_pago" ).show();
+        $('#limite_credito').attr('required', true); 
+        $('#plazo_credito_id').attr('required', true); 
+    }
+}
+
+$('#tipo_pago_id').change(function () {
+    
+    var tipoPagoId =$(this).val() 
+    console.log(tipoPagoId)
+    ocultarMostrarHtmlPago($(this).val())
+});
+
+function validaTipoPago(){
+    var tipoPagoId = $('#tipo_pago_id').val()
+    ocultarMostrarHtmlPago(tipoPagoId)
+    
+}

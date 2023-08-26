@@ -2,57 +2,138 @@
     <div class="card custom-card">
         <div class="card-body">
         	<div class="card-item">
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">CLIENTE
-							<span class="tx-danger">*</span>
-						</span>
-					</div>
 
-					{!! Form::text('nombre'
-						, null
-						,['class' 		=> 'form-control'
-							,'id'		=> 'nombre'
-							,'required'	=>	'true'
-						])
-					!!}
+        		<div class="row row-sm">
+				    <div class="col-lg-5">
+				        <div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">CLIENTE
+									<span class="tx-danger">*</span>
+								</span>
+							</div>
+
+							{!! Form::text('nombre'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'nombre'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+				    </div>
+				    <div class="col-lg-4">
+				    	<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">CONTACTO
+									<span class="tx-danger">*</span>
+								</span>
+							</div>
+
+							{!! Form::text('contacto'
+								, null
+								,['class' 		=> 'form-control'
+									,'id'		=> 'contacto'
+									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+
+				    </div>
+				    <div class="col-lg-3">
+				    	<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">R.F.C<span class="tx-danger">*</span>
+								</span>
+							</div>
+
+							{!! Form::text('rfc'
+								, null
+								,['class' 		=> 'form-control'
+
+									,'id'		=> 'rfc'
+									,'required'	=>	'true'
+									,'placeholder'=>'Ingrese el rfc en mayusculas o precione RFC para asignar XAXX010101000'
+									,'pattern'	=> '^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z\d]{3})?$'
+
+								])
+							!!}
+							<a href="" class="text-nowrap tx-20" id="asignarRcPG" >
+								<i title="RFC PUBLICO GENERAL" class="">rfc </i>
+							</a>
+						</div>
+				    </div>
+				    
 				</div>
+				<div class="row row-sm">
+					<div class="col-lg-3 ">
+				        <div class="input-group mb-3">
+				            <div class="input-group-prepend">
+				                <span class="input-group-text" id="basic-addon1">
+				                	TIPO PAGO<span class="tx-danger">*</span>
+				                </span>
+				            </div>
+				            {!! Form::select('tipo_pago_id'
+				                , $pluckTipoPagos
+				                ,isset($objeto->tipo_pago_id) ? $objeto->tipo_pago_id : ""
+				                ,['class'       => 'form-control select2'
+				                    ,'placeholder'  => 'TODOS'
+				                    ,'id'       => 'tipo_pago_id'
+				                    ,'required' => ''
+				                    
+				                ]);
+				            !!}
+				        </div>
+				    </div>
 
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">CONTACTO
-							<span class="tx-danger">*</span>
-						</span>
-					</div>
+				     
+				    	
+				    <div class="col-lg-5 tipo_pago">
+				    	<div class="input-group mb-3">
+				            <div class="input-group-prepend">
+				                <span class="input-group-text" id="basic-addon1">
+					                LIMITE DE CREDITO<span class="tx-danger">*</span>
+					            </span>
+				            </div>
+				            {!! Form::number('limite_credito'
+				                ,null
+				                ,['class'       => 'form-control'
+				                    ,'placeholder'  => 'Limite de credito maximo $500000.00'
+				                    ,'id'       => 'limite_credito'
+				                    ,'required' => ''
+				                    ,'min' =>	1
+				                    , 'max'	=> 500000
+				                    
+				                ]);
+				            !!}
+				        </div>
+				    </div>
 
-					{!! Form::text('contacto'
-						, null
-						,['class' 		=> 'form-control'
-							,'id'		=> 'contacto'
-							,'required'	=>	'true'
-						])
-					!!}
-
-					<div class="input-group-prepend">
-						<span class="input-group-text" id="basic-addon1">R.F.C<span class="tx-danger">*</span>
-						</span>
-					</div>
-
-					{!! Form::text('rfc'
-						, null
-						,['class' 		=> 'form-control'
-
-							,'id'		=> 'rfc'
-							,'required'	=>	'true'
-							,'placeholder'=>'Ingrese el rfc en mayusculas o precione RFC para asignar XAXX010101000'
-							,'pattern'	=> '^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z\d]{3})?$'
-
-						])
-					!!}
-					<a href="" class="text-nowrap tx-20" id="asignarRcPG" >
-						<i title="RFC PUBLICO GENERAL" class="">rfc </i>
-					</a>
+				    <div class="col-lg-3 tipo_pago">
+				    	<div class="input-group mb-3">
+				            <div class="input-group-prepend">
+				                <span class="input-group-text" id="basic-addon1">
+				                	PLAZO DE CREDITO<span class="tx-danger">*</span>
+				                </span>
+				            </div>
+				            {!! Form::select('plazo_credito_id'
+				                , $pluckPlazoCreditos
+				                ,null
+				                ,['class'       => 'form-control select2'
+				                    ,'placeholder'  => 'TODOS'
+				                    ,'id'       => 'plazo_credito_id'
+				                    ,'required' => ''
+				                    
+				                ]);
+				            !!}
+				        </div>
+				    </div>
+						
+				    
+				   
 				</div>
+				
+
+				
 
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
