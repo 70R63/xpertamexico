@@ -188,6 +188,15 @@ function validaSaldo(response){
     console.log("validaSaldo")
 
     if (response.data.tipoPagoId == 2) {
+         if (response.data.saldo <105) {
+            saldoNegativo = true;
+            swal(
+                "El Saldo: "+response.data.saldo +" es menor al limite permitido",
+                "Revisar con tu Administrador!",
+                "error"
+              )    
+        }
+        
         if (response.data.saldo <0) {
             saldoNegativo = true;
             swal(
@@ -197,14 +206,7 @@ function validaSaldo(response){
               )    
         }
 
-        if (response.data.saldo <105) {
-            saldoNegativo = true;
-            swal(
-                "El Saldo: "+response.data.saldo +" es menor al limite permitido",
-                "Revisar con tu Administrador!",
-                "error"
-              )    
-        }
+       
     } else {
 
     }

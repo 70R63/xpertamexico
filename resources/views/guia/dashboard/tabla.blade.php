@@ -48,4 +48,5 @@
 </div>
 
 @include('guia.dashboard.retorno')
+@include('guia.modal.eliminar')
 <!-- End Row-->

@@ -34,7 +34,7 @@ function guiasTabla(){
         
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
-        console.log(response.data)
+        //console.log(response.data)
         table = $('#guiasTablaAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
@@ -44,7 +44,7 @@ function guiasTabla(){
                     ,pagingType: "full_numbers"
                     ,deferRender: true
                     ,bDestroy: true
-                    ,data: response.data
+                    ,data: response.data.tabla
                     ,autoWidth: false
                     ,order: [[0, 'desc']]
                     ,lengthMenu: [
@@ -84,7 +84,7 @@ function guiasTabla(){
                         { "data": "id" } //0
                         ,{ "data": "mensajeria"
                                 ,render: function(data, type, row){   
-                                return documentoRetorno(row); 
+                                return documentoRetorno(row, response.data.rol); 
                             }
                         }
                         
@@ -139,12 +139,21 @@ function guiasTabla(){
     });
 }
 
-function documentoRetorno(row){
+function documentoRetorno(row, rol){
+
+    //console.log(data)
 
     var doc = documento(row)
 
     var htmlRetorno = '<span> <i title="Retorno de la guia" class="si si-action-undo text-warning tx-20"> </i> </span>';
-    return doc+htmlRetorno;
+    var htmlEliminarGuia = "";
+    if (rol == "admin"){
+        var htmlEliminarGuia =' <a  class="remove-list text-danger tx-20 remove-button ">    \
+                            <i id="eliminarGuia" title="Eliminar Guia id '+row.id +'" class="fa fa-trash" alt="Eliminar"></i>\
+                            </a>';
+        
+    }
+    return doc+htmlRetorno+htmlEliminarGuia;
 }
 
 function documento(row){
@@ -160,6 +169,27 @@ function documento(row){
     }
     return html;
 }
+
+
+
+$("#guiasTablaAjax").on( "click", "#eliminarGuia", function() {
+    console.log("modalEliminarGuia")
+//    console.log($(this).parent().parent().parent().parent().data() )
+    var dataRow = table.row( $(this).parent().parent().parent() ).data(); 
+
+    console.log(dataRow);
+
+    //valores para el modal 
+    $("#idGuia").text( dataRow.id );
+    $("#empresaNombre").text( dataRow.nombre );
+    $("#precio").text( dataRow.precio );
+
+    $("#idGuiaForm").val( dataRow.id );
+    $("#ciaForm").val( dataRow.cia );
+    $("#precioForm").val( dataRow.precio );
+
+    $("#modalEliminarGuia").modal("show");
+});
 
 
  $( "#guiasTablaAjax" ).on( "click", "span", function() {

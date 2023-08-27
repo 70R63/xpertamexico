@@ -32,7 +32,7 @@ class EmpresaController extends Controller
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__);
-
+            
             $tabla = Empresa::get();
             $empresaLtd = EmpresaLtd::get()->toArray();
 

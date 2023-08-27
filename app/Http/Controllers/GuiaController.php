@@ -33,9 +33,11 @@ use Log;
 use Mail;
 use Config;
 use Redirect;
-
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+
 
 use App\Negocio\Guia as nGuia;
 
@@ -235,9 +237,47 @@ class GuiaController extends Controller
      * @param  \App\Models\Guia  $guia
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Guia $guia)
+    public function destroy(Request $request)
     {
-        //
+        $mensaje = "Error General, Consulte a su administrador"; 
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            Log::debug($request->all());
+            
+            $nSaldo = new Saldos();
+            $nSaldo->recuperar($request);
+
+            $notices = $nSaldo->getMensaje();
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+
+        } catch (ModelNotFoundException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("ModelNotFoundException");       
+            $mensaje = "ModelNotFoundException - Favor de buscar a tu administrador ";
+        
+        } catch (QueryException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("QueryException");       
+            $mensaje = "QueryException - Favor de buscar a tu administrador ";
+        
+        } catch (\Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensaje=$e->getMessage();
+            Log::debug(print_r($mensaje,true));
+            Log::info("Error general ");       
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+        return \Redirect::back()
+                ->withErrors(array($mensaje))
+                ->withInput();
     }
 
 

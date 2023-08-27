@@ -6,12 +6,15 @@ use Log;
 use File;
 use Carbon\Carbon;
 
+//modelos
 use App\Models\Saldos\Saldos as mSaldo;
 use App\Models\API\Sucursal;
+use App\Models\Guia;
 
 
 class Saldos 
 {
+    private $mensaje = array();
     
     
     /**
@@ -87,5 +90,47 @@ class Saldos
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
+    }
+
+    /**
+     * Metodo recuperar, se busca  sumar saldo de una guia eliminada
+     * 
+     * @param array $parametros
+     * @return void
+     */
+
+    public function recuperar ($request)
+    {
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        $parametros=$request->all();
+        $guiaId = $parametros["idGuiaForm"];
+        $cia = $parametros["ciaForm"];
+        $precio = $parametros["precioForm"];
+
+        $empresaId = Sucursal::select("empresa_id")->where("id",$cia)->firstOrFail()->empresa_id;
+
+        Guia::where("id",$guiaId)->firstOrFail()->update(["estatus"=>0]);
+
+        $saldo = mSaldo::where("empresa_id", $empresaId)->firstOrFail();
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $saldoArray = $saldo->toArray();
+        $saldoArray["monto_anterior"]=$saldoArray["monto"];
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $saldoArray["monto"]=$saldoArray["monto"]+$precio;
+        
+        $saldo->fill($saldoArray)->save();
+
+        $this->mensaje[] = sprintf("La guia %s se elimino correctamente, el saldo recuperado es $%s",$guiaId,$precio);
+
+        $this->mensaje[] = sprintf("El nuevo saldo es $%s",$saldoArray["monto"]);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+    }
+
+
+
+    public function getMensaje ()
+    {
+        return $this->mensaje;
     }
 }

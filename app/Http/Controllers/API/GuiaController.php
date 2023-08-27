@@ -268,13 +268,17 @@ class GuiaController extends Controller
                 ->join('ltds', 'ltds.id', '=', 'guias.ltd_id')
                 ->join('servicios','servicios.id', '=', 'guias.servicio_id')
                 ->leftJoin('guias_paquetes', 'guias_paquetes.guia_id', '=', 'guias.id' )
-                ->offset(0)->limit(10)
+                ->where('guias.estatus',1)
                 //->where('guias.ltd_id',1)
                 //->toSql();
                 //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
+                //->offset(0)->limit(10)
                 ->get()->toArray();
+            $response['tabla']=$tabla;
+            $response['rol']=auth()->user()->roles()->first()->slug;
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
-            return $this->successResponse($tabla, 'successfully.');
+            
+            return $this->successResponse($response, 'successfully.');
             
         } catch (\ErrorException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
