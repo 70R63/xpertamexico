@@ -115,6 +115,7 @@
                         @canany(['isContraloria'])
                             @include('menu.empresas')
                             @include('menu.reportes')
+                            @include('menu.saldos')
                         @endcanany
 
                         @canany(['isAuditoria'])
@@ -136,6 +137,7 @@
                             @include('menu.usuario')
                             @include('menu.guia')
                             @include('menu.reportes')
+                            @include('menu.saldos')
 
                         @endcanany
 
@@ -144,6 +146,7 @@
                             @include('menu.direcciones')
                             @include('menu.guia')
                             @include('menu.reportes')
+                            @include('menu.saldos')
                         @endcanany
 
                         @canany(['isCliente'])

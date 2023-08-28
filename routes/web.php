@@ -87,7 +87,7 @@ Route::resource('reportes/repesajes','Reportes\RepesajeController')
 
 //Menu Saldos
 Route::resource('saldos/pagos','Saldos\PagosController')
-    ->middleware(['roles:sysadmin,admin,contraloria']);
+    ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones']);
 
 
 require __DIR__.'/auth.php';
