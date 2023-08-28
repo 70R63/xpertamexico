@@ -2,7 +2,7 @@
 	<div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	    	<div class="modal-header">
-	            <h5 class="modal-title" id="exampleModalLabel">Eliminar Registro <span id="idGuiaForm"></span></h5>
+	            <h5 class="modal-title" id="exampleModalLabel">Eliminar Registro <span class="idGuia"></span></h5>
 	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
 	            <span aria-hidden="true">×</span>
 	            </button>
@@ -11,7 +11,7 @@
 	    	<div class="modal-body">
 	        	<p class="bigger-50 bolder center grey">
 					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-					Seguro que quieres eliminar el ID '<span id="idGuia"></span>', del cliente '<span id="empresaNombre"></span>' ?  	
+					Seguro que quieres eliminar el ID '<span class="idGuia"></span>', del cliente '<span id="empresaNombre"></span>' ?  	
 				</p>
 				<p class="bigger-50 bolder center grey">
 					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>

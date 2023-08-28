@@ -276,7 +276,7 @@ class GuiaController extends Controller
                 ->get()->toArray();
             $response['tabla']=$tabla;
             $response['rol']=auth()->user()->roles()->first()->slug;
-            Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
             
             return $this->successResponse($response, 'successfully.');
             

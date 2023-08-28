@@ -26,7 +26,7 @@ function rastrearTabla(){
                     ,pagingType: "full_numbers"
                     ,deferRender: true
                     ,bDestroy: true
-                    ,data: response.data
+                    ,data: response.data.tabla
                     ,autoWidth: false
                     ,order: [[0, 'desc']]
                     ,lengthMenu: [

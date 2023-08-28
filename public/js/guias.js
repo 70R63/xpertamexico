@@ -180,7 +180,7 @@ $("#guiasTablaAjax").on( "click", "#eliminarGuia", function() {
     console.log(dataRow);
 
     //valores para el modal 
-    $("#idGuia").text( dataRow.id );
+    $(".idGuia").text( dataRow.id );
     $("#empresaNombre").text( dataRow.nombre );
     $("#precio").text( dataRow.precio );
 
