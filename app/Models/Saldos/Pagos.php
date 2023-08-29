@@ -16,7 +16,7 @@ class Pagos extends Model
     
     ];
     
-    protected $fillable = ['empresa_id','tipo_pago_id','banco_id', 'referencia', 'importe', 'fecha_deposito', 'hora_deposito'];
+    protected $fillable = ['empresa_id','tipo_pago_id','banco_id', 'referencia', 'importe', 'fecha_deposito', 'hora_deposito', "usuario_id", "created_at"];
 
 
     public function scopeJoinEmpresa($query) {
@@ -27,5 +27,10 @@ class Pagos extends Model
     public function scopeJoinBancos($query) {
       Log::info(__CLASS__." ".__FUNCTION__);
       return $query->join('bancos', 'bancos.id', '=', 'banco_id');
+    }
+
+    public function scopeJoinUsuario($query) {
+      Log::info(__CLASS__." ".__FUNCTION__);
+      return $query->join('users', 'users.id', '=', 'usuario_id');
     }
 }

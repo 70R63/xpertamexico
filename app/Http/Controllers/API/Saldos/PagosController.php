@@ -75,10 +75,12 @@ class PagosController extends ApiController
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
            
-            $pagos = Pagos::select("*","pagos.id AS pago_id","empresas.nombre AS empresa_nombre", "bancos.nombre AS banco_nombre")
+            $pagos = Pagos::select("*","pagos.id AS pago_id","empresas.nombre AS empresa_nombre", "bancos.nombre AS banco_nombre", "users.name AS users_nombre",\DB::raw('DATE_FORMAT(pagos.created_at, "%Y-%m-%d") as createdAt'))
+
                 ->where("pagos.empresa_id",$empresa_id)
                 ->joinEmpresa()
                 ->joinBancos()
+                ->joinUsuario()
                 ->get()->toArray()
                 ;
             #Log::debug(print_r($pagoResumens, true));

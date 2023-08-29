@@ -73,6 +73,8 @@ class PagosController extends Controller
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $inputs = $request->except('_token');
+        //dd();
+        $inputs["usuario_id"] = auth()->user()->id;
         Log::info(print_r($inputs,true));
         $mensaje = "";
         try {

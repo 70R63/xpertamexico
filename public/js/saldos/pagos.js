@@ -189,6 +189,8 @@ function tablaSaldosPagos(){
 
                 ,columns: [
                     { "data": "pago_id" }
+                    ,{ "data": "createdAt"}
+                    ,{ "data": "users_nombre" }
                     ,{ "data": "empresa_nombre" }
                     ,{ "data": "banco_nombre" }
                     ,{ "data": "importe" }
