@@ -28,9 +28,9 @@ class Saldos
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     
-
         $saldo = mSaldo::where("empresa_id", $inputs["empresa_id"])->firstOrFail();
         $saldoArray = $saldo->toArray();
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $saldoArray["monto_anterior"]=$saldoArray["monto"];
         $saldoArray["monto"]=$saldoArray["monto"]+$inputs["importe"];
         

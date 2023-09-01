@@ -9,6 +9,7 @@ $(function() {
 	$('#generalForm').parsley();
 	$('#enviosForm').parsley();
 	$('#saldosPagosForm').parsley();
+	$('#ajustesStoreForm').parsley();
 	
 
 });

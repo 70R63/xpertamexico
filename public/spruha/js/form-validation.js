@@ -14,5 +14,7 @@ $(function() {
 	$('#crearUsuario').parsley();
 	$('#editarUsuario').parsley();
 	
+	
+	
 
 });

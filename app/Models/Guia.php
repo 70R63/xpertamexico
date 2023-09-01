@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Log;
 
 class Guia extends Model
 {
@@ -26,7 +27,20 @@ class Guia extends Model
                 ->pluck('empresa_id')->toArray();
 
             $builder->whereIN('guias.empresa_id',$empresas);
-            $builder->orderBy('id', 'desc');
+            $builder->orderBy('guias.id', 'desc');
         });
     }
+
+    public function scopeJoinSucursalAjuste($query) {
+      Log::info(__CLASS__." ".__FUNCTION__);
+
+      return $query->join('sucursals', 'sucursals.id', '=', 'guias.cia');
+    }
+
+    public function scopeJoinLtdAjuste($query) {
+      Log::info(__CLASS__." ".__FUNCTION__);
+
+      return $query->join('ltds', 'ltds.id', '=', 'guias.ltd_id');
+    }
+
 }
