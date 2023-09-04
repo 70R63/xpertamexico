@@ -10,6 +10,7 @@ use App\Models\Ltd;
 use App\Models\EmpresaLtd;
 use App\Models\Saldos\TipoPagos;
 use App\Models\PlazoCreditos;
+use App\Models\Saldos\Saldos as mSaldos;
 
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -98,6 +99,9 @@ class EmpresaController extends Controller
                     ,'empresa_id' => $empresa->id ));
 
             $tmp = sprintf("'%s, El registro fue exitoso",$request->get('nombre'));
+
+
+            mSaldos::create(array("empresa_id" => $empresa->id));
             $notices = array($tmp);
   
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);

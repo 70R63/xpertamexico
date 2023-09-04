@@ -9,5 +9,5 @@ class Saldos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['monto', 'monto_anterior'];
+    protected $fillable = ['estatus', 'empresa_id','monto', 'monto_anterior'];
 }

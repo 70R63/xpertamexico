@@ -78,10 +78,11 @@ class PagosController extends Controller
         Log::info(print_r($inputs,true));
         $mensaje = "";
         try {
-
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Pagos::create($inputs);
             
             $saldo = new Saldos();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $saldo->calcular($inputs);
 
             $tmp = sprintf("El registro de Pago '%s'", "fue exitoso");
@@ -91,7 +92,7 @@ class PagosController extends Controller
             return \Redirect::route("pagos.index") -> withSuccess ($notices);
 
         } catch(\Illuminate\Database\QueryException $e){ 
-            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."QueryException");
             Log::debug($e->getMessage()); 
             $mensaje= $e->getMessage();
         } catch (Exception $e) {

@@ -50,6 +50,7 @@ class CotizacionController extends BaseController
         $empresasLtd = EmpresaLtd::where('empresa_id',$empresa_id)
                 ->pluck('tarifa_clasificacion', 'ltd_id')->toArray();
 
+        Log::debug($empresasLtd);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." validando empresaLTD");
         Log::debug($empresasLtd);
         
