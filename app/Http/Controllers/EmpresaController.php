@@ -64,7 +64,7 @@ class EmpresaController extends Controller
     public function create()
     {
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);    
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
             $tabla = array();
             $pluckTipoPagos = TipoPagos::orderBy('id')->pluck("nombre", "id");
             $pluckPlazoCreditos = PlazoCreditos::orderBy('id')->pluck("nombre", "id");
@@ -142,12 +142,12 @@ class EmpresaController extends Controller
     {
         $mensaje = "";
         try {
-            Log::info(__CLASS__." ".__FUNCTION__."");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $objeto = Empresa::findOrFail($id);
             $pluckTipoPagos = TipoPagos::orderBy('id')->pluck("nombre", "id");
             $pluckPlazoCreditos = PlazoCreditos::orderBy('id')->pluck("nombre", "id");
-
-            Log::debug($objeto);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            //Log::debug($objeto);
             return view(self::EDITAR_v
                 , compact('objeto',"pluckTipoPagos", "pluckPlazoCreditos") 
             );

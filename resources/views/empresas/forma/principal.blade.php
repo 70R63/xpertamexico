@@ -100,7 +100,7 @@
 				                    ,'placeholder'  => 'Limite de credito maximo $500000.00'
 				                    ,'id'       => 'limite_credito'
 				                    ,'required' => ''
-				                    ,'min' =>	1
+				                    ,'min' =>	0
 				                    , 'max'	=> 500000
 				                    
 				                ]);

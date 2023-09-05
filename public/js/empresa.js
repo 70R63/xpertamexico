@@ -98,10 +98,10 @@ $('.selectgroup-input').change(function () {
 
 function ocultarMostrarHtmlPago(tipoPagoId){
     if ( tipoPagoId  ==2 ){
+        console.log(tipoPagoId)
         $( ".tipo_pago" ).hide();
-        
-            $('#limite_credito').removeAttr('required')
-            $('#plazo_credito_id').removeAttr('required')
+        $('#limite_credito').removeAttr('required')
+        $('#plazo_credito_id').removeAttr('required')
 
     } else {
         $( ".tipo_pago" ).show();
