@@ -10,6 +10,7 @@ var sobrePesoKg = 0;
 var costoCoberturaExtendida = 0;
 var costoKgExtra = 0;
 var saldoNegativo = false;
+var saldoMinimo = 70;
 
 function pesoDimensionalyBascula(){
 
@@ -188,7 +189,7 @@ function validaSaldo(response){
     console.log("validaSaldo")
 
     if (response.data.tipoPagoId == 2) {
-         if (response.data.saldo <105) {
+         if (response.data.saldo <saldoMinimo) {
             saldoNegativo = true;
             swal(
                 "El Saldo: "+response.data.saldo +" es menor al limite permitido",
