@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Negocio\Saldos;
 
 use Log;

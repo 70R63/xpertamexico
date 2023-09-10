@@ -10,4 +10,6 @@ class GuiasPaquete extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $fillable = ['peso', 'largo','ancho', 'alto', 'precio_unitario', 'empresa_id', 'guia_id'];
 }

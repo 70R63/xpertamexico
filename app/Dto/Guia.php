@@ -102,7 +102,7 @@ class Guia {
 				,'cia' 		=> $cia
 				,'cia_d' 	=> $cia_d
 				,'piezas' 	=> $request->piezas
-				, 'documento' => ""
+				,'documento' => ""
 				,'tracking_number' 	=>""
 				,'servicio_id'		=>$request->servicio_id
 				,'peso'			=> $request->peso_facturado
@@ -178,8 +178,6 @@ class Guia {
 			$peso = $request['peso_facturado'];
 
 			$dimensiones ="";
-			
-			Log::debug( print_r($dimensiones,true) );
 
 			$extendida = $request['extendida'];
 			$piezas = $request['piezas'];
@@ -224,7 +222,7 @@ class Guia {
 
 		
 		$insert = array('usuario' => $usuario
-			,'empresa_id' 	=> $empresa_id
+			,'empresa_id' 	=> self::getSucursalEmpresaId($cia)
 			,'ltd_id' 	=> Config('ltd.estafeta.id')
 			,'cia' 		=> $cia
 			,'cia_d' 	=> $cia_d
@@ -742,6 +740,11 @@ class Guia {
 	
 	public function getInsert(){
         return $this->insert;
+    }
+
+    static private function getSucursalEmpresaId($cia){
+    	return Sucursal::findOrFail($cia)->empresa_id;
+
     }
 }
 

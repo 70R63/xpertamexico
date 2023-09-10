@@ -51,6 +51,11 @@
         <!-- Internal Daterangepicker css-->
         <link href="{{ url('spruha/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
 
+        <!-- InternalFileupload css-->
+        <link href="{{ url('spruha/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css"/>
+
+        
+
 
         @yield('css_rol_page')
 
@@ -310,6 +315,13 @@
         <!-- Internal Daternagepicker js-->
         <script src="{{url('spruha/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
         <script src="{{url('spruha/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
+
+        <!-- Internal Fileuploads js-->
+        <script src="{{url('spruha/plugins/fileuploads/js/fileupload.js') }}"></script>
+        <script src="{{url('spruha/plugins/fileuploads/js/file-upload.js') }}"></script>
+
+        
         
         <!-- Personalizacion -->
         <script src="{{ asset('js/guardar.js') }}" ></script> 

@@ -52,6 +52,10 @@ class Tipo
         $filename =  public_path($nameCsv);
         $handle = fopen($filename, 'w');
 
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="'.$nameCsv.'"');
+        header("Content-Transfer-Encoding: binary");
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         fputcsv($handle, [
             "ID GUIA",
@@ -107,7 +111,7 @@ class Tipo
                 $venta['usuario']
                 ,$venta['ltd_nombre']
                 ,$venta['numero_solicitud']
-                ,sprintf("'%s'",trim($venta['tracking_number']))
+                ,sprintf("'%s",trim($venta['tracking_number']))
                 ,$venta['servicio_nombre']
                 ,$venta['clilente_xperta']
                 ,$venta['created_at']
@@ -145,7 +149,7 @@ class Tipo
             $contador++;
         }
         fclose($handle);
-        header('Content-Type: text/csv');
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador);
         

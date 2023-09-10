@@ -13,12 +13,13 @@
 	</ul>
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="">Estadisticas</a>
+			<a class="nav-sub-link" href="{{ route('ajustes.index') }}">Ajustes</a>
 		</li>	
 	</ul>
+
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('ajustes.index') }}">Ajustes</a>
+			<a class="nav-sub-link" href="{{ route('externas.index') }}">Externas (Guias)</a>
 		</li>	
 	</ul>
 	
