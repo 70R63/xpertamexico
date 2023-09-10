@@ -33,7 +33,7 @@ class Externa
     public function guia ($file)
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //dd($file->getClientOriginalName());
+        
         $numeroDeRegistros = 0;
         $ids = "";
         $importeTotal = 0;
@@ -71,7 +71,7 @@ class Externa
             $insert['multipieza'] = $data[20];
             $insert['precio'] = $precio;
              
-
+            $insert['canal'] = "INT";
             $insert['numero_solicitud'] = Carbon::now()->timestamp;
             $insert['usuario'] = auth()->user()->name;
             $insert['piezas'] = 1;
