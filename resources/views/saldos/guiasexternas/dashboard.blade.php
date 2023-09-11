@@ -31,8 +31,8 @@
                 </div>
                 <div class="form-group row justify-content-around">     
                     <div>    
-                        <a href="{{ route('ajustes.index') }}" id="limpiar" class="btn badge-dark" >Nueva Guia</a>
-                        <button type="submit" class="btn btn-primary ml-3" >Ajustar</button>
+                        
+                        <button type="submit" class="btn btn-primary ml-3" >Cargar Archivo</button>
                     </div>   
                 </div> 
             </div>

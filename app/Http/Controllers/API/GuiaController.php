@@ -270,7 +270,7 @@ class GuiaController extends Controller
                 ->leftJoin('guias_paquetes', 'guias_paquetes.guia_id', '=', 'guias.id' )
                 ->where('guias.estatus',1)
                 //->toSql();
-                ->offset(0)->limit(10)
+                //->offset(0)->limit(10)
                 ->get()->toArray()
                 ;
             //Log::info(print_r($tabla,true));    

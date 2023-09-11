@@ -120,11 +120,11 @@ class Externa
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-            $this->tabla = mGuiasExternas::select("id","created_at", "user_id", "no_guias", "importe_total")
-                //->joinUsuario()
+            $this->tabla = mGuiasExternas::select("guias_externas.id","guias_externas.created_at", "user_id", "no_guias", "importe_total", "file_nombre", "users.name")
+                ->joinUsuario()
                 //->joinEmpresa()
-                ->where('created_at', '>', now()->subDays(30)->endOfDay())
-                ->orderBy("id","desc")
+                ->where('guias_externas.created_at', '>', now()->subDays(30)->endOfDay())
+                ->orderBy("guias_externas.id","desc")
                 ->get()->toArray();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }

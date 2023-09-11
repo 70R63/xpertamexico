@@ -2,4 +2,4 @@
     <label class="main-content-label mb-0">Cargar Archvio csv</label>
 </div>
 
-<input accept=".csv" type="file" class="dropify" data-height="200" id="fileGuiasExternas" name="fileGuiasExternas" />
+<input accept=".csv" type="file" class="dropify" data-height="200" id="fileGuiasExternas" name="fileGuiasExternas" required />
