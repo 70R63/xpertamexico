@@ -7,8 +7,6 @@ use Log;
 use App\Models\Guia;
 use App\Models\GuiasPaquete;
 use App\Models\Saldos\GuiasExternas as mGuiasExternas;
-//use App\Models\Saldos\Ajustes as mAjustes;
-//use App\Models\API\Sucursal;
 
 //Negocio
 use App\Negocio\Saldos\Saldos AS nSaldos;
@@ -41,9 +39,10 @@ class Externa
 
         $csvFile = fopen($file->getRealPath(), "r");
         fgetcsv($csvFile);
+        
         while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $precioUnitario = $data[16]+$data[17]+$data[18]+$data[14]+$data[19]+$data[20];
+            $precioUnitario = (int)$data[16]+(int)$data[17]+(int)$data[18]+(int)$data[14]+(int)$data[19]+(int)$data[20];
             $insert= array();
             $cia = $data[11];
             $precio = sprintf("%.4f",($precioUnitario*1.16));
@@ -75,13 +74,13 @@ class Externa
             $insert['numero_solicitud'] = Carbon::now()->timestamp;
             $insert['usuario'] = auth()->user()->name;
             $insert['piezas'] = 1;
-
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $guiaId = Guia::create($insert)->id;
             
             $insert['guia_id'] = $guiaId;
             $insert['precio_unitario'] = $precioUnitario;
 
-
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             GuiasPaquete::create($insert);
             
             $nSaldos = new nSaldos();
@@ -92,6 +91,7 @@ class Externa
             $numeroDeRegistros++;
             $importeTotal +=$precio;
         }
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         fclose($csvFile);
 
         $insertExternas['user_id'] = auth()->user()->id;

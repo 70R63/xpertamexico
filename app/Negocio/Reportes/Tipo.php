@@ -29,12 +29,8 @@ class Tipo
                 
             ;
 
-        //Log::debug($reporteVentas->toSql());
-        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::info(print_r($reporteVentas,true));
-
-
+     
         $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
 
 
@@ -107,7 +103,7 @@ class Tipo
 
             fputcsv($handle, [
                 $venta['id'],
-                $venta['empresa_nombre'],
+                $venta['clilente_xperta'],
                 $venta['usuario']
                 ,$venta['ltd_nombre']
                 ,$venta['numero_solicitud']
@@ -137,9 +133,9 @@ class Tipo
                 ,$venta['costo_base']
                 ,$venta['costo_kg_extra']
                 ,$venta['costo_extendida']
-                ,""
-                ,""
-                ,""
+                ,0
+                ,$venta['servicio_premium']
+                ,$venta['multipieza']
                 ,$venta['seguro']
                 ,$subtotal
                 ,$venta['precio']
@@ -163,9 +159,7 @@ class Tipo
                 ->get()->toArray()
                 
             ;
-
-        //Log::debug($reporteVentas->toSql());
-        
+ 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug(print_r($reporteRepesajes,true));
 
@@ -273,15 +267,15 @@ class Tipo
     private function insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador)
     {
         Reportes::create(
-                    array('cia' => $parametros['clienteIdCombo']
-                        ,'ltd_id' => $parametros['ltdId']
-                        ,'servicio_id'=>$parametros['servicio_id']
-                        ,'fecha_ini' => $fechaIni
-                        ,'fecha_fin' => $fechaFin
-                        ,'ruta_csv' => sprintf("public/%s",$nameCsv)
-                        ,'registros_cantidad' => $contador
-                        ,'tipo' => $parametros['tipo']
-                    )
-                );
+            array('cia' => $parametros['clienteIdCombo']
+                ,'ltd_id' => $parametros['ltdId']
+                ,'servicio_id'=>$parametros['servicio_id']
+                ,'fecha_ini' => $fechaIni
+                ,'fecha_fin' => $fechaFin
+                ,'ruta_csv' => sprintf("public/%s",$nameCsv)
+                ,'registros_cantidad' => $contador
+                ,'tipo' => $parametros['tipo']
+            )
+        );
     } //fin insertarReporte
 }

@@ -269,11 +269,11 @@ class GuiaController extends Controller
                 ->join('servicios','servicios.id', '=', 'guias.servicio_id')
                 ->leftJoin('guias_paquetes', 'guias_paquetes.guia_id', '=', 'guias.id' )
                 ->where('guias.estatus',1)
-                //->where('guias.ltd_id',1)
                 //->toSql();
-                //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
-                //->offset(0)->limit(10)
-                ->get()->toArray();
+                ->offset(0)->limit(10)
+                ->get()->toArray()
+                ;
+            //Log::info(print_r($tabla,true));    
             $response['tabla']=$tabla;
             $response['rol']=auth()->user()->roles()->first()->slug;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");

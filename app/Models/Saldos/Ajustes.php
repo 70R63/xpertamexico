@@ -13,7 +13,7 @@ class Ajustes extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['factura_id', 'fecha_deposito', 'importe', 'comentarios', 'user_id', 'nota_de', 'empresa_id'];
+    protected $fillable = ['factura_id', 'fecha_deposito', 'importe', 'comentarios', 'user_id', 'nota_de', 'empresa_id', 'guia_id'];
 
 
     protected function serializeDate(DateTimeInterface $date)

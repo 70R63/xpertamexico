@@ -140,6 +140,11 @@ class BancosSeeder extends Seeder
             'nombre' => 'BANCO VE POR MAS',
             
         ]);
+
+        Bancos::create([
+            'nombre' => 'BANREGIO',
+            
+        ]);
         
     }
 }

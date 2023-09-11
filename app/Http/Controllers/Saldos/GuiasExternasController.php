@@ -94,6 +94,7 @@ class GuiasExternasController extends Controller
     public function store(StoreGuiasExternasRequest $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug($request->all());
 
         try {
             

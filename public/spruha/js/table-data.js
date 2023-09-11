@@ -125,6 +125,59 @@ $(function() {
     //Fin Data table grupoTabla
 
 
+   //Data tabla general sin buscador
+   var exportGeneralNoBuscar = $('#exportGeneralNoBuscar').DataTable( {
+      procesing :true
+      ,bSortCellsTop: true
+      ,responsive: false
+      ,serverSide:false
+      ,paging:true
+      ,pagingType: "full_numbers"
+      ,pageLength: 25
+      ,lengthChange: true
+      ,deferRender: true
+      ,bDestroy: true
+      ,paging: true
+      ,dom: 'Brtip'
+      ,bFilter: true 
+      ,buttons: [ 
+                  { 
+                     extend: 'excelHtml5'
+                     , footer: true
+                     , charset: 'utf-8'
+                     , bom: true
+                     , fieldSeparator: ','
+                     ,fieldBoundary: ''
+                     ,exportOptions: {
+                        columns: ':not(.notexport)'
+                     }
+                     
+                  }
+                  ,{ 
+                     extend: 'pdf'
+                     ,orientation: 'landscape'
+                     , footer: true 
+                     ,exportOptions: {
+                        columns: ':not(.notexport)'
+                     } 
+                  }
+                  
+               ]
+      
+      , order: [[0, 'desc']],
+   } );
+
+
+   $('input.search').on('keyup change', function () {
+      //e.preventDefault();
+      console.log("Buscador");
+      var rel = $(this).attr("rel");
+      exportGeneralNoBuscar.columns(rel).search(this.value).draw();
+   });
+
+  
+   
+
 
 	$('#example1').DataTable({
 		language: {

@@ -81,7 +81,7 @@ class Ajustes
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
-        $this->tabla = mAjustes::select("ajustes.id","ajustes.created_at","name","nombre","factura_id","fecha_deposito", "importe", "comentarios", "nota_de")
+        $this->tabla = mAjustes::select("ajustes.id","ajustes.created_at","name","nombre","factura_id","fecha_deposito", "importe", "comentarios", "nota_de", "guia_id")
                 ->joinUsuario()
                 ->joinEmpresa()
                 ->where('ajustes.created_at', '>', now()->subDays(30)->endOfDay())

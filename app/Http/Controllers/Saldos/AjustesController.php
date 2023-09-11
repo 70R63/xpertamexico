@@ -41,8 +41,6 @@ class AjustesController extends Controller
             $nAjustes->tabla();
             $tabla = $nAjustes->getTabla();
 
-            
-
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
             return view(self::DASH_v 
                     ,compact("tabla", "iniciarBusqueda")

@@ -24,6 +24,7 @@ return [
         ,2  => 'ESTAFETA_MEXICANA'
         ,3  => 'REDPACK'
         ,4  => 'DHL'
+        ,6  => 'UPS'
     ]
     ,'estafeta'      => env('WSDL_ESTAFETA', 'Laravel'),
     'estafeta_tracking' => env('WSDL_ESTAFETA_TRACKING_DEV', 'tracking'),

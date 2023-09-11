@@ -24,7 +24,7 @@
             <div class="input-group-text">
                 <i class="fe fe-calendar  lh--9 op-6"></i>
             </div>
-            <input type="text" class="form-control pull-right datepicker" id="fecha_deposito" name="fecha_deposito" placeholder="Fecha Deposito" required>
+            <input type="text" class="form-control pull-right datepicker" id="fecha_deposito" name="fecha_deposito" placeholder="Fecha Factura" required>
         </div>
     </div>
 
@@ -35,7 +35,7 @@
             </div>
             {!! Form::text('importe', null,
                 ['class'        => 'form-control'
-                    ,'placeholder'  => 'Ingrese el importe de la factura'
+                    ,'placeholder'  => 'Ingrese importe de diferencia'
                     ,'required' => ''
                     ,'id'       => 'importe'
                 ])
@@ -59,11 +59,20 @@
     </div>
 
     {!! Form::hidden('cia'
-    , $guia->cia
-    ,['class'       => 'form-control'
-        ,'id'       => 'cia' 
-    ])
-!!}
+        , $guia->cia
+        ,['class'       => 'form-control'
+            ,'id'       => 'cia' 
+        ])
+
+    !!}
+
+    {!! Form::hidden('guia_id'
+        , $guia->guias_id
+        ,['class'       => 'form-control'
+            ,'id'       => 'guia_id' 
+        ])
+    !!}
+    
     <div class="form-group row justify-content-around">     
         <div>    
             <a href="{{ route('ajustes.index') }}" id="limpiar" class="btn badge-dark" >Nueva Guia</a>
