@@ -31,5 +31,15 @@ class Ajustes extends Model
       return $query->join('empresas', 'empresas.id', '=', 'ajustes.empresa_id');
     }
 
+    public function scopeJoinGuias($query) {
+      Log::info(__CLASS__." ".__FUNCTION__);
+      return $query->join('guias', 'guias.id', '=', 'ajustes.guia_id');
+    }
+
+    public function scopeJoinLtds($query) {
+      Log::info(__CLASS__." ".__FUNCTION__);
+      return $query->join('ltds', 'ltds.id', '=', 'guias.ltd_id');
+    }
+
 
 }

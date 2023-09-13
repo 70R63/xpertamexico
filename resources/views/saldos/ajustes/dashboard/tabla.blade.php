@@ -8,9 +8,14 @@
                 <th>USUARIO XPERTA </th>  
                 <th>CLIENTE XPERTA </th>  
                 <th>FACTURA </th>
-                <th>FECHA DEPOSITO </th>
+                <th>FECHA FACTURA </th>
                 <th>IMPORTE </th>
                 <th>NOTA DE</th>
+                <th style="display:none;">NUMERO TRACKING </th>
+                <th style="display:none;">FECHA PICKUP    </th>
+                <th style="display:none;">MENSAJERIA</th>
+                
+
             </tr>
             <tr>
                 <td></td>
@@ -24,6 +29,9 @@
                 <td></td>
                 <td><input rel=7 type="text" class="search" name="importe"></td>
                 <td></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
             </tr>
         </thead>
 
@@ -38,6 +46,9 @@
                     <td>{{ $row['fecha_deposito'] }}</td>
                     <td>{{ $row['importe'] }} </td>
                     <td>{{ $row['nota_de'] }} </td>
+                    <td style="display:none;" >{{ $row['tracking_number'] }}</td>
+                    <td style="display:none;">{{ $row['pickup_fecha'] }}</td>
+                    <td style="display:none;">{{ $row['ltd_nombre'] }}</td>
                 </tr>
                     
             @endforeach
@@ -53,6 +64,9 @@
                 <th>FECHA DEPOSITO </th>
                 <th>IMPORTE </th>
                 <th>NOTA DE</th>
+                <th style="display:none;">NUMERO TRACKING </th>
+                <th style="display:none;">FECHA PICKUP    </th>
+                <th style="display:none;">MENSAJERIA</th>
             </tr>
         </tfoot>
     </table>

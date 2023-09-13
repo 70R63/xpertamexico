@@ -81,12 +81,17 @@ class Ajustes
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
-        $this->tabla = mAjustes::select("ajustes.id","ajustes.created_at","name","nombre","factura_id","fecha_deposito", "importe", "comentarios", "nota_de", "guia_id")
-                ->joinUsuario()
-                ->joinEmpresa()
-                ->where('ajustes.created_at', '>', now()->subDays(30)->endOfDay())
-                ->orderBy("ajustes.id","desc")
-                ->get()->toArray();
+        $this->tabla = mAjustes::select("ajustes.id","ajustes.created_at","name","empresas.nombre","factura_id","fecha_deposito", "importe", "comentarios", "nota_de"
+            ,"guia_id", "guias.tracking_number", "guias.pickup_fecha", "guias.ltd_id"
+            ,"ltds.nombre AS ltd_nombre"
+            )
+            ->joinUsuario()
+            ->joinEmpresa()
+            ->joinGuias()
+            ->joinLtds()
+            ->where('ajustes.created_at', '>', now()->subDays(30)->endOfDay())
+            ->orderBy("ajustes.id","desc")
+            ->get()->toArray();
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
