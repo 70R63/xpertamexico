@@ -25,6 +25,7 @@ class Tipo
     {
 
         $reporteVentas = Reportes_ventas::filtro( $parametros )
+                ->where("reportes_ventas.estatus",1)
                 ->get()->toArray()
                 
             ;

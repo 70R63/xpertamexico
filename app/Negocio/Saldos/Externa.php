@@ -42,6 +42,8 @@ class Externa
         
         while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::debug(print_r($data,true));
+
             $precioUnitario = (int)$data[16]+(int)$data[17]+(int)$data[18]+(int)$data[14]+(int)$data[19]+(int)$data[20];
             $insert= array();
             $cia = $data[11];
