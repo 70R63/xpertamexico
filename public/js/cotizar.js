@@ -10,7 +10,7 @@ var sobrePesoKg = 0;
 var costoCoberturaExtendida = 0;
 var costoKgExtra = 0;
 var saldoNegativo = false;
-var saldoMinimo = 70;
+var saldoMinimo = 90;
 
 function pesoDimensionalyBascula(){
 
@@ -516,7 +516,7 @@ function obtenerClientes() {
         /* remind that 'data' is the response of the AjaxController */
         }).done(function( response) {
             console.log("done");
-            console.log(response.data);
+            //console.log(response.data);
            
             $('#clienteIdCombo').empty();
             $("#clienteIdCombo").append('<option selector="0" value="0"> TODOS</option>');
