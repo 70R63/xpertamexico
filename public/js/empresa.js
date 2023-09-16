@@ -122,3 +122,43 @@ function validaTipoPago(){
     ocultarMostrarHtmlPago(tipoPagoId)
     
 }
+
+function obtenerEmpresaId() {
+
+    $.ajax({
+        /* Usar el route  */
+        url: route('api.clientes'),
+        type: 'GET',
+        /* send the csrf-token and the input to the controller */
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        //data: "clienid="+id
+        
+        /* remind that 'data' is the response of the AjaxController */
+        }).done(function( response) {
+            console.log("done");
+            //console.log(response.data);
+           
+            $('#empresa_id').empty();
+            $("#empresa_id").append('<option selector="0" value="0"> TODOS</option>');
+            
+            $.each(response.data,function(key, empresa) {
+                $("#empresa_id").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
+              });   
+            
+        
+        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+            console.log( "fail" );
+            console.log(textStatus);
+            
+            swal(
+                "Error!",
+                data.responseJSON.message,
+                "error"
+              );
+            
+
+        }).always(function() {
+            console.log( "complete" );
+        });
+
+}

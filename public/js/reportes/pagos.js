@@ -1,18 +1,16 @@
 $(document).ready(function() {
-    console.log("document ready reportes ventas")
-    if ($('#tablaReporteVentasAjax').length) {
-        console.log("document ready tablaReporteVentasAjax")
-        tablaReporteVentas()  
-        // cotizar.js   
-        obtenerClientes();
+    console.log("document ready reportes pagos")
+    // empresa.js   
+    obtenerEmpresaId();
+    if ($('#tablaReportePagosAjax').length) {
+        console.log("document ready tablaReportePagosAjax")
+        tablaReportePagos()  
+        
     }
-
-    $( ".datepicker" ).datepicker();
 
 });
 
-
-function documentoVentaCsv(row){
+function documentoPagosCsv(row){
     
     
     html = '<a href="../'+row.ruta_csv+'" target="_blank"> \
@@ -29,71 +27,12 @@ function documentoVentaCsv(row){
 }
 
 
-function obtenerProveedor(row){
-    
-    var proveedor = "Todos";
-    console.log(row.ltd_id)
-    switch (row.ltd_id) {
-        case 1:
-            proveedor = "FEDEX"
-            break;
-        case 2:
-            proveedor = "ESTAFETA_MEXICANA"
-            break;
-        case 3:
-            proveedor = "REDPACK"
-            break;
-        case 4:
-            proveedor = "DHL"
-            break;
-        default:
-            proveedor = "TODOS"
-        }
-    return proveedor ;
-}
-
-function obtenerServicio(row){
-    
-    var proveedor = "Todos";
-    switch (row.servicio_id) {
-        case 1:
-            proveedor = "TERRESTRE"
-            break;
-        case 2:
-            proveedor = "2 DIAS"
-            break;
-        case 3:
-            proveedor = "DIA SIG."
-            break;
-        case 4:
-            proveedor = "09:30"
-            break;
-        default:
-            proveedor = "TODOS"
-        }
-    return proveedor;    
-}
-
-function obtenerCliente(row){
-    
-    var cliente = "TODOS";
-    switch (row.cia) {
-        case 0:
-            cliente = "TODOS"
-            break;
-        default:
-            cliente = row.nombre
-        }
-    return cliente;    
-}
-
-
-$("#generarReporte").click(function(e) {
-    console.log("generarReporte")
+$("#generarReportePagos").click(function(e) {
+    console.log("generarReportePagos")
     e.preventDefault();
 
-    var form = $('#reporteVentasForm').parsley().refresh();
-    var action = $('#reporteVentasForm').attr("action"); 
+    var form = $('#reportePagosForm').parsley().refresh();
+    var action = $('#reportePagosForm').attr("action"); 
     console.log(action);
 
     swal(
@@ -108,13 +47,13 @@ $("#generarReporte").click(function(e) {
             type: 'POST',
             /* send the csrf-token and the input to the controller */
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data: $('#reporteVentasForm').serialize()
+            data: $('#reportePagosForm').serialize()
             
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
 
-                tablaReporteVentas();
+                tablaReportePagos();
             }).fail( function( data,jqXHR, textStatus, errorThrown ) {
                 console.log( "fail" );
                 swal(
@@ -128,16 +67,17 @@ $("#generarReporte").click(function(e) {
             });
         
     } else {
-        console.log( "enviosForm con errores" );
+        console.log( "reportePagosForm con errores" );
         return false;
     }
 
 });
 
-function tablaReporteVentas(){
+
+function tablaReportePagos(){
 
     $.ajax({
-        url: '../api/reportes/ventas',
+        url: '../api/reportes/pagos/index',
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -146,7 +86,7 @@ function tablaReporteVentas(){
         /* remind that 'data' is the response of the AjaxController */
     }).done(function( response) {
         console.log(response.data)
-        table = $('#tablaReporteVentasAjax').DataTable({
+        table = $('#tablaReportePagosAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No se puede mostrar los registros"
                     }
@@ -190,30 +130,14 @@ function tablaReporteVentas(){
                         { "data": "id" } //0
                         ,{ "data": "ruta_csv"
                             ,render: function(data, type, row){   
-                                return documentoVentaCsv(row); 
+                                return documentoPagosCsv(row); 
                             }
                         }
-                        ,{ "data": "created_at" 
-                            ,render: function(data){
-                                var ahora = new Date(data);   
-                                return ahora.toLocaleDateString('es-MX')+" "+ ahora.toLocaleTimeString('es-MX'); 
-                            }
+                        ,{ "data": "creada" 
                         }
-                        ,{ "data": "nombre" 
-                            ,render: function(data, type, row){   
-                                return obtenerCliente(row); 
-                            }
-                        }
-                        ,{ "data": "ltd_id" 
-                            ,render: function(data, type, row){   
-                                return obtenerProveedor(row); 
-                            }
-                        }//4
-                        ,{ "data": "servicio_id" 
-                            ,render: function(data, type, row){   
-                                return obtenerServicio(row); 
-                            }
-                        }
+                        ,{ "data": "user_nombre" }
+                        ,{ "data": "empresa_nombre" }
+                        ,{ "data": "banco_nombre" }//4
                         ,{ "data": "fecha_ini" }
                         ,{ "data": "fecha_fin" }
                         

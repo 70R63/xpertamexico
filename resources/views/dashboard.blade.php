@@ -339,6 +339,7 @@
         <script src="{{ asset('js/reportesVentas.js') }}" ></script>
         <script src="{{ asset('js/reportes/repesajes.js') }}" ></script>
         <script src="{{ asset('js/saldos/pagos.js') }}" ></script>
+        <script src="{{ asset('js/reportes/pagos.js') }}" ></script>
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')

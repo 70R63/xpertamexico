@@ -36,7 +36,6 @@ class Tipo
 
 
         $carbon = Carbon::parse();
-        
         $carbon->settings(['toStringFormat' => 'Y-m-d']);
 
         $fechaIni = empty($parametros['fecha_ini']) ? "0000-00-00" : Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');

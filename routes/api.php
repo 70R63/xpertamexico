@@ -13,6 +13,7 @@ use App\Http\Controllers\API\ClienteController;
 use App\Http\Controllers\API\ReportesController;
 use App\Http\Controllers\API\Reportes\RepesajeController;
 use App\Http\Controllers\API\Saldos\PagosController;
+use App\Http\Controllers\API\Reportes\PagosController as ReportesPagoController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -95,6 +96,13 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
                 Route::controller(RepesajeController::class)->group(function(){
                     Route::get('repesajes', 'reportes')->name("repensajes");
                     Route::post('repesajes', 'creacion')->name("creacion");    
+                });
+            });
+
+            Route::group(['prefix'=>'pagos','as'=>'pagos.'], function(){
+                Route::controller(ReportesPagoController::class)->group(function(){
+                    Route::get('index', 'index')->name("index");
+                    Route::post('creacion', 'creacion')->name("creacion");    
                 });
             });
         });

@@ -83,7 +83,12 @@ Route::resource('reportes/ventas','ReportesController')
     ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,cliente']);
 
 Route::resource('reportes/repesajes','Reportes\RepesajeController')
-    ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,cliente']);    
+    ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,cliente']);
+
+Route::group(['as'=>'reportes.'  ,'prefix'=>'reportes'],function(){
+    Route::resource('pagado','Reportes\PagosController')
+        ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria']); 
+});
 
 //Menu Saldos
 Route::resource('saldos/pagos','Saldos\PagosController')
