@@ -90,13 +90,13 @@ class Pagos
 
         $parametros['user_id'] = auth()->user()->id;
 
-        
+            
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $carbon = Carbon::parse();
         $carbon->settings(['toStringFormat' => 'Y-m-d_hm']);
-
-        $nameCsv = sprintf("reportes/pagos/%s-reportepago_%s_%s.csv"
-                ,(string)$carbon,$parametros['empresa_id'],$parametros['banco_id']);
+        $timestamps = Carbon::now()->timestamp;
+        $nameCsv = sprintf("reportes/pagos/%s-reportepago_%s_%s-%s.csv"
+                ,(string)$carbon,$parametros['empresa_id'],$parametros['banco_id'],$timestamps);
 
         $parametros['ruta_csv'] =$nameCsv; 
         $filename =  public_path($nameCsv);

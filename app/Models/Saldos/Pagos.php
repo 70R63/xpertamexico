@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Log;
-
+use Carbon\Carbon;
 class Pagos extends Model
 {
     use HasFactory;
@@ -41,16 +41,15 @@ class Pagos extends Model
             $carbon = Carbon::parse($parametros['fecha_ini'])->format('Y-m-d');
             
             Log::debug($carbon);
-            $query->where('created_at','>=', $carbon." 00:00:00");
+            $query->where('pagos.created_at','>=', $carbon." 00:00:00");
         }
 
         
         if ( !empty($parametros['fecha_fin']) ) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $carbon = Carbon::parse($parametros['fecha_fin'])->format('Y-m-d');
-            //$carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s']);
             Log::debug($carbon);
-            $query->where('created_at','<=', $carbon." 23:59:59");
+            $query->where('pagos.created_at','<=', $carbon." 23:59:59");
         }
 
         if ( !empty($parametros['banco_id']) &&  $parametros['banco_id'] > 0) {
