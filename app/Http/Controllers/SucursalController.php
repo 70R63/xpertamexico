@@ -155,7 +155,12 @@ class SucursalController extends Controller
         $mensaje = "";
         try {
             $objeto = Sucursal::findOrFail($id);
-            $objeto->fill($request->post())->save();
+            $datosUpdate = $request->post();
+            Log::debug(print_r($datosUpdate,true));
+            if ($datosUpdate['colonia']==0) {
+                unset($datosUpdate['colonia']);
+            }
+            $objeto->fill($datosUpdate)->save();
   
             $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$id);
             $notices = array($tmp);

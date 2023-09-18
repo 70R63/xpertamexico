@@ -125,7 +125,7 @@ class ClienteController extends Controller
                
             $pluckEmpresa = Empresa::pluck('nombre','id');
             
-            //Log::debug($objeto);
+            //Log::debug(print_r($pluckEmpresa,true));
             return view(self::EDITAR_v
                 , compact('objeto',"pluckEmpresa") 
             );
@@ -157,7 +157,12 @@ class ClienteController extends Controller
         $mensaje = "";
         try {
             $objeto = Cliente::findOrFail($id);
-            $objeto->fill($request->post())->save();
+            $datosUpdate = $request->post();
+            Log::debug(print_r($datosUpdate,true));
+            if ($datosUpdate['colonia']==0) {
+                unset($datosUpdate['colonia']);
+            }
+            $objeto->fill($datosUpdate)->save();
   
             $tmp = sprintf("Actualizacion del id '%s', fue exitoso",$objeto->id);
             $notices = array($tmp);

@@ -171,7 +171,7 @@
 						,['class' 		=> 'form-control select2'
 							,'placeholder'	=> 'Seleccionar'
 							,'required'	=> 'true'
-							,'id'		=> 'empresa_id'
+							,'id'		=> 'empresa_id_nojs'
 						]);
 					!!}
 				</div>
