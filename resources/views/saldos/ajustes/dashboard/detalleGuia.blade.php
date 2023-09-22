@@ -26,7 +26,7 @@
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text tx-20" id="basic-addon1">
-                    CLIENTE: {!! $guia->sucursal_nombre  !!}
+                    CLIENTE: {!! $guia->empresa_nombre  !!}
                 </span>
             </div>
         </div>

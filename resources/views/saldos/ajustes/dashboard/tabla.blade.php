@@ -14,7 +14,7 @@
                 <th style="display:none;">NUMERO TRACKING </th>
                 <th style="display:none;">FECHA PICKUP    </th>
                 <th style="display:none;">MENSAJERIA</th>
-                
+                <th style="display:none;">MENSAJERIA</th>
 
             </tr>
             <tr>
@@ -29,6 +29,7 @@
                 <td></td>
                 <td><input rel=7 type="text" class="search" name="importe"></td>
                 <td></td>
+                <td style="display:none;"></td>
                 <td style="display:none;"></td>
                 <td style="display:none;"></td>
                 <td style="display:none;"></td>
@@ -49,6 +50,7 @@
                     <td style="display:none;" >{{ $row['tracking_number'] }}</td>
                     <td style="display:none;">{{ $row['pickup_fecha'] }}</td>
                     <td style="display:none;">{{ $row['ltd_nombre'] }}</td>
+                    <td style="display:none;">{{ $row['comentarios'] }}</td>
                 </tr>
                     
             @endforeach
@@ -67,6 +69,7 @@
                 <th style="display:none;">NUMERO TRACKING </th>
                 <th style="display:none;">FECHA PICKUP    </th>
                 <th style="display:none;">MENSAJERIA</th>
+                <th style="display:none;"></th>
             </tr>
         </tfoot>
     </table>

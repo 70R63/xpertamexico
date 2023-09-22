@@ -43,4 +43,10 @@ class Guia extends Model
       return $query->join('ltds', 'ltds.id', '=', 'guias.ltd_id');
     }
 
+    public function scopeJoinEmpresaAjuste($query) {
+      Log::info(__CLASS__." ".__FUNCTION__);
+
+      return $query->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id');
+    }
+
 }

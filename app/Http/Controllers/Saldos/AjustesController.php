@@ -150,6 +150,7 @@ class AjustesController extends Controller
             Log::debug(print_r($request->all()  ,true));
             $guiaId = $request->all()["guia_id"];
             $nAjustes = new Ajustes();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $nAjustes->detalleGuia($guiaId); 
             $guia = $nAjustes->getGuia();
 

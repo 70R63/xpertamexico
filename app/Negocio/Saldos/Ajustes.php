@@ -31,12 +31,13 @@ class Ajustes
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug(print_r($guiaId  ,true));
 
-        $this->guia = Guia::select("guias.id AS guias_id", "cia", "tracking_number","pickup_fecha","ltds.nombre as ltd_nombre", "sucursals.nombre AS sucursal_nombre")
+        $this->guia = Guia::select("guias.id AS guias_id", "cia", "tracking_number","pickup_fecha","ltds.nombre as ltd_nombre", "empresas.nombre AS empresa_nombre")
                 ->where("guias.id",$guiaId)
                 ->joinSucursalAjuste()
+                ->joinEmpresaAjuste()
                 ->joinLtdAjuste()
-                ->firstOrFail();
-        
+                ->firstOrFail()
+                ;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 

@@ -151,6 +151,13 @@ $(function() {
                      ,exportOptions: {
                         columns: ':not(.notexport)'
                      }
+                     ,customizeData: function(data, type, row) {
+                           //console.log(data)
+                           for(var i = 0; i < data.body.length; i++) {
+                            console.log("custom")
+                             data.body[i][9] = '\0' + data.body[i][9];
+                           }
+                         } 
                      
                   }
                   ,{ 
