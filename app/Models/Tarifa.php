@@ -54,6 +54,8 @@ class Tarifa extends Model
         ->where('empresa_ltds.empresa_id', $empresa_id)
         ->where('ltd_coberturas.cp', $cp_d)
         ->where('ltds.id', $ltdId)
+        ->groupBy('tarifas.id')
+
         ;
         //1 indica que puede enviar en todas los servicios de las tarifas
         $prioridad = 1;
@@ -109,6 +111,7 @@ class Tarifa extends Model
                 ->where('empresa_ltds.empresa_id', $empresa_id)
                 ->where('ltd_coberturas.cp', $cp_d)
                 ->where('tarifas.id', $tarifaId)
+                ->groupBy('tarifas.id')
 
                 ;
         
