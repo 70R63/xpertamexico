@@ -74,6 +74,12 @@ Route::resource('cotizaciones','CotizadorController')
 Route::resource('rastreos','RastreosController')
     ->middleware(['roles:sysadmin,admin,adminops,operaciones,cliente,usuario']);
 
+Route::group(['as'=>'guias.'  ,'prefix'=>'guias'],function(){
+    Route::resource('masivas','Guias\MasivasController')
+        ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria']); 
+});
+
+
 //Menu Roles
 Route::resource('roles','Roles\RolesController')
     ->middleware(['roles:sysadmin,admin']);

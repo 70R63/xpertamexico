@@ -103,8 +103,8 @@ class EstafetaDTO
         Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
 
         $this->ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
-                                ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
-                                ->first();
+            ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
+            ->first();
         
         $identification = new Identification([
                     'suscriberId' => $this->ltdTipoServicio->client_id 

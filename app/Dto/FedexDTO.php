@@ -43,7 +43,6 @@ class FedexDTO
 
 	public function parser($request){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO");
-		Log::info(utf8_encode($request['contacto']));
 		Log::info(($request['contacto']));
 		
 		$weight = new Weight(array('value'=> $request['peso_facturado']));
@@ -54,32 +53,32 @@ class FedexDTO
 				,"companyName"	=> $this->quitar_acentos($request['nombre'])
 				) 
 			);
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$direccion = sprintf("%s %s %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
 		$streetLines = str_split($this->quitar_acentos($direccion),35);
 
 		//Validacion temporal Entidad Federativa
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		if (strlen($request['entidad_federativa']) ===2 ){
 			$stateOrProvinceCode = $request['entidad_federativa'];
 		} else{
 			$stateOrProvinceCode = config('general.stateOrProvinceCode')[$request['entidad_federativa']];
 		}
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$addressShipper = New Address(
 			array("streetLines"     => $streetLines
 				,"city"	=> $this->quitar_acentos($request['colonia'])
 				,"stateOrProvinceCode"	=> $stateOrProvinceCode
 				,"postalCode"	=> $request['cp']
 			));
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$contactRecipients = New Contact( 
 			array("personName" 	=> $this->quitar_acentos($request['contacto_d'])
 				,"phoneNumber"	=> $request['celular_d']
 				,"companyName"	=> $this->quitar_acentos($request['nombre_d'])) 
 			);
 
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$direccion_d = sprintf("%s %s %s,%s",$request['direccion_d'],$request['no_int_d'],$request['no_ext_d'],$request['direccion2_d'] );
 		$streetLines_d = str_split($this->quitar_acentos($direccion_d),35);
 
@@ -98,11 +97,11 @@ class FedexDTO
 				,"stateOrProvinceCode"	=> $stateOrProvinceCode_d
 				,"postalCode"	=> $request['cp_d']
 			));
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$shipper = new Shipper(array('contact' => $contactShipper, 'address' => $addressShipper ));
 
 		$recipients = New Recipients(array('contact' => $contactRecipients, 'address' => $addressRecipients ));
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$declaredValueWeight = array('declaredValue' => new DeclaredValue(["amount"=>$request['valor_envio']])
                                     ,'weight' => $weight
                                     ,'groupPackageCount' => $request['piezas'] 
@@ -110,7 +109,7 @@ class FedexDTO
                                 );
 
 		$requestedPackageLineItems = New RequestedPackageLineItems($declaredValueWeight);
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $requestedShipment = 
             array('shipper' => $shipper
             ,'recipients' => array($recipients)
@@ -123,7 +122,7 @@ class FedexDTO
         		'value' => config('ltd.fedex.cred.accountNumber')
         	]
         );
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $init = array('requestedShipment'   => new RequestedShipment($requestedShipment)
 	                    ,'accountNumber'    => $accountNumber );
         

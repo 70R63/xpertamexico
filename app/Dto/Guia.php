@@ -64,7 +64,7 @@ class Guia {
 
 	public function parseoFedex($request, $sFedex, $canal = "API"){
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO----- ");
-		$dimensiones = sprintf("%sx%sx%s",$request->largo,$request->ancho,$request->alto);
+		$dimensiones = sprintf("%sx%sx%s",$request['largo'],$request['ancho'],$request['alto']);
 		$precio = sprintf("%.2f",$request['precio']);
 
 		$cia = $request['sucursal_id'];
@@ -95,17 +95,17 @@ class Guia {
 		    	Log::info("No se cargo ningun caso");
 		}
 
-
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$this->insert = array('usuario' => auth()->user()->name
 				,'empresa_id' 	=> auth()->user()->empresa_id
-				,'ltd_id' 	=> $request->ltd_id
+				,'ltd_id' 	=> $request['ltd_id']
 				,'cia' 		=> $cia
 				,'cia_d' 	=> $cia_d
-				,'piezas' 	=> $request->piezas
+				,'piezas' 	=> $request['piezas']
 				,'documento' => ""
 				,'tracking_number' 	=>""
-				,'servicio_id'		=>$request->servicio_id
-				,'peso'			=> $request->peso_facturado
+				,'servicio_id'		=>$request['servicio_id']
+				,'peso'			=> $request['peso_facturado']
 				,'dimensiones'	=> $dimensiones
 				,'extendida'	=> $request['extendida']
 				,'seguro'		=> $request['costo_seguro']

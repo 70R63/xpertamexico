@@ -12,7 +12,7 @@ class Pagos extends Model
     use HasFactory;
     protected $table = 'reporte_pagos';
 
-     protected $fillable = ['user_id', 'empresa_id', 'banco_id', 'fecha_ini', 'fecha_fin', 'ruta_csv', 'registros_cantidad'];
+    protected $fillable = ['user_id', 'empresa_id', 'banco_id', 'fecha_ini', 'fecha_fin', 'ruta_csv', 'registros_cantidad'];
 
 
     public function scopeFiltro($query, $parametros) {
