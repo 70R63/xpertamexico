@@ -60,8 +60,10 @@ class FedexDTO
 		//Validacion temporal Entidad Federativa
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		if (strlen($request['entidad_federativa']) ===2 ){
+			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 			$stateOrProvinceCode = $request['entidad_federativa'];
 		} else{
+			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 			$stateOrProvinceCode = config('general.stateOrProvinceCode')[$request['entidad_federativa']];
 		}
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);

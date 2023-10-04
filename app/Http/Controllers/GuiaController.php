@@ -64,17 +64,7 @@ class GuiaController extends Controller
             $servicioPluck = Servicio::pluck("nombre","id");
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
-           /* $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre')
-                        ->join('sucursals', 'sucursals.id', '=', 'guias.cia')
-                        ->join('clientes', 'clientes.id', '=', 'guias.cia_d')
-                        ->join('empresas', 'empresas.id', '=', 'sucursals.empresa_id')
-                        ->offset(0)->limit(2000)
-                        //->toSql();
-                        //->where('guias.created_at', '>', now()->subDays(30)->endOfDay())
-                        ->get()->toArray()
-                        ; 
-            Log::debug(print_r($tabla,true));
-*/
+           
             Log::debug(__CLASS__." ".__FUNCTION__." Return View DASH_v ");
             return view(self::DASH_v 
                     ,compact( "ltdActivo", "servicioPluck")

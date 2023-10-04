@@ -76,12 +76,18 @@ class RedpackDTO
         
         $trackingNumber = $actualTracking +1;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." VALIDANDO DISPONIBILIDAD DE RANGO");
+        Log::debug(print_r($rangoGuias,true));
+
+        if ( count($rangoGuias) == 0) {
+          $this->rangoExcedido = true;
+          return false;
+        }
         if ($trackingNumber > $rangoGuias[0]['final']){
             $this->rangoExcedido = true;
 
             return false;
         }
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         RangoGuias::create(array('inicial' => $rangoGuias[0]['inicial']
                       ,'final' => $rangoGuias[0]['final']
                       ,'actual'=> $trackingNumber

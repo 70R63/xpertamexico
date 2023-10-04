@@ -137,16 +137,14 @@ class DhlDTO
     					, 'receiverDetails' => $receiverDetails)
     			);
 
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $packages = $this->paquetes($request);
 
-    	
+    	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $plannedShipping = sprintf("%s GMT-06:00", Carbon::now()->addHours(24)->format('Y-m-d\TH:i:s') );
 
         $productCode = Config('ltd.dhl.servicio')[$request['servicio_id']];
-
-        
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         if ( $request['bSeguro'] == 'true' ) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $content = new Content(array("packages" => $packages
@@ -156,7 +154,7 @@ class DhlDTO
 
             $valueAddedServices = new ValueAddedServices();
             $valueAddedServices->value = (float)$request['valor_envio'];
-
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $this->body = new LabelSeguro(
                 array("productCode"=> $productCode
                     ,"plannedShippingDateAndTime" => $plannedShipping
@@ -174,6 +172,7 @@ class DhlDTO
                                 ,'description'      => ( strlen($request['contenido']) > 0 ) ? $request['contenido'] : "Sin referencia"
                             )
                         );
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $this->body = new Label(
                 array("productCode"=> $productCode
                     ,"plannedShippingDateAndTime" => $plannedShipping
@@ -202,7 +201,7 @@ class DhlDTO
      */
 
     private function paquetes($request){
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $customerReferences = new CustomerReferences();
 
 
@@ -223,13 +222,13 @@ class DhlDTO
                 );
             $packages[] = $package;
         }
-        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         if ($request['piezas'] > count($request['pesos']) ) {
             for ($i=1; $i < $request['piezas']; $i++) { 
                 $packages[] = $packages[0];
             }
         }
-            
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);   
         return $packages;
         
     }
