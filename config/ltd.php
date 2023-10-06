@@ -20,7 +20,7 @@ return [
 
     'general' =>[
         0   => 'TODOS'
-        ,1  => 'FEDEX'
+        ,1   => 'FEDEX'
         ,2  => 'ESTAFETA_MEXICANA'
         ,3  => 'REDPACK'
         ,4  => 'DHL'
@@ -117,7 +117,8 @@ return [
 	    ,'2002'=>'3'
 	    ,'2006'=>'3'
 	    ,'125' =>'3'
-        ,'2007'=>'6'
+            ,'2007'=>'6'
+	    ,'0' => '1'
             
         ]
         ,'rastreo' => [
@@ -158,7 +159,8 @@ return [
     	    ,'RD' => '3'
     	    ,'RT' => '5'
     	    ,'CM' => '3'
-            ,'RR' => '3'
+	    ,'RR' => '3'
+	    ,'CS' => '9'
         ]
         ,'shipment' => [
             'uri' => env('DHL_URI_SHIPMENT')
