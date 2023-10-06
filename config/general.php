@@ -64,6 +64,7 @@ return [
         ,'Durango'=>'DG'
         ,'Estado de México'=>'EM'
         ,'México'=>'EM'
+        ,'Mexico' => 'EM'
         ,'Guanajuato'=>'GT'
         ,'Guerrero'=>'GR'
         ,'Hidalgo'=>'HG'
