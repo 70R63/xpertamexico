@@ -76,7 +76,7 @@ Route::resource('rastreos','RastreosController')
 
 Route::group(['as'=>'guias.'  ,'prefix'=>'guias'],function(){
     Route::resource('masivas','Guias\MasivasController')
-        ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria,usuario']); 
+        ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,cliente,auditoria,usuario']); 
 });
 
 
