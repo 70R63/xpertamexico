@@ -247,7 +247,7 @@ class GuiaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function guiasTabla(){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."  INICIANDO-----------------");
         $codeHttp = 404;
         try {
             
@@ -269,8 +269,8 @@ class GuiaController extends Controller
                 ->join('servicios','servicios.id', '=', 'guias.servicio_id')
                 ->leftJoin('guias_paquetes', 'guias_paquetes.guia_id', '=', 'guias.id' )
                 ->where('guias.estatus',1)
-                //->toSql();
                 ->offset(0)->limit(10000)
+                //->toSql()
                 ->get()->toArray()
                 ;
             //Log::info(print_r($tabla,true));    

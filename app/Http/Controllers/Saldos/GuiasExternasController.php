@@ -105,7 +105,7 @@ class GuiasExternasController extends Controller
             $tmp = sprintf("'%s, El registro fue exitoso",$request->get('nombre'));
             
             $notices = $nExterna->getMensajes();
-  
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
         } catch (ModelNotFoundException $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
