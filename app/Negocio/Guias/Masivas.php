@@ -7,7 +7,7 @@ use File;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-
+use \ZipArchive;
 use App\Models\Guias\Masivas as mMasivas;
 use App\Models\Cliente;
 use App\Models\Sucursal;
@@ -39,6 +39,7 @@ class Masivas {
     private $tarifa = array();
     private $csvHandle = null;
     private $nameCsv = "";
+    private $documentoGuia = "";
     
  
     /**
@@ -66,16 +67,18 @@ class Masivas {
         
         $this->reporteFalloCsvInicio();
         $insertMasiva = array();
+        
+
         while (($row = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             $numeroDeRegistros++;
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIA NUEVA LINEA ================================= $numeroDeRegistros");
             $data = array("esManual"=>"SI");
             foreach ($cabecera as $key => $value) {
-                //Log::debug(print_r("$key => $value",true));
-                $data[$value] = $row[$key];
+                $data[trim($value)] = $row[$key];
             }
-
+            Log::debug(print_r($data,true));
+            Log::debug(print_r($data["id"],true));
             
             $empresa_id = $data['empresa_id'];
             $mensaje = "";
@@ -147,6 +150,12 @@ class Masivas {
                 $saldo = new nSaldos();
                 $saldo->menosPrecio($data["sucursal_id"], $data["precio"]);
                 $registroExitoso++;
+                $zip = new ZipArchive();
+                $zip->open("zip/archivo.zip", ZipArchive::CREATE);
+                Log::debug("../public/storage/".$this->documentoGuia);
+                $zip->addFile("../public/storage/".$this->documentoGuia, "nombre.pdf");
+                // Close ZipArchive
+                $zip->close();
                 continue;
             
             } catch (ValidationException $e) {
@@ -168,10 +177,13 @@ class Masivas {
                 $numeroDeFallos++;
             }
 
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+            Log::debug(print_r($data,true));
+            Log::debug(print_r($data["id"],true));
             $this->reporteFalloCsvAgregarRegistro($data['id'],$mensaje);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            
-            
+                
         } //fin While
         fclose($csvFile);
         
@@ -224,6 +236,8 @@ class Masivas {
         $dto = new EstafetaDTO();
         $body = $dto->parser($data,"WEB",$empresas);
 
+        //Log::debug(print_r((array)$body,true));
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $sEstafeta = new sEstafeta($empresa_id );
         $sEstafeta -> envio($body);
@@ -239,6 +253,7 @@ class Masivas {
         $unique = md5( (string)$carbon);
         $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
         $this->namePdf = sprintf("%s-%s-%s.pdf",(string)$carbon,$empresa_id,$unique);
+        $this->documentoGuia = $this->namePdf;
         Storage::disk('public')->put($this->namePdf,base64_decode($sEstafeta->documento));
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -553,17 +568,19 @@ class Masivas {
         foreach ($tarifas as $key => $tarifa) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             if ( $nCotizacion->getTipoPagoId()==2 ) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $saldoMinimo = 90; 
                 $saldo = $nCotizacion->getSaldo();
 
                 if ($saldo < $saldoMinimo) {
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $mensaje[] = sprintf("El Saldo: %s es menor al limite permitido",$saldo);
                     throw ValidationException::withMessages($mensaje);
                 }
 
                 if ($saldo < 0) {
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $mensaje[] = sprintf("Saldo Negativo: $%s",$saldo);
                     throw ValidationException::withMessages($mensaje);
                 }
@@ -613,6 +630,10 @@ class Masivas {
     private function calculoPrecio($data) {
         $data['zona'] = $this->tarifa['zona'];
         $data['costo_base'] = $this->tarifa['costo'];
+        $data['costo_seguro'] = 0;
+        $data['costo_kg_extra'] = 0;
+        $data['costo_extendida'] = 0;
+
         //Calcula sobre peso
         if ($data['peso_facturado'] > $this->tarifa['kg_fin'] ) {
             
@@ -633,7 +654,7 @@ class Masivas {
             $data['costo_extendida'] = $this->tarifa['extendida'];
             
         }
-        $data['subPrecio'] = $data['subPrecio']+$data['costo_base'];
+        $data['subPrecio'] = $data['costo_base']+$data['costo_kg_extra']+$data['costo_seguro'] + $data['costo_extendida'];
         $data['precio'] = round($data['subPrecio']*1.16, 2);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $data;
