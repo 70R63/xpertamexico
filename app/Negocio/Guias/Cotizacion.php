@@ -374,7 +374,6 @@ class Cotizacion {
 
                     foreach ($tarifas as $key => $tarifa) {
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                        Log::debug(print_r($tarifa,true));  
 
                         $empresa = Empresa::where('id', $empresa_id)->get()->toArray()[0];
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -391,20 +390,23 @@ class Cotizacion {
                         
                         $costoFsc = round( $subCosto*$fscIncremento ,2);
                         Log::debug(print_r($costoFsc,true)); 
+
                         $costo = round( $subCosto*(1+$fscIncremento) ,2);
+                        Log::debug(print_r($costo,true));
 
                         if ($request['piezas']>1){
                             $costo = $costo+ $empresa['precio_mulitpieza'];
                         }
 
                         if ($estadoCoberturaDestino[0]['extendida'] === "SI" ) {
-                            $costo = round( $costo + $empresa['area_extendida'] ,2);
+                            //$costo = round( $costo + $empresa['area_extendida'] ,2);
                         }
 
                         $servicioNombre = ($tarifa['servicio_id'] ===2) ? 'Dia Sig' : 'Terrestre' ;
                         
                         $tablaTmp = $tarifa;
                         $tablaTmp['costo'] =$costo;
+                        $tablaTmp['precio'] =$costo;
                         $tablaTmp['ltds_id'] =Config('ltd.dhl.id');
                         $tablaTmp['nombre'] =Config('ltd.dhl.nombre');
                         $tablaTmp['kg_ini'] =$request['pesoFacturado'];
@@ -415,6 +417,7 @@ class Cotizacion {
                         $tablaTmp['extendida'] = $empresa['area_extendida'];
                         $tablaTmp['seguro'] = $empresa['seguro'];
                         $tablaTmp['zona'] = $zona[0];
+                        Log::debug(print_r($tablaTmp,true));  
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
                             
@@ -440,8 +443,6 @@ class Cotizacion {
                             $tabla[] = $tablaTmp;
                         } else {
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                            
-                            
 
                             $tabla[] = $tablaTmp;
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);

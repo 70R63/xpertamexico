@@ -43,7 +43,7 @@ class EmpresaController extends Controller
                 $ltdActivo[ $value['empresa_id'] ] [$value['ltd_id']]['tarifa_clasificacion']= $value['tarifa_clasificacion'];
 
             }
-            Log::debug(print_r($ltdActivo,true));
+            //Log::debug(print_r($ltdActivo,true));
             
             $ltds = Ltd::get();             
             
