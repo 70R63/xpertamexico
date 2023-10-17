@@ -99,7 +99,8 @@ class Tipo
         $contador = 0;
         foreach ($reporteVentas as $venta) {
 
-            $subtotal = $venta['costo_base']+$venta['costo_kg_extra']+$venta['costo_extendida']+$venta['seguro'];
+            $subtotal = $venta['costo_base']+$venta['costo_kg_extra']+$venta['costo_extendida']+$venta['seguro']+$venta['servicio_premium']
+                +$venta['multipieza'];
 
             fputcsv($handle, [
                 $venta['id'],
