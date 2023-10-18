@@ -63,12 +63,16 @@ class Masivas {
 
         $csvFile = fopen($file->getRealPath(), "r");
         $cabecera = fgetcsv($csvFile);
-        //Log::debug(print_r($cabecera,true));
         
         $this->reporteFalloCsvInicio();
         $insertMasiva = array();
-        
-
+        $numeroDeSolicitud = Carbon::now()->timestamp;
+        /*
+        $nameZip = sprintf("zip/%s-%s-%s.zip",$date->format('Ymd-His'),auth()->user()->name, $numeroDeSolicitud);
+        $nameZip = str_replace('    ', '', $nameZip);
+        $zip = new ZipArchive();
+        $zip->open($nameZip, ZipArchive::CREATE);
+        */
         while (($row = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             $numeroDeRegistros++;
             
@@ -77,8 +81,6 @@ class Masivas {
             foreach ($cabecera as $key => $value) {
                 $data[trim($value)] = $row[$key];
             }
-            Log::debug(print_r($data,true));
-            Log::debug(print_r($data["id"],true));
             
             $empresa_id = $data['empresa_id'];
             $mensaje = "";
@@ -150,12 +152,10 @@ class Masivas {
                 $saldo = new nSaldos();
                 $saldo->menosPrecio($data["sucursal_id"], $data["precio"]);
                 $registroExitoso++;
-                $zip = new ZipArchive();
-                $zip->open("zip/archivo.zip", ZipArchive::CREATE);
+                
                 Log::debug("../public/storage/".$this->documentoGuia);
-                $zip->addFile("../public/storage/".$this->documentoGuia, "nombre.pdf");
-                // Close ZipArchive
-                $zip->close();
+                //$zip->addFile("../public/storage/".$this->documentoGuia,$this->documentoGuia);
+                
                 continue;
             
             } catch (ValidationException $e) {
@@ -176,15 +176,16 @@ class Masivas {
                 Log::debug(print_r($mensaje,true));
                 $numeroDeFallos++;
             }
-
+            
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-
             Log::debug(print_r($data,true));
             Log::debug(print_r($data["id"],true));
             $this->reporteFalloCsvAgregarRegistro($data['id'],$mensaje);
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 
         } //fin While
+        // Close ZipArchive
+        //$zip->close();
         fclose($csvFile);
         
         $this->reporteFalloCsvCerrar();
@@ -194,6 +195,7 @@ class Masivas {
         $insertMasiva['no_registros'] = $numeroDeRegistros;
         $insertMasiva['no_registros_fallo'] = $numeroDeFallos;
         $insertMasiva['archivo_fallo'] = $this->nameCsv;
+        //$insertMasiva['ruta_zip'] = $nameZip;
 
         mMasivas::create($insertMasiva);
 
@@ -214,7 +216,7 @@ class Masivas {
     public function tabla(){
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-            $this->tabla = mMasivas::select("masivas.id","masivas.created_at", "user_id", "no_registros", "archivo_nombre" , "archivo_fallo"
+            $this->tabla = mMasivas::select("masivas.id","masivas.created_at", "user_id", "no_registros", "archivo_nombre" , "archivo_fallo","no_registros_fallo", "ruta_zip"
                 , "users.name")
                 ->joinUsuario()
                 ->where('masivas.created_at', '>', now()->subDays(30)->endOfDay())
