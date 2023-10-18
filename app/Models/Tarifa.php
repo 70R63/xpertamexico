@@ -102,7 +102,8 @@ class Tarifa extends Model
     public function scopeRangoMaximo($query, $empresa_id, $cp_d, $ltdId, $tarifaId)
     {
 
-        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre')
+        return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega'
+            , 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre')
                 ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                 ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
                 ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
