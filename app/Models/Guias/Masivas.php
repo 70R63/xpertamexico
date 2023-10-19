@@ -12,7 +12,7 @@ class Masivas extends Model
     use HasFactory;
 
 
-    protected $fillable = ['user_id','no_registros', 'archivo_nombre', 'archivo_fallo', 'no_registros_fallo'];
+    protected $fillable = ['user_id','no_registros', 'archivo_nombre', 'archivo_fallo', 'no_registros_fallo', 'ruta_zip'];
 
     public function scopeJoinUsuario($query) {
       Log::info(__CLASS__." ".__FUNCTION__);

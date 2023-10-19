@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use \ZipArchive;
+use \DB;
+
 use App\Models\Guias\Masivas as mMasivas;
 use App\Models\Cliente;
 use App\Models\Sucursal;
@@ -67,12 +69,13 @@ class Masivas {
         $this->reporteFalloCsvInicio();
         $insertMasiva = array();
         $numeroDeSolicitud = Carbon::now()->timestamp;
-        /*
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $nameZip = sprintf("zip/%s-%s-%s.zip",$date->format('Ymd-His'),auth()->user()->name, $numeroDeSolicitud);
         $nameZip = str_replace('    ', '', $nameZip);
         $zip = new ZipArchive();
         $zip->open($nameZip, ZipArchive::CREATE);
-        */
+        
         while (($row = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             $numeroDeRegistros++;
             
@@ -154,7 +157,13 @@ class Masivas {
                 $registroExitoso++;
                 
                 Log::debug("../public/storage/".$this->documentoGuia);
-                //$zip->addFile("../public/storage/".$this->documentoGuia,$this->documentoGuia);
+                $date = Carbon::now();
+                $timestamp = $date->format('Ymd-His');
+
+                $nombrePdf = sprintf("%s-id_%s_%s_%s.pdf",$timestamp,$data['id'],$data['nombre'],$data['nombre_d'] );
+                $nombrePdf = str_replace(' ', '', $nombrePdf);
+
+                $zip->addFile("../public/storage/".$this->documentoGuia,$nombrePdf);
                 
                 continue;
             
@@ -185,7 +194,7 @@ class Masivas {
                 
         } //fin While
         // Close ZipArchive
-        //$zip->close();
+        $zip->close();
         fclose($csvFile);
         
         $this->reporteFalloCsvCerrar();
@@ -195,7 +204,7 @@ class Masivas {
         $insertMasiva['no_registros'] = $numeroDeRegistros;
         $insertMasiva['no_registros_fallo'] = $numeroDeFallos;
         $insertMasiva['archivo_fallo'] = $this->nameCsv;
-        //$insertMasiva['ruta_zip'] = $nameZip;
+        $insertMasiva['ruta_zip'] = $nameZip;
 
         mMasivas::create($insertMasiva);
 
@@ -216,11 +225,12 @@ class Masivas {
     public function tabla(){
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-            $this->tabla = mMasivas::select("masivas.id","masivas.created_at", "user_id", "no_registros", "archivo_nombre" , "archivo_fallo","no_registros_fallo", "ruta_zip"
-                , "users.name")
+            $this->tabla = mMasivas::select('masivas.id', 'user_id', 'no_registros', 'archivo_nombre' , 'archivo_fallo','no_registros_fallo', 'ruta_zip','masivas.created_at'
+                ,DB::raw('DATE_FORMAT( masivas.created_at, "%Y-%c-%d %H:%i") as createdAt')
+                , 'users.name')
                 ->joinUsuario()
                 ->where('masivas.created_at', '>', now()->subDays(30)->endOfDay())
-                ->orderBy("masivas.id","desc")
+                ->orderBy('masivas.id','desc')
                 ->get()->toArray();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     

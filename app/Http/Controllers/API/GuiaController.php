@@ -251,7 +251,7 @@ class GuiaController extends Controller
         $codeHttp = 404;
         try {
             
-                $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT(    guias.created_at, "%Y-%c-%d %H:%i") as creada')
+                $tabla = Guia::select('guias.*','sucursals.cp', 'sucursals.ciudad','sucursals.contacto', 'clientes.cp as cp_d', 'clientes.ciudad as ciudad_d', 'clientes.contacto as contacto_d','empresas.nombre', 'rastreo_estatus.nombre as rastreo_nombre', 'ltds.nombre as mensajeria', 'servicios.nombre as servicio_nombre',DB::raw('DATE_FORMAT( guias.created_at, "%Y-%c-%d %H:%i") as creada')
                     ,DB::raw('DATE_FORMAT(guias.ultima_fecha, "%Y-%c-%d") as ultima_fecha_f')
                     ,DB::raw('DATE_FORMAT(guias.pickup_fecha, "%Y-%c-%d") as pickup_fecha_f')
                     , 'tiempo_entrega'
