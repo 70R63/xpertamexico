@@ -160,7 +160,9 @@ class Masivas {
                 $date = Carbon::now();
                 $timestamp = $date->format('Ymd-His');
 
-                $nombrePdf = sprintf("%s-id_%s_%s_%s.pdf",$timestamp,$data['id'],$data['nombre'],$data['nombre_d'] );
+                $nombreLTD = Config('ltd.general')[$data['ltd_id']];
+                $nombrePdf = sprintf("%s_%s_%s_%s_%s.pdf",$timestamp,$data['nombre'],$data['nombre_d'],$nombreLTD, $data['id'] );
+
                 $nombrePdf = str_replace(' ', '', $nombrePdf);
 
                 $zip->addFile("../public/storage/".$this->documentoGuia,$nombrePdf);
@@ -393,7 +395,7 @@ class Masivas {
             $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
             $unique = md5( (string)$carbon);
             $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
-
+            $this->documentoGuia = $namePdf;
             Storage::disk('public')->put($namePdf,base64_decode( $value->content ));
 
             $guiaDTO = new GuiaDTO();
@@ -576,12 +578,16 @@ class Masivas {
             throw ValidationException::withMessages($mensaje);
         }
 
-
         foreach ($tarifas as $key => $tarifa) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             
             if ( $nCotizacion->getTipoPagoId()==2 ) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+                //validar correcion sobre query 202310
+                if ($tarifa['servicio_id'] != $data['servicio_id'] ) {
+                    continue;
+                }
                 $saldoMinimo = 90; 
                 $saldo = $nCotizacion->getSaldo();
 
