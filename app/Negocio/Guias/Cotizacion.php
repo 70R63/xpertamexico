@@ -95,6 +95,8 @@ class Cotizacion {
                                 
                                 $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
+
+                                //Log::debug(print_r($query->toSql(),true));
                                 if ($zona >=1 && $zona <= 4){
                                     Log::info("zONA 1 A 4");
                                     $costoZona = $query->min("costo");
@@ -104,7 +106,12 @@ class Cotizacion {
                                     $costoZona = $query->max("costo");
                                     
                                 }
-                                $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
+                                Log::debug(print_r("-----------------------------",true));
+                                Log::debug(print_r($costoZona,true));
+
+                                $tablaTmp = $query->where("costo",$costoZona)
+                                    ->get()->toArray()
+                                    ;
                                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                                 Log::debug(print_r($tablaTmp,true));
 
