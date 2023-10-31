@@ -574,6 +574,7 @@ class Masivas {
         $nCotizacion->base($data,$data['ltd_id']);
         $tarifas = $nCotizacion->getTabla();
         Log::debug(print_r($tarifas,true));
+        Log::debug(print_r($data,true));
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
         if (count($tarifas)==0) {
@@ -583,16 +584,18 @@ class Masivas {
 
         foreach ($tarifas as $key => $tarifa) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            
+            //validar correcion sobre query 202310
+            if ($tarifa['servicio_id'] != $data['servicio_id'] ) {
+                continue;
+            }
             if ( $nCotizacion->getTipoPagoId()==2 ) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-                //validar correcion sobre query 202310
-                if ($tarifa['servicio_id'] != $data['servicio_id'] ) {
-                    continue;
-                }
+                
                 $saldoMinimo = 90; 
                 $saldo = $nCotizacion->getSaldo();
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::debug(print_r($saldoMinimo,true));
 
                 if ($saldo < $saldoMinimo) {
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -610,7 +613,7 @@ class Masivas {
 
             $this->tarifa = $tarifa;
         }
-        
+        Log::debug(print_r($tarifa,true));
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
     }//private function cotizacion()
