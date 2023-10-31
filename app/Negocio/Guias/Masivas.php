@@ -73,6 +73,7 @@ class Masivas {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $nameZip = sprintf("zip/%s-%s-%s.zip",$date->format('Ymd-His'),auth()->user()->name, $numeroDeSolicitud);
         $nameZip = str_replace('    ', '', $nameZip);
+        
         $zip = new ZipArchive();
         $zip->open($nameZip, ZipArchive::CREATE);
         
@@ -156,15 +157,16 @@ class Masivas {
                 $saldo->menosPrecio($data["sucursal_id"], $data["precio"]);
                 $registroExitoso++;
                 
-                Log::debug("../public/storage/".$this->documentoGuia);
-                $date = Carbon::now();
-                $timestamp = $date->format('Ymd-His');
+                
+                $dateI = Carbon::now();
+                $timestamp = $dateI->format('Ymd-His');
 
                 $nombreLTD = Config('ltd.general')[$data['ltd_id']];
                 $nombrePdf = sprintf("%s_%s_%s_%s_%s.pdf",$timestamp,$data['nombre'],$data['nombre_d'],$nombreLTD, $data['id'] );
 
                 $nombrePdf = str_replace(' ', '', $nombrePdf);
-
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::debug("../public/storage/".$this->documentoGuia);
                 $zip->addFile("../public/storage/".$this->documentoGuia,$nombrePdf);
                 
                 continue;
@@ -311,7 +313,7 @@ class Masivas {
             $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
 
             Storage::disk('public')->put($namePdf,base64_decode( $value->label ));
-
+            $this->documentoGuia= $namePdf;
             $guiaDTO = new GuiaDTO();
             $guiaDTO->parseoRedpack($data,$redpack, "WEB", $namePdf);
             $insert = $guiaDTO->getInsert();
@@ -395,9 +397,10 @@ class Masivas {
             $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
             $unique = md5( (string)$carbon);
             $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
-            $this->documentoGuia = $namePdf;
+            
             Storage::disk('public')->put($namePdf,base64_decode( $value->content ));
-
+            $this->documentoGuia = $namePdf;
+            
             $guiaDTO = new GuiaDTO();
             $guiaDTO->parseoDhl($data,$sDhl, "WEB", $namePdf);
             $insert = $guiaDTO->getInsert();
