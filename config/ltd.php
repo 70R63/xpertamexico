@@ -13,7 +13,7 @@ return [
     |
     |El valor servicio es el Id delcaro en la tabla servicios
     |en caso de poner un valor mal el tipo de servicio puede causar una guia con valores distintos
-    |1) = Terrestre, 2) Siguientes dia, 3) dos dias, los valores debran ajustarse para cada LTD
+    |1) = Terrestre, 2) Siguientes dia, 3) dos dias, los valores debran ajustarse para cada LTD 
     |
     |
     */
