@@ -169,7 +169,14 @@ class EstafetaDTO
             $wayBillDocument->content=str_split($data['contenido'],25)[0]; 
         }
 
-        $wayBillDocument->aditionalInfo = $data['direccion2_d'];
+        if ( strlen($data['direccion2_d']) < 2   ) {
+            $aditionalInfo = "NA";
+        } else {
+            $aditionalInfo = str_split($data['direccion2_d'],25)[0]; 
+        }
+        
+
+        $wayBillDocument->aditionalInfo = $aditionalInfo;
         Log::debug(__CLASS__." ".__FUNCTION__." wayBillDocument FIN -----------------");
         return $wayBillDocument;
     }
@@ -259,7 +266,7 @@ class EstafetaDTO
         $address = new Address();
 
         $address->zipCode = $data['cp_d'];
-        $address->roadName = $data['direccion_d'];
+        $address->roadName = str_split($data['direccion_d'],50)[0];
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
         $address->indoorInformation = (empty($data['no_int_d']) ? "" : $data['no_int_d']); 
@@ -290,7 +297,7 @@ class EstafetaDTO
         $address = new Address();
 
         $address->zipCode = $data['cp_d'];
-        $address->roadName = $data['direccion_d'];
+        $address->roadName = str_split($data['direccion_d'],50)[0];
         $address->settlementName = $data['colonia_d'];
         $address->externalNum = $data['no_ext_d'];
         $address->indoorInformation = (empty($data['no_int_d']) ? "" : $data['no_int_d']);

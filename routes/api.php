@@ -132,7 +132,7 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 });
 
 //AMBIENTE DEV
-Route::middleware(['throttle:20,1','validaToken'])->group(function(){
+Route::middleware(['throttle:100,1','validaToken'])->group(function(){
     Route::controller(DevGuiaController::class)->group(function(){
         Route::post('dev/estafeta', 'estafeta');
     });
