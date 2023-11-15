@@ -131,20 +131,20 @@ class Masivas {
                     case 1:
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                         $this->fedex($data);
-                        $this->recurenciaPorDocumento($data);
+                        $this->recurenciaPorDocumento($data, $numeroDeSolicitud);
                         break;
                     case 2:
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                         $this->estafeta($data,$empresas,$empresa_id );
-                        $this->recurenciaPorTracking($data);
+                        $this->recurenciaPorTracking($data, $numeroDeSolicitud);
                         break;
                     case 3:
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                        $this->redpack($data,$empresa_id);
+                        $this->redpack($data,$empresa_id, $numeroDeSolicitud);
                         
                         break;
                     case 4:
-                        $this->dhl($data,$empresa_id);
+                        $this->dhl($data,$empresa_id, $numeroDeSolicitud);
                         
                         break;
                     
@@ -285,7 +285,7 @@ class Masivas {
      * @param array $parametros
      * @return void
      */
-    private function redpack($data,$empresa_id ){
+    private function redpack($data,$empresa_id, $numeroDeSolicitud ){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $redpackDTO = new RedpackDTO();
         $etiqueta = $redpackDTO->parser($data);
@@ -301,7 +301,7 @@ class Masivas {
 
         $boolPrecio = true;
         $i=1;
-        $numeroDeSolicitud = Carbon::now()->timestamp;
+        
         $notices = array("Número de Solicitud: $numeroDeSolicitud ");
         foreach ($redpack->getDocumento() as $key => $value) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
@@ -375,7 +375,7 @@ class Masivas {
      * @param array $parametros
      * @return void
      */
-    private function dhl($data,$empresa_id ){
+    private function dhl($data,$empresa_id,$numeroDeSolicitud ){
 
         $dto = new DhlDTO();
         $dto->parser($data);
@@ -388,7 +388,7 @@ class Masivas {
 
         $boolPrecio = true;
         $i=1;
-        $numeroDeSolicitud = Carbon::now()->timestamp;
+        
         $notices = array("Número de Solicitud: $numeroDeSolicitud ");
         foreach ($sDhl->getDocumento() as $key => $value) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Documento");
@@ -466,11 +466,11 @@ class Masivas {
      * @param array $parametros
      * @return void
      */
-    private function recurenciaPorTracking($data){
+    private function recurenciaPorTracking($data, $numeroDeSolicitud){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $boolPrecio = true;
         $i=1;
-        $numeroDeSolicitud = Carbon::now()->timestamp;
+        
         $notices = array("Número de Solicitud: $numeroDeSolicitud ");
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         foreach ($this->trackingNumbers as $key => $trackingNumber) {
@@ -522,11 +522,11 @@ class Masivas {
         $this->insert = $guiaDTO->getInsert();
     }
 
-    private function recurenciaPorDocumento($data){
+    private function recurenciaPorDocumento($data, $numeroDeSolicitud){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $boolPrecio = true;
         $i=1;
-        $numeroDeSolicitud = Carbon::now()->timestamp;
+        
         $notices = array("Número de Solicitud: $numeroDeSolicitud ");
         foreach ($this->fedex->getDocumentos() as $key => $documento) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
