@@ -17,7 +17,7 @@ class LoginController extends ApiController
     public function login(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-/*
+
         $xApiKey = $request->header("x-api-key");
         $corporativo = $request->header("corporativo");
         
@@ -40,7 +40,7 @@ class LoginController extends ApiController
             
             return $this->sendError('Unauthorized.', ['error'=>'Corporativo no Autorizado'], 403);
         }
-*/
+
         $minutos = 1440;    
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) { 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
