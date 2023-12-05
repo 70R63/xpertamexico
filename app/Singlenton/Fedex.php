@@ -33,6 +33,7 @@ class Fedex {
     private $latestStatusDetail;
     private $ultimaFecha; //Validar uso en la case Fedex y no en el controller
     private $pickupFecha;
+    private $response;
     
 
     private function __construct(int $ltd_id= 1, $empresa_id= 1, $plataforma = 'WEB'){
@@ -139,8 +140,13 @@ class Fedex {
                         ,'body'     => $body
                     ]);
 
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+
+            
+
             $contenido = json_decode($response->getBody()->getContents());
-            Log::debug(print_r($contenido,true));
+            $this->response = $contenido;
             $transactionShipments = $contenido->output->transactionShipments[0];
 
             $this->documentos = $transactionShipments->pieceResponses;
@@ -241,7 +247,7 @@ class Fedex {
        
     }
 
-    public static function getInstance( int $ltd_id = 1,$empresa_id= 1, $plataforma = 'WEB'){
+    public static function getInstance( int $ltd_id = 1,$empresa_id= 2, $plataforma = 'WEB'){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
             self::$instance = new self($ltd_id,$empresa_id, $plataforma);
@@ -290,8 +296,12 @@ class Fedex {
         return $this->pickupFecha;
     }
 
-     public function getDocumentos(){
+    public function getDocumentos(){
         return $this->documentos;
+    }
+
+    public function getResponse(){
+        return $this->response;
     }
     
     

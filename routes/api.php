@@ -14,6 +14,7 @@ use App\Http\Controllers\API\ReportesController;
 use App\Http\Controllers\API\Reportes\RepesajeController;
 use App\Http\Controllers\API\Saldos\PagosController;
 use App\Http\Controllers\API\Reportes\PagosController as ReportesPagoController;
+use App\Http\Controllers\API\Ltd\FedexController;
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -44,6 +45,8 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
     Route::middleware(['throttle:100,1','validaToken'])->group(function(){
         Route::post('logout', [AuthController::class, 'logout']);
         
+
+
         Route::controller(GuiaController::class)->group(function(){
             Route::get('ltds', 'creacion');
             Route::post('fedex', 'fedex');
@@ -52,8 +55,39 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
             Route::get('rastreoTabla', 'rastreoTabla');
         });
 
+
+        Route::name('api.')->group(function () {
+            //MENU FEDEX
+
+            Route::name('enviosperros.')->group(function () {        
+                Route::group(['prefix'=>'enviosperros'], function(){  
+                    Route::name('fedex.')->group(function () {        
+                        Route::group(['prefix'=>'fedex'], function(){  
+
+                            Route::get('/greeting', function () {
+                                return 'Hello World';
+                            })->name("greeting");
+                            
+                            Route::controller(FedexController::class)->group(function(){
+                                Route::get('terrestre', 'terrestre')->name("terrestre");
+                                   
+                            });
+
+                            Route::controller(FedexController::class)->group(function(){
+                                Route::get('diasig', 'diasig')->name("diasig");
+                                     
+                            });
+
+                        });
+                    });
+                });
+            });
+        });// FIN api.
+
     });
 //});
+
+
 
 //MIDDLEWARE PARA AJAX DESDE WEB
 Route::middleware(['throttle:100,1','auth'])->group(function () {
@@ -107,7 +141,7 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
             });
         });
 
-        //MENU REPORTES
+        //MENU SALDOS
         Route::group(['prefix'=>'saldos','as'=>'saldos.'], function(){          
             Route::controller(PagosController::class)->group(function(){
                 Route::get('pagos/resumen', 'tablaPagosResumen')->name("pagos_resumen");
@@ -120,8 +154,6 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
             });
 
         });
-
-        
     });
 });
 //Fin Middileware
@@ -136,6 +168,8 @@ Route::middleware(['throttle:100,1','validaToken'])->group(function(){
     Route::controller(DevGuiaController::class)->group(function(){
         Route::post('dev/estafeta', 'estafeta');
     });
-
 });
     
+
+
+

@@ -259,6 +259,7 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
+                console.log(response.data.data);
 
                 validaSaldo(response)
                 

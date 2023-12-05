@@ -12,6 +12,7 @@ use App\Models\GuiasPaquete;
 use App\Models\EmpresaEmpresas;
 
 use App\Negocio\Saldos\Saldos;
+use App\Negocio\Guias\Creacion as nCreacion;
 
 use App\Mail\GuiaCreada;
 
@@ -381,10 +382,10 @@ class GuiaController extends Controller
             $responseContenido = json_decode($response->getBody()->getContents());    
 
             if (is_object($responseContenido)) {
-                Log::info(__CLASS__." ".__FUNCTION__." is_object ");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." is_object ");
                 Log::debug(print_r($responseContenido,true));
 
-                if (isset($responseContenido->code) && $responseContenido->code === 131) {
+                if ( isset($responseContenido->code) ) {
                     Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
                     $mensaje= array($responseContenido->description);
 
@@ -452,51 +453,13 @@ class GuiaController extends Controller
             Log::debug($request);
 
             $requestInicial = $request->except(['_token']);
-
-            $fedexDTO = new FedexDTO();
-            $etiqueta = $fedexDTO->parser($request);
-            
-            Log::info(__CLASS__." ".__FUNCTION__." fedex->envio");
-            $fedex = Fedex::getInstance(Config('ltd.fedex.id'));
-            $fedex->envio( json_encode($etiqueta, JSON_UNESCAPED_UNICODE));
-
-            Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
-            $guiaDTO = new GuiaDTO();
-            $guiaDTO->parseoFedex($request,$fedex, "WEB");
-
-            $insert = $guiaDTO->getInsert();
-           
-            $boolPrecio = true;
-            $i=1;
             $numeroDeSolicitud = Carbon::now()->timestamp;
-            $notices = array("Número de Solicitud: $numeroDeSolicitud ");
-            foreach ($fedex->getDocumentos() as $key => $documento) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                
-                $insert['tracking_number'] = $documento->trackingNumber;
-                $insert['documento'] = $documento->packageDocuments[0]->url;
-                $insert['numero_solicitud'] = $numeroDeSolicitud;
-                Log::debug(print_r($insert ,true));
+            $nCreacion = new nCreacion();
 
-                if ($i > 1) {
-                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Limpiar costos");
-                    $insert = nGuia::costosEnCero( $insert );
-                }   
-                
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
-                $id = Guia::create($insert)->id;
-                $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+            $nCreacion->fedex($request, "WEB");
+            $nCreacion->recurenciaPorDocumento($request, $numeroDeSolicitud);
 
-
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                $guiaPaqueteInsert = GuiaDTO::validaPiezasPaquete($request, $key, $boolPrecio, $id);
-                $boolPrecio = false;
-
-                $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquite =$idGuiaPaquite");
-                $i++;
-            }
-
+            $notices = $nCreacion->getNotices();
             
             /*
             * Mail::to($request->email)
@@ -504,7 +467,7 @@ class GuiaController extends Controller
             *    ->send(new GuiaCreada($request, $id));
             */
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            Log::debug(print_r($request->all(),true));
+            //Log::debug(print_r($request->all(),true));
             
             $saldo = new Saldos();
             $saldo->menosPrecio($request["sucursal_id"], $request["precio"]);

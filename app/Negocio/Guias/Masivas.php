@@ -29,6 +29,7 @@ use App\Dto\DhlDTO;
 
 use App\Negocio\Guias\Cotizacion as nCotizacion;
 use App\Negocio\Saldos\Saldos as nSaldos;
+use App\Negocio\Guias\Creacion as nCreacion;
 
 class Masivas {
 
@@ -130,8 +131,13 @@ class Masivas {
                 switch ($data['ltd_id']) {
                     case 1:
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                        $this->fedex($data);
-                        $this->recurenciaPorDocumento($data, $numeroDeSolicitud);
+                        
+                        $nCreacion = new nCreacion();
+
+                        $nCreacion->fedex($data, "MSV");
+                        $nCreacion->recurenciaPorDocumento($data, $numeroDeSolicitud,"MSV");
+                        $this->documentoGuia = $nCreacion->getNamePdf();
+
                         break;
                     case 2:
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -500,63 +506,7 @@ class Masivas {
 
     }
 
-    /**
-     * Se obtienen los datos para armar el insert de estafeta
-     * 
-     * @param array $parametros
-     * @return void
-     */
-
-    private function fedex($data ){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $fedexDTO = new FedexDTO();
-        $etiqueta = $fedexDTO->parser($data);
-
-        $this->fedex = Fedex::getInstance(Config('ltd.fedex.id'));
-        $this->fedex->envio( json_encode($etiqueta, JSON_UNESCAPED_UNICODE));
-
-        Log::info(__CLASS__." ".__FUNCTION__." GuiaDTO");
-        $guiaDTO = new GuiaDTO();
-        $guiaDTO->parseoFedex($data,$this->fedex, "WEB");
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $this->insert = $guiaDTO->getInsert();
-    }
-
-    private function recurenciaPorDocumento($data, $numeroDeSolicitud){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $boolPrecio = true;
-        $i=1;
-        
-        $notices = array("Número de Solicitud: $numeroDeSolicitud ");
-        foreach ($this->fedex->getDocumentos() as $key => $documento) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            
-            $this->insert['tracking_number'] = $documento->trackingNumber;
-            $this->insert['documento'] = $documento->packageDocuments[0]->url;
-            $this->insert['numero_solicitud'] = $numeroDeSolicitud;
-            Log::debug(print_r($this->insert ,true));
-
-            if ($i > 1) {
-                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Limpiar costos");
-                $this->insert = nGuia::costosEnCero( $this->insert );
-            }   
-            
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
-            $this->insert['canal'] = "MSV";
-            $id = Guia::create($this->insert)->id;
-            $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
-
-
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $guiaPaqueteInsert = GuiaDTO::validaPiezasPaquete($data, $key, $boolPrecio, $id);
-            $boolPrecio = false;
-
-            $idGuiaPaquite = GuiasPaquete::create($guiaPaqueteInsert)->id;
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquite =$idGuiaPaquite");
-            $i++;
-        }
-
-    }
+    
 
 
     /**

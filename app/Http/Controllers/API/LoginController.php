@@ -40,19 +40,24 @@ class LoginController extends ApiController
             
             return $this->sendError('Unauthorized.', ['error'=>'Corporativo no Autorizado'], 403);
         }
-
-        $minutos = 1440;    
+  
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) { 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $data = $request->all();
 
-
+            Log::debug(print_r( $request->all(),true));
+            
             $user = Auth::user(); 
 
-            $response['token'] = $user->createToken($request->email,array(),Carbon::now()->addMinutes($minutos))->plainTextToken; 
-            $response['name'] =  $user->name;
-
             $token = $user->createToken($request->email,array(),Carbon::now()->addMinutes( $minutos ));
+
+            $response['token'] = $token->plainTextToken; 
+            $response['name'] =  $user->name;
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+
+            Log::debug(print_r( $token->accessToken,true));
+
             $response['expires_at'] =  $token->accessToken->expires_at->toDateTimeString();
 
             return $this->successResponse('User successfully logged-in.', $response);

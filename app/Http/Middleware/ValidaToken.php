@@ -2,13 +2,16 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\API\ApiController;
+
 use Closure;
 use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
 
-class ValidaToken
+
+class ValidaToken extends ApiController
 {
     /**
      * Handle an incoming request.
@@ -19,52 +22,58 @@ class ValidaToken
      */
     public function handle(Request $request, Closure $next)
     {
-        Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        try {
+            Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
 
-        Log::debug(print_r(base64_decode($request->token),true));
-        $tokenDecodificado =  base64_decode($request->token);
-        [$id, $token] = explode('|',$tokenDecodificado, 2);
-        $personalAccessToken = PersonalAccessToken::findToken($tokenDecodificado);
-        
-        if(is_null($personalAccessToken))
-            return $this->sendError("Sin autorizacion, Valida tu registro con el proveedor", array(), 401);
-        
-        if (Carbon::now()->gte($personalAccessToken->expires_at->toDateTimeString()) )
-            return $this->sendError("Sin autorizacion, Token expiro", array(), 401);
+            if(!isset($request->token))
+                return $this->sendError("Error", array("El token es neceserio"), 401);
+            
+            Log::debug(print_r(base64_decode($request->token),true));
+            $tokenDecodificado =  base64_decode($request->token);
+            [$id, $token] = explode('|',$tokenDecodificado, 2);
+            $personalAccessToken = PersonalAccessToken::findToken($tokenDecodificado);
+            Log::debug(print_r("now  ->".Carbon::now()->toDateTimeString(),true));
+            Log::debug(print_r("token->". $personalAccessToken->expires_at->toDateTimeString(),true));
 
-        Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
-        Log::debug(print_r($personalAccessToken->expires_at->toDateTimeString(),true));
-        
-        $tmp = hash('sha256', $token);
-        Log::debug(print_r($tmp,true));
-        if (strcmp($tmp, $personalAccessToken->token) !== 0)
-            return $this->sendError("Sin autorizacion, Token alterado", array(), 401);
+            if(is_null($personalAccessToken))
+                return $this->sendError("Sin autorizacion, Valida tu registro con el proveedor", array(), 401);
+            
+            if (Carbon::now()->gte($personalAccessToken->expires_at->toDateTimeString()) )
+                return $this->sendError("Sin autorizacion, Token expiro", array(), 401);
 
-        Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
-        $request['name']= $personalAccessToken->name;
-        return $next($request);
-    }
+            
+            
+            $tmp = hash('sha256', $token);
+            Log::debug(print_r($tmp,true));
+            if (strcmp($tmp, $personalAccessToken->token) !== 0)
+                return $this->sendError("Sin autorizacion, Token alterado", array(), 401);
 
+            Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            $request['name']= $personalAccessToken->name;
+            return $next($request);
 
-    /**
-     * return error response.
-     * Funcion temporal en lo que se valida la utenticacion 
-     * 
-     * @return \Illuminate\Http\Response
-     */
-    public function sendError($error, $errorMessages = [], $code = 404)
-    {
-        $response = [
-            'success' => false,
-            'message' => $error,
-        ];
+        } catch (\InvalidArgumentException $ex) {
+            Log::debug($ex );
+            return $this->successResponse("Response", "InvalidArgumentException","400");
 
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            
+            $mensaje =$ex->getMessage();
+            return $this->sendError("ErrorException","Favor de contactar al administrador", "400");
 
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
+            $resultado = $ex;
+            Log::debug(print_r($ex,true));
+            return $this->sendError("HttpException","valor de intercambio Http mal formado",$mensaje, "400");
+        } catch (\Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            return $this->sendError("Exception ", "400");
         }
 
-
-        return response()->json($response, $code);
     }
+
+
 }
