@@ -15,6 +15,7 @@ use App\Models\Sucursal;
 use App\Models\User;
 use App\Models\TarifasMostrador ;
 use App\Models\LtdCobertura;
+use App\Models\Tarifas;
 
 //DTOS
 use App\Dto\FedexDTO;
@@ -47,7 +48,7 @@ class Creacion {
      * @return void
      */
 
-    public function fedex($data, $canal="API" ){
+    public function fedex($data, $canal ){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $fedexDTO = new FedexDTO();
         //Log::debug(print_r($data->all(),true));
@@ -58,9 +59,12 @@ class Creacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $guiaDTO = new GuiaDTO();
+
+
         $guiaDTO->parseoFedex($data, $canal);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->insert = $guiaDTO->getInsert();
+
     }
 
     /**
@@ -97,7 +101,7 @@ class Creacion {
             }   
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Guia::create");
-            $this->insert['canal'] = $canal;
+            //$this->insert['canal'] = $canal;
             $id = Guia::create($this->insert)->id;
             $this->notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
 
@@ -188,63 +192,73 @@ class Creacion {
         $data = $this->validaSucursal($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
-        $nFedexTarifa = new nFedexTarifas();
-        $nFedexTarifa->zonas($cp, $cp_d);
-
-        $zona = $nFedexTarifa->getZona();
-        Log::debug(print_r($zona, true));
-
-        if ( count($zona) < 1)
-            throw ValidationException::withMessages(array("No existen zonas, Validar con tu administrador"));
-
-        $data['zona'] = $zona[0];
-
-        $data = $this->validaLtdCobertura($data);   
-        
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data = $this->dimensiones($data);
-
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data = $this->precioDescuentoPorEmpresa($data);
-
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->cotizacion($data);
             
         $this->saldo($data);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-        if ($ambiente ==="PRD") {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), $data['empresa_id'], "API", "PRD");
-            $this->fedex->envio( json_encode($data, JSON_UNESCAPED_UNICODE));
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), $data['empresa_id'], "API", $ambiente);
+        $this->fedex->envio( json_encode($data, JSON_UNESCAPED_UNICODE));
 
-            $documentos = $this->fedex->getDocumentos();
+        $documentos = $this->fedex->getDocumentos();
 
-            foreach ($documentos as $key => $value) {
-                $data['documento'] = $value->packageDocuments[0]->url;
-                $data['tracking_number'] = $value->trackingNumber;
-                Log::debug( print_r($data['documento'],true) );
+        foreach ($documentos as $key => $value) {
+            $data['documento'] = $value->packageDocuments[0]->url;
+            $data['tracking_number'] = $value->trackingNumber;
+            unset($value->netRateAmount);
+            unset($value->baseRateAmount);
+            Log::debug( print_r($data['documento'],true) );
 
+            if ($ambiente === "PRD") {
                 $this->insertDTO($data, $canal);
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $id = Guia::create($this->insert)->id;
                 $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+                
+            } else {
+                $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID xxxx");
             }
-        } else {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), $data['empresa_id'], "API", "DEV");
-            $this->fedex->envio( json_encode($data, JSON_UNESCAPED_UNICODE));
-            $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID xxxx ",);
+            
         }
-        
-
+    
         
         Log::debug(print_r($this->notices,true));
-
+        $this->responseCustom();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
+     /**
+     * Se genera un Response custom para quitar valores interno de  arespuesta de FEDEX
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion responseCustom
+     * 
+     * @throws
+     *
+     * @param 
+     * 
+     * @var array responseCustom 
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function responseCustom(){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        $responseCustom =$this->fedex->getResponse();
+        unset($responseCustom->output->transactionShipments[0]->completedShipmentDetail->shipmentRating);
+        Log::debug(print_r($responseCustom,true));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+    }
 
     /**
      * Valida la existencia del cliente
@@ -392,6 +406,38 @@ class Creacion {
 
     public function cotizacion($data){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        $nFedexTarifa = new nFedexTarifas();
+        $nFedexTarifa->zonas($data['cp'], $data['cp_d']);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        
+        $zona = $nFedexTarifa->getZona();
+        Log::debug(print_r($zona, true));
+
+        if ( count($zona) < 1)
+            throw ValidationException::withMessages(array("No existen zonas, Validar con tu administrador"));
+
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaLtdCobertura($data);   
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->dimensiones($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->precioDescuentoPorEmpresa($data);
+
+
+
+
+
+
+
+
+
+
+
+
 
         $serguroCostoPorcentaje=2; 
         $data['extendida']= 0;
@@ -650,6 +696,34 @@ class Creacion {
         return $data;
     }
     
+    /**
+     * Se valida la zona de envio 
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion zona
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var $ltdCobertura Array que tendra los datos de la cobertura
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function zona($data){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return $data;
+    }
 
 
     public function getNotices(){
