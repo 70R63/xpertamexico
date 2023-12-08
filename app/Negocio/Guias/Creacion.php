@@ -213,17 +213,17 @@ class Creacion {
             
         $this->saldo($data);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
-
-        $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), 2, "API");
-        $this->fedex->envio( json_encode($data, JSON_UNESCAPED_UNICODE));
 
         if ($ambiente ==="PRD") {
-            $data['tracking_number'] = $this->fedex->getTrackingNumber();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), $data['empresa_id'], "API", "PRD");
+            $this->fedex->envio( json_encode($data, JSON_UNESCAPED_UNICODE));
+
             $documentos = $this->fedex->getDocumentos();
 
             foreach ($documentos as $key => $value) {
                 $data['documento'] = $value->packageDocuments[0]->url;
+                $data['tracking_number'] = $value->trackingNumber;
                 Log::debug( print_r($data['documento'],true) );
 
                 $this->insertDTO($data, $canal);
@@ -232,7 +232,9 @@ class Creacion {
                 $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
             }
         } else {
-
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), $data['empresa_id'], "API", "DEV");
+            $this->fedex->envio( json_encode($data, JSON_UNESCAPED_UNICODE));
             $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID xxxx ",);
         }
         
@@ -254,7 +256,7 @@ class Creacion {
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion fedexApi
+     * @since 1.0.0 Primera version de la funcion validaCliente
      * 
      * @throws
      *
@@ -315,7 +317,7 @@ class Creacion {
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion fedexApi
+     * @since 1.0.0 Primera version de la funcion validaSucursal
      * 
      * @throws
      *
@@ -375,7 +377,7 @@ class Creacion {
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion fedexApi
+     * @since 1.0.0 Primera version de la funcion cotizacion
      * 
      * @throws
      *
@@ -450,7 +452,7 @@ class Creacion {
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion fedexApi
+     * @since 1.0.0 Primera version de la funcion precioDescuentoPorEmpresa
      * 
      * @throws
      *

@@ -69,12 +69,12 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
                             })->name("greeting");
                             
                             Route::controller(FedexController::class)->group(function(){
-                                Route::get('terrestre', 'terrestre')->name("terrestre");
+                                Route::post('terrestre', 'terrestre')->name("terrestre");
                                    
                             });
 
                             Route::controller(FedexController::class)->group(function(){
-                                Route::get('diasig', 'diasig')->name("diasig");
+                                Route::post('diasig', 'diasig')->name("diasig");
                                      
                             });
 
