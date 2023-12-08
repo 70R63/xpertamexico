@@ -50,10 +50,10 @@ class Creacion {
     public function fedex($data, $canal="API" ){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $fedexDTO = new FedexDTO();
-        Log::debug(print_r($data,true));
+        //Log::debug(print_r($data->all(),true));
         $etiqueta = $fedexDTO->parser($data);
 
-        $this->fedex = sFedex::getInstance(Config('ltd.fedex.id'));
+        $this->fedex = sFedex::getInstance(Config('ltd.fedex.id'), 2, "WEB", "PRD" );
         $this->fedex->envio( json_encode($etiqueta, JSON_UNESCAPED_UNICODE));
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
