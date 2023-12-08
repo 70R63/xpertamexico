@@ -27,7 +27,8 @@ class Sucursal extends Model
         static::addGlobalScope('estatus', function (Builder $builder) {
             $builder->where('sucursals.estatus', '1');
 
-            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+            $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
+            $empresas = EmpresaEmpresas::where('id',$empresaId)
                 ->pluck('empresa_id')->toArray();
             $builder->whereIN('empresa_id',$empresas);
         });
@@ -43,9 +44,11 @@ class Sucursal extends Model
 
     public function insertParse($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
-        $empresa_id = auth()->user()->empresa_id;
-        if ($request['esManual'] === "SI") {
+        
+        if ($request['esManual'] === "SI" || $request['esManual'] === "SEMI" || $request['esManual'] === "API") {
             $empresa_id = $request['empresa_id'];
+        } else {
+            $empresa_id = auth()->user()->empresa_id;
         }
         
         $insert = array(
@@ -85,10 +88,13 @@ class Sucursal extends Model
 
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
 
-        $empresa_id = auth()->user()->empresa_id;
-        if ($request['esManual'] === "SI") {
+        
+        if ($request['esManual'] === "SI" || $request['esManual'] === "SEMI" || $request['esManual'] === "API") {
             $empresa_id = $request['empresa_id'];
+        } else {
+            $empresa_id = auth()->user()->empresa_id;
         }
+
         $remitente = self::where('nombre', 'like', $request['nombre'])
                         ->where('empresa_id',$empresa_id)
                         ->pluck('id')

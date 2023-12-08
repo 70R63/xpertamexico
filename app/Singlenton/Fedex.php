@@ -133,6 +133,7 @@ class Fedex {
                         ,'charset' => 'utf-8'
                     ];
             
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::debug(print_r($body,true));
             
             $response = $client->request('POST', 'ship/v1/shipments', [
@@ -143,15 +144,15 @@ class Fedex {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
 
-            
-
             $contenido = json_decode($response->getBody()->getContents());
             $this->response = $contenido;
+            Log::debug(print_r($contenido,true));
+            
             $transactionShipments = $contenido->output->transactionShipments[0];
 
             $this->documentos = $transactionShipments->pieceResponses;
             $this->trackingNumber = $transactionShipments->masterTrackingNumber;
-            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
 

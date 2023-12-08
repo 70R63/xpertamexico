@@ -84,6 +84,11 @@ class Guia {
 			    $canal = "SML" ;
 			    
 			    break;
+			case "API":
+				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = API ");
+			    $canal = "API" ;
+			    
+			    break;
 			case "RETORNO":
 			    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." SECCION RETORNO ");
 				$canal = "RET" ;
@@ -95,15 +100,18 @@ class Guia {
 		    	Log::info("No se cargo ningun caso");
 		}
 
+		$usuario =  ( isset(auth()->user()->name) ) ? auth()->user()->name : $request['name'] ;
+
+		$empresaId = (isset(auth()->user()->empresa_id) ) ? auth()->user()->empresa_id : $request['empresa_id'] ;
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-		$this->insert = array('usuario' => auth()->user()->name
-				,'empresa_id' 	=> auth()->user()->empresa_id
+		$this->insert = array('usuario' => $usuario
+				,'empresa_id' 	=> $empresaId
 				,'ltd_id' 	=> $request['ltd_id']
 				,'cia' 		=> $cia
 				,'cia_d' 	=> $cia_d
 				,'piezas' 	=> $request['piezas']
-				,'documento' => ""
-				,'tracking_number' 	=>""
+				,'documento' => $request['documento']
+				,'tracking_number' 	=>$request['tracking_number']
 				,'servicio_id'		=>$request['servicio_id']
 				,'peso'			=> $request['peso_facturado']
 				,'dimensiones'	=> $dimensiones

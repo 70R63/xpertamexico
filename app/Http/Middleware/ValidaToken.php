@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Auth;
 
 class ValidaToken extends ApiController
 {
@@ -35,6 +35,9 @@ class ValidaToken extends ApiController
             Log::debug(print_r("now  ->".Carbon::now()->toDateTimeString(),true));
             Log::debug(print_r("token->". $personalAccessToken->expires_at->toDateTimeString(),true));
 
+            $user = Auth::user(); 
+            Log::debug(print_r($user,true));
+
             if(is_null($personalAccessToken))
                 return $this->sendError("Sin autorizacion, Valida tu registro con el proveedor", array(), 401);
             
@@ -50,6 +53,7 @@ class ValidaToken extends ApiController
 
             Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
             $request['name']= $personalAccessToken->name;
+            $request['user_id']= $personalAccessToken->tokenable_id;
             return $next($request);
 
         } catch (\InvalidArgumentException $ex) {

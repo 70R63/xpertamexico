@@ -27,7 +27,8 @@ class Empresa extends Model
         static::addGlobalScope('estatus_empresa', function (Builder $builder) {
             $builder->where('empresas.estatus', '1');
 
-            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+            $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
+            $empresas = EmpresaEmpresas::where('id',$empresaId)
                 ->pluck('empresa_id')->toArray();
             $builder->whereIN('id',$empresas);
     

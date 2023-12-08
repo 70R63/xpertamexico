@@ -502,6 +502,110 @@ class Cotizacion {
 
     }// fin public function base ($guiaId){
 
+
+    /**
+     * Se obtienen los datos para armar el insert de fedex
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion fedexApi
+     * 
+     * @throws
+     *
+     * @param array $parametros eseseses
+     * 
+     * @var int 
+     * 
+     * 
+     * @return json Objeto con la respuesta de exito o fallo 
+     */
+
+    public function valoresCotizacion($data){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        
+        $data['costo_kg_extra']= 0;
+        $data['costo_seguro'] = 0;
+        $data['costo_extendida'] = 0;
+        $data['sobre_peso_kg'] =0;
+        $data['bSeguro'] = false;
+       
+        $data['peso_bascula'] = $data['peso'];
+        $data['peso_dimensional'] = ($data['alto']*$data['ancho']*$data['largo'])/5000;
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data['peso_facturado'] = ($data['peso_bascula'] > $data['peso_dimensional']) ? ceil($data['peso_bascula']) : ceil($data['peso_dimensional']) ;
+        
+        $data['pesoFacturado']=$data['peso_facturado'];
+
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data['subPrecio'] = $data['costo_kg_extra']+$data['costo_seguro']+$data['costo_extendida'];
+
+
+        return $data;
+    }//private function valoresCotizacion()
+
+
+    /**
+     * Se obtienen los datos obtener el precio
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion fedexApi
+     * 
+     * @throws
+     *
+     * @param array $data informacion de todo el flujo 
+     * 
+     * @var int 
+     * 
+     * 
+     * @return json Objeto con la respuesta de exito o fallo 
+     */
+
+    public function calculoPrecio($data) {
+        $data['zona'] = $this->tarifa['zona'];
+        $data['costo_base'] = $this->tarifa['costo'];
+        $data['costo_seguro'] = 0;
+        $data['costo_kg_extra'] = 0;
+        $data['costo_extendida'] = 0;
+
+        //Calcula sobre peso
+        if ($data['peso_facturado'] > $this->tarifa['kg_fin'] ) {
+            
+            $data['sobre_peso_kg'] = $data['peso_facturado'] - $this->tarifa['kg_fin'];
+            $data['costo_kg_extra'] = $data['sobre_peso_kg'] * $this->tarifa['kg_extra'];
+        }
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        //valida Seguro
+        if ($data['valor_envio'] > 0) {
+            $data['costo_seguro'] = ($data['valor_envio']* $this->tarifa['seguro'])/100;
+            $data['bSeguro'] = true;
+
+        }
+
+        $data['extendida'] = $this->tarifa['extendida_cobertura'];
+        //Valida area extendida
+        if ( $this->tarifa['extendida_cobertura'] === "SI"){
+            $data['costo_extendida'] = $this->tarifa['extendida'];
+            
+        }
+        $data['subPrecio'] = $data['costo_base']+$data['costo_kg_extra']+$data['costo_seguro'] + $data['costo_extendida'];
+        $data['precio'] = round($data['subPrecio']*1.16, 2);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return $data;
+    } //fin calculoPrecio
+
     public function getMensaje ()
     {
         return $this->mensaje;

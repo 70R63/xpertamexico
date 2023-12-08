@@ -164,9 +164,52 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
 });
 
 //AMBIENTE DEV
-Route::middleware(['throttle:100,1','validaToken'])->group(function(){
+
+Route::name('api.dev.')->group(function () {
+    Route::group(['prefix'=>'dev/'], function(){
+        Route::name('enviosperros.')->group(function () {        
+            Route::group(['prefix'=>'enviosperros'], function(){  
+                Route::post('/login', [AuthController::class, 'login'])->name('login');
+            });
+        });
+    });
+});
+
+
+Route::middleware(['throttle:10,1','validaToken'])->group(function(){
     Route::controller(DevGuiaController::class)->group(function(){
         Route::post('dev/estafeta', 'estafeta');
+    });
+
+    Route::name('api.dev.')->group(function () {
+
+        Route::group(['prefix'=>'dev/'], function(){
+
+            Route::name('enviosperros.')->group(function () {        
+                Route::group(['prefix'=>'enviosperros'], function(){  
+
+                    Route::name('fedex.')->group(function () {        
+                        Route::group(['prefix'=>'fedex'], function(){  
+
+                            Route::get('/greeting', function () {
+                                return 'Hello World';
+                            })->name("greeting");
+                            
+                            Route::controller(FedexController::class)->group(function(){
+                                Route::post('terrestre', 'terrestreDEV')->name("terrestreDEV");
+                                   
+                            });
+
+                            Route::controller(FedexController::class)->group(function(){
+                                Route::post('diasig', 'diasig')->name("diasig");
+                                     
+                            });
+
+                        });
+                    });
+                });
+            });
+        });// FIN api.
     });
 });
     

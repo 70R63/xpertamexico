@@ -24,7 +24,8 @@ class EmpresaLtd extends Model
         parent::boot();        
         static::addGlobalScope('empresa_id', function (Builder $builder) {
 
-            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+            $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
+            $empresas = EmpresaEmpresas::where('id',$empresaId)
                 ->pluck('empresa_id')->toArray();
             $builder->whereIN('empresa_id',$empresas);
         });

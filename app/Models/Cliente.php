@@ -32,7 +32,8 @@ class Cliente extends Model
         static::addGlobalScope('estatus', function (Builder $builder) {
             $builder->where('clientes.estatus', '1');
 
-            $empresas = EmpresaEmpresas::where('id',auth()->user()->empresa_id)
+            $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
+            $empresas = EmpresaEmpresas::where('id',$empresaId)
                 ->pluck('empresa_id')->toArray();
             $builder->whereIN('empresa_id',$empresas);
         });
@@ -49,12 +50,11 @@ class Cliente extends Model
     public function insertSemiManual($request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ---------");
 
-        $empresa_id = auth()->user()->empresa_id;
-        if ($request['esManual'] === "SI") {
+        
+        if ($request['esManual'] === "SI" || $request['esManual'] === "SEMI" || $request['esManual'] === "API" ) {
             $empresa_id = $request['empresa_id'];
-        }
-        if ($request['esManual'] === "SEMI") {
-            $empresa_id = $request['empresa_id'];
+        } else {
+            $empresa_id = auth()->user()->empresa_id;
         }
         
         
@@ -113,6 +113,14 @@ class Cliente extends Model
                             ->where('empresa_id',$empresa_id)
                             ->pluck('id')
                             ->toArray();
+            case "API":
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+                $canal = "API" ;
+                $empresa_id = $request['empresa_id'];
+                $cliente = self::where('nombre', 'like', $request['nombre_d'])
+                            ->where('empresa_id',$empresa_id)
+                            ->pluck('id')
+                            ->toArray();
                 
                 break;     
             case "RETORNO":
@@ -121,7 +129,7 @@ class Cliente extends Model
                             ->toArray();;
                 break;           
             default:
-                Log::info("No se cargo ningun caso");
+                Log::info("No se detecto el canal");
         }
         
 

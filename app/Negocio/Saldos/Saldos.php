@@ -4,6 +4,7 @@ namespace App\Negocio\Saldos;
 use Log;
 use File;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 //modelos
 use App\Models\Saldos\Saldos as mSaldo;
@@ -84,7 +85,8 @@ class Saldos
         $saldoArray["monto_anterior"]=$saldoArray["monto"];
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $saldoArray["monto"]=$saldoArray["monto"]-$precio;
-        
+       
+        Log::debug(print_r($saldoArray,true)); 
         $saldo->fill($saldoArray)->save();
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -125,6 +127,52 @@ class Saldos
         $this->mensaje[] = sprintf("El nuevo saldo es $%s",$saldoArray["monto"]);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
+
+
+    /**
+     * Valida las reglas de negocio para el saldo
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion fedexApi
+     * 
+     * @throws
+     *
+     * @param float saldo monto disponible que tiene una empresa
+     * 
+     * @var int 
+     * @var float $saldo
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function validaSaldo($saldo){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $saldoMinimo = 90; 
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug(print_r($saldoMinimo,true));
+
+        if ($saldo < $saldoMinimo) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $mensaje[] = sprintf("El Saldo: %s es menor al limite permitido",$saldo);
+            throw ValidationException::withMessages($mensaje);
+        }
+
+        if ($saldo < 0) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $mensaje[] = sprintf("Saldo Negativo: $%s",$saldo);
+            throw ValidationException::withMessages($mensaje);
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+    }
+
 
 
 
