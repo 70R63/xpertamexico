@@ -34,7 +34,7 @@ class Creacion {
 	private $insert = array();
 	private $notices = array();
 	private $namePdf = array();
-    private $response;
+    private $response = array();
     private $zona = "";
     private $sucursalJson = array();
     private $clienteJson = array();
@@ -223,7 +223,6 @@ class Creacion {
         }
     
         
-        Log::debug(print_r($this->notices,true));
         $this->responseCustom();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
@@ -255,8 +254,7 @@ class Creacion {
 
         $responseCustom =$this->fedex->getResponse();
         unset($responseCustom->output->transactionShipments[0]->completedShipmentDetail->shipmentRating);
-        Log::debug(print_r($responseCustom,true));
-
+        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
@@ -291,8 +289,7 @@ class Creacion {
         $direcciones = $this->clienteJson['address']['streetLines'];
 
         $direccion = $direcciones[0];
-        Log::debug( print_r($data,true));
-
+       
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $cliente = new Cliente();
         $cliente->validaCliente($data);
@@ -404,7 +401,7 @@ class Creacion {
      * @return $data Se agra informacion segun la necesidad
      */
 
-    public function cotizacion($data){
+    private function cotizacion($data){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
         $nFedexTarifa = new nFedexTarifas();
@@ -417,6 +414,8 @@ class Creacion {
         if ( count($zona) < 1)
             throw ValidationException::withMessages(array("No existen zonas, Validar con tu administrador"));
 
+        $data['zona']=$zona[0];
+
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->validaLtdCobertura($data);   
@@ -426,17 +425,6 @@ class Creacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->precioDescuentoPorEmpresa($data);
-
-
-
-
-
-
-
-
-
-
-
 
 
         $serguroCostoPorcentaje=2; 
@@ -450,10 +438,9 @@ class Creacion {
         } else {
             $data['valor_envio']= $this->paquete['declaredValue']['amount'];
             $subCostoSeguro = ($data['valor_envio']*$serguroCostoPorcentaje)/100;
-            $data['costo_seguro'] = ($subCostoSeguro*1.16);
+            $data['costo_seguro'] = ($subCostoSeguro);
             $data['bSeguro'] = true;
         }
-        
         
         
         $data['costo_kg_extra']=0;
@@ -462,13 +449,14 @@ class Creacion {
         //caclulo extendida 
         $data['costo_extendida'] = 0;
         if ($data['extendida'] === 'SI') {
-            $data['costo_extendida']=(170*1.16);
+            $data['costo_extendida']=(170);
         }
         
 
         $data['peso_bascula'] = $data['peso'];
         $data['peso_dimensional'] = ($data['alto']*$data['ancho']*$data['largo'])/5000;
         
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data['peso_facturado'] = ($data['peso_bascula'] > $data['peso_dimensional']) ? ceil($data['peso_bascula']) : ceil($data['peso_dimensional']) ;
         
@@ -476,14 +464,14 @@ class Creacion {
 
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data['subPrecio'] = $data['costo_kg_extra']+$data['costo_seguro']+$data['costo_extendida'];
-
-
+        $data['subPrecio'] = $data['costo_base']+$data['costo_kg_extra']+$data['costo_seguro']+$data['costo_extendida'];
 
         $data['piezas']=$this->paquete['groupPackageCount']; //groupPackageCount
 
         $data['precio']=$data['subPrecio']*1.16;// suma valores adiocnales
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug( print_r($data,true));
         return $data;
     }
 
@@ -516,14 +504,21 @@ class Creacion {
         
         $kg = $this->paquete['weight']['value'];
 
-        $tarifaMostrador = TarifasMostrador::where('zona',$data['zona'])
+
+        $tarifaMostradorQuery = TarifasMostrador::where('zona',$data['zona'])
                     ->where('ltd_id', $data['ltd_id'])
-                    ->where('servicio_id', $data['servicio_id'])
+                    //->where('servicio_id', $data['servicio_id'])
                     ->where('kg', $kg)
-                    ->get()->toArray()
+                    
                     //->getBindings()
                     ;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        if ( isset($data['servicio_id']) ){
+            $tarifaMostradorQuery = $tarifaMostradorQuery->where('servicio_id', $data['servicio_id']);
+        }
 
+        $tarifaMostrador = $tarifaMostradorQuery->get()->toArray();
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug( print_r($tarifaMostrador,true));
 
         if (count($tarifaMostrador) <1)
@@ -540,6 +535,7 @@ class Creacion {
         $subTotalMostrador = $precioConDescuento+$fscCargo;
         $data['costo_base']= $subTotalMostrador;
         
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug( print_r($subTotalMostrador,true));
 
         return $data;
@@ -718,6 +714,89 @@ class Creacion {
      * @return $data Se agra informacion segun la necesidad
      */
 
+
+    /**
+     * Valida la cotizacion 
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion cotizacion
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var $cotizacion Se usa para generar peticion para validar las cotizaciones
+     * @var $dimensiones  
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function cotizadorPorServicio($data, $servicio){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        $this->paquete= $data['requestedPackageLineItems'][0];
+        $this->paquete['groupPackageCount'] = 0;
+        $response = array();
+        
+        switch ($servicio) {
+            case 'todos':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+                $servicios = array("1","2");
+                foreach ($servicios as $key => $value) {
+                    $data['servicio_id']=$value;
+                    $response[] = $this->cotizacion($data);
+                }
+                break;
+            
+            case 'terrestre':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $data['servicio_id']=1;
+                $response[] = $this->cotizacion($data);
+                break;
+            case 'diasig':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $data['servicio_id']=2;
+                $response[] = $this->cotizacion($data);
+                break;
+
+            default:
+                throw ValidationException::withMessages(array("Servicio no contrado o erroneo, favor de validar con tu administrador"));
+                break;
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);       
+        foreach ($response as $key => $value) {
+            Log::debug( print_r($value,true) );   
+            unset($value['token']);
+            unset($value['requestedPackageLineItems']);
+            unset($value['user_id']);
+            unset($value['ltd_id']);
+            unset($value['pesoFacturado']);
+            unset($value['piezas']);
+            /*
+            
+            unset($value['']);
+            unset($value['']);
+            unset($value['']); 
+            unset($value['']);
+            unset($value['']);
+            */
+            $this->response[]= $value;
+        }
+
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+    }
+
     public function zona($data){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
@@ -734,6 +813,10 @@ class Creacion {
         return $this->namePdf;
     }
 
+
+    public function getResponse(){
+        return $this->response;
+    }
 	
 
 

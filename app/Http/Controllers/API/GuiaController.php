@@ -413,7 +413,7 @@ class GuiaController extends Controller
             $this->error = "HttpException";
             $this->mensaje =$ex->getMessage();
         } catch (\Exception $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." Exception");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
             Log::debug(print_r($ex,true));
             $this->error = "Exception";
             $this->mensaje =$ex->getMessage();
@@ -571,34 +571,40 @@ class GuiaController extends Controller
         foreach ($guias as $key => $value) {
             Log::info("-----".++$i."/$guiaCantidad -----");
             Log::debug($value);
+            try{
+                $sEstafeta->rastreo($value['tracking_number']);
+                $update = array();
+                
+                if ($sEstafeta->getExiteSeguimiento()) {   
+                    Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
+                    $paquete = $sEstafeta->getPaquete();
 
-            $sEstafeta->rastreo($value['tracking_number']);
-            $update = array();
-            
-            if ($sEstafeta->getExiteSeguimiento()) {   
-                Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
-                $paquete = $sEstafeta->getPaquete();
+                    $update = array('ultima_fecha' => $sEstafeta->getUltimaFecha()
+                            ,'rastreo_estatus' => Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()]
+                            ,'rastreo_peso' => $paquete['peso'] 
+                            ,'largo' => $paquete['largo'] 
+                            ,'ancho' => $paquete['ancho'] 
+                            ,'alto' => $paquete['alto']
+                            ,'quien_recibio' =>  $sEstafeta->getQuienRecibio()
+                            ,'pickup_fecha' =>  $sEstafeta->getPickupFecha()
 
-                $update = array('ultima_fecha' => $sEstafeta->getUltimaFecha()
-                        ,'rastreo_estatus' => Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()]
-                        ,'rastreo_peso' => $paquete['peso'] 
-                        ,'largo' => $paquete['largo'] 
-                        ,'ancho' => $paquete['ancho'] 
-                        ,'alto' => $paquete['alto']
-                        ,'quien_recibio' =>  $sEstafeta->getQuienRecibio()
-                        ,'pickup_fecha' =>  $sEstafeta->getPickupFecha()
+                        );
 
-                    );
+                    Log::info(print_r($update,true));
 
-                Log::info(print_r($update,true));
-
-                $affectedRows = GuiaAPI::where("id", $value['id'])
-                        ->update($update);
-    
-                Log::debug("affectedRows -> $affectedRows");
-            }else{
-                Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
+                    $affectedRows = GuiaAPI::where("id", $value['id'])
+                            ->update($update);
+        
+                    Log::debug("affectedRows -> $affectedRows");
+                }else{
+                    Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
+                }
+            }  catch (\Exception $ex) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
+                Log::debug(print_r($ex,true));
+                
             }
+            
             
         } // fin foreach ($tabla as $key => $value)
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");

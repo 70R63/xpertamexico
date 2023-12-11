@@ -78,6 +78,11 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
                                      
                             });
 
+                            Route::controller(FedexController::class)->group(function(){
+                                Route::get('cotizacion/{servicio}', 'cotizacion')->name("cotizacion");
+                                     
+                            });
+
                         });
                     });
                 });
@@ -201,7 +206,12 @@ Route::middleware(['throttle:10,1','validaToken'])->group(function(){
                             });
 
                             Route::controller(FedexController::class)->group(function(){
-                                Route::post('diasig', 'diasig')->name("diasig");
+                                Route::post('diasig', 'diasigDEV')->name("diasigDEV");
+                                     
+                            });
+
+                            Route::controller(FedexController::class)->group(function(){
+                                Route::get('cotizacion/{servicio}', 'cotizacionDEV')->name("cotizacionDEV");
                                      
                             });
 
