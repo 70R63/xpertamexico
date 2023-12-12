@@ -177,6 +177,12 @@ Route::name('api.dev.')->group(function () {
                 Route::post('/login', [AuthController::class, 'login'])->name('login');
             });
         });
+
+        Route::name('sademio.')->group(function () {        
+            Route::group(['prefix'=>'sademio'], function(){  
+                Route::post('/login', [AuthController::class, 'login'])->name('login');
+            });
+        });
     });
 });
 
@@ -219,6 +225,29 @@ Route::middleware(['throttle:10,1','validaToken'])->group(function(){
                     });
                 });
             });
+
+
+            //SADEMIO
+
+             Route::name('sademio.')->group(function () {        
+                Route::group(['prefix'=>'sademio'], function(){  
+
+                    Route::name('estafeta.')->group(function () {        
+                        Route::group(['prefix'=>'estafeta'], function(){  
+
+                            Route::get('/greeting', function () {
+                                return 'Hello World';
+                            })->name("greeting");
+                            
+                            Route::controller(DevGuiaController::class)->group(function(){
+                                Route::post('{servicio}', 'sademio')->name("estafeta");       
+                            });
+                        });
+                    });
+                });
+            });
+
+
         });// FIN api.
     });
 });

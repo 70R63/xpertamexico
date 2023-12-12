@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\TarifasMostrador ;
 use App\Models\LtdCobertura;
 use App\Models\Tarifas;
+use App\Models\Servicio;
 
 //DTOS
 use App\Dto\FedexDTO;
@@ -471,7 +472,6 @@ class Creacion {
         $data['precio']=$data['subPrecio']*1.16;// suma valores adiocnales
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::debug( print_r($data,true));
         return $data;
     }
 
@@ -507,7 +507,6 @@ class Creacion {
 
         $tarifaMostradorQuery = TarifasMostrador::where('zona',$data['zona'])
                     ->where('ltd_id', $data['ltd_id'])
-                    //->where('servicio_id', $data['servicio_id'])
                     ->where('kg', $kg)
                     
                     //->getBindings()
@@ -772,6 +771,7 @@ class Creacion {
                 break;
         }
 
+       
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);       
         foreach ($response as $key => $value) {
             Log::debug( print_r($value,true) );   
@@ -781,6 +781,13 @@ class Creacion {
             unset($value['ltd_id']);
             unset($value['pesoFacturado']);
             unset($value['piezas']);
+
+            $mServicio = Servicio::where("id",$data['servicio_id'])
+                ->firstOrFail();
+
+            Log::debug($mServicio->nombre);
+            unset($value['servicio_id']);
+            $value['servicio_nombre'] = $mServicio->nombre;
             /*
             
             unset($value['']);
