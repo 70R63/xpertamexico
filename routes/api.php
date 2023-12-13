@@ -15,6 +15,8 @@ use App\Http\Controllers\API\Reportes\RepesajeController;
 use App\Http\Controllers\API\Saldos\PagosController;
 use App\Http\Controllers\API\Reportes\PagosController as ReportesPagoController;
 use App\Http\Controllers\API\Ltd\FedexController;
+use App\Http\Controllers\API\Ltd\EstafetaController;
+
 
 use App\Http\Controllers\API\DEV\GuiaController as DevGuiaController ;
 
@@ -179,7 +181,7 @@ Route::name('api.dev.')->group(function () {
         });
 
         Route::name('sademio.')->group(function () {        
-            Route::group(['prefix'=>'sademio'], function(){  
+            Route::group(['prefix'=>'SADEMIO'], function(){  
                 Route::post('/login', [AuthController::class, 'login'])->name('login');
             });
         });
@@ -226,11 +228,9 @@ Route::middleware(['throttle:10,1','validaToken'])->group(function(){
                 });
             });
 
-
             //SADEMIO
-
              Route::name('sademio.')->group(function () {        
-                Route::group(['prefix'=>'sademio'], function(){  
+                Route::group(['prefix'=>'SADEMIO'], function(){  
 
                     Route::name('estafeta.')->group(function () {        
                         Route::group(['prefix'=>'estafeta'], function(){  
@@ -239,8 +239,8 @@ Route::middleware(['throttle:10,1','validaToken'])->group(function(){
                                 return 'Hello World';
                             })->name("greeting");
                             
-                            Route::controller(DevGuiaController::class)->group(function(){
-                                Route::post('{servicio}', 'sademio')->name("estafeta");       
+                            Route::controller(EstafetaController::class)->group(function(){
+                                Route::post('{servicio}', 'creacionDEV')->name("estafeta");       
                             });
                         });
                     });
