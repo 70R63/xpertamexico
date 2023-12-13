@@ -36,14 +36,16 @@ class Cotizacion {
      * @return void
     */
 
-    public function base ($request,$ltd_id = 0){
+    public function base ($request,$ltd_id = 0, $canal ="WEB"){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        
         if ( is_null($request['sucursal']) ) {
             $empresa_id = $request['clienteIdCombo'];
         } else {
             $empresa_id= Sucursal::where('id',$request['sucursal'])
                     ->value('empresa_id');
         }
+        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Empresa id $empresa_id");
             
         $empresasLtdQuery = EmpresaLtd::where('empresa_id',$empresa_id);
@@ -51,6 +53,7 @@ class Cotizacion {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Consulta ltd_id=$ltd_id");
             $empresasLtdQuery->where('ltd_id',$ltd_id);
         }
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $empresasLtd = $empresasLtdQuery
                 ->pluck('tarifa_clasificacion', 'ltd_id')
@@ -71,6 +74,7 @@ class Cotizacion {
                             ->where("empresa_id", $empresa_id)
                             ->distinct()->get()->pluck('servicio_id')->toArray();
         
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
             switch ($clasificacion) {
                 case "1": //FLAT
@@ -126,6 +130,10 @@ class Cotizacion {
                             break;
                         case "2":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 2 = ESTAFETA");
+                            if ($canal === "API") {
+                                $query->where("servicio_id",$request['servicio_id']);
+                            }
+                            
                             $tablaTmp = $query->get()->toArray();
                             
                             foreach ($tablaTmp as $key => $value) {

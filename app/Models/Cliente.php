@@ -114,7 +114,7 @@ class Cliente extends Model
                             ->pluck('id')
                             ->toArray();
             case "API":
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = semi ");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." esManual = API ");
                 $canal = "API" ;
                 $empresa_id = $request['empresa_id'];
                 $cliente = self::where('nombre', 'like', $request['nombre_d'])

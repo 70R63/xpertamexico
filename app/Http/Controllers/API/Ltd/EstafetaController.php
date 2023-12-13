@@ -94,7 +94,7 @@ class EstafetaController extends ApiController
             $nEstafetaCreacion->parseoAPI($data);
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            return $this->successResponse( $nEstafetaCreacion->getResponse(), "Exito");
+            return $this->successResponse( $nEstafetaCreacion->getResponse(), $nEstafetaCreacion->getNotices());
 
 
         } catch (ValidationException $ex) {
