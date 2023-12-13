@@ -17,11 +17,14 @@ use Illuminate\Support\Facades\Storage;
 use App\Singlenton\Estafeta ; //PRODUCTION
 use App\Singlenton\Fedex as sFedex ; //PRODUCTION
 use App\Dto\Guia as GuiaDTO;
+
+
 use App\Models\Guia;
 use App\Models\API\Guia as GuiaAPI;
 use App\Models\API\Rastreo_peticion;
 use App\Models\EmpresaEmpresas;
 use App\Models\GuiasPaquete;
+use App\Models\LtdTipoServicio;
 
 /**
  * GuiaController
