@@ -380,10 +380,10 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
             $response = ($re->getResponse());
             $responseContenido = json_decode($response->getBody()->getContents());    
-
+            Log::debug(print_r($responseContenido,true));
             if (is_object($responseContenido)) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." is_object ");
-                Log::debug(print_r($responseContenido,true));
+                
 
                 if ( isset($responseContenido->code) ) {
                     Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
