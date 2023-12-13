@@ -139,21 +139,13 @@ class GuiaController extends Controller
                         ;
 
         Log::debug(print_r($ltdTipoServicio,true));
-        throw ValidationException::withMessages(array("Revision de Flujo "));
 
         $identification = array(
             "suscriberId"=>$ltdTipoServicio['client_id']
             ,"customerNumber"=>$ltdTipoServicio['customer_number']
         );
 
-/*
-        $identification = array(
-            "suscriberId"=>Config('ltd.estafeta.cred.suscriberId'),
-            "customerNumber"=>Config('ltd.estafeta.cred.customerNumber')
-        );
-*/
-        $salesOrganization = Config('ltd.estafeta.cred.salesOrganization'); 
-        Log::debug($identification);
+        $salesOrganization = $ltdTipoServicio['sales_organization'];
         try {
 
             
