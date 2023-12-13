@@ -118,24 +118,42 @@ class GuiaController extends Controller
      */
     public function estafeta(Request $request){
         Log::info(__CLASS__." ".__FUNCTION__." INICIO");
-
-        Log::debug($request);
+        $data = $request->except(['api_token']);
+        Log::debug($data);
+        $data['ltd_id']=2;
         $response = null;
         $trackingNumber = "";
         $systemInformation = array("id"=>"AP01",
             "name"=>"AP01",
             "version"=>"1.10.20");
 
+        $serviceIdLtd=$data['labelDefinition']['serviceConfiguration']['serviceTypeId'];
+        $ltdTipoServicio = LtdTipoServicio::where("empresa_id", $data['empresa_id'])
+                        ->where("ltd_id", $data['ltd_id'])
+                        ->where("service_id_ltd",$serviceIdLtd)
+                        ->firstOrFail()
+                        ->toArray()
+                        ;
+
+        Log::debug(print_r($ltdTipoServicio,true));
+        throw ValidationException::withMessages(array("Revision de Flujo "));
+
+        $identification = array(
+            "suscriberId"=>$ltdTipoServicio['client_id']
+            ,"customerNumber"=>$ltdTipoServicio['customer_number']
+        );
+
+/*
         $identification = array(
             "suscriberId"=>Config('ltd.estafeta.cred.suscriberId'),
             "customerNumber"=>Config('ltd.estafeta.cred.customerNumber')
         );
-
+*/
         $salesOrganization = Config('ltd.estafeta.cred.salesOrganization'); 
         Log::debug($identification);
         try {
 
-            $data = $request->except(['api_token']);
+            
             if(empty($data))
                  return $this->sendError("Body, sin estructura o vacio", null, "400");
 
