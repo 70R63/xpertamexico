@@ -43,6 +43,15 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
         ], 200);
 });
 
+//SADEMIO
+Route::name('api')->group(function () {
+    Route::name('sademio.')->group(function () {        
+        Route::group(['prefix'=>'SADEMIO'], function(){  
+            Route::post('/login', [AuthController::class, 'login'])->name('login');
+        });
+    });
+});
+
 //Route::domain('local.xpertamexico.com')->group(function () {
     Route::middleware(['throttle:100,1','validaToken'])->group(function(){
         Route::post('logout', [AuthController::class, 'logout']);
@@ -89,6 +98,27 @@ Route::middleware('auth:sanctum')->get('/ping', function (Request $request) {
                     });
                 });
             });
+
+
+            //SADEMIO
+             Route::name('sademio.')->group(function () {        
+                Route::group(['prefix'=>'SADEMIO'], function(){  
+
+                    Route::name('estafeta.')->group(function () {        
+                        Route::group(['prefix'=>'estafeta'], function(){  
+
+                            Route::get('/greeting', function () {
+                                return 'Hello World';
+                            })->name("greeting");
+                            
+                            Route::controller(EstafetaController::class)->group(function(){
+                                Route::post('{servicio}', 'creacionDEV')->name("estafeta");       
+                            });
+                        });
+                    });
+                });
+            });
+
         });// FIN api.
 
     });
@@ -163,33 +193,10 @@ Route::middleware(['throttle:50,1','auth'])->group(function () {
         });
 
 
-        //SADEMIO
-        Route::name('sademio.')->group(function () {        
-            Route::group(['prefix'=>'SADEMIO'], function(){  
-                Route::post('/login', [AuthController::class, 'login'])->name('login');
-            });
-        });
-
-        //SADEMIO
-         Route::name('sademio.')->group(function () {        
-            Route::group(['prefix'=>'SADEMIO'], function(){  
-
-                Route::name('estafeta.')->group(function () {        
-                    Route::group(['prefix'=>'estafeta'], function(){  
-
-                        Route::get('/greeting', function () {
-                            return 'Hello World';
-                        })->name("greeting");
-                        
-                        Route::controller(EstafetaController::class)->group(function(){
-                            Route::post('{servicio}', 'creacionDEV')->name("estafeta");       
-                        });
-                    });
-                });
-            });
-        });
+        
 
         
+
     });
 });
 //Fin Middileware

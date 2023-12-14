@@ -69,7 +69,7 @@ Class EstafetaCreacion {
     	$data = $this->cotizacion($data);
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-    	//$this->saldo($data);
+    	$this->saldo($data);
 
     	Log::debug($data);
         
@@ -89,6 +89,8 @@ Class EstafetaCreacion {
         Log::debug( json_encode($data) );
 
         $sEstafeta -> envio($data);
+
+        
         $this->response = $sEstafeta->getResultado();
         $trackingNumber = $sEstafeta->getTrackingNumber();
         $this->notices[] ="Exito";
