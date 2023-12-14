@@ -112,7 +112,7 @@ Route::name('api')->group(function () {
                             })->name("greeting");
                             
                             Route::controller(EstafetaController::class)->group(function(){
-                                Route::post('{servicio}', 'creacionDEV')->name("estafeta");       
+                                Route::post('{servicio}', 'creacion')->name("creacion");       
                             });
                         });
                     });
@@ -127,7 +127,7 @@ Route::name('api')->group(function () {
 
 
 //MIDDLEWARE PARA AJAX DESDE WEB
-Route::middleware(['throttle:50,1','auth'])->group(function () {
+Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {
         //Carga los metodos basicos index, store, update , etc
         Route::apiResource('cotizaciones', CotizacionController::class);
@@ -276,7 +276,7 @@ Route::middleware(['throttle:10,1','validaToken'])->group(function(){
                             })->name("greeting");
                             
                             Route::controller(EstafetaController::class)->group(function(){
-                                Route::post('{servicio}', 'creacionDEV')->name("estafeta");       
+                                Route::post('{servicio}', 'creacionDEV')->name("creacionDEV");       
                             });
                         });
                     });

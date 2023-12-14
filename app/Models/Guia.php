@@ -11,7 +11,9 @@ class Guia extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['token'];
+
+    //protected $fillables = ['id'];
 
     /**
      * Agraga a la consulta los casos de negocio.

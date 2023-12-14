@@ -4,18 +4,25 @@ namespace App\Negocio\Guias;
 
 use Log;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
-
+//SINGLENTON
 use App\Singlenton\EstafetaDev;
+use App\Singlenton\Estafeta;
 
 //models
 use App\Models\LtdTipoServicio;
 use App\Models\Cliente;
 use App\Models\Sucursal;
 use App\Models\LtdCobertura;
+use App\Models\Guia;
+use App\Models\User;
 
 use App\Negocio\Guias\Cotizacion as nCotizacion;
 use App\Negocio\Saldos\Saldos as nSaldos;
+
+use App\Dto\Guia as GuiaDTO;
 
 
 
@@ -44,12 +51,13 @@ Class EstafetaCreacion {
      * @return json Objeto con la respuesta de exito o fallo 
      */
 
-    public function parseoApi(array $data){
-
-    	Log::debug(__CLASS__." ".__FUNCTION__." "." sEstafeta -> envio()");
+    public function parseoApiDev(array $data){
+    	Log::debug(__CLASS__." ".__FUNCTION__." "." parseoApiDev");
+        $data['numero_solicitud'] = Carbon::now()->timestamp;
     	Log::debug($data);
-    	$data['empresa_id']=308;
-    	$data['esManual']="API" ;
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaUsuario($data);
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->validaCliente($data);
@@ -79,24 +87,149 @@ Class EstafetaCreacion {
             "version"=>"1.10.20");
         $data['systemInformation']= $systemInformation;
         $data['labelDefinition']['serviceConfiguration']['quantityOfLabels'] = 1;
-
+        $data['contenido'] = $data['labelDefinition']['wayBillDocument']['content'];
         //$data['labelDefinition']['itemDescription']['weight'] = 1;
-        Log::debug("Se intancia el Singlento Estafeta");
-        
-        $sEstafeta = new EstafetaDev(2, 2, "API");
+        Log::info("Se intancia el Singlento Estafeta");
+        $sEstafeta = new EstafetaDev($data['ltd_id'], $data['empresa_id'], $data['esManual']);
 
         Log::debug(__CLASS__." ".__FUNCTION__." "." sEstafeta -> envio()");
-        Log::debug( json_encode($data) );
-
         $sEstafeta -> envio($data);
 
-        
+
         $this->response = $sEstafeta->getResultado();
         $trackingNumber = $sEstafeta->getTrackingNumber();
         $this->notices[] ="Exito";
         $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID xxxx");
         
 
+    }
+
+
+    /**
+     * Se busca obtener las tarifas de FEDEX basado en el KG .
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion cotizacionDEV
+     * 
+     * @throws
+     *
+     * @param  Illuminate\Http\Request  $request Recibe la paticion del cliente
+     * 
+     * @var array $data Se convierte el Json de la peticion a array
+     * 
+     * @return json Objeto con la respuesta de exito o fallo 
+     */
+
+    public function parseoApi(array $data){
+        Log::debug(__CLASS__." ".__FUNCTION__." "." parseoApi");
+        $data['numero_solicitud'] = Carbon::now()->timestamp;
+        Log::debug($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaUsuario($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaCliente($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaSucursal($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->ltdTipoServicio($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaLtdCobertura($data);
+
+        $data = $this->tarifas($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->cotizacion($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $this->saldo($data);
+
+        
+        
+        $trackingNumber = "";
+        $systemInformation = array("id"=>"AP01",
+            "name"=>"AP01",
+            "version"=>"1.10.20");
+        $data['systemInformation']= $systemInformation;
+        $data['labelDefinition']['serviceConfiguration']['quantityOfLabels'] = 1;
+        $data['contenido'] = $data['labelDefinition']['wayBillDocument']['content'];
+
+        Log::debug("Se intancia el Singlento Estafeta");
+        $sEstafeta = new Estafeta($data['empresa_id'], $data["esManual"] ,$data['servicio_id']);
+
+        Log::debug(__CLASS__." ".__FUNCTION__." "." sEstafeta -> envio()");
+        $sEstafeta -> envio($data);
+
+
+        $this->response = $sEstafeta->getResultado();
+        $trackingNumbers = $sEstafeta->getTrackingNumber();
+        Log::debug(print_r($trackingNumbers ,true));      
+        $data['tracking_number'] =$trackingNumbers;
+        $carbon = Carbon::now();
+        $unique = md5( (string)$carbon);
+        $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
+        $namePdf = sprintf("%s-%s-%s.pdf",(string)$carbon,$data['empresa_id'],$unique);
+        $data['documento'] = $namePdf;
+        Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        unset($data['identification']);
+        unset($data['labelDefinition']);
+        unset($data['systemInformation']);
+        unset($data['id']);
+        $data['canal']= $data['esManual'];
+
+        Log::debug($data);
+        $id = Guia::create($data)->id;
+        $this->notices[] ="Exito";
+        $this->notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
+
+
+    }
+
+
+    /**
+     * Busca el usuario .
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion validaUsuario
+     * 
+     * @throws
+     *
+     * @param array  $data Array conta la infroamcion del flujo
+     * 
+     * @var array $data Se convierte el Json de la peticion a array
+     * 
+     * @return json Objeto con la respuesta de exito o fallo 
+     */
+
+    public function validaUsuario(array $data){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $user = User::where("id", $data['user_id'])
+            ->firstOrFail();
+
+        Log::debug($user);
+
+        $data['empresa_id']= $user->empresa_id;
+        $data['usuario']= $user->name;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return $data;
     }
     
 
@@ -183,6 +316,10 @@ Class EstafetaCreacion {
     	if (count($cotizacion) <1) {
     		throw ValidationException::withMessages(array("No cuenta con tarifas."));
     	}
+
+        unset($cotizacion[0]['extendida']);
+        
+
     	$data = array_merge($data, $cotizacion[0]);
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -249,6 +386,7 @@ Class EstafetaCreacion {
 
         }
         $data['cliente_id']=$cliente->getId();
+        $data['cia_d']=$data['cliente_id'];
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $data;
@@ -314,6 +452,7 @@ Class EstafetaCreacion {
         }
         $data['sucursal_id']=$remitente->getId();
         $data['sucursal'] = $data['sucursal_id'];
+        $data['cia'] = $data['sucursal_id'];
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
@@ -354,11 +493,13 @@ Class EstafetaCreacion {
 
         $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
 
-        $data['costo_seguro']=0;
-        if($serviceConfiguration['isInsurance']){
-        	$data['valor_declarado'] = $serviceConfiguration['insurance']['declaredValue'];
 
-        	$data['costo_seguro'] = ($data['valor_declarado']*$data['seguro'])/100;
+        $data['costo_seguro']=0;
+        $data['valor_envio']=0;
+        if($serviceConfiguration['isInsurance']){
+        	$data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
+
+        	$data['costo_seguro'] = ($data['valor_envio']*$data['seguro'])/100;
         }
         
         $data['peso'] = $dimensiones['weight'];
