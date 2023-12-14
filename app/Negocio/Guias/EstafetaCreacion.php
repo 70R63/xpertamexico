@@ -187,8 +187,11 @@ Class EstafetaCreacion {
         unset($data['labelDefinition']);
         unset($data['systemInformation']);
         unset($data['id']);
-        $data['canal']= $data['esManual'];
+        unset($data['created_at']);
+        unset($data['updated_at']);
 
+        $data['canal']= $data['esManual'];
+        
         Log::debug($data);
         $id = Guia::create($data)->id;
         $this->notices[] ="Exito";

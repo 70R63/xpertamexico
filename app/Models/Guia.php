@@ -13,7 +13,6 @@ class Guia extends Model
 
     protected $guarded = ['token'];
 
-    //protected $fillables = ['id'];
 
     /**
      * Agraga a la consulta los casos de negocio.
