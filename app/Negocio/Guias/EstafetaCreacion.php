@@ -69,7 +69,7 @@ Class EstafetaCreacion {
     	$data = $this->cotizacion($data);
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-    	$this->saldo($data);
+    	//$this->saldo($data);
 
     	Log::debug($data);
         
@@ -123,7 +123,7 @@ Class EstafetaCreacion {
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-    	$ltdTipoServicio = LtdTipoServicio::where("empresa_id", 308)
+    	$ltdTipoServicio = LtdTipoServicio::where("empresa_id", $data['empresa_id'])
     					->where("ltd_id", $data['ltd_id'])
     					->where("service_id",$data['servicio_id'])
     					->firstOrFail()
