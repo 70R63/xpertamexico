@@ -446,7 +446,7 @@ class GuiaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rastreoAutomaticoFedex(){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        Log::info(__CLASS__." ".__FUNCTION__.__LINE__." INICIANDO-----------------");
         $codeHttp = 404;
         try {
 
@@ -637,7 +637,8 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $guias = Guia::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)
-                    ->whereIN('rastreo_estatus',array(1,2,3))
+                    ->where('created_at', '>', now()->subDays(90)->endOfDay())
+                     ->whereNotIn('rastreo_estatus',array(4,7))
                     //->offset(0)->limit(20)
                     ->get()->toArray();
         Log::info("Total de guias revisar ".count($guias));
@@ -659,10 +660,14 @@ class GuiaController extends Controller
         
         $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)            
-                    ->whereIN('rastreo_estatus',array(1,2,3))
+                    ->whereNotIn('rastreo_estatus',array(4,7))
+                    ->where('created_at', '>', now()->subDays(90)->endOfDay())
                     //->offset(0)->limit(10)
                     ->orderBy('id', 'DESC')
-                    ->get()->toArray();
+                    ->get()
+                    ->toArray()
+                    ;
+        //Log::debug($guias);
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
         return $guias;
