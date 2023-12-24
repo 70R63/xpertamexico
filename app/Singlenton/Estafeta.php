@@ -152,7 +152,7 @@ class Estafeta {
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
         Log::debug(print_r(json_encode($body),true));
-        $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
+        $response = $client->request('POST', 'v1/wayBills?outputType=FILE_THERMAL_SEQUENCE&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
             'headers'   => $headers
             ,'body'     => json_encode($body)
         ]);

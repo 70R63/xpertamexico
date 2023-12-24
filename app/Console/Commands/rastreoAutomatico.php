@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App;
+use Log;
 class rastreoAutomatico extends Command
 {
     /**
@@ -12,7 +13,7 @@ class rastreoAutomatico extends Command
      *
      * @var string
      */
-    protected $signature = 'rastreo:automatico';
+    protected $signature = 'rastreo:automatico {--paridad= : Valor de para o impar}';
 
     /**
      * The console command description.
@@ -25,11 +26,14 @@ class rastreoAutomatico extends Command
      * Execute the console command.
      *
      * @return int
-     */
+     */ 
     public function handle()
     {
+        Log::info($this->option('paridad'));
+        $paridad = $this->option('paridad');
+
         $controller = App::make('\App\Http\Controllers\API\GuiaController');
-        app()->call([$controller, 'rastreoActualizarAutomatico'], []);
+        app()->call([$controller, 'rastreoActualizarAutomatico'], ["paridad"=>$paridad]);
 
         return Command::SUCCESS;
     }

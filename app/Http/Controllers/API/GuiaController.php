@@ -386,14 +386,15 @@ class GuiaController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function rastreoActualizarAutomatico(){
+    public function rastreoActualizarAutomatico($paridad = 2){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $codeHttp = 404;
         try {
 
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $paridad");
             $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.estafeta.id')) )->id;
 
-            $this->rastreoEstafeta(true);
+            $this->rastreoEstafeta(true, $paridad=1);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             
@@ -563,7 +564,7 @@ class GuiaController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    private function rastreoEstafeta(bool $automatico = false){
+    private function rastreoEstafeta(bool $automatico = false, $paridad=2){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $guia = array();
         $plataforma = "AUTOMATICO";
@@ -576,7 +577,7 @@ class GuiaController extends Controller
         }
         Log::info(__CLASS__." ".__FUNCTION__." empresaId $empresaId");
 
-        $guias = $this->consultaGuiaParaRastreoAutomatico( Config('ltd.estafeta.id'), $empresaId);
+        $guias = $this->consultaGuiaParaRastreoAutomatico( Config('ltd.estafeta.id'), $empresaId,$paridad);
         $sEstafeta = Estafeta::getInstance($empresaId,$plataforma, $servicioID);
 
         $guiaCantidad = count($guias);
@@ -655,18 +656,25 @@ class GuiaController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    private function consultaGuiaParaRastreoAutomatico(int $ltdId, int $empresaId = 1 ){
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
-        
+    private function consultaGuiaParaRastreoAutomatico(int $ltdId, int $empresaId = 1, $paridad=2 ){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
+
+
         $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)            
                     ->whereNotIn('rastreo_estatus',array(4,7))
                     ->where('created_at', '>', now()->subDays(90)->endOfDay())
                     //->offset(0)->limit(10)
                     ->orderBy('id', 'DESC')
-                    ->get()
-                    ->toArray()
+                    
                     ;
+
+        if ($paridad != 2) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $guias->whereRaw(" mod(id,2) = $paridad");
+        }
+
+        $guias = $guias->get()->toArray();
         //Log::debug($guias);
         Log::info("Total de guias revisar ".count($guias));
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
