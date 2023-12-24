@@ -394,7 +394,7 @@ class GuiaController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $paridad");
             $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.estafeta.id')) )->id;
 
-            $this->rastreoEstafeta(true, $paridad=1);
+            $this->rastreoEstafeta(true, $paridad);
             
             Log::debug(print_r(Carbon::now()->toDateTimeString(),true));
             
