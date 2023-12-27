@@ -18,6 +18,7 @@ use App\Models\Sucursal;
 use App\Models\LtdCobertura;
 use App\Models\Guia;
 use App\Models\User;
+use App\Models\GuiasPaquete;
 
 use App\Negocio\Guias\Cotizacion as nCotizacion;
 use App\Negocio\Saldos\Saldos as nSaldos;
@@ -184,7 +185,7 @@ Class EstafetaCreacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         unset($data['identification']);
-        unset($data['labelDefinition']);
+        //unset($data['labelDefinition']);
         unset($data['systemInformation']);
         unset($data['id']);
         unset($data['created_at']);
@@ -192,11 +193,16 @@ Class EstafetaCreacion {
 
         $data['canal']= $data['esManual'];
         
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug($data);
         $id = Guia::create($data)->id;
         $this->notices[] ="Exito";
         $this->notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaPaquete($data, $id);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
     }
 
@@ -622,6 +628,40 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
+
+    /**
+     * Valida el paquete con dimensinoes para registrar
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion validaPaquete
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * @param int $id El id de la guia insertada
+     * 
+     * @var float $monto
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function validaPaquete($data, $id){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $key = 0;
+        $boolPrecio = false;
+        $plataforma= $data['canal'];
+        $guiaPaqueteInsert = GuiaDTO::validaPiezasPaquete($data, $key, $boolPrecio, $id,$plataforma);
+        
+
+        $idGuiaPaquete = GuiasPaquete::create($guiaPaqueteInsert)->id;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquete =$idGuiaPaquete");
+    }
 
     public function getResponse(){
         return $this->response;

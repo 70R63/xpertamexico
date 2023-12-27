@@ -264,7 +264,7 @@ class Fedex {
        
     }
 
-    public static function getInstance( int $ltd_id = 1,$empresa_id= 2, $plataforma = 'WEB', $ambiente){
+    public static function getInstance( int $ltd_id = 1,$empresa_id= 2, $plataforma = 'WEB', $ambiente='PRD'){
         if (!self::$instance) {
             Log::debug(__CLASS__." ".__FUNCTION__." Creando intancia");
             self::$instance = new self($ltd_id,$empresa_id, $plataforma, $ambiente);

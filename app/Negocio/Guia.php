@@ -26,25 +26,6 @@ class Guia
         $insert['costo_kg_extra'] = 0; 
         $insert['costo_kg_extra'] = 0; 
         
-        /*$insert[''] = 0; 
-        $insert[''] = 0; 
-        $insert[''] = 0; 
-        $insert[''] = 0; 
-        $insert[''] = 0; 
-                
-                
-                ,'extendida'    => $extendida
-               
-               
-                ,''       => $precio
-                ,''   =>  $costoBase
-                ,''   =>  $costoKgExtra
-                ,'peso_dimensional' =>  $pesoDimension
-                ,'peso_bascula' =>  $pesoBascula
-                ,'sobre_peso_kg'    =>  $sobrePesoKg
-                ,'costo_extendida'  => $costoExtendida
-            );
-            */
         return $insert;
     }
 

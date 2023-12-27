@@ -23,13 +23,14 @@ class Tipo
 
     public function ventas (array $parametros)
     {
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $reporteVentas = Reportes_ventas::filtro( $parametros )
                 ->where("reportes_ventas.estatus",1)
                 ->get()->toArray()
                 
             ;
 
+        //Log::debug();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
      
         $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
