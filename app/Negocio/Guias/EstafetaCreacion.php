@@ -79,6 +79,9 @@ Class EstafetaCreacion {
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     	$this->saldo($data);
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $cotizaciones = $this->resumenCotizacion($data);
 
     	Log::debug($data);
         
@@ -89,7 +92,7 @@ Class EstafetaCreacion {
         $data['systemInformation']= $systemInformation;
         $data['labelDefinition']['serviceConfiguration']['quantityOfLabels'] = 1;
         $data['contenido'] = $data['labelDefinition']['wayBillDocument']['content'];
-        //$data['labelDefinition']['itemDescription']['weight'] = 1;
+        
         Log::info("Se intancia el Singlento Estafeta");
         $sEstafeta = new EstafetaDev($data['ltd_id'], $data['empresa_id'], $data['esManual']);
 
@@ -98,6 +101,9 @@ Class EstafetaCreacion {
 
 
         $this->response = $sEstafeta->getResultado();
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $this->response->cotizacion=$cotizaciones;
+
         $trackingNumber = $sEstafeta->getTrackingNumber();
         $this->notices[] ="Exito";
         $this->notices[]= sprintf("El registro de la solicitud se genero con exito con el ID xxxx");
@@ -155,7 +161,10 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->saldo($data);
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $cotizaciones = $this->resumenCotizacion($data);
         
+        Log::debug($data);
         
         $trackingNumber = "";
         $systemInformation = array("id"=>"AP01",
@@ -173,6 +182,10 @@ Class EstafetaCreacion {
 
 
         $this->response = $sEstafeta->getResultado();
+
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $this->response->cotizacion=$cotizaciones;
+        
         $trackingNumbers = $sEstafeta->getTrackingNumber();
         Log::debug(print_r($trackingNumbers ,true));      
         $data['tracking_number'] =$trackingNumbers;
@@ -543,10 +556,9 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data['subPrecio'] = $data['costo_base']+$data['costo_kg_extra']+$data['costo_seguro']+$data['costo_extendida'];
 
-        
-
-
         $data['precio']=$data['subPrecio']*1.16;
+
+
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $data;
@@ -661,6 +673,46 @@ Class EstafetaCreacion {
 
         $idGuiaPaquete = GuiasPaquete::create($guiaPaqueteInsert)->id;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." idGuiaPaquete =$idGuiaPaquete");
+    }
+
+    /**
+     * Regresa la cotizacon de la solicutd de la guia
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion resumenCotizacion
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $resumenCotizacion
+     * @var array $resumen
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function resumenCotizacion($data){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $resumenCotizacion['costo'] = $data['costo'];
+        $resumenCotizacion['kgs_extras'] = $data['sobre_peso_kg'];
+        $resumenCotizacion['costo_kgs_extras'] = $data['costo_kg_extra'];
+        $resumenCotizacion['valor_declarado'] = $data['valor_envio'];
+        $resumenCotizacion['costo_seguro'] = $data['costo_seguro'];
+        $resumenCotizacion['costo_ae'] = $data['costo_extendida'];
+        $resumenCotizacion['sub_total'] = $data['subPrecio'];
+        $resumenCotizacion['total'] = $data['precio'];
+
+        $resumen[] = $resumenCotizacion;
+
+        return $resumen;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        
     }
 
     public function getResponse(){
