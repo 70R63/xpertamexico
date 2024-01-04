@@ -189,7 +189,7 @@ class EstafetaController extends ApiController
             $servicio = $request->route()->parameter('servicios');
             $ltd = $request->route()->parameter('ltds');
             
-            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             switch ($servicio) {
                 case 'terrestre':
                     $data['servicio_id']=1; 
@@ -209,7 +209,8 @@ class EstafetaController extends ApiController
             }
 
             $objetoGeneral = null;
-            switch ($ltd) {
+            
+            /*switch ($ltd) {
                 case "estafeta":
                     $data['ltd_id']= 2;
                     $nEstafetaCreacion = new nEstafetaCreacion();
@@ -222,7 +223,13 @@ class EstafetaController extends ApiController
                     break;
             }
            
-            
+            */
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $data['ltd_id']= 2;
+                    $nEstafetaCreacion = new nEstafetaCreacion();
+                    $nEstafetaCreacion->parseoApi($data);
+                    $objetoGeneral = $nEstafetaCreacion;
+
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return $this->successResponse( $objetoGeneral->getResponse(), $objetoGeneral->getNotices());
 

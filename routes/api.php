@@ -112,7 +112,7 @@ Route::name('api')->group(function () {
                             })->name("greeting");
                             
                             Route::controller(EstafetaController::class)->group(function(){
-                                Route::post('{servicio}', 'creacion')->name("creacion");       
+                                Route::post('{servicios}', 'creacion')->name("creacion");       
                             });
                         });
                     });
