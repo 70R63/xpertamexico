@@ -75,7 +75,7 @@ class AccesosApi extends ApiController
 
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $user = User::where("id",$request['user_id'])->firstOrFail() ; 
-            
+            Log::debug($user);
             
             if ( $user['empresa_id'] != $empresa_id ) {
             
