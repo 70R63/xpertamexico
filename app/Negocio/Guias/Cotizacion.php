@@ -39,14 +39,21 @@ class Cotizacion {
     public function base ($request,$ltd_id = 0, $canal ="WEB"){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
-        if ( is_null($request['sucursal']) ) {
-            $empresa_id = $request['clienteIdCombo'];
+        if ($canal==="WEB") {
+            if ( is_null($request['sucursal']) ) {
+                $empresa_id = $request['clienteIdCombo'];
+            } else {
+                $empresa_id= Sucursal::where('id',$request['sucursal'])
+                        ->value('empresa_id');
+            }    
         } else {
-            $empresa_id= Sucursal::where('id',$request['sucursal'])
-                    ->value('empresa_id');
+            $empresa_id = $request['empresa_id'];
         }
+
+
         
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Empresa id $empresa_id");
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Empresa id =$empresa_id");
             
         $empresasLtdQuery = EmpresaLtd::where('empresa_id',$empresa_id);
         if ($ltd_id > 0){
