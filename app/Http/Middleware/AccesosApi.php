@@ -25,7 +25,10 @@ class AccesosApi extends ApiController
     public function handle(Request $request, Closure $next)
     {
         try {
-            Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
+
+            Log::info($request->all());
+
             $xApiKey = $request->header("x-api-key");
             $corporativo = $request->header("Corporativo");
             
