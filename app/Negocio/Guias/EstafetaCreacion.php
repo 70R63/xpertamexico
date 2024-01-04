@@ -337,14 +337,20 @@ Class EstafetaCreacion {
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-    	$ltdTipoServicio = LtdTipoServicio::where("empresa_id", $data['empresa_id'])
+    	$ltdTipoServicios = LtdTipoServicio::where("empresa_id", $data['empresa_id'])
     					->where("ltd_id", $data['ltd_id'])
     					->where("service_id",$data['servicio_id'])
-    					->firstOrFail()
+    					->get()
     					->toArray()
     					;
 
-    	Log::debug(print_r($ltdTipoServicio,true));
+    	Log::debug(print_r($ltdTipoServicios,true));
+        if (count($ltdTipoServicios) ==1) {
+            $ltdTipoServicio = $ltdTipoServicios[0];
+        } else {
+            throw ValidationException::withMessages(array("No cuenta con el servcio indicado o tiene incongurencias de Servicios, Validar con el Administrador."));
+        }
+
 
     	$identification = array(
             "suscriberId"=>$ltdTipoServicio['client_id']
