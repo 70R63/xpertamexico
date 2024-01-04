@@ -120,7 +120,7 @@ class Cotizacion {
                                 Log::debug(print_r("-----------------------------",true));
                                 Log::debug(print_r($costoZona,true));
 
-                                $tablaTmp = $query->where("costo",$costoZona)
+                                $tablaTmp = $query->where("costo","like","%".$costoZona."%")
                                     ->get()->toArray()
                                     ;
                                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
