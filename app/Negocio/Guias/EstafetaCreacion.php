@@ -30,6 +30,7 @@ use App\Dto\Guia as GuiaDTO;
 Class EstafetaCreacion {
 
 	private $response;
+    private $cotizaciones;
 	
 	/**
      * Se busca obtener las tarifas de FEDEX basado en el KG .
@@ -78,7 +79,10 @@ Class EstafetaCreacion {
     	$data = $this->cotizacion($data);
 
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-    	$this->saldo($data);
+        if ($data['tipoPagoId'] ===2) {
+            $this->saldo($data);    
+        }
+    	
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $cotizaciones = $this->resumenCotizacion($data);
@@ -151,20 +155,22 @@ Class EstafetaCreacion {
         $data = $this->ltdTipoServicio($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data = $this->validaLtdCobertura($data);
+        $data = $this->validaLtdCobertura($data);      
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->tarifas($data);
+        Log::debug($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->cotizacion($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $this->saldo($data);
-
+        $this->saldo($data);    
+        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $cotizaciones = $this->resumenCotizacion($data);
         
-        Log::debug($data);
+        //Log::debug($data);
         
         $trackingNumber = "";
         $systemInformation = array("id"=>"AP01",
@@ -208,7 +214,7 @@ Class EstafetaCreacion {
         
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::debug($data);
+        //Log::debug($data);
         $id = Guia::create($data)->id;
         $this->notices[] ="Exito";
         $this->notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
@@ -218,6 +224,57 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
     }
+
+    /**
+     * Se busca obtener las tarifas de ESTAFETA basado en el KG y parseando valores del body custom.
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion soloCotizacion
+     * 
+     * @throws
+     *
+     * @param  Illuminate\Http\Request  $request Recibe la paticion del cliente
+     * 
+     * @var array $data Se convierte el Json de la peticion a array
+     * 
+     * @return json Objeto con la respuesta de exito o fallo 
+     */
+
+    public function soloCotizacion(array $data){
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data['numero_solicitud'] = Carbon::now()->timestamp;
+        Log::debug($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->ltdTipoServicio($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->validaLtdCobertura($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->tarifas($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->cotizacion($data, 2);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $cotizaciones = $this->resumenCotizacion($data);
+
+        Log::debug($cotizaciones);
+        $this->cotizaciones = $cotizaciones;
+       
+        $this->notices[] ="Exito";
+        $this->notices[]= sprintf("La cotizacion puede cambiar al momento de creacar de la guia");
+        
+
+    }
+
 
 
     /**
@@ -331,7 +388,7 @@ Class EstafetaCreacion {
     	$nCotizacion = new nCotizacion();
 
     	$nCotizacion->base($data, $data['ltd_id'],$data['esManual']);
-
+        $data['tipoPagoId'] = $nCotizacion->getTipoPagoId();
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     	$cotizacion = $nCotizacion->getTabla();
 
@@ -497,6 +554,10 @@ Class EstafetaCreacion {
      * @throws
      *
      * @param array $data Informacion general de la petricion
+     * @param int $cotizacionPersonalizada = 1 es el flujo de guia con 
+     * valores del body original para crear una guia
+     * @param int $cotizacionPersonalizada = 2 flujo de una cotizacion sin 
+     * creacion de guia 
      * 
      * @var int 
      * 
@@ -504,31 +565,45 @@ Class EstafetaCreacion {
      * @return $data Se agra informacion segun la necesidad
      */
 
-    public function cotizacion($data){
+    public function cotizacion($data, $cotizacionPersonalizada=1){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
         
         $data['piezas']=1;
+        $data['costo_seguro']=0;
+        
         $data['costo_base']=$data['costo'];
 
-        $dimensiones = $data['labelDefinition']['itemDescription'];
+        switch ($cotizacionPersonalizada) {
+            case '1':
+                $data['valor_envio']=0;
+                $dimensiones = $data['labelDefinition']['itemDescription'];
 
-        $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
+                $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
 
 
-        $data['costo_seguro']=0;
-        $data['valor_envio']=0;
-        if($serviceConfiguration['isInsurance']){
-        	$data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
-
-        	$data['costo_seguro'] = ($data['valor_envio']*$data['seguro'])/100;
+            
+                if($serviceConfiguration['isInsurance']){
+                    $data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
+                }
+            
+                $data['peso'] = $dimensiones['weight'];
+                $data['alto'] = $dimensiones['height'];
+                $data['ancho'] = $dimensiones['width'];
+                $data['largo'] = $dimensiones['length'];
+                break;
+            
+            case '2':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                break;
+            default:
+                // code...
+                break;
         }
-        
-        $data['peso'] = $dimensiones['weight'];
-        $data['alto'] = $dimensiones['height'];
-        $data['ancho'] = $dimensiones['width'];
-        $data['largo'] = $dimensiones['length'];
 
+        
+
+        $data['costo_seguro'] = ($data['valor_envio']*$data['seguro'])/100;
 
         $data['peso_bascula'] = $data['peso'];
         $data['peso_dimensional'] = ($data['alto']*$data['ancho']*$data['largo'])/5000;
@@ -634,7 +709,10 @@ Class EstafetaCreacion {
         $monto = $saldo-> porEmpresa($data['empresa_id']);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $saldo->validaSaldo($monto);
+        if ($data['tipoPagoId'] ===2) {
+            $saldo->validaSaldo($monto);
+        }
+        
 
         $saldo->menosPrecio($data["sucursal_id"], $data["precio"]);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -721,6 +799,10 @@ Class EstafetaCreacion {
 
     public function getNotices(){
         return $this->notices;
+    }
+
+    public function getCotizaciones(){
+        return $this->cotizaciones;
     }
 
 

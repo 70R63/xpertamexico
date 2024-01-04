@@ -11,6 +11,8 @@ use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
+
 class ValidaToken extends ApiController
 {
     /**
@@ -24,19 +26,33 @@ class ValidaToken extends ApiController
     {
         try {
             Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+            $xApiKey = $request->header("x-api-key");
+            $corporativo = $request->header("Corporativo");
+            
+            $env = \Dotenv\Dotenv::createArrayBacked(base_path())->load();
+            $corporativoCadena = isset($env[$corporativo]) ? $env[$corporativo] : "sin corporativo";
 
+            /*
+            $empresa_id = explode('_',$corporativoCadena)[0];
+            Log::debug($corporativoCadena);
+            Log::debug($empresa_id);
+
+            if ( !($xApiKey === md5($corporativoCadena) )) {
+            
+                return $this->sendError('Unauthorized.', ['error'=>'Corporativo no Autorizado'], 403);
+            }
+            */
             if(!isset($request->token))
                 return $this->sendError("Error", array("El token es neceserio"), 401);
             
-            Log::debug(print_r(base64_decode($request->token),true));
+            //Log::debug(print_r(base64_decode($request->token),true));
             $tokenDecodificado =  base64_decode($request->token);
             [$id, $token] = explode('|',$tokenDecodificado, 2);
+            
             $personalAccessToken = PersonalAccessToken::findToken($tokenDecodificado);
             Log::debug(print_r("now  ->".Carbon::now()->toDateTimeString(),true));
             Log::debug(print_r("token->". $personalAccessToken->expires_at->toDateTimeString(),true));
 
-            $user = Auth::user(); 
-            Log::debug(print_r($user,true));
 
             if(is_null($personalAccessToken))
                 return $this->sendError("Sin autorizacion, Valida tu registro con el proveedor", array(), 401);
@@ -45,15 +61,25 @@ class ValidaToken extends ApiController
                 return $this->sendError("Sin autorizacion, Token expiro", array(), 401);
 
             
-            
             $tmp = hash('sha256', $token);
-            Log::debug(print_r($tmp,true));
+            
             if (strcmp($tmp, $personalAccessToken->token) !== 0)
                 return $this->sendError("Sin autorizacion, Token alterado", array(), 401);
 
-            Log::debug(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $request['name']= $personalAccessToken->name;
             $request['user_id']= $personalAccessToken->tokenable_id;
+
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $user = User::where("id",$request['user_id'])->firstOrFail() ; 
+            
+            /*
+            if ( $user['empresa_id'] != $empresa_id ) {
+            
+                return $this->sendError('Unauthorized.', ['error'=>'Incongruencia Operativa'], 403);
+            }
+            */
+            $request['empresa_id']=$user['empresa_id'];
             return $next($request);
 
         } catch (\InvalidArgumentException $ex) {

@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'roles' => \App\Http\Middleware\RolesMiddleware::class, //MIDDELWARE DE ROLES
         'validaToken'   => \App\Http\Middleware\ValidaToken::class,
+        'AccesosApi'   => \App\Http\Middleware\AccesosApi::class,
     ];
 }
  

@@ -206,7 +206,7 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::get('rastreoActualizar', 'rastreoActualizarAutomatico')->name("rastreoConsola");
 });
 
-//AMBIENTE DEV
+//AMBIENTE DEV TEMPORAL
 
 Route::name('api.dev.')->group(function () {
     Route::group(['prefix'=>'dev/'], function(){
@@ -287,7 +287,64 @@ Route::middleware(['throttle:10,1','validaToken'])->group(function(){
         });// FIN api.
     });
 });
-    
 
+
+
+//AMBINTE DEV.OPERANDOEXPERTAMENTE.COM
+
+Route::name('api.v1.')->group(function () {
+    Route::group(['prefix'=>'v1/'], function(){
+              
+        Route::group(['prefix'=>'{empresa}'], function(){  
+            Route::post('/login', [AuthController::class, 'login'])->name('login');
+        });
+    
+    });
+});
+
+
+Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
+    Route::name('api.v1.')->group(function () {
+    Route::group(['prefix'=>'v1/'], function(){
+        
+        Route::group(['prefix'=>'empresas/{empresa}'
+            , 'as'=>'empresas.']
+            , function(){
+
+            
+            Route::get('/greeting', function () {
+                                return 'Hello World';
+                            })->name("greeting");
+
+            Route::group(['prefix'=>'ltds/{ltds}/servicios/{servicios}'
+                            ,'as' => 'ltds.servicios' ]
+                        ,function(){
+
+                 Route::controller(CotizacionController::class)->group(function(){
+                    Route::get('cotizaciones', 'cotizaciones')->name('cotizaciones');    
+                });
+
+
+            });       
+            
+            
+            Route::group(['prefix'=>'ltds/{ltds}', 'as'=>'ltds.'], function(){  
+                Route::group(['prefix'=>'servicios/{servicios}', 'as'=>'servicios.'], function(){  
+                
+                    Route::controller(EstafetaController::class)->group(function(){
+                        Route::post('guia', 'creacion')->name("guia");       
+                    });
+                });
+            });
+            
+            
+       
+            
+
+        }); 
+            
+    });    
+    });
+});
 
 

@@ -186,9 +186,10 @@ class EstafetaController extends ApiController
             $data['ltd_id'] = 2;
             $data['esManual']="API";
            
-            $servicio = $request->route()->parameter('servicio');
+            $servicio = $request->route()->parameter('servicios');
+            $ltd = $request->route()->parameter('ltds');
             
-            $nEstafetaCreacion = new nEstafetaCreacion();
+            
             switch ($servicio) {
                 case 'terrestre':
                     $data['servicio_id']=1; 
@@ -206,10 +207,24 @@ class EstafetaController extends ApiController
                     break;
                
             }
-            $nEstafetaCreacion->parseoApi($data);
+
+            $objetoGeneral = null;
+            switch ($ltd) {
+                case "estafeta":
+                    $data['ltd_id']= 2;
+                    $nEstafetaCreacion = new nEstafetaCreacion();
+                    $nEstafetaCreacion->parseoApi($data);
+                    $objetoGeneral = $nEstafetaCreacion;
+                    break;
+                
+                default:
+                    throw ValidationException::withMessages(array("La paquetetria no existe favor de validar"));
+                    break;
+            }
+           
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            return $this->successResponse( $nEstafetaCreacion->getResponse(), $nEstafetaCreacion->getNotices());
+            return $this->successResponse( $objetoGeneral->getResponse(), $objetoGeneral->getNotices());
 
 
         } catch (ValidationException $ex) {
