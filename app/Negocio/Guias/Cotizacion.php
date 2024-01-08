@@ -304,6 +304,9 @@ class Cotizacion {
                         $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
                         ->where('kg_fin', ">=", $request['pesoFacturado'] )
                         ->where('servicio_id', $value);
+
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");
+                        Log::debug(print_r($tablaTmp->get()->toArray(),true));
                         
                         $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
@@ -316,8 +319,8 @@ class Cotizacion {
                             $costoZona = $query->max("costo");
                             
                         }
-
-                        $tablaTmp = $query->where("costo",$costoZona)->get()->toArray();
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__."  costoZona=$costoZona");
+                        $tablaTmp = $query->where("costo","like","%".$costoZona."%")->get()->toArray();
                         foreach ($tablaTmp as $key => $value) {
                             $tablaTmp[$key]['zona'] = "NA";
                         }
