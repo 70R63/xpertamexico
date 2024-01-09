@@ -167,6 +167,7 @@ return [
     	    ,'CM' => '3'
 	        ,'RR' => '3'
 	        ,'CS' => '9'
+            ,'ND' => '3'
         ]
         ,'shipment' => [
             'uri' => env('DHL_URI_SHIPMENT')
