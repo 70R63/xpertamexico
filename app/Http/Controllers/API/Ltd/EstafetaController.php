@@ -187,7 +187,7 @@ class EstafetaController extends ApiController
             $data['esManual']="API";
            
             $servicio = $request->route()->parameter('servicios');
-            $ltd = $request->route()->parameter('ltds');
+            //$ltd = $request->route()->parameter('ltds');
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             switch ($servicio) {
@@ -226,9 +226,9 @@ class EstafetaController extends ApiController
             */
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $data['ltd_id']= 2;
-                    $nEstafetaCreacion = new nEstafetaCreacion();
-                    $nEstafetaCreacion->parseoApi($data);
-                    $objetoGeneral = $nEstafetaCreacion;
+            $nEstafetaCreacion = new nEstafetaCreacion();
+            $nEstafetaCreacion->parseoApi($data);
+            $objetoGeneral = $nEstafetaCreacion;
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return $this->successResponse( $objetoGeneral->getResponse(), $objetoGeneral->getNotices());

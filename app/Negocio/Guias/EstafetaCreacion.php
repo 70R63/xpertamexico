@@ -204,7 +204,6 @@ Class EstafetaCreacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         unset($data['identification']);
-        //unset($data['labelDefinition']);
         unset($data['systemInformation']);
         unset($data['id']);
         unset($data['created_at']);

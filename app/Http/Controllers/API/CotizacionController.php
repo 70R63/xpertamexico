@@ -16,6 +16,7 @@ use App\Models\Cliente;
 
 use App\Negocio\Guias\Cotizacion as nCotizacion;
 use App\Negocio\Guias\EstafetaCreacion as nEstafetaCreacion;
+use App\Negocio\Guias\Creacion as nCreacion;
 
 
 
@@ -131,7 +132,6 @@ class CotizacionController extends BaseController
             switch ($servicio) {
                 case 'terrestre':
                     $data['servicio_id']=1; 
-                    
                     break;
                 case 'diasig':
                     $data['servicio_id']=2;
@@ -155,17 +155,24 @@ class CotizacionController extends BaseController
                     $nEstafetaCreacion->soloCotizacion($data);
                     $objetoGeneral = $nEstafetaCreacion;
                     break;
+                case "fedex":
+                    $data['ltd_id']= 1;
+
+                    $nCreacion = new nCreacion();
+                    $nCreacion->parseoCotizacionApi($data);
+                    $objetoGeneral = $nCreacion;
+                    break;
                 
                 default:
-                    throw ValidationException::withMessages(array("La paquetetria no existe favor de validar"));
+                    throw ValidationException::withMessages(array("La paqueteria no existe favor de validar con el Administrador"));
                     break;
             }
             
-            
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            return $this->successResponse( $objetoGeneral->getCotizaciones()
-                ,$objetoGeneral->getNotices() );
+
+            return $this->successResponse( $objetoGeneral->getResponse()                ,$objetoGeneral->getNotices() );
+            //return $this->successResponse( $objetoGeneral->getCotizaciones()                ,$objetoGeneral->getNotices() );
 
 
         } catch (ValidationException $ex) {
