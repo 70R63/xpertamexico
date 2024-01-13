@@ -194,7 +194,9 @@ class Creacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->cotizacion($data);
-
+            
+        $this->saldo($data);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->fedex = sFedex::getInstance(config('ltd.fedex.id'), $data['empresa_id'], "API", $ambiente);
@@ -220,12 +222,9 @@ class Creacion {
             }
             
         }
+    
         
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
-        $this->saldo($data);
-
-        $this->responseCustom($data);
-        
+        $this->responseCustom();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
@@ -251,17 +250,11 @@ class Creacion {
      * @return $data Se agra informacion segun la necesidad
      */
 
-    public function responseCustom($data){
+    public function responseCustom(){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
         $responseCustom =$this->fedex->getResponse();
         unset($responseCustom->output->transactionShipments[0]->completedShipmentDetail->shipmentRating);
-        
-        $this->response = $responseCustom;
-
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $cotizaciones = $this->resumenCotizacionFedex($data);
-        $this->response->cotizacion=$cotizaciones;
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
@@ -528,7 +521,7 @@ class Creacion {
         Log::debug( print_r($tarifaMostrador,true));
 
         if (count($tarifaMostrador) <1)
-            throw ValidationException::withMessages(array("No Exite Tarifa"));
+            throw new \LogicException("No Exite Tarifa");
 
         $descuentoPorcentaje = 43;
         $fsc = 17;
@@ -722,7 +715,7 @@ class Creacion {
 
 
     /**
-     * Valida la cotizacion de Fedex
+     * Valida la cotizacion 
      * 
      * @author Javier Hernandez
      * @copyright 2022-2023 XpertaMexico
@@ -795,101 +788,20 @@ class Creacion {
             Log::debug($mServicio->nombre);
             unset($value['servicio_id']);
             $value['servicio_nombre'] = $mServicio->nombre;
+            /*
             
+            unset($value['']);
+            unset($value['']);
+            unset($value['']); 
+            unset($value['']);
+            unset($value['']);
+            */
             $this->response[]= $value;
         }
 
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-    }
-
-
-    /**
-     * Actividad para persear la informacion de la solicitud via API
-     * 
-     * @author Javier Hernandez
-     * @copyright 2022-2023 XpertaMexico
-     * @package App\Negocio\Guias
-     * @api
-     * 
-     * @version 1.0.0
-     * 
-     * @since 1.0.0 Primera version de la funcion parseoCotizacionApi
-     * 
-     * @throws
-     *
-     * @param array $data Informacion general de la peticion
-     * 
-     * @var $cotizacion Se usa para generar peticion para validar las cotizaciones
-     * @var $dimensiones  
-     * 
-     * 
-     * @return $data Se agra informacion segun la necesidad
-     */
-
-    public function parseoCotizacionApi($data){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data['requestedPackageLineItems'][]=array();
-        $this->paquete['weight']['value'] = $data['peso'];
-
-        $this->paquete['dimensiones']= array("alto"=>$data['alto']
-                                    ,"ancho"=>$data['ancho']
-                                    ,"largo"=>$data['largo']
-                                );
-        $this->paquete['declaredValue']['amount']= $data['valor_declarado'];  
-        $this->paquete['groupPackageCount']=1; 
-
-        $data = $this->cotizacion($data);
-
-        $this->response = $this->resumenCotizacionFedex($data);
-
-        $this->notices[] ="Exito";
-        $this->notices[]= sprintf("La cotizacion puede cambiar al momento de creacar de la guia");
-        
-
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-    }
-
-
-    /**
-     * Regresa la cotizacon de la solicutd de la guia
-     * 
-     * @author Javier Hernandez
-     * @copyright 2022-2023 XpertaMexico
-     * @package App\Negocio\Guias
-     * 
-     * @version 1.0.0
-     * 
-     * @since 1.0.0 Primera version de la funcion resumenCotizacion
-     * 
-     * @throws
-     *
-     * @param array $data Informacion general de la peticion
-     * 
-     * @var array $resumenCotizacion
-     * @var array $resumen
-     * 
-     * 
-     * @return $data Se agra informacion segun la necesidad
-     */
-
-    public function resumenCotizacionFedex($data){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $resumenCotizacion['costo'] = $data['costo_base'];
-        $resumenCotizacion['kgs_extras'] = $data['sobre_peso_kg'];
-        $resumenCotizacion['costo_kgs_extras'] = $data['costo_kg_extra'];
-        $resumenCotizacion['valor_declarado'] = $data['valor_envio'];
-        $resumenCotizacion['costo_seguro'] = $data['costo_seguro'];
-        $resumenCotizacion['costo_ae'] = $data['costo_extendida'];
-        $resumenCotizacion['sub_total'] = $data['subPrecio'];
-        $resumenCotizacion['total'] = $data['precio'];
-
-        $resumen[] = $resumenCotizacion;
-
-        return $resumen;
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
     }
 
     public function zona($data){

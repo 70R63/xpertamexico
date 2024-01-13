@@ -24,7 +24,11 @@ class LoginController extends ApiController
         $env = \Dotenv\Dotenv::createArrayBacked(base_path())->load();
         $corporativoCadena = isset($env[$corporativo]) ? $env[$corporativo] : "sin corporativo";
         $minutos = $request->minutos;
-        
+
+        $empresa_id = explode('_',$corporativoCadena)[0];
+        Log::debug($corporativoCadena);
+        Log::debug($empresa_id);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         if ( ($minutos > 10080 )) {
             
             return $this->sendError('Time exceeded.', ['error'=>'El valor maximo en minutos es 10080'], 409);
@@ -49,6 +53,12 @@ class LoginController extends ApiController
             
             $user = Auth::user(); 
 
+            Log::debug($user);
+            if ( $user->empresa_id != $empresa_id ) {
+            
+                return $this->sendError('Unauthorized.', ['error'=>'Incongruencia Operativa'], 403);
+            }
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $token = $user->createToken($request->email,array(),Carbon::now()->addMinutes( $minutos ));
 
             $response['token'] = $token->plainTextToken; 
@@ -56,14 +66,15 @@ class LoginController extends ApiController
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
 
-            Log::debug(print_r( $token->accessToken,true));
+            //Log::debug(print_r( $token->accessToken,true));
 
             $response['expires_at'] =  $token->accessToken->expires_at->toDateTimeString();
 
             return $this->successResponse('User successfully logged-in.', $response);
         } 
         else { 
-            return $this->sendError('Unauthorized.', ['error'=>'Unauthorized'], 403);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            return $this->sendError('Unauthorized.', ['error'=>'Usuario o Password invalidos'], 403);
         } 
     }
 
