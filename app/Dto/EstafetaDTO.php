@@ -23,6 +23,9 @@ use Carbon\Carbon;
 #CLASES DE NEGOCIO 
 use App\Models\LtdTipoServicio;
 
+
+use Illuminate\Validation\ValidationException;
+
 /**
  * 
  */
@@ -100,11 +103,22 @@ class EstafetaDTO
      */
 
     public function parser(array $data, $canal = 'API', array $empresas){
-        Log::debug(__CLASS__." ".__FUNCTION__." INICIO");
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO");
 
         $this->ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
             ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
-            ->first();
+            ->where('estatus',1)
+            ->first()
+            
+            ;
+
+        Log::debug(($this->ltdTipoServicio)); 
+
+        if ( !isset($this->ltdTipoServicio->client_id)) {
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            throw ValidationException::withMessages(array("No Existen Servicios, Favor de Validar con el Administrador"));
+        }
+        
         
         $identification = new Identification([
                     'suscriberId' => $this->ltdTipoServicio->client_id 
