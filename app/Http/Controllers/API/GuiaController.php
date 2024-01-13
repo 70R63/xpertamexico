@@ -670,7 +670,7 @@ class GuiaController extends Controller
                     ;
 
         if ($paridad != 2) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." paridad=$paridad");
             $guias->whereRaw(" mod(id,2) = $paridad");
         }
 
