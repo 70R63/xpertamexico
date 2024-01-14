@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Log;
 use Laravel\Sanctum\HasApiTokens;
 use DB;
+use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
@@ -111,16 +112,16 @@ class CotizacionController extends BaseController
 
     public function cotizaciones(Request $request){
         try{
-
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-             $data =$request->all();
+
+            $data =$request->all();
                 if(empty($data))
                     throw ValidationException::withMessages(array("Favor de validar tu body"));
            
             $data['canal'] = "API";
             $data['esManual'] = "API";
             $data['sucursal_id']=0;
-            
+            $data['numero_solicitud'] = Carbon::now()->timestamp;
             
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
           
@@ -146,6 +147,8 @@ class CotizacionController extends BaseController
                
             }
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            //Validar cambio posterior apra evitar esta reasignacion
+            $data['valor_envio']= $data['valor_declarado'];
             Log::info($data);
             $objetoGeneral = null;
             switch ($ltd) {

@@ -247,9 +247,7 @@ Class EstafetaCreacion {
 
     public function soloCotizacion(array $data){
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data['numero_solicitud'] = Carbon::now()->timestamp;
-        Log::debug($data);
-
+        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->ltdTipoServicio($data);
 
@@ -267,6 +265,7 @@ Class EstafetaCreacion {
 
         Log::debug($cotizaciones);
         $this->cotizaciones = $cotizaciones;
+        $this->response = $cotizaciones;
        
         $this->notices[] ="Exito";
         $this->notices[]= sprintf("La cotizacion puede cambiar al momento de creacar de la guia");
@@ -792,9 +791,8 @@ Class EstafetaCreacion {
         $resumenCotizacion['total'] = $data['precio'];
 
         $resumen[] = $resumenCotizacion;
-
-        return $resumen;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return $resumen;
         
     }
 
