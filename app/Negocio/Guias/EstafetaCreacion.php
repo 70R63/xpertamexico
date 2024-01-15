@@ -184,7 +184,7 @@ Class EstafetaCreacion {
         $sEstafeta = new Estafeta($data['empresa_id'], $data["esManual"] ,$data['servicio_id']);
 
         Log::debug(__CLASS__." ".__FUNCTION__." "." sEstafeta -> envio()");
-        $sEstafeta -> envio($data);
+        $sEstafeta -> envio($data, $data['esManual'], $data['formatoImpresion']);
 
 
         $this->response = $sEstafeta->getResultado();
@@ -198,7 +198,9 @@ Class EstafetaCreacion {
         $carbon = Carbon::now();
         $unique = md5( (string)$carbon);
         $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
-        $namePdf = sprintf("%s-%s-%s.pdf",(string)$carbon,$data['empresa_id'],$unique);
+
+        $formatoExtension = ($data['formatoImpresion'] === "FILE_PDF") ? ".pdf" : ".txt" ;   
+        $namePdf = sprintf("%s-%s-%s%s",(string)$carbon,$data['empresa_id'],$unique, $formatoExtension);
         $data['documento'] = $namePdf;
         Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 

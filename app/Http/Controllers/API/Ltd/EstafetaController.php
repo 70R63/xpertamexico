@@ -188,6 +188,7 @@ class EstafetaController extends ApiController
            
             $servicio = $request->route()->parameter('servicios');
             //$ltd = $request->route()->parameter('ltds');
+            $formatoImpresion = $request->route()->parameter('formatoImpresion');
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             switch ($servicio) {
@@ -208,22 +209,22 @@ class EstafetaController extends ApiController
                
             }
 
-            $objetoGeneral = null;
-            
-            /*switch ($ltd) {
-                case "estafeta":
-                    $data['ltd_id']= 2;
-                    $nEstafetaCreacion = new nEstafetaCreacion();
-                    $nEstafetaCreacion->parseoApi($data);
-                    $objetoGeneral = $nEstafetaCreacion;
+
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            switch ($formatoImpresion) {
+                case 'termica':
+                    $data['formatoImpresion']= "FILE_THERMAL_SEQUENCE"; 
                     break;
                 
                 default:
-                    throw ValidationException::withMessages(array("La paquetetria no existe favor de validar"));
+                    $data['formatoImpresion']= "FILE_PDF"; 
                     break;
+               
             }
-           
-            */
+
+            $objetoGeneral = null;
+            
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $data['ltd_id']= 2;
             $nEstafetaCreacion = new nEstafetaCreacion();

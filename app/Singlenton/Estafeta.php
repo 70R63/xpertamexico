@@ -135,7 +135,7 @@ class Estafeta {
      * @return \Illuminate\Http\Response
      */
 
-    public function envio($body,$plataforma= "WEB"){
+    public function envio($body,$plataforma= "WEB", $formatoImpresion = "FILE_PDF"){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO ------------------");
         
         $client = new Client(['base_uri' => $this->baseUri]);
@@ -147,19 +147,23 @@ class Estafeta {
             ,'Accept'    => 'application/json'
             ,'apiKey'   => $this->keyId 
         ];
-	    Log::debug(print_r("Armando Peticion",true));
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." HEADERS");
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
         Log::debug(print_r(json_encode($body),true));
-        $response = $client->request('POST', 'v1/wayBills?outputType=FILE_PDF&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI', [
+
+        
+        $uri = sprintf("v1/wayBills?outputType=%s&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI",$formatoImpresion);
+
+        Log::debug(print_r("Armando Peticion $formatoImpresion",true));
+        $response = $client->request('POST', $uri, [
             'headers'   => $headers
             ,'body'     => json_encode($body)
         ]);
 
+        
         $this->resultado = json_decode($response->getBody()->getContents());
 
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->documento = $this->resultado->data;
 
         Log::debug($this->documento);
