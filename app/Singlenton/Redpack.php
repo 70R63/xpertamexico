@@ -140,10 +140,11 @@ class Redpack {
 
         $response = $this->clienteRest($body, 'POST','redpack/documentation', $headers);
 
-        Log::debug(__CLASS__." ".__FUNCTION__." response ");
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." response ");
         $contenido = json_decode($response->getBody()->getContents());
         
         $objResponse = $contenido[0];
+        Log::debug(print_r($objResponse,true));
 
         $this->trackingNumber = $objResponse->trackingNumber;
         $this->documento = $objResponse->parcels;

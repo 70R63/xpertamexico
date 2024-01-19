@@ -367,7 +367,6 @@ class Guia {
 
  			);
 
-		Log::info(print_r($this->insert,true));
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO ".$canal);
 
 	}

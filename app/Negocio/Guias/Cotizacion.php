@@ -381,14 +381,15 @@ class Cotizacion {
                             ;
 
                     if ($request['pesoFacturado'] >70) {
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." pesoFacturado >70");
                         $maxPrecio = $tarifas->max('precio');
-                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                         Log::debug(print_r($maxPrecio,true));
                         $tarifas = $tarifas->where('precio',$maxPrecio)
                                         ->get()->toArray()
                                         ;
                         
                     } else {
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." pesoFacturado <70");
                         $tarifas = $tarifas->where('kg', $request['pesoFacturado'])
                             ->get()->toArray()
                             ;
