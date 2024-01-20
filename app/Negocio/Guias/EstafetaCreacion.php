@@ -180,11 +180,12 @@ Class EstafetaCreacion {
         $data['labelDefinition']['serviceConfiguration']['quantityOfLabels'] = 1;
         $data['contenido'] = $data['labelDefinition']['wayBillDocument']['content'];
 
-        Log::debug("Se intancia el Singlento Estafeta");
-        $sEstafeta = new Estafeta($data['empresa_id'], $data["esManual"] ,$data['servicio_id']);
+	Log::debug("Se intancia el Singlento Estafeta");
+	$tipo = 1;
+        $sEstafeta = new Estafeta($data['empresa_id'], $data["esManual"] ,$tipo);
 
         Log::debug(__CLASS__." ".__FUNCTION__." "." sEstafeta -> envio()");
-        $sEstafeta -> envio($data, $data['esManual'], $data['formatoImpresion']);
+        $sEstafeta -> envio($data);
 
 
         $this->response = $sEstafeta->getResultado();
@@ -249,7 +250,9 @@ Class EstafetaCreacion {
 
     public function soloCotizacion(array $data){
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
+        $data['numero_solicitud'] = Carbon::now()->timestamp;
+        Log::debug($data);
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->ltdTipoServicio($data);
 

@@ -658,9 +658,10 @@ class GuiaController extends Controller
 
         $guias = GuiaAPI::select('id','ltd_id', 'tracking_number')
                     ->where('ltd_id',$ltdId)            
-                    ->whereNotIn('rastreo_estatus',array(4,7))
-                    ->where('created_at', '>', now()->subDays(90)->endOfDay())
-                    ->where('created_at', '<', now()->subDays(2)->endOfDay())
+		    ->whereNotIn('rastreo_estatus',array(4,7))
+		    ->whereNotIn('empresa_id',array(307))
+		    ->where('created_at', '>', now()->subDays(90)->endOfDay())
+		    ->where('created_at', '<', now()->subDays(2)->endOfDay())
                     //->offset(0)->limit(10)
                     ->orderBy('id', 'DESC')
                     
