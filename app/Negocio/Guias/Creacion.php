@@ -256,6 +256,7 @@ class Creacion {
         $responseCustom =$this->fedex->getResponse();
         unset($responseCustom->output->transactionShipments[0]->completedShipmentDetail->shipmentRating);
         
+        $this->response=$responseCustom;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 

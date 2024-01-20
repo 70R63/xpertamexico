@@ -633,14 +633,17 @@ class FedexController extends ApiController
             $servicio = $request->route()->parameter('servicios');
             switch ($servicio) {
                 case 'terrestre':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $data['requestedShipment']['serviceType'] = 'FEDEX_EXPRESS_SAVER';
                     $data['servicio_id'] = 1;   
                     break;
                 case 'diasig':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $data['requestedShipment']['serviceType'] = 'STANDARD_OVERNIGHT';
                     $data['servicio_id'] = 2;
                     break;
                 case '2dias':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $data['servicio_id']=3;
                 break;
                 
