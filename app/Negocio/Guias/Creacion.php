@@ -256,6 +256,7 @@ class Creacion {
         $responseCustom =$this->fedex->getResponse();
         unset($responseCustom->output->transactionShipments[0]->completedShipmentDetail->shipmentRating);
         
+        $this->response=$responseCustom;
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }
 
@@ -714,6 +715,8 @@ class Creacion {
      */
 
 
+
+
     /**
      * Valida la cotizacion 
      * 
@@ -724,7 +727,7 @@ class Creacion {
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion cotizacion
+     * @since 1.0.0 Primera version de la funcion cotizadorPorServicio
      * 
      * @throws
      *
@@ -788,20 +791,129 @@ class Creacion {
             Log::debug($mServicio->nombre);
             unset($value['servicio_id']);
             $value['servicio_nombre'] = $mServicio->nombre;
-            /*
             
-            unset($value['']);
-            unset($value['']);
-            unset($value['']); 
-            unset($value['']);
-            unset($value['']);
-            */
             $this->response[]= $value;
         }
 
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
+    }
+
+
+    /**
+     * Valida la cotizacion de Fedex
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion soloCotizacion
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var $cotizacion Se usa para generar peticion para validar las cotizaciones
+     * @var $dimensiones  
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function soloCotizacion($data, $servicio){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        $this->paquete['weight']['value']= $data['peso'];
+        $this->paquete['dimensiones']['alto'] =  $data['alto'];
+        $this->paquete['dimensiones']['ancho'] =  $data['ancho'];
+        $this->paquete['dimensiones']['largo'] =  $data['largo'];
+        $this->paquete['declaredValue']['amount']= $data['valor_declarado'];
+
+        $this->paquete['groupPackageCount'] = 1;
+        $response = array();
+        
+        switch ($servicio) {
+            
+            case 'terrestre':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $data['servicio_id']=1;
+                $response[] = $this->cotizacion($data);
+                break;
+            case 'diasig':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $data['servicio_id']=2;
+                $response[] = $this->cotizacion($data);
+                break;
+
+            default:
+                throw ValidationException::withMessages(array("Servicio no contrado o erroneo, favor de validar con tu administrador"));
+                break;
+        }
+
+       
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);       
+        foreach ($response as $key => $value) {
+            Log::debug( print_r($value,true) );   
+            
+            $mServicio = Servicio::where("id",$data['servicio_id'])
+                ->firstOrFail();
+
+            Log::debug($mServicio->nombre);
+            unset($value['servicio_id']);
+            $value['servicio_nombre'] = $mServicio->nombre;
+
+            $this->response= $this->resumenCotizacion($value);
+
+            $this->notices[] ="Exito";
+            $this->notices[]= sprintf("La cotizacion puede cambiar al momento de creacar de la guia");
+        }
+
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+    }
+
+    /**
+     * Regresa la cotizacon de la solicutd de la guia
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion resumenCotizacion
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $resumenCotizacion
+     * @var array $resumen
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    private function resumenCotizacion($data){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $resumenCotizacion['costo'] = $data['costo_base'];
+        $resumenCotizacion['kgs_extras'] = $data['sobre_peso_kg'];
+        $resumenCotizacion['costo_kgs_extras'] = $data['costo_kg_extra'];
+        $resumenCotizacion['valor_declarado'] = $data['valor_declarado'];
+        $resumenCotizacion['costo_seguro'] = $data['costo_seguro'];
+        $resumenCotizacion['costo_ae'] = $data['costo_extendida'];
+        $resumenCotizacion['sub_total'] = $data['subPrecio'];
+        $resumenCotizacion['total'] = $data['precio'];
+
+        $resumen[] = $resumenCotizacion;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return $resumen;
+        
     }
 
     public function zona($data){

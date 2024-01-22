@@ -153,16 +153,19 @@ class CotizacionController extends BaseController
             $objetoGeneral = null;
             switch ($ltd) {
                 case "estafeta":
+                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." $ltd");
                     $data['ltd_id']= 2;
                     $nEstafetaCreacion = new nEstafetaCreacion();
                     $nEstafetaCreacion->soloCotizacion($data);
                     $objetoGeneral = $nEstafetaCreacion;
                     break;
                 case "fedex":
+                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." $ltd");
                     $data['ltd_id']= 1;
 
                     $nCreacion = new nCreacion();
-                    $nCreacion->parseoCotizacionApi($data);
+                    //$nCreacion->cotizadorPorServicio($data, $servicio);
+                    $nCreacion->soloCotizacion($data, $servicio);
                     $objetoGeneral = $nCreacion;
                     break;
                 
@@ -175,8 +178,6 @@ class CotizacionController extends BaseController
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
             return $this->successResponse( $objetoGeneral->getResponse()                ,$objetoGeneral->getNotices() );
-            //return $this->successResponse( $objetoGeneral->getCotizaciones()                ,$objetoGeneral->getNotices() );
-
 
         } catch (ValidationException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__.__LINE__." ValidationException");

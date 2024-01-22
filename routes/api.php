@@ -317,7 +317,7 @@ Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
                             })->name("greeting");
 
             Route::group(['prefix'=>'ltds/{ltds}/servicios/{servicios}'
-                            ,'as' => 'ltds.servicios' ]
+                            ,'as' => 'ltds.servicios.' ]
                         ,function(){
 
                  Route::controller(CotizacionController::class)->group(function(){
@@ -330,11 +330,7 @@ Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
             
             Route::group(['prefix'=>'ltds/estafeta', 'as'=>'ltds.estafeta.'], function(){  
                 Route::group(['prefix'=>'servicios/{servicios}', 'as'=>'servicios.'], function(){  
-                /*
-                    Route::controller(EstafetaController::class)->group(function(){
-                        //Route::post('guia', 'creacion')->name("guia");       
-                    });
-                */
+                
                     Route::controller(EstafetaController::class)->group(function(){
                         Route::post('guia/{formatoImpresion?}', 'creacion')->name("guia");       
                     });
@@ -346,7 +342,9 @@ Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
                 Route::group(['prefix'=>'servicios/{servicios}', 'as'=>'servicios.'], function(){  
                 
                     Route::controller(FedexController::class)->group(function(){
-                        Route::post('guia', 'creacion')->name("guia");       
+                        Route::post('guia/{formatoImpresion?}', 'creacion')->name("guias");
+                                     
+                            
                     });
                 });
             });

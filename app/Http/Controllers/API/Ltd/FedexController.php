@@ -520,7 +520,7 @@ class FedexController extends ApiController
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion cotizacionDEV
+     * @since 1.0.0 Primera version de la funcion cotizacion
      * 
      * @throws
      *
@@ -550,7 +550,7 @@ class FedexController extends ApiController
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
-            return $this->successResponse( $nCreacion->getResponse(), "Exito");
+            return $this->successResponse( $nCreacion->getResponse(), $nCreacion->getNotices());
 
         } catch (ValidationException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__.__LINE__." ValidationException");
@@ -633,14 +633,17 @@ class FedexController extends ApiController
             $servicio = $request->route()->parameter('servicios');
             switch ($servicio) {
                 case 'terrestre':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $data['requestedShipment']['serviceType'] = 'FEDEX_EXPRESS_SAVER';
                     $data['servicio_id'] = 1;   
                     break;
                 case 'diasig':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $data['requestedShipment']['serviceType'] = 'STANDARD_OVERNIGHT';
                     $data['servicio_id'] = 2;
                     break;
                 case '2dias':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     $data['servicio_id']=3;
                 break;
                 
