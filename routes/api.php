@@ -317,7 +317,7 @@ Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
                             })->name("greeting");
 
             Route::group(['prefix'=>'ltds/{ltds}/servicios/{servicios}'
-                            ,'as' => 'ltds.servicios' ]
+                            ,'as' => 'ltds.servicios.' ]
                         ,function(){
 
                  Route::controller(CotizacionController::class)->group(function(){
@@ -342,7 +342,9 @@ Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
                 Route::group(['prefix'=>'servicios/{servicios}', 'as'=>'servicios.'], function(){  
                 
                     Route::controller(FedexController::class)->group(function(){
-                        Route::post('guias/{formatoImpresion?}', 'creacion')->name("guias");       
+                        Route::post('guia/{formatoImpresion?}', 'creacion')->name("guias");
+                                     
+                            
                     });
                 });
             });
