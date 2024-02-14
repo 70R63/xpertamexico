@@ -1,8 +1,8 @@
 import './bootstrap';
 
 import route from 'ziggy';
-import { Ziggy } from './ziggy';
-import ziggy from './resources/js/app.js';
+import { ZiggyVue } from './ziggy';
+.use(ZiggyVue, Ziggy)
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
