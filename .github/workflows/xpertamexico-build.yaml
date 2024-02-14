@@ -55,7 +55,9 @@ jobs:
 #        env:
 #          MY_ENV_VAR: value-for-my-env-var
 #          MY_SECRET_ENV_VAR: ${{ secrets.MY_SECRET }} # here you can find information how to create secrets: https://docs.github.com/en/actions/security-guides/encrypted-secrets
-        run: php artisan key:generate --force -n
+        run: |
+          php artisan key:generate --force -n
+          npm install && npm run build
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -76,7 +78,7 @@ jobs:
         with:
           api-key: ${{ secrets.IONOS_API_KEY }}
           service-host: api-us.ionos.space
-          project-id: 2534a111-0c86-429d-84e1-168c6f11ae37
+          project-id: 4513a8cc-d21c-4360-8114-fc4b100577d9
           branch-id: ${{ inputs.branch-id }}
           version: ${{ github.sha }}
           folder: ${{ env.DEPLOYMENT_FOLDER }}
