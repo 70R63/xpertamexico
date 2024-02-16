@@ -499,6 +499,7 @@ class Guia {
 		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ----");
 
 		$remitente = $request['labelDefinition']['location']['origin'];
+		Log::debug( print_r($remitente,true));
 		$direccion2 = isset($remitente['address']['addressReference']) ? $remitente['address']['addressReference'] : "";
 		$noInt= isset($remitente['address']['indoorInformation']) ? $remitente['address']['indoorInformation'] : "" ;
 
@@ -512,8 +513,8 @@ class Guia {
 					'no_ext' => $remitente['address']['externalNum'],
 					'no_int' => $noInt,
 					'empresa_id' => $empresa_id
-					,'ciudad'	=> $remitente['address']['ciudad']
-					,'entidad_federativa'=> $remitente['address']['entidad']
+					,'ciudad'	=> $remitente['address']['settlementName']
+					,'entidad_federativa'=> $remitente['address']['settlementTypeAbbName']
 				);
 		$tmp[0] = Sucursal::create($insertValue)->id;
 		Log::debug(print_r($tmp,true));
@@ -615,8 +616,8 @@ class Guia {
 					'no_ext' => $destinatario['address']['externalNum'],
 					'no_int' => $noInt,
 					'empresa_id' => $empresa_id
-					,'ciudad'	=> $destinatario['address']['ciudad']
-					,'entidad_federativa'=> $destinatario['address']['entidad']
+					,'ciudad'	=> $destinatario['address']['settlementName']
+					,'entidad_federativa'=> $destinatario['address']['settlementTypeAbbName']
 				);
 		$tmp[0] = Cliente::create($insertValue)->id;
 		Log::debug(print_r($tmp,true));

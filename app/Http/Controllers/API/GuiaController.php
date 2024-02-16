@@ -131,7 +131,8 @@ class GuiaController extends Controller
             "version"=>"1.10.20");
 
         $serviceIdLtd=$data['labelDefinition']['serviceConfiguration']['serviceTypeId'];
-        $ltdTipoServicio = LtdTipoServicio::where("empresa_id", $data['empresa_id'])
+        try {
+            $ltdTipoServicio = LtdTipoServicio::where("empresa_id", $data['empresa_id'])
                         ->where("ltd_id", $data['ltd_id'])
                         ->where("service_id_ltd",$serviceIdLtd)
                         ->firstOrFail()
@@ -146,7 +147,7 @@ class GuiaController extends Controller
         );
 
         $salesOrganization = $ltdTipoServicio['sales_organization'];
-        try {
+        
 
             
             if(empty($data))
