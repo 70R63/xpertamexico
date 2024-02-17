@@ -62,3 +62,27 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## SANCTUM
+
+
+Installar desde composer require laravel/sanctum o usar compuser update
+
+Para publicar el vendor 
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+Optimizar y Migrar
+php artisan migrate
+php artisan optimize
+
+
+## SEEDERS DE USUARIOS Y ROLES
+
+
+Para crear el usuario administador ejecutar los siguientes commandos.
+
+
+php artisan db:seed --class=rolesPermisosSeeder
+php artisan db:seed --class=createRolesSeeder
+
+
