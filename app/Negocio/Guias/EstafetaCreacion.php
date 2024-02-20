@@ -249,7 +249,9 @@ Class EstafetaCreacion {
 
     public function soloCotizacion(array $data){
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
+        $data['numero_solicitud'] = Carbon::now()->timestamp;
+        Log::debug($data);
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->ltdTipoServicio($data);
 

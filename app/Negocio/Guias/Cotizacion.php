@@ -86,7 +86,7 @@ class Cotizacion {
                             ->where("empresa_id", $empresa_id)
                             ->distinct()->get()->pluck('servicio_id')->toArray();
         
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $canal");
             
             if ($canal === "API") {
                 $query = TarifaApi::base($empresa_id, $request['cp_d'], $ltdId);

@@ -63,7 +63,7 @@ class Tarifa extends Model
             $query = $query->groupBy('tarifas.id');
         }
 
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         //1 indica que puede enviar en todas los servicios de las tarifas
         $prioridad = 1;
         //LTD 2= estafeta
