@@ -68,7 +68,7 @@ class Estafeta {
             $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
 
-            
+            Log::debug( Config('ltd.estafeta.token_uri') );
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." formParams");
             Log::debug(print_r($formParams,true));
 
@@ -78,6 +78,7 @@ class Estafeta {
             );
 
             if ($response->getStatusCode() == "200"){
+                Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." StatusCode 200");
                 $json = json_decode($response->getBody()->getContents());
 
                 $this->token = $json->access_token;
@@ -92,6 +93,8 @@ class Estafeta {
                 Log::debug(print_r($insert,true));
                 $id = LtdSesion::create($insert)->id;
                 Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
+            } else {
+                Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." ");
             }
             
         }
@@ -107,6 +110,7 @@ class Estafeta {
 
     private function clienteRest(array $body,$metodo = 'GET', string $baseUri, $servicio, int $servicioID=1){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        Log::debug($baseUri);
         $client = new Client(['base_uri' => $baseUri]);
         $authorization = sprintf("Bearer %s",$this->token);
 
@@ -117,6 +121,7 @@ class Estafeta {
                     ,'apiKey'   => $apiKey
                 ];
 
+        Log::debug($headers);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Body ");
         $bodyJson = json_encode($body);
         Log::debug(print_r($bodyJson,true));
@@ -152,7 +157,7 @@ class Estafeta {
         Log::debug(print_r(json_encode($body),true));
 
         
-        $uri = sprintf("v1/wayBills?outputType=%s&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI",$formatoImpresion);
+        $uri = sprintf("%sv1/wayBills?outputType=%s&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI",$this->baseUri,$formatoImpresion);
 
         Log::debug(print_r("Armando Peticion $formatoImpresion",true));
         $response = $client->request('POST', $uri, [
@@ -189,10 +194,11 @@ class Estafeta {
                     , 'alto' => 0
                 );
 
+
         $body = array (
-          'suscriberId' => Config('ltd.estafeta.rastreo.suscriberId'),
-          'login' => Config('ltd.estafeta.rastreo.login'),
-          'password' => Config('ltd.estafeta.rastreo.pswd'),
+          'suscriberId' => $this->clientID,
+          'login' => $this->user,
+          'password' => $this->passwd,
           'searchType' => array (
             'type' => 'L',
             'waybillList' => array (
@@ -219,10 +225,13 @@ class Estafeta {
           ),
         );
 
+        Log::debug(json_encode($body));
+
         $response = $this->clienteRest($body, 'POST',Config('ltd.estafeta.rastreo.base_uri'),Config('ltd.estafeta.rastreo.servicio'), 2);
 
     
         $tmp = $response->getBody()->getContents();
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Response");
         Log::debug(print_r($tmp,true));
         $contenido = json_decode($tmp);
         $response = $contenido->ExecuteQueryResponse->ExecuteQueryResult->trackingData;
@@ -274,6 +283,7 @@ class Estafeta {
             $this->pickupFecha = Carbon::parse($trackingData->pickupData->pickupDateTime)->format('Y-m-d H:i:s');
 
             $this->exiteSeguimiento = true;
+            $this->resultado = $response;
         }else{
             Log::debug("Sin tracking");
             $this->exiteSeguimiento = false;   
@@ -304,11 +314,15 @@ class Estafeta {
 
         $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
         
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." EmpresaEmpresas");
+        Log::debug(print_r($empresas,true));
 
         $ltdCredencial = LtdCredencial::where('ltd_id',2)
                                 ->whereIn('empresa_id',$empresas);
 
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LtdCredencial");
+        Log::debug(print_r($ltdCredencial->get()->toArray(),true));
+                     
         if ($recursoId === 1) {
             Log::info(__CLASS__." ".__FUNCTION__." Token para etiquetas");
             $credenciales = $ltdCredencial->where('recurso','LABEL')->get()->toArray();
@@ -329,10 +343,13 @@ class Estafeta {
         }
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." asignar credenciales");
+        Log::debug( print_r($credenciales,true));
         $this->keyId = $credenciales[0]['key_id'];
         $this->secret = $credenciales[0]['secret'];
         $this->clientID = $credenciales[0]['client_id'];
         $this->customerNumber = $credenciales[0]['customer_number'];
+        $this->user = $credenciales[0]['user'];
+        $this->passwd = $credenciales[0]['passwd'];
 
 
 

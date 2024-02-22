@@ -1,6 +1,6 @@
 <div class="col-sm-5">
 	    <div>
-	        <span class="tx-18 mb-5">DESTINO</span> 
+	        <span class="tx-18 mb-5">DESTINO 1</span> 
 	    </div>
 	</div>
 <div class="checkManualHtml">
@@ -10,7 +10,7 @@
 			<span class="input-group-text" id="basic-addon1"> Nombre<span class="tx-danger">*</span></span>
 		</div>
 		{!! Form::select('cliente'
-			, $cliente
+			, array()
 			,'MEX'
 			,['class' 		=> 'form-control select2 cotizacionSemi'
 				,'placeholder'	=> 'Seleccionar'

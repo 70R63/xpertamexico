@@ -21,18 +21,19 @@ class RolesMiddleware
     public function handle(Request $request, Closure $next,...$roles)
     {
 
-     if(auth()->user() == null){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
-        return redirect('login');
-     }else {
-         foreach($roles as $rol){
-            
-            if(auth()->user()->hasRol($rol)){
-                return $next($request);
-            }       
+         if(auth()->user() == null){
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            return redirect('login');
+         }else {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+             foreach($roles as $rol){
+                
+                if(auth()->user()->hasRol($rol)){
+                    return $next($request);
+                }       
+            }
+            return redirect(RouteServiceProvider::HOME);
         }
-    return redirect(RouteServiceProvider::HOME);
-    }
     }
 
     

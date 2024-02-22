@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\ApiController;
+use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Sucursal;
+use App\Models\API\Sucursal as SucursalApi;
+use App\Models\API\Cliente as ClienteApi;
 
 use Log;
 
@@ -21,12 +24,31 @@ class DireccionController extends ApiController
         Log::debug($tipo);
 
         try {
-            if($tipo === "destinatario"){
-                $tabla = Cliente::get()->toArray();    
-            }else{
-                $tabla = Sucursal::get()->toArray();
+
+            switch ($tipo) {
+                case 'destinatario':
+                    //Destino
+                    $tabla = Cliente::get()->toArray();
+                    break;
+
+                case 'remitente':
+                    //Origen
+                    $tabla = Sucursal::get()->toArray();
+                    break;
+                
+                default:
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                    $sucursal = SucursalApi::where('id',$tipo)
+                            ->get()->toArray();
+
+                    $tabla = ClienteApi::where('empresa_id',$sucursal[0]['empresa_id'])
+                        ->orderBy('nombre')
+                        ->get()->toArray();
+                    Log::debug(print_r($tabla,true));
+                    // code...
+                    break;
             }
-            
+
 
             $success['mensaje'] = "Asignacion exitosa";
 

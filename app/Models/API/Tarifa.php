@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\API;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,13 +31,6 @@ class Tarifa extends Model
         static::addGlobalScope('status', function (Builder $builder) {
             $builder->where('tarifas.estatus', '1');
 
-            $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
-
-
-            $empresas = EmpresaEmpresas::where('id',$empresaId)
-                ->pluck('empresa_id')->toArray();
-            $builder->whereIN('tarifas.empresa_id',$empresas);
-
         });
     }
 
@@ -63,7 +56,7 @@ class Tarifa extends Model
             $query = $query->groupBy('tarifas.id');
         }
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
         //1 indica que puede enviar en todas los servicios de las tarifas
         $prioridad = 1;
         //LTD 2= estafeta

@@ -73019,3 +73019,14 @@ body.horizontalmenu {
 
 /* ###### ie css ###### */
 /*# sourceMappingURL=style.css.map */
+
+.flex-container {
+  display: flex;
+  /* background-color: DodgerBlue;*/
+}
+
+.flex-container > b {
+  background-color: #white;
+  justify-content:flex-end;
+  
+}
