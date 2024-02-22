@@ -179,10 +179,16 @@
                         <div class="input-group">
                             @include("dashboard.header")
 
-                            
                         </div>
+
                     </div>
-                    
+                    <div class="main-header-right">
+
+                        @canany(['isUsuario','isCliente'])
+                            <span class="badge badge-danger badge-pill tx-18">-$1000</span>                            
+                        @endcanany
+                        
+                    </div>
                     <div class="main-header-right">
                         
                         @include('perfil.index')

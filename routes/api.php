@@ -144,7 +144,7 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
         });
 
         Route::controller(DireccionController::class)->prefix('direccion')->group(function(){
-            Route::get('{cliente}', 'index');
+            Route::get('{cliente}', 'index')->name('direcciones.tipo');
            
         });
 
