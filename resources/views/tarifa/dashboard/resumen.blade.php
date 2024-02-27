@@ -2,7 +2,7 @@
 	<table id="exportGeneral" class="table table-striped table-bordered text-nowrap" >
 		<thead>
 			<tr>
-				
+				<th>EMPRESA_ID</th>
 				<th>CLIENTE</th>
 				<th>MENSAJERIA</th>
 				<th>SERVICIO</th>
@@ -16,7 +16,7 @@
 
 			@foreach( $tabla  as $objeto)
 				<tr>
-				
+					<td>{{ $objeto->empresa_id }}</td>
 					<td>
 						<a href=" {{ route('tarifas.show', $objeto->empresa_id) }} " class="text-dark tx-16 ">
 							
@@ -36,7 +36,7 @@
 		</tbody>
 		<tfoot>
 		    <tr>
-		      <td colspan="5">Los datos son responsabilidad del cliente</td>
+		      <td colspan="6">Los datos son responsabilidad del cliente</td>
 		    </tr>
 		</tfoot>
 		

@@ -111,11 +111,12 @@ class Tarifas {
     public function resumenPorCorporativos(){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
-        $tabla = mTarifa::select( DB::raw('count(1) as totalTarifas'),DB::raw('max(costo) as costo_max'),DB::raw('min(costo) as costo_min'), "ltds_id" , "empresa_id", "servicio_id")
+        $tabla = mTarifa::select('empresa_id', DB::raw('count(1) as totalTarifas'),DB::raw('max(costo) as costo_max'),DB::raw('min(costo) as costo_min'), "ltds_id" , "empresa_id", "servicio_id")
         		->where('estatus',1)
         		->groupBy('empresa_id')
         		->groupBy('ltds_id')
         		->groupBy('servicio_id')
+        		->orderBy('empresa_id', 'asc')
         		->get();
 
         $pluckLtd = Ltd::where('estatus',1)
