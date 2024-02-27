@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div>
-                        <a href="{{ route('tarifas.index') }}" class="btn badge-dark" >Cancelar</a>
+                        <a href="{{ url()->previous() }}" class="btn badge-dark" >Cancelar</a>
                         <button type="submit" class="btn btn-primary ml-3" >Guardar</button>
                     </div>
                 </div>
