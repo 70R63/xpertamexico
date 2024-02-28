@@ -103,7 +103,8 @@ class ReportesController extends ApiController
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $mensaje = "ok";
-           
+            header('Content-Type: application/csv');
+//header('Content-Disposition: attachment; filename='.$filename);
             return $this->successResponse(array(), $mensaje);    
 
         } catch (\InvalidArgumentException $ex) {

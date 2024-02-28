@@ -184,9 +184,7 @@
                     </div>
                     <div class="main-header-right">
 
-                        @canany(['isUsuario','isCliente'])
-                            <span class="badge badge-danger badge-pill tx-18">-$1000</span>                            
-                        @endcanany
+                        @include("dashboard.header_saldo")
                         
                     </div>
                     <div class="main-header-right">
@@ -344,8 +342,14 @@
         <script src="{{ asset('js/direcciones.js') }}" ></script>
         <script src="{{ asset('js/reportesVentas.js') }}" ></script>
         <script src="{{ asset('js/reportes/repesajes.js') }}" ></script>
-        <script src="{{ asset('js/saldos/pagos.js') }}" ></script>
         <script src="{{ asset('js/reportes/pagos.js') }}" ></script>
+        <script src="{{ asset('js/saldos/pagos.js') }}" ></script>
+        @routes
+        <script src="{{ asset('js/saldos/saldos.js') }}" ></script>
+        
+
+        
+        
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
 @yield('js_user_page')
