@@ -22,7 +22,7 @@ class CreateRolesPermisosTable extends Migration
 
         Artisan::call('db:seed', [
             '--class' => 'rolesPermisosSeeder',
-            '--force' => true 
+            '--force' => true
         ]);
 
     }
