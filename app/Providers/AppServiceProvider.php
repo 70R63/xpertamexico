@@ -26,3 +26,14 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 }
+use Illuminate\Support\Facades\Schema;
+
+/**
+ * Bootstrap any application services.
+ *
+ * @return void
+ */
+
+{
+    Schema::defaultStringLength(191);
+}
