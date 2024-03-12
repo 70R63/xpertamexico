@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::resource('profile','userProfileController');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard.index');
 })->middleware(['auth'])->name('dashboard');
 
 /*
