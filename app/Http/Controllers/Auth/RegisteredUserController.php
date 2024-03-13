@@ -8,7 +8,7 @@ use App\Models\CatalogoElemento;
 use App\Models\Roles\Roles;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use App\Services\DomicilioService;
+//use App\Services\DomicilioService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +20,7 @@ class RegisteredUserController extends Controller
     protected $domicilio;
     public function __construct()
     {
-        $this->domicilio = new DomicilioService();
+        //$this->domicilio = new DomicilioService();
     }
 
     /**
