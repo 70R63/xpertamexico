@@ -6,7 +6,8 @@ use App\Http\Requests\StoreEmpresaRequest;
 use App\Http\Requests\UpdateEmpresaRequest;
 use App\Models\Empresa;
 use App\Models\EmpresaEmpresas;
-use App\Models\Ltd;
+use App\Models\Cfg_ltd;
+use App\Models\Ltd; //validar para quoitar
 use App\Models\EmpresaLtd;
 use App\Models\Saldos\TipoPagos;
 use App\Models\PlazoCreditos;
@@ -32,7 +33,7 @@ class EmpresaController extends Controller
     public function index()
     {
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             
             $tabla = Empresa::get();
             $empresaLtd = EmpresaLtd::get()->toArray();
@@ -43,10 +44,10 @@ class EmpresaController extends Controller
                 $ltdActivo[ $value['empresa_id'] ] [$value['ltd_id']]['tarifa_clasificacion']= $value['tarifa_clasificacion'];
 
             }
-            //Log::debug(print_r($ltdActivo,true));
+
             
-            $ltds = Ltd::get();             
-            
+            $ltds = Cfg_ltd::get();             
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return view(self::DASH_v 
                     ,compact("tabla","ltds", "ltdActivo")
                 );

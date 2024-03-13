@@ -8,12 +8,16 @@ use App\Models\CatalogoElemento;
 use App\Models\Roles\Roles;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-//use App\Services\DomicilioService;
+use App\Services\DomicilioService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+
+use App\Negocio\Empresas\Empresas as nEmpresas; 
+
+use Log;
 
 class RegisteredUserController extends Controller
 {
@@ -63,25 +67,37 @@ class RegisteredUserController extends Controller
             'selfie' => ['required','image','max:5120'],
         ]);
 
+        $data = $request->all();
+        Log::debug( print_r($data));
+        $nEmpresa = new nEmpresas();
+        $nEmpresa->crear($data);
+
         $user = User::create([
             'name' => $request->name,
             'apellido_paterno' => $request->apellido_paterno,
-            'apellido_materno' => @$request->apellido_materno,
+            'apellido_materno' => $request->apellido_materno,
             'rfc' => $request->rfc,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'empresa_id' => $nEmpresa->getEmpresaId()
         ]);
 
         $rolCliente = Roles::whereSlug('cliente')->first();
         $user->roles()->sync([ $rolCliente->id ]);
-        $this->domicilio->guardarDomicilio($request,$user);
+        //$this->domicilio->guardarDomicilio($request,$user);
 
         foreach ($request->allFiles() as $k=>$file){
             $file->store('documentos/'.$user->id.'/'.$k);
         }
 
+
         event(new Registered($user));
         Auth::login($user);
+
+        Log::info( print_r(auth()->user()->empresa_id,true));
+
+
+        
         return redirect(RouteServiceProvider::HOME)->with('success',["Te has registrado correctamente. Te notificaremos por email cuando tu información sea validada."]);
     }
 }

@@ -353,7 +353,7 @@
         // SDK MercadoPago.js
         <script src="https://sdk.mercadopago.com/js/v2"></script>
         <script type="text/javascript">
-            const mp = new MercadoPago('TEST-d306e10e-dff9-4f88-b66b-235a51178e95');
+            const mp = new MercadoPago('TEST-21790bfd-c517-494f-a444-ef70f555a49b');
             const bricksBuilder = mp.bricks();
 
         </script>
@@ -361,7 +361,8 @@
             mp.bricks().create("wallet", "wallet_container", {
                initialization: {
                    //preferenceId: "150057237-7d260728-3417-423b-aea8-5c9606097842",
-                    preferenceId: "150057237-ff55b2da-f9fc-4c77-b883-d88de6ef5fb4",
+                    preferenceId: "1717901241-0a0511d0-90a9-47e3-bfc4-d5ffb6b25a1e",
+                    redirectMode: "blank"
                },
             customization: {
              texts: {
