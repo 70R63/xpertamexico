@@ -143,7 +143,7 @@ function fechaTentativa(row){
 
 
 function obtenerCP(id, modelo) {
-
+    console.log("cargadnp obtenerCP");
     $.ajax({
         /* Usar el route  */
         url: "api/cp",
@@ -567,7 +567,7 @@ function direccionesPorEmpresa(idSucursa){
             console.log(response.data);
            
             $('#cliente').empty();
-            
+            $("#cliente").append('<option selector="0" value="0"> Selecciona</option>');
             $.each(response.data,function(key, empresa) {
                 $("#cliente").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
               });   

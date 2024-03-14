@@ -5,8 +5,8 @@
                 <th>AJUSTE ID </th>
                 <th>FECHA CREACION </th>
                 <th>GUIA ID </th>
-                <th>USUARIO XPERTA </th>  
-                <th>CLIENTE XPERTA </th>  
+                <th>USUARIO  </th>  
+                <th>CLIENTE  </th>  
                 <th>FACTURA </th>
                 <th>FECHA FACTURA </th>
                 <th>IMPORTE </th>
@@ -60,8 +60,8 @@
                 <th>AJUSTE ID </th>
                 <th>FECHA CREACION </th>
                 <th>GUIA ID </th>
-                <th>USUARIO XPERTA </th>  
-                <th>CLIENTE XPERTA </th>  
+                <th>USUARIO  </th>  
+                <th>CLIENTE  </th>  
                 <th>FACTURA </th>
                 <th>FECHA DEPOSITO </th>
                 <th>IMPORTE </th>

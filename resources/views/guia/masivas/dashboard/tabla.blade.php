@@ -6,7 +6,7 @@
                 <th class='notexport'>ARCHIVO RESUMEN </th>
                 <th class='notexport'>ZIP PDFS</th>
                 <th>FECHA CREACION </th>
-                <th>USUARIO XPERTA </th>  
+                <th>USUARIO </th>  
                 <th>NO DE GUIAS </th>
                 <th>ARCHIVO CARGAR</th>
                 
@@ -43,7 +43,7 @@
                 <th>MASIVA ID </th>
                 <th>ARCHIVO RESUMEN </th>
                 <th>FECHA CREACION </th>
-                <th>USUARIO XPERTA </th>  
+                <th>USUARIO </th>  
                 <th>NO DE GUIAS </th>
                 <th>ARCHIVO CARGAR</th>
             </tr>

@@ -4,8 +4,8 @@
             <tr>
                 <th>PAGO ID </th>
                 <th>FECHA CREACION </th>
-                <th>USUARIO XPERTA </th>  
-                <th>CLIENTE XPERTA </th>  
+                <th>USUARIO  </th>  
+                <th>CLIENTE  </th>  
                 <th>BANCO </th>
                 <th>IMPORTE </th>
                 <th>REFERENCIA </th>
@@ -27,8 +27,8 @@
             <tr>
                 <th>PAGO ID </th>
                 <th>FECHA CREACION </th>
-                <th>USUARIO XPERTA </th>
-                <th>CLIENTE XPERTA </th>  
+                <th>USUARIO  </th>
+                <th>CLIENTE  </th>  
                 <th>BANCO </th>
                 <th>IMPORTE </th>
                 <th>REFERENCIA </th>

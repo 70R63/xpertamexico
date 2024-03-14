@@ -62,7 +62,7 @@ class Tipo
             ,"NO SOLICITUD"
             ,"TRACKINGNUMBER"
             ,"SERVICIO_ID"
-            ,"CLIENTE EXPERTA"
+            ,"CLIENTE"
             ,"CREACION"
             ,"FECHA ENVIO"
             ,"LARGO"
@@ -187,7 +187,7 @@ class Tipo
         fputcsv($handle, [
             
             "GUIA_ID"
-            ,"CLIENTE XPERTA"
+            ,"CLIENTE"
             ,"TRACKINGNUMBER"
             ,"FECHA RECOLECCION"
             ,"SERVICIO"

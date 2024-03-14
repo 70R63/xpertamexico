@@ -15,7 +15,7 @@
                     
                 </div>
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
-                    <label class="main-content-label mb-4">CLIENTE XPERTA: {{$objeto['clienteXperta']}}</label>
+                    <label class="main-content-label mb-4">CLIENTE : {{$objeto['clienteXperta']}}</label>
                 </div>
             </div>
         </div>

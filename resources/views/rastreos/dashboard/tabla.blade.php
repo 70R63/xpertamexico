@@ -17,7 +17,7 @@
                                 <th>FECHA ENTREGA</th>
                                 <th>GARANTIA</th>
                                 <th>QUIEN <br>RECIBE</th>
-                                <th>CLIENTE XPERTA</th>
+                                <th>CLIENTE</th>
                                 <th>CIUDAD DESTINO</th>
                                 <th>CIUDAD ORIGEN</th>
                                 <th>PESO KG</th>

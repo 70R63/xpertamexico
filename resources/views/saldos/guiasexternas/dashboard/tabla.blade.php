@@ -4,7 +4,7 @@
             <tr>
                 <th>EXTERNA ID </th>
                 <th>FECHA CREACION </th>
-                <th>USUARIO XPERTA </th>  
+                <th>USUARIO  </th>  
                 <th>NO DE GUIAS </th>
                 <th>IMPORTE TOTAL</th>
                 <th>ARCHIVO</th>
@@ -37,7 +37,7 @@
             <tr>
                 <th>EXTERNA ID </th>
                 <th>FECHA CREACION </th>
-                <th>USUARIO XPERTA </th>  
+                <th>USUARIO  </th>  
                 <th>NO DE GUIAS </th>
                 <th>IMPORTE TOTAL</th>
                 <th>ARCHIVO</th>

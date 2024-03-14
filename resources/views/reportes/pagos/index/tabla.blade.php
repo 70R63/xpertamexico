@@ -12,7 +12,7 @@
                                         <th>ID REPORTE <br>PAGO </th>
                                         <th class='notexport'>REPORTE</th>
                                         <th>FECHA <br>CREACION</th>
-                                        <th>USUARIO <br>XPERTA</th>
+                                        <th>USUARIO </th>
                                         <th>CLIENTE</th>
                                         <th>BANCOS </th>
                                         <th>FECHA INI<br>(FILTRO)</th>
@@ -26,7 +26,7 @@
                                         <th>ID REPORTE <br>PAGO </th>
                                         <th class='notexport'>REPORTE</th>
                                         <th>FECHA <br>CREACION</th>
-                                        <th>USUARIO <br>XPERTA</th>
+                                        <th>USUARIO </th>
                                         <th>CLIENTE</th>
                                         <th>BANCOS </th>
                                         <th>FECHA INI<br>(FILTRO)</th>

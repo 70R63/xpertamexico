@@ -12,7 +12,7 @@
                                 <th>MENSAJERIA</th>
                                 <th>SERVICIO</th>
                                 <th>USUARIO</th>
-                                <th>CLIENTE XPERTA</th>
+                                <th>CLIENTE</th>
                                 <th>REMITENTE <br>(CONTACTO)</th>
                                 <th>DESTINATATIO <br>(CONTACTO)</th>
                                 <th>CP ORIGEN</th>
