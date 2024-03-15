@@ -12,6 +12,8 @@ var costoKgExtra = 0;
 var saldoNegativo = false;
 var saldoMinimo = 90;
 
+
+
 function pesoDimensionalyBascula(){
 
     var piezas = $("#piezas").val()
@@ -352,7 +354,7 @@ table = $('#cotizacionAjax').DataTable({
 
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
    
-
+    saldoNegativo=false
     if (saldoNegativo) {
         swal(
             "Por el monento no puede hacer guias",

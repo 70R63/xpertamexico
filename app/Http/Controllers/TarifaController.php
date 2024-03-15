@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTarifaRequest;
 use App\Http\Requests\UpdateTarifaRequest;
 use App\Models\Tarifa;
-use App\Models\Ltd;
+use App\Models\Cfg_ltd as mCfgLtd;
 use App\Models\Servicio;
 use App\Models\Empresa;
 
@@ -65,7 +65,7 @@ class TarifaController extends Controller
 
             $pluckEmpresa = Empresa::pluck('nombre','id');
             
-            $pluckLtd = Ltd::where('estatus',1)
+            $pluckLtd = mCfgLtd::where('estatus',1)
                                 ->pluck('nombre','id');
 
             $pluckServicio = Servicio::where('estatus',1)

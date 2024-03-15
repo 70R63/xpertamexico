@@ -47,7 +47,7 @@ class Saldos
      * @return monto
      */
 
-    public function porEmpresa ( $empresa_id)
+    public function porEmpresa (int $empresa_id )
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         

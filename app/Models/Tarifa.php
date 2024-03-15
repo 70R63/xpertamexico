@@ -31,12 +31,6 @@ class Tarifa extends Model
         static::addGlobalScope('status', function (Builder $builder) {
             $builder->where('tarifas.estatus', '1');
 
-            $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
-
-
-            $empresas = EmpresaEmpresas::where('id',$empresaId)
-                ->pluck('empresa_id')->toArray();
-            $builder->whereIN('tarifas.empresa_id',$empresas);
 
         });
     }
@@ -44,20 +38,23 @@ class Tarifa extends Model
     /**
      * Se crea un scope con la base del query para tarifas con difernetes forams de tarificar
      */
-    public function scopeBase($query, $empresa_id, $cp_d, $ltdId ){
+    public function scopeBase($query, $empresa_id,$cp_d, $ltdId ){
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-        $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
-        ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
+        $query->select('tarifas.*', 'cfg_ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
+        ->join('cfg_ltds', 'tarifas.ltds_id', '=', 'cfg_ltds.id')
         ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
         ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
-        ->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
-        ->where('tarifas.empresa_id', $empresa_id)
-        ->where('empresa_ltds.empresa_id', $empresa_id)
+        //->join('empresa_ltds', 'empresa_ltds.ltd_id', '=', 'tarifas.ltds_id')
+        //->where('tarifas.empresa_id', $empresa_id)
+        //->where('empresa_ltds.empresa_id', $empresa_id)
         ->where('ltd_coberturas.cp', $cp_d)
-        ->where('ltds.id', $ltdId)
+        ->where('ltd_coberturas.ltd_id', $ltdId)
         ;
+
+        //Log::debug(print_r($query->toSql(),true));
+
 
         if ($ltdId != 1) {
             $query = $query->groupBy('tarifas.id');

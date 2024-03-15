@@ -54,10 +54,6 @@
         <!-- InternalFileupload css-->
         <link href="{{ url('spruha/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css"/>
 
-        
-
-
-
 
         @yield('css_rol_page')
 
@@ -354,15 +350,16 @@
         
         <script src="https://sdk.mercadopago.com/js/v2"></script>
         <script type="text/javascript">
-            const mp = new MercadoPago('TEST-21790bfd-c517-494f-a444-ef70f555a49b');
-            const bricksBuilder = mp.bricks();
+            //const mp = new MercadoPago('TEST-21790bfd-c517-494f-a444-ef70f555a49b');
+            //const bricksBuilder = mp.bricks();
 
         </script>
         <script type="text/javascript">
+            /*
             mp.bricks().create("wallet", "wallet_container", {
                initialization: {
                    //preferenceId: "150057237-7d260728-3417-423b-aea8-5c9606097842",
-                    preferenceId: "1717901241-0a0511d0-90a9-47e3-bfc4-d5ffb6b25a1e",
+                    preferenceId: "1717901241-887ec437-e039-4344-b748-095915ada70c",
                     redirectMode: "blank"
                },
             customization: {
@@ -371,6 +368,7 @@
              },
              },
             });
+            */
         </script>
         
 

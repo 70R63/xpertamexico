@@ -10,7 +10,7 @@ use DB;
 //MODELS
 use App\Models\Tarifa;
 use App\Models\API\Tarifa as mTarifa;
-use App\Models\Ltd;
+use App\Models\Cfg_ltd as mCfgLtd;;
 use App\Models\Servicio;
 use App\Models\Empresa;
 use App\Models\API\Empresa as mEmpresaApi;
@@ -57,7 +57,7 @@ class Tarifas {
 
         $tabla = Tarifa::get();
 
-        $pluckLtd = Ltd::where('estatus',1)
+        $pluckLtd = mCfgLtd::where('estatus',1)
                             ->pluck('nombre','id');
 
         $pluckServicio = Servicio::where('estatus',1)
@@ -119,7 +119,7 @@ class Tarifas {
         		->orderBy('empresa_id', 'asc')
         		->get();
 
-        $pluckLtd = Ltd::where('estatus',1)
+        $pluckLtd = mCfgLtd::where('estatus',1)
                             ->pluck('nombre','id');
 
         $pluckServicio = Servicio::where('estatus',1)
@@ -178,7 +178,7 @@ class Tarifas {
         $tabla = mTarifa::where('empresa_id',$objeto->id)
                 ->get();
 
-        $pluckLtd = Ltd::where('estatus',1)
+        $pluckLtd = mCfgLtd::where('estatus',1)
                             ->pluck('nombre','id');
 
         $pluckServicio = Servicio::where('estatus',1)

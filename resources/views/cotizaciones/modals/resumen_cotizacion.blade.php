@@ -1,6 +1,24 @@
 <!-- Modal -->
-{!! Form::open([ 'route' => 'cotizaciones.create', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script type="text/javascript">
+    const mp = new MercadoPago('TEST-21790bfd-c517-494f-a444-ef70f555a49b');
+    const bricksBuilder = mp.bricks();
+    mp.bricks().create("wallet", "wallet_container", {
+       initialization: {
+           //preferenceId: "150057237-7d260728-3417-423b-aea8-5c9606097842",
+            preferenceId: "1717901241-887ec437-e039-4344-b748-095915ada70c",
+            redirectMode: "blank"
+       },
+    customization: {
+     texts: {
+      valueProp: 'smart_option',
+     },
+     },
+    });
+</script>
 <div class="modal" id="myModal">
+{!! Form::open([ 'route' => 'cotizaciones.create', 'method' => 'GET' , 'class'=>'parsley-style-1', 'id'=>'generalForm' ]) !!}
+
     <div class="modal-dialog" role="document">
         <div class="modal-content modal-content-demo">
             <div class="modal-header">
@@ -54,6 +72,7 @@
                             
                         </ul>
                     </div>
+                    
                     <div class="pricing-plans  bg-primary">
                         Para continuar con la creación, presionar el boton continuar
                     </div>
@@ -61,13 +80,15 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary ml-3" >Continuar</button>
                     <a class="btn badge-dark" data-dismiss="modal" type="button">Cerrar</a>
+                    
                 </div>
             </div>
             <!-- FIN class="modal-body" -->
         </div>
     </div>
-</div>
 
 
 @include('cotizaciones.forma.guiastore_ocultos')
 {!! Form::close() !!} 
+<div id="wallet_container">a</div>
+</div>

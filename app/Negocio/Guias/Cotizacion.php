@@ -20,6 +20,8 @@ use App\Models\API\Empresa as EmpresaApi;
 use App\Models\Sucursal;
 use App\Models\Cliente;
 
+use App\Models\Cfg_ltd as mCfgLtd;
+
 //Negocio
 use App\Negocio\Fedex_tarifas;
 use App\Negocio\Saldos\Saldos;
@@ -41,7 +43,9 @@ class Cotizacion {
 
     public function base ($request,$ltd_id = 0, $canal ="WEB"){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
+
+        $empresa_id = auth()->user()->empresa_id;
+        /*
         if ($canal==="WEB") {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             if ( is_null($request['sucursal']) ) {
@@ -66,34 +70,44 @@ class Cotizacion {
             $empresasLtdQuery->where('ltd_id',$ltd_id);
         }
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $empresasLtd = $empresasLtdQuery
-                ->pluck('tarifa_clasificacion', 'ltd_id')
-                ->toArray();
-
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." validando empresaLTD");
-        Log::debug($empresasLtd);
+       
         
+        */
 
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $ltds = mCfgLtd::where("estatus",1)->pluck('nombre',    'id')
+                ->toArray();
+        Log::debug($ltds);
         $tabla = array();
-        foreach ($empresasLtd as $ltdId => $clasificacion) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => clasificacion $clasificacion ------------------------------------");
+        foreach ($ltds as $ltdId => $nombre) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => nombre $nombre ");
                         
             $tablaTmp = array();
-
+/*
             $servicioIds = Tarifa::select('servicio_id')
                             ->where("ltds_id", $ltdId)
-                            ->where("empresa_id", $empresa_id)
+                            //->where("empresa_id", $empresa_id)
                             ->distinct()->get()->pluck('servicio_id')->toArray();
-        
+  */      
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $canal");
-            
+           /* 
             if ($canal === "API") {
                 $query = TarifaApi::base($empresa_id, $request['cp_d'], $ltdId);
             } else {
-                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                $query = Tarifa::base($request['cp_d'], $ltdId);
             }
+            */
+            $query = Tarifa::base($empresa_id,$request['cp_d'], $ltdId);
 
+            $tablaTmp = $query->get()->toArray();
+            
+            foreach ($tablaTmp as $key => $value) {
+                $tablaTmp[$key]['zona'] = "NA";
+            }
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $tabla = array_merge($tabla, $tablaTmp);
+            /*
             switch ($clasificacion) {
                 case "1": //FLAT
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 1 = FLAT");
@@ -518,6 +532,8 @@ class Cotizacion {
                 default:
                     Log::debug("No se seleccion niguna clasificacion");
             }//fin Switch
+*/
+
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $this->tabla = $tabla;
         }//fin foreach ($empresasLtd as $ltdId => $clasificacion) {

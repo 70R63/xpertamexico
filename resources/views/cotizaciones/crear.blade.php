@@ -1,6 +1,22 @@
 @extends('dashboard')
 @section('content')
-
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script type="text/javascript">
+    const mp = new MercadoPago('TEST-21790bfd-c517-494f-a444-ef70f555a49b');
+    const bricksBuilder = mp.bricks();
+    mp.bricks().create("wallet", "wallet_container", {
+       initialization: {
+           //preferenceId: "150057237-7d260728-3417-423b-aea8-5c9606097842",
+            preferenceId: "1717901241-887ec437-e039-4344-b748-095915ada70c",
+            redirectMode: "blank"
+       },
+    customization: {
+     texts: {
+      valueProp: 'smart_option',
+     },
+     },
+    });
+</script>
 
 @include('cotizaciones.crear.header')
 <!--Row-->
@@ -37,6 +53,7 @@
         
         <div>
             <a href="{{ route('cotizaciones.index') }}" class="btn badge-dark" >Cancelar</a>
+            
             <button type="submit" class="btn btn-primary ml-3" id="btnEnviar">Crear Guia</button>
         </div>    
     </div>
@@ -60,5 +77,6 @@
 <!-- Row end -->
 
 {!! Form::close() !!}
+
 
 @endsection
