@@ -158,11 +158,15 @@ Class EstafetaCreacion {
         $data = $this->validaLtdCobertura($data);      
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data = $this->tarifas($data);
+	
+	$data = $this->perseoCotizacion($data);
+	Log::debug(print_r($data,true));
+	$data = $this->tarifas($data);
         Log::debug($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data = $this->cotizacion($data);
+	//$data = $this->tarifas($data);
+	$data = $this->cotizacion($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->saldo($data);    
@@ -227,6 +231,7 @@ Class EstafetaCreacion {
 
     }
 
+	
     /**
      * Se busca obtener las tarifas de ESTAFETA basado en el KG y parseando valores del body custom.
      * 
@@ -394,7 +399,7 @@ Class EstafetaCreacion {
     public function tarifas(array $data){
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-    	$nCotizacion = new  nCotizacion();
+    	$nCotizacion = new nCotizacion();
 
     	$nCotizacion->base($data, $data['ltd_id'],$data['esManual']);
         $data['tipoPagoId'] = $nCotizacion->getTipoPagoId();
@@ -581,7 +586,7 @@ Class EstafetaCreacion {
         $data['piezas']=1;
         $data['costo_seguro']=0;
         
-        $data['costo_base']=$data['costo'];
+        $data['costo_base']= isset($data['costo']) ? 0 : 1;//$data['costo'] ;
 
         switch ($cotizacionPersonalizada) {
             case '1':

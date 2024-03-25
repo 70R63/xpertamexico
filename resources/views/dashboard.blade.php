@@ -350,26 +350,6 @@
         @routes
         <script src="{{ asset('js/saldos/saldos.js') }}" ></script>
         
-        // SDK MercadoPago.js
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
-        <script type="text/javascript">
-            const mp = new MercadoPago('TEST-d306e10e-dff9-4f88-b66b-235a51178e95');
-            const bricksBuilder = mp.bricks();
-
-        </script>
-        <script type="text/javascript">
-            mp.bricks().create("wallet", "wallet_container", {
-               initialization: {
-                   //preferenceId: "150057237-7d260728-3417-423b-aea8-5c9606097842",
-                    preferenceId: "150057237-ff55b2da-f9fc-4c77-b883-d88de6ef5fb4",
-               },
-            customization: {
-             texts: {
-              valueProp: 'smart_option',
-             },
-             },
-            });
-        </script>
         
 
 {{--INTEGRACION DE ROLES Y USUARIOS--}} 
