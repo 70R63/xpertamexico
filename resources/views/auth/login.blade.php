@@ -1,4 +1,4 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('content')
 
@@ -11,7 +11,7 @@
             <div class="row row-sm">
                <div class="col-lg-6 col-xl-5 d-none d-lg-block text-center bg-primary details">
                   <div class="mt-2 pt-4 p-2 pos-absolute">
-                     <img  src="{{ url('spruha/img/brand/xpertaLogoTrans-138x142.png') }}" class="header-brand-img mb-1" alt="logo">{{ config('app.env', 'Ambiente') }}
+                     <img  src="{{ url('spruha/img/brand/xpertaLogoTrans-138x142.png') }}" class="header-brand-img mb-1" alt="logo">
                      <div class="clearfix"></div>
                      <img src="{{ url('spruha/img/svgs/user.svg') }}" class="ht-90 mb-0" alt="user">
                      <h5 class="mt-4 text-white">Create Your Account</h5>
@@ -48,11 +48,11 @@
                               </div>
                               <button type="submit" class="btn ripple btn-main-primary btn-block">Ingresar</button>
                            </form>
-                           <div class="text-left mt-5 ml-0">
+                           <div class="text-center mt-5 ml-0">
                            	@if (Route::has('password.request'))
                               <div class="mb-1"><a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a></div>
                             @endif
-                              <!-- <div>Don't have an account? <a href="#">Register Here</a></div> -->
+                              <div>¿No tienes una cuenta? <a href="{{route('register')}}">Regístrate aquí</a></div>
                            </div>
                         </div>
                      </div>
