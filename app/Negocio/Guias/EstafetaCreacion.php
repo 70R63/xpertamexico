@@ -159,15 +159,17 @@ Class EstafetaCreacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 	
-	$data = $this->perseoCotizacion($data);
-	Log::debug(print_r($data,true));
-	$data = $this->tarifas($data);
-        Log::debug($data);
+    	$data = $this->perseoCotizacion($data);
+    	//Log::debug(print_r($data,true));
+    	$data = $this->tarifas($data);
+        
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-	//$data = $this->tarifas($data);
-	$data = $this->cotizacion($data);
-
+	    //$data = $this->tarifas($data);
+	   
+        $data = $this->cotizacion($data);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug($data);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->saldo($data);    
         
@@ -582,21 +584,19 @@ Class EstafetaCreacion {
     public function cotizacion($data, $cotizacionPersonalizada=1){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-        
         $data['piezas']=1;
         $data['costo_seguro']=0;
         
-        $data['costo_base']= isset($data['costo']) ? 0 : 1;//$data['costo'] ;
+        $data['costo_base']= isset($data['costo']) ? $data['costo']      : 1;//$data['costo'] ;
 
         switch ($cotizacionPersonalizada) {
             case '1':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $data['valor_envio']=0;
                 $dimensiones = $data['labelDefinition']['itemDescription'];
 
                 $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
 
-
-            
                 if($serviceConfiguration['isInsurance']){
                     $data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
                 }
@@ -616,7 +616,7 @@ Class EstafetaCreacion {
         }
 
         
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data['costo_seguro'] = ($data['valor_envio']*$data['seguro'])/100;
 
         $data['peso_bascula'] = $data['peso'];
