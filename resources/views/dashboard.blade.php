@@ -236,7 +236,6 @@
                     @include('mensaje.exitoso')
                     <div class="inner-body">
                         <!-- Page Content -->
-                        hola
                         @yield('content')
                         <!-- End Page Content -->     
                     </div>

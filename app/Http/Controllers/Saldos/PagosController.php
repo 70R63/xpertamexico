@@ -32,7 +32,9 @@ class PagosController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return view("saldos.pagos.index"
                     ,compact("tabla")
-                )->withErrors(array("Falta de saldo "));
+                )
+
+            ;
             
 
         } catch (Exception $e) {
@@ -122,7 +124,7 @@ class PagosController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return view("saldos.pagos.show"
                     ,compact("tabla")
-                )->withErrors(array("Falta de saldo "));
+                );
             
 
         } catch(\Illuminate\Database\QueryException $e){ 
