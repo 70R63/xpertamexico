@@ -175,7 +175,7 @@ class Tarifas {
     public function resumenPorCliente($objeto){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
-        $tabla = mTarifa::where('empresa_id',$objeto->id)
+        $tabla = mTarifa::where('empresa_id',$objeto['tarifa'])
                 ->get();
 
         $pluckLtd = Ltd::where('estatus',1)
@@ -187,10 +187,6 @@ class Tarifas {
         $pluckEmpresa = mEmpresaApi::where('estatus',1)
                 ->pluck('nombre','id');
 
-//        Log::debug(print_r($tabla->toArray(),true));
-  //      Log::debug(print_r($pluckLtd->toArray(),true));
-    //    Log::debug(print_r($pluckServicio->toArray(),true));
-        Log::debug(print_r($pluckEmpresa->toArray(),true));
 
 
         $this->tabla = $tabla;

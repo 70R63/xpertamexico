@@ -20,6 +20,7 @@ class RolesMiddleware
      */
     public function handle(Request $request, Closure $next,...$roles)
     {
+      Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
 
          if(auth()->user() == null){
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 

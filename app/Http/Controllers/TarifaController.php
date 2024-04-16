@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTarifaRequest;
 use App\Http\Requests\UpdateTarifaRequest;
+use Illuminate\Http\Request;
+
 use App\Models\Tarifa;
 use App\Models\Ltd;
 use App\Models\Servicio;
@@ -118,11 +120,12 @@ class TarifaController extends Controller
      * @param  \App\Models\Tarifa  $tarifa
      * @return \Illuminate\Http\Response
      */
-    public function show(Tarifa $tarifa)
+    public function show(Request $tarifa)
     {
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
-            Log::debug($tarifa->toArray());
+            //Log::debug($tarifa->input('tarifa'));
+            Log::debug($tarifa['tarifa']);
 
             $nTarifas = new nTarifas();
             

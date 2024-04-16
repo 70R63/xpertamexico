@@ -18,7 +18,7 @@
 				<tr>
 					<td>{{ $objeto->empresa_id }}</td>
 					<td>
-						<a href=" {{ route('tarifas.show', $objeto->empresa_id) }} " class="text-dark tx-16 ">
+						<a href="{{route('tarifas.show', $objeto->empresa_id)}}" class="text-dark tx-16 ">
 							
 							{{ $pluckEmpresa[$objeto->empresa_id] }}
 						</a>
