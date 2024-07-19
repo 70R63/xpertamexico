@@ -531,7 +531,7 @@ class GuiaController extends Controller
             
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
-            Log::debug($ex->getBody());
+            Log::debug($ex->getResponse());
             $mensaje = array("Se ha producido un error interno favor de contactar al proveedor");
 
         } catch(\Illuminate\Database\QueryException $ex){ 
