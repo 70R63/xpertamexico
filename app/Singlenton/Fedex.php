@@ -43,7 +43,7 @@ class Fedex {
         if ($ambiente==="PRD") {
             $this->baseUri = Config('ltd.fedex.base_uri');    
         } else {
-            $this->baseUri = "https://apis-sandbox.fedex.com/";
+            $this->baseUri = Config('ltd.fedex.base_uri');
         }
         
         Log::info($this->baseUri);
@@ -61,7 +61,7 @@ class Fedex {
             if ($plataforma == 'WEB'){
                 $empresa_id = auth()->user()->empresa_id;
             } 
-/*
+
             $client = new Client(['base_uri' => $this->baseUri, 'verify' => false ]);
 
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
@@ -73,8 +73,8 @@ class Fedex {
                     );   
             } else {
                 $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
-                        ,"l7640a59a8ce1c4dfea7bb2d302febc882"
-                        ,"2bc10d1d2f3b4b6ab55a0e63518c306e"
+                        ,Config('ltd.fedex.client_id')
+                        ,Config('ltd.fedex.client_secret')
                     );  
             }
             
@@ -85,23 +85,13 @@ class Fedex {
                     ,'body'     => $body
                 ]);
 
-            */
+            
             $client = new Client();
             $headers = [
               'Content-Type' => 'application/x-www-form-urlencoded',
             ];
             
-            $body = [
-            'form_params' => [
-              'grant_type' => 'client_credentials',
-              'client_id' => 'l7eb600994a1334d1aa614df3e2afe5b7b',
-              'client_secret' => 'fdad92b6-d32e-4a09-b445-e948bcd910ab'
-            ]];
             
-            $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
-                        ,"l7eb600994a1334d1aa614df3e2afe5b7b"
-                        ,"fdad92b6-d32e-4a09-b445-e948bcd910ab"
-                    ); 
             $response = $client->post('https://apis.fedex.com/oauth/token', [
                 'headers'   => $headers
                 ,'body'     => $body
