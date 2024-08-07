@@ -40,11 +40,9 @@ class Fedex {
     private function __construct(int $ltd_id= 1, $empresa_id= 1, $plataforma = 'WEB', $ambiente="PRD"){
 
         Log::info(__CLASS__." ".__FUNCTION__);
-        if ($ambiente==="PRD") {
-            $this->baseUri = Config('ltd.fedex.base_uri');    
-        } else {
-            $this->baseUri = Config('ltd.fedex.base_uri');
-        }
+        
+        $this->baseUri = Config('ltd.fedex.base_uri');
+        
         
         Log::info($this->baseUri);
         $sesion = LtdSesion::where('ltd_id', $ltd_id)
@@ -66,37 +64,20 @@ class Fedex {
 
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
                 
-            if ($ambiente==="PRD") {
-                $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
+            $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
                         ,Config('ltd.fedex.client_id')
                         ,Config('ltd.fedex.client_secret')
                     );   
-            } else {
-                $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
-                        ,Config('ltd.fedex.client_id')
-                        ,Config('ltd.fedex.client_secret')
-                    );  
-            }
             
             Log::info( print_r($body,true) );
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecutando Peticion");
+            //$response = $client->request('POST', 'auth/oauth/v2/token',
             $response = $client->request('POST', 'oauth/token', [
                     'headers'   => $headers
                     ,'body'     => $body
                 ]);
 
             
-            $client = new Client();
-            $headers = [
-              'Content-Type' => 'application/x-www-form-urlencoded',
-            ];
-            
-            
-            $response = $client->post('https://apis.fedex.com/oauth/token', [
-                'headers'   => $headers
-                ,'body'     => $body
-            ]);
-
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $contenido = json_decode($response->getBody()->getContents());
 
@@ -114,7 +95,6 @@ class Fedex {
             $id = LtdSesion::create($insert)->id;
             Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
         }
-        die();
         
     }
 

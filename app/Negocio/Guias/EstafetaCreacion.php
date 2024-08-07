@@ -267,6 +267,9 @@ Class EstafetaCreacion {
         $data = $this->validaLtdCobertura($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->perseoCotizacion($data,0);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->tarifas($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
