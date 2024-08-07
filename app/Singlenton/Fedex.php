@@ -224,11 +224,22 @@ class Fedex {
                     $this->latestStatusDetail = $value1->latestStatusDetail;                    
 
                     if (isset($value1->packageDetails->weightAndDimensions) ) {
-                        foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
-                            if ($value->unit === 'KG') {
-                                $pesoDimension['peso'] = $value->value;
-                            }
+
+                        if ( isset($value1->packageDetails->weightAndDimensions->weight) ) {
+                            foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
+                                if ($value->unit === 'KG') {
+                                    $pesoDimension['peso'] = $value->value;
+                                }
+                            }    
+                        } else {
+                            
+                            foreach ($value1->shipmentDetails->weight as $key => $value) {
+                                if ($value->unit === 'KG') {
+                                    $pesoDimension['peso'] = $value->value;
+                                }
+                            } 
                         }
+                        
                     }
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     if (isset($value1->packageDetails->weightAndDimensions->dimensions) ) {
