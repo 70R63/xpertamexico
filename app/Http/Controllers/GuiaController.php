@@ -321,7 +321,7 @@ class GuiaController extends Controller
             Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 
             $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
-
+                
             $boolPrecio = true;
             $i=1;
             $numeroDeSolicitud = Carbon::now()->timestamp;

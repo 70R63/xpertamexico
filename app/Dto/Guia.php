@@ -129,6 +129,7 @@ class Guia {
 				,'peso_bascula'	=>	$request['peso_bascula']
 				,'sobre_peso_kg'	=> $request['sobre_peso_kg']
 				,'costo_extendida'	=> $request['costo_extendida']
+				,'tarifa_id'	=> $request['tarifa_id']
 
 			);
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO----- ");
@@ -254,6 +255,7 @@ class Guia {
 			,'peso_bascula'	=>	$pesoBascula
 			,'sobre_peso_kg'	=> $sobrePesoKg
 			,'costo_extendida'	=> $costoExtendida
+			,'tarifa_id'	=> $request['tarifa_id']
 			
 		);
 

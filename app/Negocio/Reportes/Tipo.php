@@ -29,8 +29,6 @@ class Tipo
                 ->get()->toArray()
                 
             ;
-
-        //Log::debug();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
      
         $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
@@ -156,7 +154,7 @@ class Tipo
 
     public function repesaje (array $parametros)
     {
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $reporteRepesajes = Reportes_repesajes::filtro( $parametros )
                 ->get()->toArray()
                 
@@ -186,7 +184,7 @@ class Tipo
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         fputcsv($handle, [
             
-            "GUIA_ID"
+            "PROVEEDOR_LTD"
             ,"CLIENTE XPERTA"
             ,"TRACKINGNUMBER"
             ,"FECHA RECOLECCION"
@@ -197,11 +195,11 @@ class Tipo
             ,"PESO DIMENSIONAL"
             ,"PESO BASCULA"
             ,"PESO FACTURADO"
-            ,"LARGO"
-            ,"ANCHO"
-            ,"ALTO"
-            ,"PESO DIMENSIONAL"
-            ,"PESO BASCULA"
+            ,"LARGO RASTREO"
+            ,"ANCHO RASTREO"
+            ,"ALTO RASTREO"
+            ,"PESO DIMENSIONAL RASTREO"
+            ,"PESO BASCULA RASTREO"
             ,"KGS EXTRA"
             ,"COSTO BASE"
             ,"COSTO KGS EXTRA"
@@ -212,7 +210,6 @@ class Tipo
             ,"COSTO SEGURO"
             ,"SUBTOTAL"
             ,"TOTAL"
-            ,"ESTATUS RASTREO"
 
 
         ]);
@@ -223,7 +220,7 @@ class Tipo
             $subtotal = $repesaje['costo_base']+$repesaje['costo_kg_extra']+$repesaje['costo_extendida']+$repesaje['seguro'];
 
             fputcsv($handle, [
-                $repesaje['id']
+                $repesaje['ltd_nombre']
                 ,$repesaje['cliente_xperta']
                 ,$repesaje['tracking_number']
                 ,$repesaje['pickup_fecha']
@@ -249,9 +246,7 @@ class Tipo
                 ,$repesaje['seguro']
                 ,$subtotal
                 ,$repesaje['precio']
-                ,$repesaje['rastreo_nombre']
 
-                
 
             ]);
             $contador++;
@@ -260,7 +255,7 @@ class Tipo
         fclose($handle);
         header('Content-Type: text/csv');
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //$this->insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador);
+        $this->insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador);
         
     }// repesaje
 

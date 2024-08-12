@@ -228,3 +228,10 @@
         ,'id'       => 'costo_extendida' 
     ])
 !!}
+
+{!! Form::hidden('tarifa_id'
+    , $objeto['tarifa_id']
+    ,['class'       => 'form-control'
+        ,'id'       => 'tarifa_id' 
+    ])
+!!}

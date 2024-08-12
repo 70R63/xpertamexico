@@ -35,7 +35,6 @@ class Reportes_repesajes extends Model
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $empresaId = auth()->user()->empresa_id;
             $empresas = EmpresaEmpresas::where('id',$empresaId)->pluck('empresa_id')->toArray();
-            Log::info(print_r($empresas,true));    
             $query->whereIN('empresa_id', $empresas);
         }
        
