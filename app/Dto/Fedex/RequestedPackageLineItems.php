@@ -18,4 +18,6 @@ class RequestedPackageLineItems extends DataTransferObject {
 
 	public Weight $weight;
 
+	public $dimensions;
+
 }

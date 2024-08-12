@@ -71,7 +71,6 @@ class Fedex {
             
             Log::info( print_r($body,true) );
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecutando Peticion");
-            //$response = $client->request('POST', 'auth/oauth/v2/token',
             $response = $client->request('POST', 'oauth/token', [
                     'headers'   => $headers
                     ,'body'     => $body
