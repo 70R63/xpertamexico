@@ -91,42 +91,7 @@ Class EstafetaRastreo {
             $this->notices[]= "La guia aun no cuenta seguimiento";
             $this->response=array();
         }
-        /*
-        foreach ($guias as $key => $value) {
-            Log::info("-----".++$i."/$guiaCantidad -----");
-            Log::debug($value);
-            
-            $sEstafeta->rastreo($value['tracking_number']);
-            $update = array();
-            
-            if ($sEstafeta->getExiteSeguimiento()) {   
-                Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
-                $paquete = $sEstafeta->getPaquete();
-
-                $update = array('ultima_fecha' => $sEstafeta->getUltimaFecha()
-                        ,'rastreo_estatus' => Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()]
-                        ,'rastreo_peso' => $paquete['peso'] 
-                        ,'largo' => $paquete['largo'] 
-                        ,'ancho' => $paquete['ancho'] 
-                        ,'alto' => $paquete['alto']
-                        ,'quien_recibio' =>  $sEstafeta->getQuienRecibio()
-                        ,'pickup_fecha' =>  $sEstafeta->getPickupFecha()
-
-                    );
-
-                Log::info(print_r($update,true));
-
-                $affectedRows = GuiaAPI::where("id", $value['id'])
-                        ->update($update);
-    
-                Log::debug("affectedRows -> $affectedRows");
-            }else{
-                Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
-            }
-            
-            
-        } // fin foreach ($tabla as $key => $value)
-		*/
+        
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
     }//public function parseoApi
 
@@ -161,6 +126,32 @@ Class EstafetaRastreo {
     				;
   		return $guias;
     	Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+    }
+
+    /**
+     * Se realiza el ajuste al saldo cuando el peso rastreo es mayor al peso facturado de
+     * la cotizacion.
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2024 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion recotizacionPorRastreo
+     * 
+     * @throws
+     *
+     * @param  Illuminate\Http\Request  $request Recibe la paticion del cliente
+     * 
+     * @var array $data Se convierte el Json de la peticion a array
+     * 
+     * @return json Objeto con la respuesta de exito o fallo 
+     */
+
+    public function recotizacionPorRastreo(array $data){
 
     }
 }

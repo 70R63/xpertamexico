@@ -36,7 +36,7 @@
 
 
 	<div class="input-group-prepend">
-		<span class="input-group-text" id="basic-addon1">Dimensiones (LxWxH) <span class="tx-danger">*</span></span>
+		<span class="input-group-text" id="basic-addon1">Dimensiones<span class="tx-danger">*</span></span>
 	</div>
 	{!! Form::text('largo[]', null,
 		['class' 		=> 'form-control multi'

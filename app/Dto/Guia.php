@@ -229,7 +229,7 @@ class Guia {
 			$zona = "NA";
 		}
 
-		
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Parseo insert ");
 		$insert = array('usuario' => $usuario
 			,'empresa_id' 	=> self::getSucursalEmpresaId($cia)
 			,'ltd_id' 	=> Config('ltd.estafeta.id')
