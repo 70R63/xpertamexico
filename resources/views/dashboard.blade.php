@@ -7,7 +7,7 @@
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
         <!-- Favicon -->
-        <link rel="icon" href="{{ url('spruha/img/brand/favicon.ico') }}" type="image/x-icon"/>
+       
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -83,8 +83,7 @@
                     <a class="main-logo" href="https://xpertamexico.com/" target="_blank">
                         <img src="{{ url('spruha/img/brand/xpertaLogoTrans-110x91-2.png') }}" class="header-brand-img desktop-logo" alt="logo">
                         <img src="{{ url('spruha/img/brand/xperta-50x56-removebg-preview.png') }}" class="header-brand-img icon-logo" alt="logo">
-                        <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img desktop-logo theme-logo" alt="logo">
-                        <img src="{{ url('spruha/img/brand/ulalaBco.png') }}" class="header-brand-img icon-logo theme-logo" alt="logo">
+                        
                     </a>
                 </div>
 

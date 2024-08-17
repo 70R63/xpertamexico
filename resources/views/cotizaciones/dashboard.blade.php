@@ -85,7 +85,8 @@
                 <div class="card-header border-bottom-0 pt-0 pl-0 pr-0 d-flex">
                     
                 </div>
-                @include('cotizaciones.dashboard.tabla')    
+                @include('cotizaciones.dashboard.tabla')
+                    
             </div>
         </div>
     </div>

@@ -259,16 +259,17 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
-                console.log(response.data.data);
+                //console.log(response.data.data);
 
                 validaSaldo(response)
-                
 
                 table = $('#cotizacionAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No exiten tarifas con los datos para cotizar"
-                    }
-                    ,"processing": true,
+                    },
+                    dom: '<"title"<"filter"f>>rtip',
+                    
+                    "processing": true,
                     "bDestroy": true,
                     order: [[1, 'desc']]
 
@@ -564,7 +565,7 @@ function direccionesPorEmpresa(idSucursa){
         /* remind that 'data' is the response of the AjaxController */
         }).done(function( response) {
             console.log("done");
-            console.log(response.data);
+            //console.log(response.data);
            
             $('#cliente').empty();
             
