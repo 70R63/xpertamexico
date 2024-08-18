@@ -222,7 +222,7 @@ class Tipo
             fputcsv($handle, [
                 $repesaje['ltd_nombre']
                 ,$repesaje['cliente_xperta']
-                ,$repesaje['tracking_number']
+                ,sprintf("'%s",trim($repesaje['tracking_number']))
                 ,$repesaje['pickup_fecha']
                 ,$repesaje['servicio_nombre']
                 ,$repesaje['largo']
