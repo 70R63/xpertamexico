@@ -63,7 +63,7 @@ class Estafeta {
             $this->token = $sesion->token;
 
         }else {
-            Log::info(__CLASS__." ".__FUNCTION__." Seccion Else");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Seccion Else");
             
             $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
@@ -237,7 +237,7 @@ class Estafeta {
         $response = $contenido->ExecuteQueryResponse->ExecuteQueryResult->trackingData;
         
         if (isset($response->TrackingData)) {
-            Log::info("Existe tracking");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Existe tracking");
 
             $trackingData = $response->TrackingData;
             
@@ -251,7 +251,9 @@ class Estafeta {
                 $pesoDimension['largo'] = $trackingData->dimensions->length;
                 $pesoDimension['ancho'] = $trackingData->dimensions->width;
                 $pesoDimension['alto'] = $trackingData->dimensions->height;
-                $pesoDimension['peso'] = ( $weight > $volumetricWeight) ? $weight : $volumetricWeight;
+                $pesoDimension['peso'] = $weight;
+               
+                $pesoDimension['peso_dimensional_rastreo'] = $volumetricWeight;
             }
             
             $this->paquete = $pesoDimension;

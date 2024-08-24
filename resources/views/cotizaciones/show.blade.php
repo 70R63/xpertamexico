@@ -1,8 +1,6 @@
 @extends('dashboard')
 @section('content')
 
-
-
 <!--Row-->
 <div class="row row-sm">
     <div class="col-lg-12">

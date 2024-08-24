@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('guias', function (Blueprint $table) {
             $table->unsignedInteger('tarifa_id')->nullable(false)->default(0);
+            $table->float('peso_dimensional_rastreo', 12,2)->default(0);
+            $table->float('precio_rastreo', 12,2)->default(0);
+
         });
     }
 
@@ -27,6 +30,8 @@ return new class extends Migration
     {
         Schema::table('guias', function (Blueprint $table) {
             $table->dropColumn('tarifa_id');
+            $table->dropColumn('peso_dimensional_rastreo');
+            $table->dropColumn('precio_rastreo');
         });
     }
 };

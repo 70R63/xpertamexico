@@ -186,20 +186,20 @@ class Tipo
             
             "PROVEEDOR_LTD"
             ,"CLIENTE XPERTA"
-            ,"TRACKINGNUMBER"
+            ,"GUIA"
             ,"FECHA RECOLECCION"
             ,"SERVICIO"
+            ,"PESO FACTURADO"
+            ,"PESO BASCULA"
             ,"LARGO"
             ,"ANCHO"
             ,"ALTO"
             ,"PESO DIMENSIONAL"
-            ,"PESO BASCULA"
-            ,"PESO FACTURADO"
+            ,"PESO BASCULA RASTREO"
             ,"LARGO RASTREO"
             ,"ANCHO RASTREO"
             ,"ALTO RASTREO"
-            ,"PESO DIMENSIONAL RASTREO"
-            ,"PESO BASCULA RASTREO"
+            ,"PESO DIMENSIONAL RASTREO" 
             ,"KGS EXTRA"
             ,"COSTO BASE"
             ,"COSTO KGS EXTRA"
@@ -210,6 +210,7 @@ class Tipo
             ,"COSTO SEGURO"
             ,"SUBTOTAL"
             ,"TOTAL"
+            ,"TOTAL RASTREO"
 
 
         ]);
@@ -225,16 +226,16 @@ class Tipo
                 ,sprintf("'%s",trim($repesaje['tracking_number']))
                 ,$repesaje['pickup_fecha']
                 ,$repesaje['servicio_nombre']
+                ,$repesaje['peso_facturado']
+                ,$repesaje['peso_bascula']
                 ,$repesaje['largo']
                 ,$repesaje['ancho']
                 ,$repesaje['alto']
                 ,$repesaje['peso_dimensional']
-                ,$repesaje['peso_bascula']
-                ,$repesaje['peso_facturado']
+                ,"0"
                 ,$repesaje['largo_rastreo']
                 ,$repesaje['ancho_rastreo']
                 ,$repesaje['alto_rastreo']
-                ,"0"
                 ,"0"
                 ,$repesaje['sobre_peso_kg']
                 ,$repesaje['costo_base']
@@ -246,6 +247,7 @@ class Tipo
                 ,$repesaje['seguro']
                 ,$subtotal
                 ,$repesaje['precio']
+                ,$repesaje['precio_rastreo']
 
 
             ]);
