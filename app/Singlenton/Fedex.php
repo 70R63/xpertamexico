@@ -180,6 +180,7 @@ class Fedex {
                     , 'largo' => 0
                     , 'ancho' => 0
                     , 'alto' => 0
+                    ,'peso_dimensional_rastreo'=>0
                 );
 
         $body = array('trackingInfo' => [
