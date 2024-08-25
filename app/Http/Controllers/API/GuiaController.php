@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 #CLASES DE NEGOCIO 
 use App\Negocio\Guias\Repesaje as nRepesaje;
+use App\Negocio\Guias\Rastreo as nRastreo;
 
 use App\Singlenton\Estafeta ; //PRODUCTION
 use App\Singlenton\Fedex as sFedex ; //PRODUCTION
@@ -522,7 +523,8 @@ class GuiaController extends Controller
         foreach ($guias as $key => $value) {
             Log::info("-----".++$i."/$guiaCantidad -----");
             Log::debug($value);
-
+            $guia_id = $value['id'];
+            $precioOriginal = $value['precio'];
             $sFedex->rastreo($value['tracking_number']);
             $update = array();
             if ($sFedex->getExiteSeguimiento()) {   
@@ -532,25 +534,24 @@ class GuiaController extends Controller
                 $paquete = $sFedex->getPaquete();
                 $quienRecibio = $sFedex->getQuienRecibio();    
                 $ultimaFecha = Carbon::parse($scanEvents->date)->format('Y-m-d H:i:s');
+                $rastreoEstatus =Config('ltd.fedex.rastreoEstatus')[$latestStatusDetail->derivedCode];
+                $pickupFecha = $sFedex->getPickupFecha();
 
-                $update = array('ultima_fecha' => $ultimaFecha
-                        ,'rastreo_estatus' => Config('ltd.fedex.rastreoEstatus')[$latestStatusDetail->derivedCode]
-                        ,'rastreo_peso' => $paquete['peso'] 
-                        ,'largo' => $paquete['largo'] 
-                        ,'ancho' => $paquete['ancho'] 
-                        ,'alto' => $paquete['alto']
-                        ,'quien_recibio' =>  $quienRecibio
-                        ,'pickup_fecha' =>  $sFedex->getPickupFecha()
-
-                    );
-
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
+                $nRepesaje = new nRepesaje();
+                $nRepesaje->calcularPrecio($guia_id, $paquete, $precioOriginal);
+                $precioRastreo = $nRepesaje->getPrecioRastreo();
                 
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $nRastreo = new nRastreo();
+                $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete);
+                $update = $nRastreo->getUpdate();
                 Log::debug(print_r($update,true));
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizado Guia");
                 $affectedRows = GuiaAPI::where("id", $value['id'])
                         ->update($update);
                 
-                Log::debug("affectedRows -> $affectedRows");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
             }
         } // fin foreach ($tabla as $key => $value)
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
@@ -599,34 +600,26 @@ class GuiaController extends Controller
                     $nRepesaje = new nRepesaje();
                     $nRepesaje->calcularPrecio($guia_id, $paquete, $value['precio']);
                     $precioRastreo = $nRepesaje->getPrecioRastreo();
-
+                    $ultimaFecha =  $sEstafeta->getUltimaFecha();
+                    $rastreoEstatus = Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()];
+                    $quienRecibio = $sEstafeta->getQuienRecibio();
+                    $pickupFecha = $sEstafeta->getPickupFecha();
 
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." armando update");
-                    $update = array('ultima_fecha' => $sEstafeta->getUltimaFecha()
-                            ,'rastreo_estatus' => Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()]
-                            ,'rastreo_peso' => $paquete['peso'] 
-                            ,'largo' => $paquete['largo'] 
-                            ,'ancho' => $paquete['ancho'] 
-                            ,'alto' => $paquete['alto']
-                            ,'quien_recibio' =>  $sEstafeta->getQuienRecibio()
-                            ,'pickup_fecha' =>  $sEstafeta->getPickupFecha()
-                            ,'peso_dimensional_rastreo' => $paquete['peso_dimensional_rastreo'] 
-                            ,'precio_rastreo' => $precioRastreo
-                        );
-
+                    $nRastreo = new nRastreo();
+                    $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete);
+                    $update = $nRastreo->getUpdate();
                     Log::info(print_r($update,true));
 
                     $affectedRows = GuiaAPI::where("id", $guia_id)
                             ->update($update);
         
-                    Log::debug("affectedRows -> $affectedRows");
-
-                    
-
+                   
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
 
 
                 }else{
-                    Log::info(__CLASS__." ".__FUNCTION__." Sin seguimiento");
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
                 }
             }  catch (\Exception $ex) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
@@ -758,20 +751,7 @@ class GuiaController extends Controller
 
             $objetoGeneral = null;
             
-            /*switch ($ltd) {
-                case "estafeta":
-                    $data['ltd_id']= 2;
-                    $nEstafetaCreacion = new nEstafetaCreacion();
-                    $nEstafetaCreacion->parseoApi($data);
-                    $objetoGeneral = $nEstafetaCreacion;
-                    break;
-                
-                default:
-                    throw ValidationException::withMessages(array("La paquetetria no existe favor de validar"));
-                    break;
-            }
            
-            */
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $data['ltd_id']= 2;
             $nEstafetaCreacion = new nEstafetaCreacion();

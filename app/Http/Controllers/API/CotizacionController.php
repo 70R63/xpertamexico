@@ -40,7 +40,7 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $tabla = $nCotizacion->getTabla();
 
-        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
         Log::debug(print_r($tabla,true));
         $success['data'] = $tabla;
         $success['saldo'] = $nCotizacion->getSaldo();
@@ -69,7 +69,7 @@ class CotizacionController extends BaseController
                 ->toArray();
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::info($resultado);
+        Log::debug($resultado);
         return $this->successResponse($resultado, 'User login successfully.');
         
     }

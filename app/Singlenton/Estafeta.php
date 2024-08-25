@@ -192,6 +192,7 @@ class Estafeta {
                     , 'largo' => 0
                     , 'ancho' => 0
                     , 'alto' => 0
+                    ,'peso_dimensional_rastreo'=>0
                 );
 
 
@@ -240,7 +241,7 @@ class Estafeta {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Existe tracking");
 
             $trackingData = $response->TrackingData;
-            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($trackingData,true));
             Log::info(__CLASS__." ".__FUNCTION__." Ultimo estatus");
             $this->latestStatusDetail = $trackingData->statusENG;
             Log::debug(print_r($this->latestStatusDetail,true));
@@ -254,6 +255,8 @@ class Estafeta {
                 $pesoDimension['peso'] = $weight;
                
                 $pesoDimension['peso_dimensional_rastreo'] = $volumetricWeight;
+            } else {
+                Log::info(__CLASS__." ".__FUNCTION__." "."Validar estatus y valores rastreo");
             }
             
             $this->paquete = $pesoDimension;
