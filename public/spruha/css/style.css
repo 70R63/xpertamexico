@@ -7573,6 +7573,15 @@ div.dataTables_wrapper div.dataTables_length select {
     margin-right: 10px;
 }
 
+.title::before {
+  font-size: 1em;
+  margin: 1.5em 0 0 0;
+  content: "Selecciona la opcion de tu preferencia";
+}
+
+.filter {
+  float: right;
+}
 /* ######  Datatables ###### */
 /* ###### Toast ###### */
 .toast {
@@ -73019,3 +73028,14 @@ body.horizontalmenu {
 
 /* ###### ie css ###### */
 /*# sourceMappingURL=style.css.map */
+
+.flex-container {
+  display: flex;
+  /* background-color: DodgerBlue;*/
+}
+
+.flex-container > b {
+  background-color: #white;
+  justify-content:flex-end;
+  
+}

@@ -692,29 +692,6 @@ class Creacion {
         return $data;
     }
     
-    /**
-     * Se valida la zona de envio 
-     * 
-     * @author Javier Hernandez
-     * @copyright 2022-2023 XpertaMexico
-     * @package App\Negocio\Guias
-     * @api
-     * 
-     * @version 1.0.0
-     * 
-     * @since 1.0.0 Primera version de la funcion zona
-     * 
-     * @throws
-     *
-     * @param array $data Informacion general de la peticion
-     * 
-     * @var $ltdCobertura Array que tendra los datos de la cobertura
-     * 
-     * 
-     * @return $data Se agra informacion segun la necesidad
-     */
-
-
 
 
     /**

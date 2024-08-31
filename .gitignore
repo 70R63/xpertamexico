@@ -1,5 +1,4 @@
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
@@ -20,3 +19,4 @@ composer.lock
 .gitignore
 /public/reportes/*
 public/zip/*
+public/build/assets/*

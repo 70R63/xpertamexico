@@ -82,7 +82,6 @@ class RepesajeController extends ApiController
                 
             ;
 
-            //Log::debug($reporteVentas->toSql());
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Log::info(print_r($reporteVentas,true));

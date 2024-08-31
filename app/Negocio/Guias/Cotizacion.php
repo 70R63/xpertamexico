@@ -7,13 +7,16 @@ use DB;
 
 //modelos
 use App\Models\Tarifa;
+use App\Models\API\Tarifa as TarifaApi;
 use App\Models\EmpresaEmpresas;
 use App\Models\EmpresaLtd;
+use App\Models\API\EmpresaLtd as EmpresaLtdApi;
 use App\Models\LtdCobertura;
 use App\Models\PostalGrupo;
 use App\Models\PostalZona;
 use App\Models\DhlTarifas;
 use App\Models\Empresa;
+use App\Models\API\Empresa as EmpresaApi;
 use App\Models\Sucursal;
 use App\Models\Cliente;
 
@@ -40,22 +43,24 @@ class Cotizacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         
         if ($canal==="WEB") {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             if ( is_null($request['sucursal']) ) {
                 $empresa_id = $request['clienteIdCombo'];
             } else {
                 $empresa_id= Sucursal::where('id',$request['sucursal'])
                         ->value('empresa_id');
             }    
+            $empresasLtdQuery = EmpresaLtd::where('empresa_id',$empresa_id);
         } else {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $empresa_id = $request['empresa_id'];
+            $empresasLtdQuery = EmpresaLtdApi::where('empresa_id',$empresa_id);
         }
 
 
-        
-        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Empresa id =$empresa_id");
             
-        $empresasLtdQuery = EmpresaLtd::where('empresa_id',$empresa_id);
+        
         if ($ltd_id > 0){
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Consulta ltd_id=$ltd_id");
             $empresasLtdQuery->where('ltd_id',$ltd_id);
@@ -81,8 +86,14 @@ class Cotizacion {
                             ->where("empresa_id", $empresa_id)
                             ->distinct()->get()->pluck('servicio_id')->toArray();
         
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $canal");
+            
+            if ($canal === "API") {
+                $query = TarifaApi::base($empresa_id, $request['cp_d'], $ltdId);
+            } else {
+                $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+            }
+
             switch ($clasificacion) {
                 case "1": //FLAT
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 1 = FLAT");
@@ -515,8 +526,14 @@ class Cotizacion {
         $saldo = new Saldos();
         $this->saldo = $saldo->porEmpresa($empresa_id);
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $empresa = Empresa::select("tipo_pago_id")->where("id", $empresa_id)->firstOrFail();
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $canal");
+        if ($canal === "API") {
+            $empresa = EmpresaApi::select("tipo_pago_id")->where("id", $empresa_id)->firstOrFail();
+        } else {
+            $empresa = Empresa::select("tipo_pago_id")->where("id", $empresa_id)->firstOrFail();
+        }
+        
+        
         $this->tipoPagoId = $empresa->tipo_pago_id;
 
     }// fin public function base ($guiaId){

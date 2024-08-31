@@ -51,7 +51,8 @@ class Dhl {
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
 
         $client = new Client(['base_uri' => $this->baseUri]);
-        
+	
+	Log::debug(print_r($body,true));	
         $bodyJson = json_encode($body);
         Log::debug(print_r($bodyJson,true));
 

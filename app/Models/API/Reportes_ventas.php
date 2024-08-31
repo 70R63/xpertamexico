@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Log;
 use Carbon\Carbon;
+use DateTimeInterface;
 
 use App\Models\API\Sucursal;
 use App\Models\EmpresaEmpresas;
@@ -14,6 +15,11 @@ use App\Models\EmpresaEmpresas;
 class Reportes_ventas extends Model
 {
     use HasFactory;
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format("Y-m-d H:i:s");
+    }
 
 
     public function scopeFiltro($query, $parametros) {

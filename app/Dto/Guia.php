@@ -129,6 +129,7 @@ class Guia {
 				,'peso_bascula'	=>	$request['peso_bascula']
 				,'sobre_peso_kg'	=> $request['sobre_peso_kg']
 				,'costo_extendida'	=> $request['costo_extendida']
+				,'tarifa_id'	=> $request['tarifa_id']
 
 			);
 		Log::info(__CLASS__." ".__FUNCTION__." FINALIZNADO----- ");
@@ -228,7 +229,7 @@ class Guia {
 			$zona = "NA";
 		}
 
-		
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Parseo insert ");
 		$insert = array('usuario' => $usuario
 			,'empresa_id' 	=> self::getSucursalEmpresaId($cia)
 			,'ltd_id' 	=> Config('ltd.estafeta.id')
@@ -254,6 +255,7 @@ class Guia {
 			,'peso_bascula'	=>	$pesoBascula
 			,'sobre_peso_kg'	=> $sobrePesoKg
 			,'costo_extendida'	=> $costoExtendida
+			,'tarifa_id'	=> $request['tarifa_id']
 			
 		);
 
@@ -499,6 +501,7 @@ class Guia {
 		Log::info(__CLASS__." ".__FUNCTION__." INICIANDO ----");
 
 		$remitente = $request['labelDefinition']['location']['origin'];
+		Log::debug( print_r($remitente,true));
 		$direccion2 = isset($remitente['address']['addressReference']) ? $remitente['address']['addressReference'] : "";
 		$noInt= isset($remitente['address']['indoorInformation']) ? $remitente['address']['indoorInformation'] : "" ;
 
@@ -512,8 +515,8 @@ class Guia {
 					'no_ext' => $remitente['address']['externalNum'],
 					'no_int' => $noInt,
 					'empresa_id' => $empresa_id
-					,'ciudad'	=> $remitente['address']['ciudad']
-					,'entidad_federativa'=> $remitente['address']['entidad']
+					,'ciudad'	=> $remitente['address']['settlementName']
+					,'entidad_federativa'=> $remitente['address']['settlementTypeAbbName']
 				);
 		$tmp[0] = Sucursal::create($insertValue)->id;
 		Log::debug(print_r($tmp,true));
@@ -615,8 +618,8 @@ class Guia {
 					'no_ext' => $destinatario['address']['externalNum'],
 					'no_int' => $noInt,
 					'empresa_id' => $empresa_id
-					,'ciudad'	=> $destinatario['address']['ciudad']
-					,'entidad_federativa'=> $destinatario['address']['entidad']
+					,'ciudad'	=> $destinatario['address']['settlementName']
+					,'entidad_federativa'=> $destinatario['address']['settlementTypeAbbName']
 				);
 		$tmp[0] = Cliente::create($insertValue)->id;
 		Log::debug(print_r($tmp,true));

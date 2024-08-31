@@ -3,6 +3,7 @@
 namespace App\Singlenton;
 
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 use Log;
 use Carbon\Carbon;
 use Config;
@@ -39,13 +40,11 @@ class Fedex {
     private function __construct(int $ltd_id= 1, $empresa_id= 1, $plataforma = 'WEB', $ambiente="PRD"){
 
         Log::info(__CLASS__." ".__FUNCTION__);
-        if ($ambiente==="PRD") {
-            $this->baseUri = Config('ltd.fedex.base_uri');    
-        } else {
-            $this->baseUri = "https://apis-sandbox.fedex.com/";
-        }
+        
+        $this->baseUri = Config('ltd.fedex.base_uri');
         
         
+        Log::info($this->baseUri);
         $sesion = LtdSesion::where('ltd_id', $ltd_id)
                 ->where('expira_en','>', Carbon::now())
                 ->where('ambiente', $ambiente)
@@ -61,28 +60,24 @@ class Fedex {
                 $empresa_id = auth()->user()->empresa_id;
             } 
 
-            $client = new Client(['base_uri' => $this->baseUri]);
+            $client = new Client(['base_uri' => $this->baseUri, 'verify' => false ]);
 
             $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
                 
-            if ($ambiente==="PRD") {
-                $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
+            $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
                         ,Config('ltd.fedex.client_id')
                         ,Config('ltd.fedex.client_secret')
                     );   
-            } else {
-                $body = sprintf("grant_type=client_credentials&client_id=%s&client_secret=%s"
-                        ,"l7640a59a8ce1c4dfea7bb2d302febc882"
-                        ,"2bc10d1d2f3b4b6ab55a0e63518c306e"
-                    );  
-            }
             
-           
+            Log::info( print_r($body,true) );
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecutando Peticion");
             $response = $client->request('POST', 'oauth/token', [
                     'headers'   => $headers
                     ,'body'     => $body
                 ]);
 
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $contenido = json_decode($response->getBody()->getContents());
 
             Log::debug(print_r($contenido,true));
@@ -185,6 +180,7 @@ class Fedex {
                     , 'largo' => 0
                     , 'ancho' => 0
                     , 'alto' => 0
+                    ,'peso_dimensional_rastreo'=>0
                 );
 
         $body = array('trackingInfo' => [
@@ -228,11 +224,22 @@ class Fedex {
                     $this->latestStatusDetail = $value1->latestStatusDetail;                    
 
                     if (isset($value1->packageDetails->weightAndDimensions) ) {
-                        foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
-                            if ($value->unit === 'KG') {
-                                $pesoDimension['peso'] = $value->value;
-                            }
+
+                        if ( isset($value1->packageDetails->weightAndDimensions->weight) ) {
+                            foreach ($value1->packageDetails->weightAndDimensions->weight as $key => $value) {
+                                if ($value->unit === 'KG') {
+                                    $pesoDimension['peso'] = $value->value;
+                                }
+                            }    
+                        } else {
+                            
+                            foreach ($value1->shipmentDetails->weight as $key => $value) {
+                                if ($value->unit === 'KG') {
+                                    $pesoDimension['peso'] = $value->value;
+                                }
+                            } 
                         }
+                        
                     }
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     if (isset($value1->packageDetails->weightAndDimensions->dimensions) ) {

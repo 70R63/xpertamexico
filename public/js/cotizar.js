@@ -259,16 +259,17 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
-                console.log(response.data.data);
+                //console.log(response.data.data);
 
                 validaSaldo(response)
-                
 
                 table = $('#cotizacionAjax').DataTable({
                     "oLanguage": {
                         "sEmptyTable": "No exiten tarifas con los datos para cotizar"
-                    }
-                    ,"processing": true,
+                    },
+                    dom: '<"title"<"filter"f>>rtip',
+                    
+                    "processing": true,
                     "bDestroy": true,
                     order: [[1, 'desc']]
 
@@ -484,6 +485,10 @@ $("#sucursal").change(function() {
     var idSucursal = $('#sucursal').val();
     console.log("sucursal "+idSucursal)
     obtenerCP(idSucursal, "Sucursal");
+
+    direccionesPorEmpresa(idSucursal)
+   
+            
 }); 
 
 $("#cliente").change(function() {
@@ -543,6 +548,50 @@ function obtenerClientes() {
         });
 
 }
+
+
+function direccionesPorEmpresa(idSucursa){
+    console.log( "direccionesPorEmpresa" );
+
+    $.ajax({
+        /* Usar el route  */
+        //url: route('api.cp.colonias'), 
+        url: route('api.direcciones.tipo', [idSucursa]),
+        type: 'GET',
+        /* send the csrf-token and the input to the controller */
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        
+        
+        /* remind that 'data' is the response of the AjaxController */
+        }).done(function( response) {
+            console.log("done");
+            //console.log(response.data);
+           
+            $('#cliente').empty();
+            
+            $.each(response.data,function(key, empresa) {
+                $("#cliente").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
+              });   
+            
+        
+        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+            console.log( "fail" );
+            console.log(textStatus);
+            
+            swal(
+                "Error!",
+                data.responseJSON.message,
+                "error"
+              );
+            
+
+        }).always(function() {
+            console.log( "complete" );
+    });
+    
+}
+
+
 
 $("#addRow").click(function () {
     console.log('AddRow')

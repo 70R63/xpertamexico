@@ -317,10 +317,11 @@ class GuiaController extends Controller
             $unique = md5( (string)$carbon);
             $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
             $namePdf = sprintf("%s-%s-%s.pdf",(string)$carbon,$empresa_id,$unique);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 
             $insert = GuiaDTO::estafeta($sEstafeta,$requestInicial,"WEB");
-
+                
             $boolPrecio = true;
             $i=1;
             $numeroDeSolicitud = Carbon::now()->timestamp;
@@ -530,7 +531,7 @@ class GuiaController extends Controller
             
         } catch (\GuzzleHttp\Exception\InvalidArgumentException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." InvalidArgumentException");
-            Log::debug($ex->getBody());
+            Log::debug($ex->getResponse());
             $mensaje = array("Se ha producido un error interno favor de contactar al proveedor");
 
         } catch(\Illuminate\Database\QueryException $ex){ 

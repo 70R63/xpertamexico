@@ -158,12 +158,18 @@ Class EstafetaCreacion {
         $data = $this->validaLtdCobertura($data);      
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $data = $this->tarifas($data);
-        Log::debug($data);
+	
+    	$data = $this->perseoCotizacion($data);
+    	//Log::debug(print_r($data,true));
+    	$data = $this->tarifas($data);
+        
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+	    //$data = $this->tarifas($data);
+	   
         $data = $this->cotizacion($data);
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug($data);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->saldo($data);    
         
@@ -227,6 +233,7 @@ Class EstafetaCreacion {
 
     }
 
+	
     /**
      * Se busca obtener las tarifas de ESTAFETA basado en el KG y parseando valores del body custom.
      * 
@@ -258,6 +265,9 @@ Class EstafetaCreacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->validaLtdCobertura($data);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $this->perseoCotizacion($data,0);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->tarifas($data);
@@ -577,21 +587,19 @@ Class EstafetaCreacion {
     public function cotizacion($data, $cotizacionPersonalizada=1){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-        
         $data['piezas']=1;
         $data['costo_seguro']=0;
         
-        $data['costo_base']=$data['costo'];
+        $data['costo_base']= isset($data['costo']) ? $data['costo']      : 1;//$data['costo'] ;
 
         switch ($cotizacionPersonalizada) {
             case '1':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $data['valor_envio']=0;
                 $dimensiones = $data['labelDefinition']['itemDescription'];
 
                 $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
 
-
-            
                 if($serviceConfiguration['isInsurance']){
                     $data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
                 }
@@ -611,7 +619,7 @@ Class EstafetaCreacion {
         }
 
         
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data['costo_seguro'] = ($data['valor_envio']*$data['seguro'])/100;
 
         $data['peso_bascula'] = $data['peso'];
@@ -641,11 +649,82 @@ Class EstafetaCreacion {
         $data['subPrecio'] = $data['costo_base']+$data['costo_kg_extra']+$data['costo_seguro']+$data['costo_extendida'];
 
         $data['precio']=$data['subPrecio']*1.16;
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug(print_r(['data'],true));
 
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $data;
+    }
+
+
+     /**
+     * Valida la existencia del remitente (sucursal)
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2023 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion validaSucursal
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la petricion
+     * @param int $cotizacionPersonalizada = 1 es el flujo de guia con 
+     * valores del body original para crear una guia
+     * @param int $cotizacionPersonalizada = 2 flujo de una cotizacion sin 
+     * creacion de guia 
+     * 
+     * @var int 
+     * 
+     * 
+     * @return $data Se agra informacion segun la necesidad
+     */
+
+    public function perseoCotizacion($data, $cotizacionPersonalizada=1){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        switch ($cotizacionPersonalizada) {
+            case '1':
+                $data['valor_envio']=0;
+                $dimensiones = $data['labelDefinition']['itemDescription'];
+
+                $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
+
+
+            
+                if($serviceConfiguration['isInsurance']){
+                    $data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
+                }
+            
+                $data['peso'] = $dimensiones['weight'];
+                $data['alto'] = $dimensiones['height'];
+                $data['ancho'] = $dimensiones['width'];
+                $data['largo'] = $dimensiones['length'];
+                break;
+            
+            case '2':
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                break;
+            default:
+                // code...
+                break;
+        }
+
+
+        $data['peso_bascula'] = $data['peso'];
+        $data['peso_dimensional'] = ($data['alto']*$data['ancho']*$data['largo'])/5000;
+        
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data['pesoFacturado'] = ($data['peso_bascula'] > $data['peso_dimensional']) ? ceil($data['peso_bascula']) : ceil($data['peso_dimensional']) ;
+
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return $data;
+
     }
 
 

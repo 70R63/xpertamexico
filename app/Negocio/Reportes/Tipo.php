@@ -29,8 +29,6 @@ class Tipo
                 ->get()->toArray()
                 
             ;
-
-        //Log::debug();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
      
         $ltdLeyenda = Config("ltd.general")[$parametros['ltdId']];
@@ -156,7 +154,7 @@ class Tipo
 
     public function repesaje (array $parametros)
     {
-
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $reporteRepesajes = Reportes_repesajes::filtro( $parametros )
                 ->get()->toArray()
                 
@@ -186,22 +184,22 @@ class Tipo
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         fputcsv($handle, [
             
-            "GUIA_ID"
+            "PROVEEDOR_LTD"
             ,"CLIENTE XPERTA"
-            ,"TRACKINGNUMBER"
+            ,"GUIA"
             ,"FECHA RECOLECCION"
             ,"SERVICIO"
-            ,"LARGO"
-            ,"ANCHO"
-            ,"ALTO"
-            ,"PESO DIMENSIONAL"
-            ,"PESO BASCULA"
             ,"PESO FACTURADO"
+            ,"PESO BASCULA"
             ,"LARGO"
             ,"ANCHO"
             ,"ALTO"
             ,"PESO DIMENSIONAL"
-            ,"PESO BASCULA"
+            ,"PESO BASCULA RASTREO"
+            ,"LARGO RASTREO"
+            ,"ANCHO RASTREO"
+            ,"ALTO RASTREO"
+            ,"PESO DIMENSIONAL RASTREO" 
             ,"KGS EXTRA"
             ,"COSTO BASE"
             ,"COSTO KGS EXTRA"
@@ -212,7 +210,7 @@ class Tipo
             ,"COSTO SEGURO"
             ,"SUBTOTAL"
             ,"TOTAL"
-            ,"ESTATUS RASTREO"
+            ,"TOTAL RASTREO"
 
 
         ]);
@@ -223,21 +221,21 @@ class Tipo
             $subtotal = $repesaje['costo_base']+$repesaje['costo_kg_extra']+$repesaje['costo_extendida']+$repesaje['seguro'];
 
             fputcsv($handle, [
-                $repesaje['id']
+                $repesaje['ltd_nombre']
                 ,$repesaje['cliente_xperta']
-                ,$repesaje['tracking_number']
+                ,sprintf("'%s",trim($repesaje['tracking_number']))
                 ,$repesaje['pickup_fecha']
                 ,$repesaje['servicio_nombre']
+                ,$repesaje['peso_facturado']
+                ,$repesaje['peso_bascula']
                 ,$repesaje['largo']
                 ,$repesaje['ancho']
                 ,$repesaje['alto']
                 ,$repesaje['peso_dimensional']
-                ,$repesaje['peso_bascula']
-                ,$repesaje['peso_facturado']
+                ,"0"
                 ,$repesaje['largo_rastreo']
                 ,$repesaje['ancho_rastreo']
                 ,$repesaje['alto_rastreo']
-                ,"0"
                 ,"0"
                 ,$repesaje['sobre_peso_kg']
                 ,$repesaje['costo_base']
@@ -249,9 +247,8 @@ class Tipo
                 ,$repesaje['seguro']
                 ,$subtotal
                 ,$repesaje['precio']
-                ,$repesaje['rastreo_nombre']
+                ,$repesaje['precio_rastreo']
 
-                
 
             ]);
             $contador++;
@@ -260,7 +257,7 @@ class Tipo
         fclose($handle);
         header('Content-Type: text/csv');
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //$this->insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador);
+        $this->insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador);
         
     }// repesaje
 

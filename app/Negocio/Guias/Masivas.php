@@ -115,6 +115,12 @@ class Masivas {
 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $this->tarifa($data);
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $$$$$$$$$$$$$$$$$$$$$$$$$$");
+                Log::debug(print_r($this->tarifa,true));
+
+                $data['tarifa_id']=$this->tarifa['id'];
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $$$$$$$$$$$$$$$$$$$$$$$$$$");
                 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                 $data = $this->calculoPrecio($data);
@@ -258,7 +264,6 @@ class Masivas {
         $dto = new EstafetaDTO();
         $body = $dto->parser($data,"WEB",$empresas);
 
-        //Log::debug(print_r((array)$body,true));
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $sEstafeta = new sEstafeta($empresa_id );
@@ -523,10 +528,13 @@ class Masivas {
         $nCotizacion = new nCotizacion();
         $nCotizacion->base($data,$data['ltd_id']);
         $tarifas = $nCotizacion->getTabla();
-        Log::debug(print_r($tarifas,true));
-        Log::debug(print_r($data,true));
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
+        Log::debug(print_r($tarifas,true));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug(print_r($data,true));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         if (count($tarifas)==0) {
             $mensaje[] = sprintf("No se cuenta con tarifas ");
             throw ValidationException::withMessages($mensaje);

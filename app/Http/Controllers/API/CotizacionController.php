@@ -40,7 +40,7 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $tabla = $nCotizacion->getTabla();
 
-        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
         Log::debug(print_r($tabla,true));
         $success['data'] = $tabla;
         $success['saldo'] = $nCotizacion->getSaldo();
@@ -56,7 +56,7 @@ class CotizacionController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function cp(Request $request){
-        Log::info(__CLASS__." ".__FUNCTION__);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::info($request);
         $modelo = $request->get('modelo');
 
@@ -68,6 +68,8 @@ class CotizacionController extends BaseController
         $resultado = $datos->get()
                 ->toArray();
         
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::debug($resultado);
         return $this->successResponse($resultado, 'User login successfully.');
         
     }
