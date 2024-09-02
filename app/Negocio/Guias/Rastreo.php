@@ -62,7 +62,7 @@ class Rastreo {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." armando update");
         $this->update = array('ultima_fecha' => $ultimaFecha
                 ,'rastreo_estatus' => $rastreoEstatus
-                ,'rastreo_peso' => $paquete['peso'] 
+                ,'rastreo_peso' => $paquete['peso_rastreo'] 
                 ,'largo' => $paquete['largo'] 
                 ,'ancho' => $paquete['ancho'] 
                 ,'alto' => $paquete['alto']
