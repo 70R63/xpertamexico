@@ -193,6 +193,8 @@ class Estafeta {
                     , 'ancho' => 0
                     , 'alto' => 0
                     ,'peso_dimensional_rastreo'=>0
+                    ,'peso_rastreo'=>0
+                    ,'peso_facturado_rastreo'=>0
                 );
 
 
@@ -252,9 +254,13 @@ class Estafeta {
                 $pesoDimension['largo'] = $trackingData->dimensions->length;
                 $pesoDimension['ancho'] = $trackingData->dimensions->width;
                 $pesoDimension['alto'] = $trackingData->dimensions->height;
-                $pesoDimension['peso'] = $weight;
-               
+                $pesoDimension['peso_rastreo'] = $weight;
                 $pesoDimension['peso_dimensional_rastreo'] = $volumetricWeight;
+
+                $pesoFacturadoRastreo = ($weight > $volumetricWeight) ? $weight : $volumetricWeight;
+                $pesoDimension['peso_facturado_rastreo'] = ceil($pesoFacturadoRastreo);
+
+
             } else {
                 Log::info(__CLASS__." ".__FUNCTION__." "."Validar estatus y valores rastreo");
             }

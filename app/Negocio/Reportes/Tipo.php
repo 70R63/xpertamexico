@@ -156,6 +156,7 @@ class Tipo
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $reporteRepesajes = Reportes_repesajes::filtro( $parametros )
+                //->where("ids",1)
                 ->get()->toArray()
                 
             ;
@@ -186,20 +187,22 @@ class Tipo
             
             "PROVEEDOR_LTD"
             ,"CLIENTE XPERTA"
-            ,"GUIA"
+            ,"GUIA ID"
+            ,"TRACKINGNUMBER"
             ,"FECHA RECOLECCION"
             ,"SERVICIO"
             ,"PESO FACTURADO"
             ,"PESO BASCULA"
+            ,"PESO DIMENSIONAL"
             ,"LARGO"
             ,"ANCHO"
             ,"ALTO"
-            ,"PESO DIMENSIONAL"
-            ,"PESO BASCULA RASTREO"
-            ,"LARGO RASTREO"
-            ,"ANCHO RASTREO"
-            ,"ALTO RASTREO"
-            ,"PESO DIMENSIONAL RASTREO" 
+            ,"PESO FACTURADO LTD"
+            ,"PESO BASCULA LTD"
+            ,"PESO DIMENSIONAL LTD"
+            ,"LARGO LTD"
+            ,"ANCHO LTD"
+            ,"ALTO LTD"
             ,"KGS EXTRA"
             ,"COSTO BASE"
             ,"COSTO KGS EXTRA"
@@ -223,20 +226,22 @@ class Tipo
             fputcsv($handle, [
                 $repesaje['ltd_nombre']
                 ,$repesaje['cliente_xperta']
+                ,$repesaje['id']
                 ,sprintf("'%s",trim($repesaje['tracking_number']))
                 ,$repesaje['pickup_fecha']
                 ,$repesaje['servicio_nombre']
                 ,$repesaje['peso_facturado']
                 ,$repesaje['peso_bascula']
+                ,$repesaje['peso_dimensional']
                 ,$repesaje['largo']
                 ,$repesaje['ancho']
                 ,$repesaje['alto']
-                ,$repesaje['peso_dimensional']
-                ,"0"
+                ,"PESO FACTURADO LTD"
+                ,$repesaje['rastreo_peso']
+                ,$repesaje['peso_dimensional_rastreo']
                 ,$repesaje['largo_rastreo']
                 ,$repesaje['ancho_rastreo']
                 ,$repesaje['alto_rastreo']
-                ,"0"
                 ,$repesaje['sobre_peso_kg']
                 ,$repesaje['costo_base']
                 ,$repesaje['costo_kg_extra']
@@ -271,7 +276,7 @@ class Tipo
                 ,'servicio_id'=>$parametros['servicio_id']
                 ,'fecha_ini' => $fechaIni
                 ,'fecha_fin' => $fechaFin
-                ,'ruta_csv' => sprintf("public/%s",$nameCsv)
+                ,'ruta_csv' => sprintf("%s",$nameCsv)
                 ,'registros_cantidad' => $contador
                 ,'tipo' => $parametros['tipo']
             )

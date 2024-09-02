@@ -126,6 +126,8 @@ class ReportesController extends ApiController
             Log::debug(print_r($e->getMessage(),true ));
            $mensaje = $e->getMessage();
         }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $mensaje");
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
         return $this->sendError("Exception",$mensaje, "400");
 
