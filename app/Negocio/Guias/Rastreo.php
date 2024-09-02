@@ -70,6 +70,8 @@ class Rastreo {
                 ,'pickup_fecha' =>  $pickupFecha
                 ,'peso_dimensional_rastreo' => $paquete['peso_dimensional_rastreo'] 
                 ,'precio_rastreo' => $precioRastreo
+                ,'peso_facturado_rastreo' => $paquete['peso_facturado_rastreo']
+
             );
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
