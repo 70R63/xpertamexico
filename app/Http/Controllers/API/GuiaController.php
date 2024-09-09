@@ -569,7 +569,7 @@ class GuiaController extends Controller
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizando Saldo");
                     $update['importe'] = -($precioRastreo-$value['precio']);
                     $nSaldos = new nSaldos();
-                    $nSaldos->calcular($update);
+                    //$nSaldos->calcular($update);
 
                 }
                 
@@ -649,7 +649,7 @@ class GuiaController extends Controller
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizando Saldo");
                         $update['importe'] = -($precioRastreo-$value['precio']);
                         $nSaldos = new nSaldos();
-                        $nSaldos->calcular($update);
+                        //$nSaldos->calcular($update);
 
                     }
                     
