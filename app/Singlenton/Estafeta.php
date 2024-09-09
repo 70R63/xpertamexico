@@ -243,7 +243,7 @@ class Estafeta {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Existe tracking");
 
             $trackingData = $response->TrackingData;
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($trackingData,true));
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($trackingData,true));
             Log::info(__CLASS__." ".__FUNCTION__." Ultimo estatus");
             $this->latestStatusDetail = $trackingData->statusENG;
             Log::debug(print_r($this->latestStatusDetail,true));

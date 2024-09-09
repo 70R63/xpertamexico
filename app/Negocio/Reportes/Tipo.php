@@ -189,6 +189,7 @@ class Tipo
             ,"CLIENTE XPERTA"
             ,"GUIA ID"
             ,"TRACKINGNUMBER"
+            ,"ES REPESAJE"
             ,"FECHA RECOLECCION"
             ,"SERVICIO"
             ,"PESO FACTURADO"
@@ -213,7 +214,8 @@ class Tipo
             ,"COSTO SEGURO"
             ,"SUBTOTAL"
             ,"TOTAL"
-            ,"TOTAL RASTREO"
+            ,"TOTAL REPESAJE"
+            ,"DIFERENCIA REPESAJE"
 
 
         ]);
@@ -223,11 +225,17 @@ class Tipo
         foreach ($reporteRepesajes as $repesaje) {
             $subtotal = $repesaje['costo_base']+$repesaje['costo_kg_extra']+$repesaje['costo_extendida']+$repesaje['seguro'];
 
+            $diferenciaPrecio=0;
+            if ($repesaje['es_repesaje']==='SI'){
+                $diferenciaPrecio = $repesaje['precio_rastreo']-$repesaje['precio']
+                $diferenciaPrecio = round($diferenciaPrecio, 2)
+            }
             fputcsv($handle, [
                 $repesaje['ltd_nombre']
                 ,$repesaje['cliente_xperta']
                 ,$repesaje['id']
                 ,sprintf("'%s",trim($repesaje['tracking_number']))
+                ,$repesaje['es_repesaje']
                 ,$repesaje['pickup_fecha']
                 ,$repesaje['servicio_nombre']
                 ,$repesaje['peso_facturado']
@@ -236,7 +244,7 @@ class Tipo
                 ,$repesaje['largo']
                 ,$repesaje['ancho']
                 ,$repesaje['alto']
-                ,"PESO FACTURADO LTD"
+                ,$repesaje['peso_facturado_rastreo']
                 ,$repesaje['rastreo_peso']
                 ,$repesaje['peso_dimensional_rastreo']
                 ,$repesaje['largo_rastreo']
@@ -253,14 +261,17 @@ class Tipo
                 ,$subtotal
                 ,$repesaje['precio']
                 ,$repesaje['precio_rastreo']
-
+                ,$diferenciaPrecio
 
             ]);
             $contador++;
         }
         
         fclose($handle);
-        header('Content-Type: text/csv');
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="'.$nameCsv.'"');
+        header("Content-Transfer-Encoding: binary");
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->insertarReporte($parametros, $fechaIni, $fechaFin, $nameCsv, $contador);
         

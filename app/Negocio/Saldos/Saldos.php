@@ -34,6 +34,7 @@ class Saldos
         $saldoArray["monto_anterior"]=$saldoArray["monto"];
         $saldoArray["monto"]=$saldoArray["monto"]+$inputs["importe"];
         
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($saldoArray,true));
         $saldo->fill($saldoArray)->save();
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);

@@ -141,8 +141,6 @@ function guiasTabla(){
 
 function documentoRetorno(row, rol){
 
-    console.log(rol)
-
     var doc = documento(row)
 
     var htmlRetorno = '<span> <i title="Retorno de la guia" class="si si-action-undo text-warning tx-20"> </i> </span>';

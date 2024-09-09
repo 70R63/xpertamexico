@@ -56,7 +56,7 @@ class Rastreo {
      * @return array conjunto de valor parseado para actualizar la guia 
      */
 
-    public function parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, array $paquete){
+    public function parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, array $paquete, $esRepesaje){
        
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." armando update");
@@ -71,6 +71,7 @@ class Rastreo {
                 ,'peso_dimensional_rastreo' => $paquete['peso_dimensional_rastreo'] 
                 ,'precio_rastreo' => $precioRastreo
                 ,'peso_facturado_rastreo' => $paquete['peso_facturado_rastreo']
+                ,'es_repesaje'      => $esRepesaje
 
             );
 

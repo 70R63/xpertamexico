@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 #CLASES DE NEGOCIO 
 use App\Negocio\Guias\Repesaje as nRepesaje;
 use App\Negocio\Guias\Rastreo as nRastreo;
+use App\Negocio\Saldos\Saldos as nSaldos;
 
 use App\Singlenton\Estafeta ; //PRODUCTION
 use App\Singlenton\Fedex as sFedex ; //PRODUCTION
@@ -192,7 +193,7 @@ class GuiaController extends Controller
                 $insert['tracking_number'] = $trackingNumber;
                 $insert['documento'] = $namePdf;
                 Log::debug(print_r($insert ,true));   
-                //dd("prueba");
+                
                 $id = Guia::create($insert)->id;
                 $ids = sprintf("%s,%s",$ids, $ids);
                 $notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
@@ -390,6 +391,7 @@ class GuiaController extends Controller
      */
     public function rastreoActualizarAutomatico($paridad = 2){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        $tiempoTranscurrido = Carbon::now();
         $codeHttp = 404;
         try {
 
@@ -406,6 +408,7 @@ class GuiaController extends Controller
                     );
             
             $tabla= array();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecucion ".$tiempoTranscurrido->diffForHumans());
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
             return $this->successResponse($tabla, 'successfully.');
             
@@ -435,6 +438,7 @@ class GuiaController extends Controller
             $this->mensaje =$ex->getMessage();
         }
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecucion ".$tiempoTranscurrido->diffForHumans());
         return $this->sendError($this->error,$this->mensaje, $codeHttp);
     }//fin reastreo, Global para actualizar el esatus de las guias
 
@@ -450,6 +454,7 @@ class GuiaController extends Controller
      */
     public function rastreoAutomaticoFedex(){
         Log::info(__CLASS__." ".__FUNCTION__.__LINE__." INICIANDO-----------------");
+        $tiempoTranscurrido = Carbon::now();
         $codeHttp = 404;
         try {
 
@@ -466,6 +471,7 @@ class GuiaController extends Controller
                     );
             
             $tabla= array();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecucion ".$tiempoTranscurrido->diffForHumans());
             Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
             return $this->successResponse($tabla, 'successfully.');
             
@@ -531,27 +537,43 @@ class GuiaController extends Controller
                 Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
                 $scanEvents = $sFedex->getScanEvents();
                 $latestStatusDetail = $sFedex->getLatestStatusDetail();
+                
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obtener Valores Singlento");
                 $paquete = $sFedex->getPaquete();
-                $quienRecibio = $sFedex->getQuienRecibio();    
                 $ultimaFecha = Carbon::parse($scanEvents->date)->format('Y-m-d H:i:s');
                 $rastreoEstatus =Config('ltd.fedex.rastreoEstatus')[$latestStatusDetail->derivedCode];
+                $quienRecibio = $sFedex->getQuienRecibio();    
                 $pickupFecha = $sFedex->getPickupFecha();
+
 
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
                 $nRepesaje = new nRepesaje();
-                $nRepesaje->calcularPrecio($guia_id, $paquete, $precioOriginal);
+                $nRepesaje->calcularPrecio($guia_id, $paquete, $value);
                 $precioRastreo = $nRepesaje->getPrecioRastreo();
-                
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                $esRepesaje = $nRepesaje->getEsRepesaje();
+
+
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." armando update");
                 $nRastreo = new nRastreo();
-                $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete);
+                $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete, $esRepesaje);
                 $update = $nRastreo->getUpdate();
-                Log::debug(print_r($update,true));
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizado Guia");
-                $affectedRows = GuiaAPI::where("id", $value['id'])
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($update,true));
+
+                $affectedRows = GuiaAPI::where("id", $guia_id)
                         ->update($update);
-                
+
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
+                
+
+                if ($esRepesaje==='SI') {
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizando Saldo");
+                    $update['importe'] = -($precioRastreo-$value['precio']);
+                    $nSaldos = new nSaldos();
+                    $nSaldos->calcular($update);
+
+                }
+                
+                
             }
         } // fin foreach ($tabla as $key => $value)
         Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
@@ -568,6 +590,7 @@ class GuiaController extends Controller
      */
     private function rastreoEstafeta(bool $automatico = false, $paridad=2){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        
         $guia = array();
         $plataforma = "AUTOMATICO";
         $servicioID = 2;
@@ -585,51 +608,65 @@ class GuiaController extends Controller
         $guiaCantidad = count($guias);
         $i = 0;
         foreach ($guias as $key => $value) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."-----".++$i."/$guiaCantidad -----");
-            Log::debug($value);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."----------".++$i."/$guiaCantidad ----------");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." valores de guia ".print_r($value,true));
             $guia_id = $value['id'];
             try{
                 $sEstafeta->rastreo($value['tracking_number']);
                 $update = array();
-                
+                $updateSaldo = array();
                 if ($sEstafeta->getExiteSeguimiento()) {   
                     Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
-                    $paquete = $sEstafeta->getPaquete();
 
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
-                    $nRepesaje = new nRepesaje();
-                    $nRepesaje->calcularPrecio($guia_id, $paquete, $value['precio']);
-                    $precioRastreo = $nRepesaje->getPrecioRastreo();
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Obtener Valores Singlento");
+                    $paquete = $sEstafeta->getPaquete();
                     $ultimaFecha =  $sEstafeta->getUltimaFecha();
                     $rastreoEstatus = Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()];
                     $quienRecibio = $sEstafeta->getQuienRecibio();
                     $pickupFecha = $sEstafeta->getPickupFecha();
+                    
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
+                    $nRepesaje = new nRepesaje();
+                    $nRepesaje->calcularPrecio($guia_id, $paquete, $value);
+                    $precioRastreo = $nRepesaje->getPrecioRastreo();
+                    $esRepesaje = $nRepesaje->getEsRepesaje();
+
 
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." armando update");
                     $nRastreo = new nRastreo();
-                    $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete);
+                    $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete, $esRepesaje);
                     $update = $nRastreo->getUpdate();
-                    Log::info(print_r($update,true));
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($update,true));
 
                     $affectedRows = GuiaAPI::where("id", $guia_id)
                             ->update($update);
-        
-                   
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
 
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
+                    
+
+                    if ($esRepesaje==='SI') {
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizando Saldo");
+                        $update['importe'] = -($precioRastreo-$value['precio']);
+                        $nSaldos = new nSaldos();
+                        $nSaldos->calcular($update);
+
+                    }
+                    
 
                 }else{
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
                 }
             }  catch (\Exception $ex) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception :". $ex->getMessage());
                 Log::debug(print_r($ex,true));
                 
             }
             
             
         } // fin foreach ($tabla as $key => $value)
-        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
     }// Fin rastreoFedex
 
 
@@ -668,14 +705,15 @@ class GuiaController extends Controller
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
 
 
-        $guias = GuiaAPI::select('id','ltd_id', 'tracking_number', 'precio')
+        $guias = GuiaAPI::select('id','ltd_id', 'tracking_number', 'precio','empresa_id', 'peso', 'tarifa_id',  'servicio_id')
             ->where('ltd_id',$ltdId)            
 		    ->whereNotIn('rastreo_estatus',array(4,7))
 		    ->whereNotIn('empresa_id',array(307))
 		    ->where('created_at', '>', now()->subDays(90)->endOfDay())
 		    ->where('created_at', '<', now()->subDays(2)->endOfDay())
-            //->offset(5)->limit(5)
+            //->offset(0)->limit(100)
             ->orderBy('id', 'DESC')
+            //->whereIn("guias.id", array(88141,88423) )
                     
                     ;
 
@@ -728,7 +766,6 @@ class GuiaController extends Controller
             $data['esManual']="API";
            
             $servicio = $request->route()->parameter('servicios');
-            //$ltd = $request->route()->parameter('ltds');
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             switch ($servicio) {
