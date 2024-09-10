@@ -143,10 +143,8 @@ class Repesaje {
 
 				}
 				
-				
-
 			} else {
-				Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin Asignacion LTD");
+				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin Asignacion LTD");
 			}
 
 		} else {
