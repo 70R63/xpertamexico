@@ -78,8 +78,8 @@ class Repesaje {
 
 				if ( count($tarifa) > 0 ) {
 
-					$tarifa_kg_fin = $tarifa['kg_fin'];
-					$tarifa_kg_extra = $tarifa['kg_extra'];
+					$tarifa_kg_fin = $tarifa[0]['kg_fin'];
+					$tarifa_kg_extra = $tarifa[0]['kg_extra'];
 					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tarifa_id= $tarifaId");
 					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $pesoFacturadoRastreo > $tarifa_kg_fin");
 
