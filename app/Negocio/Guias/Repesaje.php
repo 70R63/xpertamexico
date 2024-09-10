@@ -74,63 +74,75 @@ class Repesaje {
 
 				$tarifa = Tarifa::select("id","kg_ini", "kg_fin", "kg_extra", "costo")
 					->where("id",$data['tarifa_id'])
-					->firstOrFail();
+					->get()->toArray();
 
-				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tarifa_id= $tarifaId");
-				Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $pesoFacturadoRastreo > $tarifa->kg_fin");
+				if ( count($tarifa) > 0 ) {
 
-
-				switch ($empresaLtd[0]['tarifa_clasificacion']) {
-					case 1:
-						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." TARIFA FLAT");
-
-						if ($pesoFacturadoRastreo > $tarifa->kg_fin) {
-							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso Maximo exedido");
-
-							$pesoDiferencia = $pesoFacturadoRastreo-$data['peso'];
-
-							$costoExtraDiferencia =$pesoDiferencia*  $tarifa->kg_extra;
-							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." costoExtraDiferencia=$costoExtraDiferencia");
-							$this->precioRastreo = $data['precio'] + ($costoExtraDiferencia*1.16);
-
-							$this->esRepesaje = 1;
-
-						} else {
-							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso en rango Maximo");
-						}
-						break;
-
-					case 2:
-						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." TARIFA RANGO");
-
-						if ($pesoFacturadoRastreo > $tarifa->kg_fin) {
-							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso Maximo exedido");
+					$tarifa_kg_fin = $tarifa['kg_fin'];
+					$tarifa_kg_extra = $tarifa['kg_extra'];
+					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tarifa_id= $tarifaId");
+					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $pesoFacturadoRastreo > $tarifa_kg_fin");
 
 
-							$tarifaNueva = Tarifa::select("id","kg_ini", "kg_fin", "kg_extra", "costo")
-								->where("kg_ini", ">=",$pesoFacturadoRastreo)
-								->where("kg_fin", "=<",$pesoFacturadoRastreo)
-								->get()->toArray();
+					switch ($empresaLtd[0]['tarifa_clasificacion']) {
+						case 1:
+							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." TARIFA FLAT");
 
-							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-							if ( count($tarifaNueva) >0) {
-								$this->precioRastreo = $tarifaNueva[0]['costo'] * 1.16;
+							if ($pesoFacturadoRastreo > $tarifa_kg_fin) {
+								Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso Maximo exedido");
+
+								$pesoDiferencia = $pesoFacturadoRastreo-$data['peso'];
+
+								$costoExtraDiferencia =$pesoDiferencia * $tarifa_kg_extra;
+								Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." costoExtraDiferencia=$costoExtraDiferencia");
+								$this->precioRastreo = $data['precio'] + ($costoExtraDiferencia*1.16);
+
+								$this->esRepesaje = 1;
+
 							} else {
-								
+								Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso en rango Maximo");
 							}
-							$this->esRepesaje = 1;
+							break;
 
-						} else {
-							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso en rango Maximo");
-						}
+						case 2:
+							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." TARIFA RANGO");
+
+							if ($pesoFacturadoRastreo > $tarifa_kg_fin) {
+								Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso Maximo exedido");
+
+
+								$tarifaNueva = Tarifa::select("id","kg_ini", "kg_fin", "kg_extra", "costo")
+									->where("kg_ini", ">=",$pesoFacturadoRastreo)
+									->where("kg_fin", "=<",$pesoFacturadoRastreo)
+									->get()->toArray();
+
+								Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+								if ( count($tarifaNueva) >0) {
+									$this->precioRastreo = $tarifaNueva[0]['costo'] * 1.16;
+								} else {
+									
+								}
+								$this->esRepesaje = 1;
+
+							} else {
+								Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Peso en rango Maximo");
+							}
 
 
 
-						break;
-					default:
-						Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." TARIFA DEFAULT");
-						break;
+							break;
+						default:
+							Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." TARIFA DEFAULT");
+							break;
+					} //  fin switch ($empresaLtd[0]['tarifa_clasificacion'])
+					
+
+				} else {
+					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." No se detecta Tarifa, validar con Administracion");
+
 				}
+				
+				
 
 			} else {
 				Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin Asignacion LTD");
