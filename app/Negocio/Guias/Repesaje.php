@@ -73,11 +73,12 @@ class Repesaje {
 
 
 				$tarifa = Tarifa::select("id","kg_ini", "kg_fin", "kg_extra", "costo")
-					->where("id",$data['tarifa_id'])
+					->where("id",$tarifaId)
 					->get()->toArray();
 
+				Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($tarifa,true));
 				if ( count($tarifa) > 0 ) {
-
+					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Valida Tarifa ");
 					$tarifa_kg_fin = $tarifa[0]['kg_fin'];
 					$tarifa_kg_extra = $tarifa[0]['kg_extra'];
 					Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tarifa_id= $tarifaId");
