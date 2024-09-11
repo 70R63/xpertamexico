@@ -227,8 +227,8 @@ class Tipo
 
             $diferenciaPrecio=0;
             if ($repesaje['es_repesaje']==='SI'){
-                $diferenciaPrecio = $repesaje['precio_rastreo']-$repesaje['precio']
-                $diferenciaPrecio = round($diferenciaPrecio, 2)
+                $diferenciaPrecio = $repesaje['precio_rastreo']-$repesaje['precio'];
+                $diferenciaPrecio = round($diferenciaPrecio, 2);
             }
             fputcsv($handle, [
                 $repesaje['ltd_nombre']
