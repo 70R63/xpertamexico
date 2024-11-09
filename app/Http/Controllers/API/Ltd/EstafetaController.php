@@ -92,7 +92,7 @@ class EstafetaController extends ApiController
                     $data['servicio_id']=12;
                 break;
                 case 'diasigpps':
-                    $data['servicio_id']=2;
+                    $data['servicio_id']=13;
                     break;
                 
                 default:
@@ -210,6 +210,12 @@ class EstafetaController extends ApiController
                 case '2dias':
                     $data['servicio_id']=3;
                 break;
+                case 'terrestrepps':
+                    $data['servicio_id']=12;
+                break;
+                case 'diasigpps':
+                    $data['servicio_id']=13;
+                    break;
                 
                 default:
                     throw ValidationException::withMessages(array("Favor de validar tu servicio"));
