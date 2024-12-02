@@ -106,5 +106,8 @@ Route::resource('saldos/ajustes','Saldos\AjustesController')
 Route::resource('saldos/externas','Saldos\GuiasExternasController')
     ->middleware(['roles:admin,contraloria,adminops,operaciones']);
 
+Route::resource('saldos/cargaconciliacion','Saldos\CargaConciliacionController')
+    ->middleware(['roles:admin,contraloria,adminops,operaciones']);
+
 
 require __DIR__.'/auth.php';

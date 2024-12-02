@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 
-@include('saldos.guiasexternas.dashboard.header')
+@include('saldos.cargaconciliacion.dashboard.header')
 
 <!-- Row -->
 <div class="row">
@@ -9,7 +9,7 @@
         <div class="card custom-card">
             <div class="card-header bg-transparent border-bottom-0">
                 <div>
-                    <label class="main-content-label mb-2">Ajustes por Guias Externas</label> <span class="d-block tx-12 mb-0 text-muted">Ajustes de Pagos</span>
+                    <label class="main-content-label mb-2">Carga Conciliacion</label> <span class="d-block tx-12 mb-0 text-muted">Subir archivo con la realacion de factura y guias cobradas por las LTDs.</span>
                 </div>
             </div>
         </div>
@@ -21,13 +21,13 @@
 <div class="row row-sm">
     <div class="col-xxl-2 col-xl-12 col-lg-12 col-md-12">
         
-        {!! Form::open([ 'route' => ['externas.store'], 'method' =>    'POST'     , 'class'=>'parsley-style-1', 'id'=>'ajustesStoreForm' 
+        {!! Form::open([ 'route' => ['cargaconciliacion.store'], 'method' =>    'POST'     , 'class'=>'parsley-style-1', 'id'=>'ajustesStoreForm' 
             ,'enctype'=>'multipart/form-data'
         ]) 
         !!}
             <div class="card custom-card">
                 <div class="card-body ">
-                    @include("saldos.guiasexternas.dashboard.campos")       
+                    @include("saldos.cargaconciliacion.dashboard.campos")       
                 </div>
                 <div class="form-group row justify-content-around">     
                     <div>    
@@ -41,7 +41,7 @@
     <div class="col-xxl-10 col-xl-12 col-lg-12 col-md-12">
          <div class="card custom-card">
             <div class="card-body ">
-                @include("saldos.guiasexternas.dashboard.tabla")
+                @include("saldos.cargaconciliacion.dashboard.tabla")
             </div>
         </div>
     </div>

@@ -25,7 +25,7 @@
 	
 	<ul class="nav-sub">
 		<li class="nav-sub-item">
-			<a class="nav-sub-link" href="{{ route('externas.index') }}">Conciliacion</a>
+			<a class="nav-sub-link" href="{{ route('cargaconciliacion.index') }}"> Carga Conciliacion</a>
 		</li>	
 	</ul>
 </li>
