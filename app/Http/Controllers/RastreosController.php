@@ -16,6 +16,11 @@ use App\Singlenton\Dhl as sDhl;
 use Log;
 use Carbon\Carbon;
 
+#CLASES DE NEGOCIO 
+use App\Negocio\Guias\Repesaje as nRepesaje;
+use App\Negocio\Guias\Rastreo as nRastreo;
+use App\Negocio\Saldos\Saldos as nSaldos;
+
 class RastreosController extends Controller
 {
 
@@ -228,10 +233,11 @@ class RastreosController extends Controller
             $totalGuias = count($guias);
             Log::info("Total de guias revisar ".$totalGuias);
 
+            $i = 0;
             foreach ($guias as $key => $guia) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                Log::info("$key / $totalGuias");
-                Log::debug(print_r($guia,true));
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."----------".++$i."/$guiaCantidad ----------");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." valores de guia ".print_r($guia,true));
+                $guia_id = $guia['id'];
 
                 try {
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -243,25 +249,38 @@ class RastreosController extends Controller
 
                     if ($sDhl->getExiteSeguimiento()) {   
                         Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
-                        $paquete = $sDhl->getPaquete();
+                        $paquete = $sDhl->getPaquete();                  
+                        $ultimaFecha =  $sDhl->getUltimaFecha();
+                        $rastreoEstatus = Config('ltd.estafeta.rastreoEstatus')[$sDhl->getLatestStatusDetail()];
+                        $quienRecibio = $sDhl->getQuienRecibio();
+                        $pickupFecha = $sDhl->getPickupFecha();
 
-                        $update = array('ultima_fecha' => $sDhl->getUltimaFecha()
-                                ,'rastreo_estatus' => Config('ltd.dhl.rastreoEstatus')[$sDhl->getLatestStatusDetail()]
-                                ,'rastreo_peso' => $paquete['peso'] 
-                                ,'largo' => $paquete['largo'] 
-                                ,'ancho' => $paquete['ancho'] 
-                                ,'alto' => $paquete['alto']
-                                ,'quien_recibio' =>  $sDhl->getQuienRecibio()
-                                ,'pickup_fecha' =>  $sDhl->getPickupFecha()
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
+                        $nRepesaje = new nRepesaje();
+                        $nRepesaje->calcularPrecio($guia_id, $paquete, $guia);
+                        $precioRastreo = $nRepesaje->getPrecioRastreo();
+                        $esRepesaje = $nRepesaje->getEsRepesaje();
 
-                            );
+                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." armando update");
+                        $nRastreo = new nRastreo();
+                        $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete, $esRepesaje);
+                        $update = $nRastreo->getUpdate();
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($update,true));
 
-                        Log::info(print_r($update,true));
-                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                        $affectedRows = Guia::where("id", $guia['id'])
+                        $affectedRows = GuiaAPI::where("id", $guia_id)
                                 ->update($update);
-            
-                        Log::debug("affectedRows -> $affectedRows");
+
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
+                        
+
+                        if ($esRepesaje==='SI') {
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Actualizando Saldo");
+                            $update['importe'] = -($precioRastreo-$guia['precio']);
+                            $nSaldos = new nSaldos();
+                            //$nSaldos->calcular($update);
+
+                        }
+                        
                     }else{
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
                     }
