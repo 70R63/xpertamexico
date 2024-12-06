@@ -26,15 +26,17 @@
             </tr>
         </thead>
 
-        @foreach( $tabla  as $row)
+        @foreach( $conciliacionesTabla  as $row)
             <tr>
-                <td>{{ $row['id'] }}</td>
-                <td>{{ $row['id'] }}</td>
-                <td>{{ $row['created_at'] }}</td>
+                <td>
+                    <a class="nav-sub-link" href="{{ route('cargaconciliacion.show', ['cargaconciliacion'=>$row['num_factura_ltd']]) }}">{{ $row['num_factura_ltd'] }}</a>
+                </td>
+                <td>{{ $row['fecha_factura'] }}</td>
+                <td>{{ $row['num_factura_ltd'] }}</td>
+                <td>{{ $row['ltd_nombre'] }}</td>
                 <td>{{ $row['name'] }}</td>
-                <td>{{ $row['no_guias'] }}</td>
-                <td>{{ $row['importe_total'] }}</td>
-                <td>{{ $row['file_nombre'] }}</td>
+                <td>{{ $row['subtotal'] }}</td>
+                <td>{{ $row['total'] }}</td>
                 <td></td>
                 <td></td>
             </tr>
@@ -44,7 +46,7 @@
                                 
         <tfoot>
             <tr>
-                                <th>CONCILIACION ID </th>
+                <th>CONCILIACION ID </th>
                 <th>FECHA FACTURA </th>
                 <th>NO FACTURA </th>
                 <th>LTD</th>

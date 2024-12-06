@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Saldos;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\StoreCargaConciliacionRequest;
-use App\Http\Requests\UpdateCargaConciliacionRequest;
+use App\Http\Requests\Saldos\StoreCargaConciliacionRequest;
+use App\Http\Requests\Saldos\UpdateCargaConciliacionRequest;
 use App\Models\CargaConciliacion;
 
 
@@ -13,6 +13,7 @@ use App\Models\CargaConciliacion;
 use Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use \Redirect;
 
 //Exepciones
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -31,8 +32,8 @@ class CargaConciliacionController extends Controller
 
     const DASH_v = "saldos.cargaconciliacion.dashboard";
     #const CREAR_v = "saldos.cargaconciliacion.crear";
-    #const EDITAR_v = "saldos.editar";
-    #const SHOW_v = "saldos.show";
+    #const EDITAR_v = "saldos.cargaconciliacion.editar";
+    const SHOW_v = "saldos.cargaconciliacion.show";
     /**
      * Display a listing of the resource.
      *
@@ -48,10 +49,9 @@ class CargaConciliacionController extends Controller
            
             $cargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
             $cargaConciliacion->index();
-            //$nExterna->tabla();
-            //$tabla = $nExterna->getTabla();
                         
             $ltds = $cargaConciliacion->getLtds();
+            $conciliacionesTabla = $cargaConciliacion->getConciliacionView();
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
 
 
@@ -66,7 +66,7 @@ class CargaConciliacionController extends Controller
             */    
 
             return view(self::DASH_v 
-                    ,compact("ltds", "tabla")
+                    ,compact("ltds", "conciliacionesTabla")
                 );
 
 
@@ -84,7 +84,7 @@ class CargaConciliacionController extends Controller
             Log::info("QueryException");       
             $mensaje = "QueryException - Favor de buscar a tu administrador ";
         
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
             $mensaje=$e->getMessage();
             Log::debug(print_r($mensaje,true));
@@ -102,9 +102,62 @@ class CargaConciliacionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($facturaId)
     {
-        //
+        $tabla = array();
+        $ltds = array();
+        $numeroDeSolicitud = Carbon::now()->timestamp;
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud); 
+           
+            $cargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
+            $cargaConciliacion->show($facturaId);
+                        
+            $ltds = $cargaConciliacion->getLtds();
+            $conciliacionesTabla = $cargaConciliacion->getCargaConciliacions();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+
+
+            
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView("saldos.cargaconciliacion.show.tabla_detalle"
+                , array("conciliacionesTabla"=>$conciliacionesTabla)
+            )->setPaper('a4', 'landscape');
+        
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+            return $pdf->download('document.pdf');
+        
+
+            return view(self::DASH_v 
+                    ,compact("ltds", "conciliacionesTabla")
+                );
+
+
+        } catch (ModelNotFoundException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("ModelNotFoundException");       
+            $mensaje = "ModelNotFoundException - Favor de buscar a tu administrador ";
+        
+        } catch (QueryException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("QueryException");       
+            $mensaje = "QueryException - Favor de buscar a tu administrador ";
+        
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensaje=$e->getMessage();
+            Log::debug(print_r($mensaje,true));
+            Log::info("Error general ");       
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return view(self::DASH_v 
+                    ,compact("tabla", "ltds"))
+                ->withErrors( $mensaje);
     }
 
     /**
@@ -115,7 +168,45 @@ class CargaConciliacionController extends Controller
      */
     public function store(StoreCargaConciliacionRequest $request)
     {
-        //
+        $data = $request->all();
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));
+        $numeroDeSolicitud = Carbon::now()->timestamp;
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud); 
+
+            $nCargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
+            $nCargaConciliacion->store($data);
+
+
+            $tmp = sprintf("El registro de la nueva DIRECCION '%s', fue exitoso",$request->get('nombre'));
+            $notices = array($tmp);
+  
+            return Redirect::route(self::INDEX_r) -> withSuccess ($notices);
+
+        } catch (ModelNotFoundException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("ModelNotFoundException");       
+            $mensaje = "ModelNotFoundException - Favor de buscar a tu administrador ";
+        
+        } catch (QueryException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("QueryException");       
+            $mensaje = "QueryException - Favor de buscar a tu administrador ";
+        
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensaje=$e->getMessage();
+            Log::debug(print_r($mensaje,true));
+            Log::info("Error general ");       
+        }
+
+        return Redirect::back()
+                ->withErrors(array($mensaje))
+                ->withInput();
     }
 
     /**
@@ -124,9 +215,56 @@ class CargaConciliacionController extends Controller
      * @param  \App\Models\CargaConciliacion  $cargaConciliacion
      * @return \Illuminate\Http\Response
      */
-    public function show(CargaConciliacion $cargaConciliacion)
+    public function show($facturaId)
     {
-        //
+        $tabla = array();
+        $ltds = array();
+        $numeroDeSolicitud = Carbon::now()->timestamp;
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud - $facturaId"); 
+           
+            $nCargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+            $nCargaConciliacion->show($facturaId);
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+            $ltds = $nCargaConciliacion->getLtds();
+            $conciliacionesTabla = $nCargaConciliacion->getCargaConciliacions();
+
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+ 
+
+            return view(self::SHOW_v 
+                    ,compact("ltds", "conciliacionesTabla","facturaId")
+                )->withErrors( "validando show");
+
+
+        } catch (ModelNotFoundException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("ModelNotFoundException");       
+            $mensaje = "ModelNotFoundException - Favor de buscar a tu administrador ";
+        
+        } catch (QueryException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("QueryException");       
+            $mensaje = "QueryException - Favor de buscar a tu administrador ";
+        
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensaje=$e->getMessage();
+            Log::debug(print_r($mensaje,true));
+            Log::info("Error general ");       
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return view(self::DASH_v 
+                    ,compact("tabla", "ltds"))
+                ->withErrors( $mensaje);
     }
 
     /**
@@ -161,5 +299,71 @@ class CargaConciliacionController extends Controller
     public function destroy(CargaConciliacion $cargaConciliacion)
     {
         //
+    }
+
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\CargaConciliacion  $cargaConciliacion
+     * @return \Illuminate\Http\Response
+     */
+    public function descarga( $facturaId)
+    {
+        $tabla = array();
+        $ltds = array();
+        $numeroDeSolicitud = Carbon::now()->timestamp;
+        try {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud); 
+           
+            $cargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
+            $cargaConciliacion->show($facturaId);
+                        
+            $ltds = $cargaConciliacion->getLtds();
+            $conciliacionesTabla = $cargaConciliacion->getCargaConciliacions();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+
+
+            
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView("saldos.cargaconciliacion.show.tabla_detalle"
+                , array("conciliacionesTabla"=>$conciliacionesTabla)
+            )->setPaper('a4', 'landscape');
+        
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+            return $pdf->download('document.pdf');
+        
+
+            return view(self::DASH_v 
+                    ,compact("ltds", "conciliacionesTabla")
+                );
+
+
+        } catch (ModelNotFoundException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("ModelNotFoundException");       
+            $mensaje = "ModelNotFoundException - Favor de buscar a tu administrador ";
+        
+        } catch (QueryException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensajeInterno=$e->getMessage();
+            Log::debug(print_r($mensajeInterno,true));
+            Log::info("QueryException");       
+            $mensaje = "QueryException - Favor de buscar a tu administrador ";
+        
+        } catch (Exception $e) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
+            $mensaje=$e->getMessage();
+            Log::debug(print_r($mensaje,true));
+            Log::info("Error general ");       
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        return view(self::DASH_v 
+                    ,compact("tabla", "ltds"))
+                ->withErrors( $mensaje);
     }
 }

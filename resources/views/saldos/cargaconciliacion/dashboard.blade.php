@@ -21,7 +21,7 @@
 <div class="row row-sm">
     <div class="col-xxl-2 col-xl-12 col-lg-12 col-md-12">
         
-        {!! Form::open([ 'route' => ['cargaconciliacion.store'], 'method' =>    'POST'     , 'class'=>'parsley-style-1', 'id'=>'ajustesStoreForm' 
+        {!! Form::open([ 'route' => ['cargaconciliacion.store'], 'method' =>    'POST'     , 'class'=>'parsley-style-1', 'id'=>'cargaConciliacionStoreForm' 
             ,'enctype'=>'multipart/form-data'
         ]) 
         !!}

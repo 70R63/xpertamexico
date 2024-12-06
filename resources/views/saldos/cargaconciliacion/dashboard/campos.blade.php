@@ -32,4 +32,4 @@
     
     
 </div>
-<input accept=".csv" type="file" class="dropify" data-height="200" id="fileGuiasExternas" name="fileGuiasExternas" required />
+<input accept=".csv" type="file" class="dropify" data-height="200" id="fileCargaConciliacion" name="fileCargaConciliacion" required />

@@ -109,5 +109,15 @@ Route::resource('saldos/externas','Saldos\GuiasExternasController')
 Route::resource('saldos/cargaconciliacion','Saldos\CargaConciliacionController')
     ->middleware(['roles:admin,contraloria,adminops,operaciones']);
 
+Route::group(['as'=>'saldos.cargaconciliacion.'  ,'prefix'=>'saldos/cargaconciliacion'],function(){
+    Route::controller('Saldos\CargaConciliacionController'::class)->group(function(){
+        Route::get('descarga/{facturaId}', 'descarga')->name("descarga")
+            ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria']);;
 
+    });
+/*
+    Route::resource('descarga','Reportes\PagosController')
+        ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria']); 
+        */
+});
 require __DIR__.'/auth.php';

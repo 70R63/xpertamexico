@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_conciliacions', function (Blueprint $table) {
+        Schema::create('carga_conciliacions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->boolean('estatus')->default(1);
 
             $table->unsignedInteger('user_id')->nullable(false)->default(1);
             $table->unsignedInteger('empresa_id')->nullable(false)->default(1)->index();
+            $table->date('fecha_factura')->nullable(false)->default("1999-12-31");
+            $table->unsignedInteger('ltd_id')->nullable(false)->default(0);
 
             $table->string('tracking_number');
             $table->string('num_factura_ltd');

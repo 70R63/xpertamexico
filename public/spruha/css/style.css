@@ -3181,7 +3181,7 @@ fieldset:disabled a.btn {
     border-radius: 50%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .card-item .card-item-icon.card-icon {

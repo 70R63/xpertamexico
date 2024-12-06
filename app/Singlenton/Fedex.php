@@ -174,7 +174,7 @@ class Fedex {
      * @return \Illuminate\Http\Response
      */
 
-    public function rastreo(int $trackingNumber = 1){
+    public function rastreo($trackingNumber = 1){
         Log::debug(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         $pesoDimension  = array('peso' => 0
                     , 'largo' => 0
