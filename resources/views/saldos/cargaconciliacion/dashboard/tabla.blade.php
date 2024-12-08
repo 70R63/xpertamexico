@@ -2,6 +2,7 @@
     <table id="exportGeneral" class="table table-striped table-bordered text-nowrap " >
         <thead>
             <tr>
+                <th>FECHA CREACION</th>
                 <th>CONCILIACION ID </th>
                 <th>FECHA FACTURA </th>
                 <th>NO FACTURA </th>
@@ -9,7 +10,6 @@
                 <th>USUARIO XPERTA </th>  
                 <th> SUBTOTAL</th>
                 <th> TOTAL</th>
-                <th>TIPO CFDI</th>
                 <th>TIPO CFDI</th>
                 
             </tr>
@@ -28,6 +28,7 @@
 
         @foreach( $conciliacionesTabla  as $row)
             <tr>
+                <td>{{ $row['created_at'] }}</td>
                 <td>
                     <a class="nav-sub-link" href="{{ route('cargaconciliacion.show', ['cargaconciliacion'=>$row['num_factura_ltd']]) }}">{{ $row['num_factura_ltd'] }}</a>
                 </td>
@@ -38,7 +39,7 @@
                 <td>{{ $row['subtotal'] }}</td>
                 <td>{{ $row['total'] }}</td>
                 <td></td>
-                <td></td>
+                
             </tr>
                 
         @endforeach

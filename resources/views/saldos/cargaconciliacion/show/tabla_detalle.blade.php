@@ -25,7 +25,7 @@ td {
     <table style="width:100%; ">
         <thead>
             <tr >
-                <th colspan="9">COMERCIALIZADORA XPERTA MEXICO</th>
+                <th colspan="9" class="mark">COMERCIALIZADORA XPERTA MEXICO</th>
             </tr >
         </thead>
 
@@ -33,36 +33,36 @@ td {
 
         <tr >
             <td colspan="2">CONCILIACION DE CUENTAS POR PAGAR</td>
-            <td>NUMERO DE ENVIOS:</td>
-            <td colspan="4">42</td>
+            <td>NUMERO DE ENVIOS:{{ $conciliacionView['cantidad']}}</td>
+            <td colspan="4"></td>
             <td>$ PRECIO DE VENTA SIN IVA </td>
-            <td>$26,104.85</td>
+            <td>{{ $conciliacionView['subtotal_facturado_ltd_sum']}}</td>
         </tr>
         <tr>
             <td>FACTURA LTD: </td>
-            <td>MEXR005047386</td>
+            <td>{{ $conciliacionView['num_factura_ltd']}}</td>
             <td colspan="5"></td>
             
             <td>$ COSTO DE VENTA SIN IVA</td>
-            <td>$18,386.78</td>
+            <td>{{ $conciliacionView['costo_base_sum']}}</td>
              
         </tr>
         <tr>
             <td>TRANSPORTISTA: </td>
-            <td>DHL</td>
+            <td>{{ $conciliacionView['ltd_nombre']}}</td>
             <td colspan="5"> </td>
             
-            <td>$% UTILIDAD FACTURA LTD </td>
-            <td>30%</td>
+            <td>% UTILIDAD FACTURA LTD </td>
+            <td>{{ $conciliacionView['utilidad_factura_ltd_porcentaje_sum']}}%</td>
              
         </tr>
 
         <tr>
             <td>FECHA FACTURA: </td>
-            <td>04/10/2024</td>
+            <td>{{ $conciliacionView['fecha_factura']}}</td>
             <td colspan="5"> </td>
             <td>$ UTILIDAD FACTURA LTD </td>
-            <td>$7,718.07</td>
+            <td>${{ $conciliacionView['utilidad_factura_ltd_monetaria_sum']}}</td>
              
         </tr>
           
@@ -77,6 +77,7 @@ td {
     <table class="registros" style="width:100%;" >
         <thead>
             <tr>
+                <th>ID</th>
                 <th>FECHA ENVIO </th>
                 <th>TRACKING </th>
                 <th>CLIENTE XPERTA </th>
@@ -89,17 +90,17 @@ td {
             </tr>
         </thead>
 
-        @foreach( $conciliacionesTabla  as $row)
+        @foreach( $conciliacionDetalleView  as $i=>$row)
             <tr>
-                
+                <td>{{ $i+1 }}</td> 
                 <td>{{ $row['fecha_envio'] }}</td>
                 <td>{{ $row['tracking_number'] }}</td>
-                <td>{{ $row['user_id'] }}</td>
-                <td>Precio venta</td>
-                <td>Costo Venta</td>
-                <td>$ Utilidad</td>
-                <td>% Utilidad</td>
-                <td>% Costo Venta</td>
+                <td>{{ $row['nombre'] }}</td>
+                <td>{{ $row['costo_base'] }}</td>
+                <td>{{ $row['subtotal_facturado_ltd'] }}</td>
+                <td>{{ $row['utilidad_monetaria'] }}</td>
+                <td>{{ $row['utilidad_porcentaje'] }}</td>
+                <td>{{ $row['costo_venta_porcentaje'] }}</td>
                
             </tr>
             
@@ -109,6 +110,7 @@ td {
                                 
         <tfoot>
             <tr>
+                <th>ID</th>
                 <th>FECHA ENVIO </th>
                 <th>TRACKING </th>
                 <th>CLIENTE XPERTA </th>

@@ -7,11 +7,15 @@ use Log;
 use App\Models\Ltd;
 use App\Models\Saldos\CargaConciliacion as mCargaConciliacion;
 use App\Models\Saldos\ConciliacionView as mConciliacionView;
+use App\Models\Saldos\ConciliacionDetalleView as mConciliacionDetalleView; 
 
 //Negocio
 
 //Utilerias
 use Carbon\Carbon;
+
+//Excepciones
+use Illuminate\Validation\ValidationException;
 
 class CargaConciliacion 
 {
@@ -22,6 +26,7 @@ class CargaConciliacion
     private $ltds = array();
     private $conciliacionView = array();
     private $cargaConciliacions = array();
+    private $conciliacionDetalleView = array();
 
     public function __construct($numeroDeSolicitud){
 
@@ -89,6 +94,7 @@ class CargaConciliacion
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
 
         $ltd_id= $data["ltd_id"];
+        $numFacturaLtd= $data["num_factura_ltd"];
         $fechaFactura = $data["fecha_factura"];;
         $file=$data['fileCargaConciliacion'];
         $fileNombre = $file->getClientOriginalName();
@@ -107,7 +113,7 @@ class CargaConciliacion
                 "fecha_factura" => $fechaFactura,
                 "ltd_id" => $ltd_id,
                 "tracking_number" => $row[0],
-                "num_factura_ltd" => $row[1],
+                "num_factura_ltd" => $numFacturaLtd,
                 "servicio_id" => $row[2],
                 "fecha_envio" => $row[3],
                 "peso_facturado_ltd" => $row[4],
@@ -157,8 +163,54 @@ class CargaConciliacion
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
 
         $this->ltds = Ltd::pluck('nombre','id');
+        $this->conciliacionDetalleView = mConciliacionDetalleView::where("num_factura_ltd", $facturaId)->get()->toArray();
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
+        $this->conciliacionView = mConciliacionView::where("num_factura_ltd", $facturaId)->get()->toArray();
+    
+        if (count($this->conciliacionView)===0) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
+            throw ValidationException::withMessages(array("No se encuentran datos de la factura: $facturaId, Contacta a tu administrador "));
+        }
+        
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($this->conciliacionView,true));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
+
+    }
+
+
+    /**
+     * Obtener todos los registros de una factura en especifico
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2024 XpertaMexico
+     * @package App\Negocio\Saldos
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion show
+     * 
+     * @throws
+     *
+     * @param string valor de factura par cada LTD
+     * 
+     * @var array ltds  
+     * @var float $saldo
+     * 
+     * 
+     * @return void Se usaran getters y settes
+     */
+
+    public function descarga( $facturaId){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
+
+        $this->ltds = Ltd::pluck('nombre','id');
         $this->cargaConciliacions = mCargaConciliacion::where("num_factura_ltd", $facturaId)->get()->toArray();
 
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
+        $this->conciliacionView = mConciliacionView::where("num_factura_ltd", $facturaId)->get()->toArray();
+    
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
 
@@ -174,6 +226,10 @@ class CargaConciliacion
 
     public function getCargaConciliacions(){
         return $this->cargaConciliacions;
+    }
+
+    public function getConciliacionDetalleView(){
+        return $this->conciliacionDetalleView;
     }
 
 

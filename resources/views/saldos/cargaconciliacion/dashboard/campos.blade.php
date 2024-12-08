@@ -12,7 +12,15 @@
     !!}    
 
 </div>
+<div class="pd-5">
+    <span class="input-group-text" id="basic-addon1">Factura</span>
 
+    {{Form::text('num_factura_ltd', null
+        , ['class' => 'form-control'
+            ,'required' => ''
+        ])
+    }}
+</div>
 <div class="pd-5">
     <span class="input-group-text" id="basic-addon1">Fecha Factura</span>
 

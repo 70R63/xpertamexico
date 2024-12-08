@@ -19,6 +19,7 @@ use \Redirect;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use \Exception;
+use Illuminate\Validation\ValidationException;
 
 //Negocio
 use App\Negocio\Saldos\CargaConciliacion as nCargaConciliacion;
@@ -107,6 +108,7 @@ class CargaConciliacionController extends Controller
         $tabla = array();
         $ltds = array();
         $numeroDeSolicitud = Carbon::now()->timestamp;
+        
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud); 
            
@@ -219,6 +221,9 @@ class CargaConciliacionController extends Controller
     {
         $tabla = array();
         $ltds = array();
+        $conciliacionesTabla = array();
+        $conciliacionView = array();
+        
         $numeroDeSolicitud = Carbon::now()->timestamp;
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud - $facturaId"); 
@@ -229,16 +234,23 @@ class CargaConciliacionController extends Controller
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
             $ltds = $nCargaConciliacion->getLtds();
-            $conciliacionesTabla = $nCargaConciliacion->getCargaConciliacions();
+            $conciliacionDetalleView = $nCargaConciliacion->getConciliacionDetalleView();
+            $conciliacionView = $nCargaConciliacion->getConciliacionView()[0];
 
 
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
  
 
             return view(self::SHOW_v 
-                    ,compact("ltds", "conciliacionesTabla","facturaId")
+                    ,compact("ltds", "conciliacionDetalleView","facturaId", "conciliacionView")
                 )->withErrors( "validando show");
 
+         } catch (ValidationException $ex) {
+
+            $mensaje = $ex->getMessage();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud $mensaje");
+            
 
         } catch (ModelNotFoundException $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
@@ -262,8 +274,8 @@ class CargaConciliacionController extends Controller
         }
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        return view(self::DASH_v 
-                    ,compact("tabla", "ltds"))
+        return view(self::SHOW_v 
+                    ,compact("tabla", "ltds", "conciliacionesTabla", "facturaId"))
                 ->withErrors( $mensaje);
     }
 
@@ -313,12 +325,13 @@ class CargaConciliacionController extends Controller
     {
         $tabla = array();
         $ltds = array();
+        $conciliacionesTabla = array();
         $numeroDeSolicitud = Carbon::now()->timestamp;
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud); 
            
             $cargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
-            $cargaConciliacion->show($facturaId);
+            $cargaConciliacion->descarga($facturaId);
                         
             $ltds = $cargaConciliacion->getLtds();
             $conciliacionesTabla = $cargaConciliacion->getCargaConciliacions();

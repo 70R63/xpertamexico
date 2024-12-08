@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use DateTimeInterface;
 
-class ConciliacionView extends Model
+class ConciliacionDetalleView extends Model
 {
     use HasFactory;
 

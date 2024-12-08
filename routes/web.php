@@ -115,9 +115,6 @@ Route::group(['as'=>'saldos.cargaconciliacion.'  ,'prefix'=>'saldos/cargaconcili
             ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria']);;
 
     });
-/*
-    Route::resource('descarga','Reportes\PagosController')
-        ->middleware(['roles:sysadmin,admin,contraloria,adminops,operaciones,auditoria']); 
-        */
+
 });
 require __DIR__.'/auth.php';
