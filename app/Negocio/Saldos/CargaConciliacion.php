@@ -208,6 +208,8 @@ class CargaConciliacion
         $this->ltds = Ltd::pluck('nombre','id');
         $this->cargaConciliacions = mCargaConciliacion::where("num_factura_ltd", $facturaId)->get()->toArray();
 
+        $this->conciliacionDetalleView = mConciliacionDetalleView::where("num_factura_ltd", $facturaId)->get()->toArray();
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroDeSolicitud);
         $this->conciliacionView = mConciliacionView::where("num_factura_ltd", $facturaId)->get()->toArray();
     

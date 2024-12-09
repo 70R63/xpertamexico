@@ -56,15 +56,6 @@ class CargaConciliacionController extends Controller
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
 
 
-            /*
-            $pdf = App::make('dompdf.wrapper');
-            $pdf->loadView("saldos.cargaconciliacion.dashboard.modal.reporte_cargaconciliacion"
-                , array("tabla"=>$tabla)
-            )->setPaper('a4', 'landscape');
-        
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
-            return $pdf->download('document.pdf');
-            */    
 
             return view(self::DASH_v 
                     ,compact("ltds", "conciliacionesTabla")
@@ -243,7 +234,7 @@ class CargaConciliacionController extends Controller
 
             return view(self::SHOW_v 
                     ,compact("ltds", "conciliacionDetalleView","facturaId", "conciliacionView")
-                )->withErrors( "validando show");
+                );
 
          } catch (ValidationException $ex) {
 
@@ -323,35 +314,36 @@ class CargaConciliacionController extends Controller
      */
     public function descarga( $facturaId)
     {
-        $tabla = array();
         $ltds = array();
-        $conciliacionesTabla = array();
+        $conciliacionesTabla = array(); 
+        $conciliacionDetalleView = array();
         $numeroDeSolicitud = Carbon::now()->timestamp;
         try {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud); 
            
             $cargaConciliacion = new nCargaConciliacion($numeroDeSolicitud);
             $cargaConciliacion->descarga($facturaId);
-                        
+            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
             $ltds = $cargaConciliacion->getLtds();
-            $conciliacionesTabla = $cargaConciliacion->getCargaConciliacions();
+            $conciliacionDetalleView = $cargaConciliacion->getConciliacionDetalleView();
+            $conciliacionesView = $cargaConciliacion->getConciliacionView()[0];
+
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
 
+            $data["conciliacionView"] =$conciliacionesView;
+            $data["conciliacionDetalleView"] =$conciliacionDetalleView; 
 
-            
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView("saldos.cargaconciliacion.show.tabla_detalle"
-                , array("conciliacionesTabla"=>$conciliacionesTabla)
+                , $data
+
             )->setPaper('a4', 'landscape');
         
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$numeroDeSolicitud);
-            return $pdf->download('document.pdf');
+            $namePdf = sprintf("%s-%s.pdf",$facturaId, $numeroDeSolicitud);
+            return $pdf->download($namePdf);
         
-
-            return view(self::DASH_v 
-                    ,compact("ltds", "conciliacionesTabla")
-                );
-
 
         } catch (ModelNotFoundException $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__); 
@@ -375,8 +367,10 @@ class CargaConciliacionController extends Controller
         }
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $cargaConciliacion->index();
+        $conciliacionesTabla = $cargaConciliacion->getConciliacionView();
         return view(self::DASH_v 
-                    ,compact("tabla", "ltds"))
+                    ,compact("conciliacionesTabla", "ltds"))
                 ->withErrors( $mensaje);
     }
 }

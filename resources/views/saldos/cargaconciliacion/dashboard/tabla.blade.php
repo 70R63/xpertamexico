@@ -36,8 +36,8 @@
                 <td>{{ $row['num_factura_ltd'] }}</td>
                 <td>{{ $row['ltd_nombre'] }}</td>
                 <td>{{ $row['name'] }}</td>
-                <td>{{ $row['subtotal'] }}</td>
-                <td>{{ $row['total'] }}</td>
+                <td>{{ $row['subtotal_facturado_ltd_sum'] }}</td>
+                <td>{{ $row['total_facturado_ltd_sum'] }}</td>
                 <td></td>
                 
             </tr>
