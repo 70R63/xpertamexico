@@ -47,6 +47,7 @@
                                 
         <tfoot>
             <tr>
+                <th>FECHA CREACION</th>
                 <th>CONCILIACION ID </th>
                 <th>FECHA FACTURA </th>
                 <th>NO FACTURA </th>
@@ -54,7 +55,6 @@
                 <th>USUARIO XPERTA </th>  
                 <th> SUBTOTAL</th>
                 <th> TOTAL</th>
-                <th>TIPO CFDI</th>
                 <th>TIPO CFDI</th>
             </tr>
         </tfoot>

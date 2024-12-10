@@ -36,7 +36,23 @@ td {
             <td>NUMERO DE ENVIOS:{{ $conciliacionView['cantidad']}}</td>
             <td colspan="4"></td>
             <td>$ PRECIO DE VENTA SIN IVA </td>
-            <td>{{ $conciliacionView['subtotal_facturado_ltd_sum']}}</td>
+            <td>@if  ($conciliacionView['costo_base_sum'] > 0 )
+                <h5>
+                <span class="badge badge-pill badge-success">
+                    {{$conciliacionView['costo_base_sum']}}
+                </span>
+                </h5>
+                @else
+                    <h5>
+                    <span class="badge badge-pill badge-danger">
+                        {{$conciliacionView['costo_base_sum']}}
+                    </span>
+                    </h5>
+                @endif
+
+             
+                
+            </td>
         </tr>
         <tr>
             <td>FACTURA LTD: </td>
@@ -44,7 +60,21 @@ td {
             <td colspan="5"></td>
             
             <td>$ COSTO DE VENTA SIN IVA</td>
-            <td>{{ $conciliacionView['costo_base_sum']}}</td>
+            <td>
+                @if  ($conciliacionView['subtotal_facturado_ltd_sum'] > 0 )
+                <h5>
+                <span class="badge badge-pill badge-success">
+                    {{$conciliacionView['subtotal_facturado_ltd_sum']}}
+                </span>
+                </h5>
+                @else
+                    <h5>
+                    <span class="badge badge-pill badge-danger">
+                        {{$conciliacionView['subtotal_facturado_ltd_sum']}}
+                    </span>
+                    </h5>
+                @endif
+            </td>
              
         </tr>
         <tr>
@@ -53,7 +83,23 @@ td {
             <td colspan="5"> </td>
             
             <td>% UTILIDAD FACTURA LTD </td>
-            <td>{{ $conciliacionView['utilidad_factura_ltd_porcentaje_sum']}}%</td>
+            <td>
+
+                @if  ($conciliacionView['utilidad_factura_ltd_porcentaje_sum'] > 0 )
+                <h5>
+                <span class="badge badge-pill badge-success">
+                    {{$conciliacionView['utilidad_factura_ltd_porcentaje_sum']}}%
+                </span>
+                </h5>
+                @else
+                    <h5>
+                    <span class="badge badge-pill badge-danger">
+                        {{$conciliacionView['utilidad_factura_ltd_porcentaje_sum']}}%
+                    </span>
+                    </h5>
+                @endif
+
+            </td>
              
         </tr>
 
@@ -62,7 +108,21 @@ td {
             <td>{{ $conciliacionView['fecha_factura']}}</td>
             <td colspan="5"> </td>
             <td>$ UTILIDAD FACTURA LTD </td>
-            <td>${{ $conciliacionView['utilidad_factura_ltd_monetaria_sum']}}</td>
+            <td>
+                @if  ($conciliacionView['utilidad_factura_ltd_monetaria_sum'] > 0 )
+                <h5>
+                <span class="badge badge-pill badge-success">
+                    ${{$conciliacionView['utilidad_factura_ltd_monetaria_sum']}}
+                </span>
+                </h5>
+                @else
+                    <h5>
+                    <span class="badge badge-pill badge-danger">
+                        ${{$conciliacionView['utilidad_factura_ltd_monetaria_sum']}}
+                    </span>
+                    </h5>
+                @endif
+            </td>
              
         </tr>
           
@@ -98,7 +158,22 @@ td {
                 <td>{{ $row['nombre'] }}</td>
                 <td>{{ $row['costo_base'] }}</td>
                 <td>{{ $row['subtotal_facturado_ltd'] }}</td>
-                <td>{{ $row['utilidad_monetaria'] }}</td>
+                <td class="text-success" >
+
+                    @if  ($row['utilidad_monetaria']  > 0 )
+                    
+                        ${{$row['utilidad_monetaria'] }}
+                    
+                    @else
+                       
+                        <span class="text-danger">
+                            ${{$row['utilidad_monetaria'] }}
+                        </span>
+                        
+                    @endif
+
+                   
+                </td>
                 <td>{{ $row['utilidad_porcentaje'] }}</td>
                 <td>{{ $row['costo_venta_porcentaje'] }}</td>
                

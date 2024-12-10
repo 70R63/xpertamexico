@@ -171,7 +171,7 @@ class CargaConciliacionController extends Controller
             $nCargaConciliacion->store($data);
 
 
-            $tmp = sprintf("El registro de la nueva DIRECCION '%s', fue exitoso",$request->get('nombre'));
+            $tmp = sprintf("El registro de la factura  '%s', fue exitoso",$data['num_factura_ltd']);
             $notices = array($tmp);
   
             return Redirect::route(self::INDEX_r) -> withSuccess ($notices);

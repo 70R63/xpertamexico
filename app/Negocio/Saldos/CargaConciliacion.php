@@ -105,7 +105,7 @@ class CargaConciliacion
         
         while (($row = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            Log::debug(print_r($row,true));
+            Log::debug(print_r( Carbon::parse($row[3])->format('Y-m-d'),true));
 
             $rowInsert = [
                 "user_id" => auth()->user()->id,
@@ -115,7 +115,7 @@ class CargaConciliacion
                 "tracking_number" => $row[0],
                 "num_factura_ltd" => $numFacturaLtd,
                 "servicio_id" => $row[2],
-                "fecha_envio" => $row[3],
+                "fecha_envio" =>  Carbon::parse($row[3])->format('Y-m-d'),
                 "peso_facturado_ltd" => $row[4],
                 "alto_facturado_ltd" => $row[5],
                 "largo_facturado_ltd" => $row[6],
