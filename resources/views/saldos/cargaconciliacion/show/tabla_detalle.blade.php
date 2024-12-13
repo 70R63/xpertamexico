@@ -174,8 +174,8 @@ td {
 
                    
                 </td>
-                <td>{{ $row['utilidad_porcentaje'] }}</td>
-                <td>{{ $row['costo_venta_porcentaje'] }}</td>
+                <td>{{ $row['utilidad_porcentaje'] }} % </td>
+                <td>{{ $row['costo_venta_porcentaje'] }} %</td>
                
             </tr>
             
