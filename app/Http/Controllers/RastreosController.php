@@ -251,7 +251,7 @@ class RastreosController extends Controller
                         Log::info(__CLASS__." ".__FUNCTION__." Valida seguimiento");
                         $paquete = $sDhl->getPaquete();                  
                         $ultimaFecha =  $sDhl->getUltimaFecha();
-                        $rastreoEstatus = Config('ltd.estafeta.rastreoEstatus')[$sDhl->getLatestStatusDetail()];
+                        $rastreoEstatus = Config('ltd.dhl.rastreoEstatus')[$sDhl->getLatestStatusDetail()];
                         $quienRecibio = $sDhl->getQuienRecibio();
                         $pickupFecha = $sDhl->getPickupFecha();
 
