@@ -140,7 +140,7 @@ class Dhl {
             $pesoDimension['ancho'] = (isset($value->width)) ? $value->width : 0 ;
             $pesoDimension['alto'] = (isset($value->high)) ? $value->high : 0 ;
             $pesoDimension['peso'] = $value->totalWeight;
-            $pesoDimension['peso_dimensional_rastreo']
+            $pesoDimension['peso_dimensional_rastreo'] = 0;
 
             if ( count($value->events) ) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);

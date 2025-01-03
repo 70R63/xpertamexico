@@ -256,8 +256,11 @@ class RastreosController extends Controller
                         $pickupFecha = $sDhl->getPickupFecha();
 
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
+
+                        $guiaAll = GuiaAPI::where("id", $guia_id)->get()->toArray()[0];
+                        
                         $nRepesaje = new nRepesaje();
-                        $nRepesaje->calcularPrecio($guia_id, $paquete, $guia);
+                        $nRepesaje->calcularPrecio($guia_id, $paquete, $guiaAll);
                         $precioRastreo = $nRepesaje->getPrecioRastreo();
                         $esRepesaje = $nRepesaje->getEsRepesaje();
 
