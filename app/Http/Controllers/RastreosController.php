@@ -235,7 +235,7 @@ class RastreosController extends Controller
 
             $i = 0;
             foreach ($guias as $key => $guia) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."----------".++$i."/$guiaCantidad ----------");
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."----------".++$i."/$totalGuias ----------");
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." valores de guia ".print_r($guia,true));
                 $guia_id = $guia['id'];
 
