@@ -133,7 +133,7 @@ class Dhl {
 
         $pesoDimension = array();
         $this->ultimaFecha = "1999-12-31 23:59:59";
-        Log::debug(print_r($contenido->shipments,true));
+        Log::debug(print_r("-------- ".$contenido,true));
         foreach ($contenido->shipments as $key => $value) {
             Log::info(print_r($value,true));
             $pesoDimension['largo'] = (isset($value->length)) ? $value->length : 0 ;
@@ -142,6 +142,7 @@ class Dhl {
             $pesoDimension['peso'] = $value->totalWeight;
             $pesoDimension['peso_rastreo'] = $value->totalWeight;
             $pesoDimension['peso_dimensional_rastreo'] = 0;
+            $pesoDimension['peso_facturado_rastreo'] = $value->totalWeight;
 
             if ( count($value->events) ) {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
