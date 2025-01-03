@@ -258,7 +258,7 @@ class RastreosController extends Controller
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Calular Repesaje");
 
                         $guiaAll = Guia::where("id", $guia_id)->get()->toArray()[0];
-                        
+
                         $nRepesaje = new nRepesaje();
                         $nRepesaje->calcularPrecio($guia_id, $paquete, $guiaAll);
                         $precioRastreo = $nRepesaje->getPrecioRastreo();
@@ -270,7 +270,7 @@ class RastreosController extends Controller
                         $update = $nRastreo->getUpdate();
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($update,true));
 
-                        $affectedRows = GuiaAPI::where("id", $guia_id)
+                        $affectedRows = Guia::where("id", $guia_id)
                                 ->update($update);
 
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." guiaId =$guia_id,  affectedRows -> $affectedRows");
