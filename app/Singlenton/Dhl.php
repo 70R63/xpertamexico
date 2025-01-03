@@ -139,7 +139,7 @@ class Dhl {
             $pesoDimension['largo'] = (isset($value->length)) ? $value->length : 0 ;
             $pesoDimension['ancho'] = (isset($value->width)) ? $value->width : 0 ;
             $pesoDimension['alto'] = (isset($value->high)) ? $value->high : 0 ;
-            $pesoDimension['peso'] = $value->totalWeight;
+            $pesoDimension['peso_rastreo'] = $value->totalWeight;
             $pesoDimension['peso_dimensional_rastreo'] = 0;
 
             if ( count($value->events) ) {
