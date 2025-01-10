@@ -117,8 +117,11 @@ class Cotizacion {
                                 
                                 $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
-
-                                //Log::debug(print_r($query->toSql(),true));
+                                if ($zona ===0) {
+                                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." NO SE CUENTA CON ZONA PARA COTIZAR");
+                                    continue;
+                                }
+                                
                                 if ($zona >=1 && $zona <= 4){
                                     Log::info("zONA 1 A 4");
                                     $costoZona = $query->min("costo");
@@ -433,10 +436,6 @@ class Cotizacion {
 
                         if ($request['piezas']>1){
                             $costo = $costo+ $empresa['precio_mulitpieza'];
-                        }
-
-                        if ($estadoCoberturaDestino[0]['extendida'] === "SI" ) {
-                            //$costo = round( $costo + $empresa['area_extendida'] ,2);
                         }
 
                         $servicioNombre = ($tarifa['servicio_id'] ===2) ? 'Dia Sig' : 'Terrestre' ;

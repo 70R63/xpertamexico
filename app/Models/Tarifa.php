@@ -33,7 +33,6 @@ class Tarifa extends Model
 
             $empresaId =  isset(auth()->user()->empresa_id)  ? auth()->user()->empresa_id : 2 ;
 
-
             $empresas = EmpresaEmpresas::where('id',$empresaId)
                 ->pluck('empresa_id')->toArray();
             $builder->whereIN('tarifas.empresa_id',$empresas);
@@ -67,9 +66,10 @@ class Tarifa extends Model
         //1 indica que puede enviar en todas los servicios de las tarifas
         $prioridad = 1;
         //LTD 2= estafeta
-        if ($ltdId == 2 ) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $ltdCobertura = LtdCobertura::select('garantia','id')
+        //LTD 1= Fedex
+        if ($ltdId == 2 || $ltdId == 1 ) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltdid=$ltdId");
+            $ltdCobertura = LtdCobertura::select('garantia','id', 'cp')
                     ->where('ltd_id',$ltdId)
                     ->where('cp',$cp_d)
                     ->get()->toArray();
@@ -82,8 +82,7 @@ class Tarifa extends Model
                     ->where('estatus',1)
                     ->get()->toArray()[0];
 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                Log::debug(print_r($servicio,true)); 
+                Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__.print_r($servicio,true)); 
                 $prioridad = $servicio['prioridad'];
             } else {
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -148,6 +147,13 @@ class Tarifa extends Model
             ->where("grupo_destino", $postalGrupoDestino)
             ->pluck("zona")->toArray();
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($zona,true) );
+
+        if (count($zona)===0 ) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $zona[0]=0;
+        }
         return $zona[0]; 
 
     }
