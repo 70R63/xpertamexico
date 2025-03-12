@@ -205,6 +205,7 @@ class EstafetaDTO
         $serviceConfiguration->serviceTypeId = $this->ltdTipoServicio->service_id_ltd;
         $serviceConfiguration->originZipCodeForRouting = $data['cp'];
         $serviceConfiguration->salesOrganization= $this->ltdTipoServicio->sales_organization ;
+        $serviceConfiguration->isServiceUsesKilos= config('ltd.estafeta.isServiceUsesKilos');
         
 
         $serviceConfiguration->isInsurance=false;

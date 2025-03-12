@@ -89,7 +89,8 @@ return [
             ,'secret'   => env('ESTAFETA_SECRET_TRACKING')
             ,'base_uri'  =>  env('ESTAFETA_BASEURI_TRACKING')
             ,'servicio'  =>  env('ESTAFETA_SERVICIO_TRACKING')
-        ]
+        ],
+        "isServiceUsesKilos" => env('ESTAFETA_USESKILOS')
     ]
     ,'redpack' =>[
         'id'    => "3"
