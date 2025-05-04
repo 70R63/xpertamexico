@@ -51,7 +51,12 @@
                             <div>
                                 <b>Zona:</b><span id="spanZona"></span>
                             </div>
-                            
+                            <div>
+                                <b>Dimenson Excedida:</b><span id="spanDimensionExcedida"></span>
+                                <b>Peso Excedido:</b><span id="spanPesoExcedido"></span>
+                                
+                            </div>
+                            <b>Pza No Convencional:</b><span id="spanPzaNoConvencional"></span>
                         </ul>
                     </div>
                     <div class="pricing-plans  bg-primary">

@@ -42,6 +42,12 @@
                     <div>
                         <b>Zona:</b> {{$objeto['zona']}} <span id="spanZona"></span>
                     </div>
+                    <div>
+                        <b>Dimenson Excedida:$ {{$objeto['dimension_excedida']}}</b>
+                        <b>Peso Excedido:$ {{$objeto['peso_excedido']}} </b><span id="spanPesoExcedido"></span>
+                        
+                    </div>
+                    <b>Pza No Convencional:$ {{$objeto['pza_no_convencional']}} </b><span id="spanPzaNoConvencional"></span>
                 </ul>
             </div>
             <div class="pricing-plans  bg-primary">

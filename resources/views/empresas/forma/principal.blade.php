@@ -126,15 +126,10 @@
 				                ]);
 				            !!}
 				        </div>
-				    </div>
-						
-				    
+				    </div>		    
 				   
 				</div>
 				
-
-				
-
 				<div class="input-group mb-3">
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">EMAIL
@@ -295,6 +290,60 @@
 								,['class' 		=> 'form-control'
 									,'id'		=> 'seguro'
 									,'required'	=>	'true'
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-2">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									DIMENSION EXCED.<span class="tx-danger">*</span>$
+								</span>
+							</div>
+							{!! Form::number('dimension_excedida'
+								, ( isset($objeto->dimension_excedida)) ? $objeto->dimension_excedida : 0
+								,['class' 		=> 'form-control'
+									,'id'		=> 'dimension_excedida'
+									,'required'	=>	'true'
+									,'step'	=>	'0.1'
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-2">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									PESO EXCED.<span class="tx-danger">*</span>$
+								</span>
+							</div>
+							{!! Form::number('peso_excedido'
+								,  ( isset($objeto->peso_excedido)) ? $objeto->peso_excedido : 0
+								,['class' 		=> 'form-control'
+									,'id'		=> 'peso_excedido'
+									,'required'	=>	'true'
+									,'step'	=>	'0.1'	
+								])
+							!!}
+						</div>
+					</div>
+
+					<div class="col-lg-2">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="basic-addon1">
+									Pza NO convencional<span class="tx-danger">*</span>$
+								</span>
+							</div>
+							{!! Form::number('pza_no_convencional'
+								, ( isset($objeto->pza_no_convencional)) ? $objeto->pza_no_convencional : 0
+								,['class' 		=> 'form-control'
+									,'id'		=> 'pza_no_convencional'
+									,'required'	=>	'true'
+									,'step'	=>	'0.1'
 								])
 							!!}
 						</div>

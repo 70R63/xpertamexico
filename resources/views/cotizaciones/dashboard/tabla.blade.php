@@ -16,6 +16,7 @@
                     <th>APLICA A.E</th>
                     <th>$ Extendida</th>
                     <th>$ SEGURO</th>
+                    <th>$ OTROS</th>
                     <th>COSTO TOTAL (sin IVA)</th>
                     
                 </tr>
@@ -36,6 +37,7 @@
                     <th>APLICA A.E</th>
                     <th>$ Extendida</th>
                     <th>$ SEGURO</th>
+                    <th>$ OTROS</th>
                     <th>COSTO TOTAL (sin IVA)</th>
                     
                 </tr>

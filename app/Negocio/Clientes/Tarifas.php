@@ -67,7 +67,7 @@ class Tarifas {
                 ->pluck('nombre','id');
 
         //Log::debug(print_r($tabla->toArray(),true));
-        Log::debug(print_r($pluckLtd->toArray(),true));
+        Log::debug(print_r($pluckEmpresa->toArray(),true));
         Log::debug(print_r($pluckServicio->toArray(),true));
 
         $this->tabla = $tabla;
@@ -109,7 +109,7 @@ class Tarifas {
      */
 
     public function resumenPorCorporativos(){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."Hola");
         
         $tabla = mTarifa::select('empresa_id', DB::raw('count(1) as totalTarifas'),DB::raw('max(costo) as costo_max'),DB::raw('min(costo) as costo_min'), "ltds_id" , "empresa_id", "servicio_id")
         		->where('estatus',1)
@@ -128,10 +128,10 @@ class Tarifas {
         $pluckEmpresa = mEmpresaApi::where('estatus',1)
                 ->pluck('nombre','id');
 
-//        Log::debug(print_r($tabla->toArray(),true));
+        Log::debug(print_r($tabla->toArray(),true));
   //      Log::debug(print_r($pluckLtd->toArray(),true));
     //    Log::debug(print_r($pluckServicio->toArray(),true));
-        Log::debug(print_r($pluckEmpresa->toArray(),true));
+        //Log::debug(print_r($pluckEmpresa->toArray(),true));
 
 
         $this->tabla = $tabla;

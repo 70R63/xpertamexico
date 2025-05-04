@@ -31,6 +31,7 @@ class Cotizacion {
     private $empresaId = 0;
     private $saldo = 0;
     private $tipoPagoId = 0;
+    private $empresaObj = array();
 
      /**
      * Metodo base, Genera la logica para las cotizacion
@@ -166,7 +167,7 @@ class Cotizacion {
                         default:
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd default");
                             $tablaTmp = $query->get()->toArray();
-                            
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($tablaTmp,true));
                             foreach ($tablaTmp as $key => $value) {
                                 $tablaTmp[$key]['zona'] = "NA";
                             }
@@ -453,6 +454,7 @@ class Cotizacion {
                         $tablaTmp['extendida'] = $empresa['area_extendida'];
                         $tablaTmp['seguro'] = $empresa['seguro'];
                         $tablaTmp['zona'] = $zona[0];
+                         
                         Log::debug(print_r($tablaTmp,true));  
                         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CALCULO KG ADICIOANL DHL");
                         if ($request['pesoFacturado'] >70) { 
@@ -527,14 +529,19 @@ class Cotizacion {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $canal");
         if ($canal === "API") {
-            $empresa = EmpresaApi::select("tipo_pago_id")->where("id", $empresa_id)->firstOrFail();
+            $empresa = EmpresaApi::select("tipo_pago_id","dimension_excedida", "peso_excedido", "pza_no_convencional")->where("id", $empresa_id)->firstOrFail();
         } else {
-            $empresa = Empresa::select("tipo_pago_id")->where("id", $empresa_id)->firstOrFail();
+            $empresa = Empresa::select("tipo_pago_id","dimension_excedida", "peso_excedido", "pza_no_convencional")->where("id", $empresa_id)->firstOrFail();
         }
-        
-        
+       
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ". print_r($empresa,true));
+
         $this->tipoPagoId = $empresa->tipo_pago_id;
 
+        $this->empresaObj['dimension_excedida'] = $empresa->dimension_excedida;
+        $this->empresaObj['peso_excedido'] = $empresa->peso_excedido;
+        $this->empresaObj['pza_no_convencional'] = $empresa->pza_no_convencional;
     }// fin public function base ($guiaId){
 
 
@@ -660,5 +667,12 @@ class Cotizacion {
     {
         return $this->tipoPagoId;
     }
+
+    public function getEmpresaObj()
+    {
+        return $this->empresaObj;
+    }
+
+    
 
 }// Fin Clase

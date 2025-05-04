@@ -1,6 +1,6 @@
 <div class="col-sm-5">
 	    <div>
-	        <span class="tx-18 mb-5">DESTINO 1</span> 
+	        <span class="tx-18 mb-5">DESTINO</span> 
 	    </div>
 	</div>
 <div class="checkManualHtml">

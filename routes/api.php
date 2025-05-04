@@ -130,7 +130,6 @@ Route::name('api')->group(function () {
 //});
 
 
-
 //MIDDLEWARE PARA AJAX DESDE WEB
 Route::middleware(['throttle:100,1','auth'])->group(function () {
     Route::name('api.')->group(function () {

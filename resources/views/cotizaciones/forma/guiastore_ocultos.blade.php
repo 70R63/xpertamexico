@@ -211,3 +211,23 @@
         ,'id'       => 'costo_extendida' 
     ])
 !!}
+
+{!! Form::hidden('dimension_excedida'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'dimension_excedida' 
+    ])
+!!}
+
+{!! Form::hidden('peso_excedido'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'peso_excedido' 
+    ])
+!!}
+{!! Form::hidden('pza_no_convencional'
+    , null
+    ,['class'       => 'form-control'
+        ,'id'       => 'pza_no_convencional' 
+    ])
+!!}

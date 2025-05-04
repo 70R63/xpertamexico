@@ -11,6 +11,9 @@ var costoCoberturaExtendida = 0;
 var costoKgExtra = 0;
 var saldoNegativo = false;
 var saldoMinimo = 90;
+var esDimensionExcedidaDhl = false
+var esPesoExcedidoDhl = false
+var esPzaNoConvencionalDhl = false
 
 function pesoDimensionalyBascula(){
 
@@ -68,9 +71,20 @@ function pesofacturado(){
         
 
         var peso = $('.registroMultipieza .multi').get()[indexPeso].value
+
+        esPzaNoConvencionalDhl = false
+        if (peso >= 25 && peso < 70 ) {
+            esPzaNoConvencionalDhl = true
+        }
+
         var largo = $('.registroMultipieza .multi').get()[indexLargo].value
         var ancho = $('.registroMultipieza .multi').get()[indexAncho].value
         var alto = $('.registroMultipieza .multi').get()[indexAlto].value
+
+        esDimensionExcedidaDhl  = false
+        if (largo >=100 || ancho >=100 || alto >=100) {
+            esDimensionExcedidaDhl = true
+        }
 
         if ($('.registroMultipieza').length == 1){
             bascula = peso*piezas
@@ -87,6 +101,10 @@ function pesofacturado(){
 
     })       
     console.log("peso facturado = "+pesoFacturado)
+    esPesoExcedidoDhl = false
+    if (pesoFacturado >=70 ) {
+        esPesoExcedidoDhl = true
+    }
     $("#pesoFacturado").val(pesoFacturado);
 }
 
@@ -124,7 +142,7 @@ function preciofinal(dataRow){
         console.log(costoCoberturaExtendida);
     } 
 
-    return dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida;
+    return dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida + dataRow.costoExtraDHL;
 }
 
 function fechaTentativa(row){
@@ -140,7 +158,6 @@ function fechaTentativa(row){
     ahora.setDate(ahora.getDate()+diaLaboral)
     return ahora.toLocaleDateString('es-MX');
 }
-
 
 function obtenerCP(id, modelo) {
 
@@ -259,7 +276,7 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
-                //console.log(response.data.data);
+                console.log(response.data.empresaObj);
 
                 validaSaldo(response)
 
@@ -314,6 +331,11 @@ $("#cotizar").click(function(e) {
                             ,render: function (data, type, row, meta) {
                                 return '$ '+costoSeguroValidar(row.seguro);   
                             } 
+                        },
+                        { "data": "costoExtraDhlPorEmpresa" 
+                            ,render: function (data, type, row, meta) {
+                                return '$ '+costoExtraDhlPorEmpresa(row,response.data.empresaObj);   
+                            }
                         },
                         { "data": "costo_total"
                             ,render: function (data, type, row, meta) {
@@ -393,7 +415,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
         var areaExtendida  = dataRow['extendida_cobertura'];
         var zona  = dataRow['zona'];
         var costoBase  = dataRow['costo'];
-        //var kgExtra  = dataRow['kg_extra'];
+       
 
         //valores para el modal resumen_cotizacion.blade
         $("#spanPrecio").text( precioIva );
@@ -409,6 +431,10 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
         $("#spanOcurre").text(ocurre);
         $("#spanAreaExtendida").text(areaExtendida);
         $("#spanZona").text(zona);
+
+        $("#spanDimensionExcedida").text(dataRow.dimension_excedida);
+        $("#spanPesoExcedido").text(dataRow.peso_excedido);
+        $("#spanPzaNoConvencional").text(dataRow.pza_no_convencional);
 
         //valores para request, campos ocultos guiastore_ocultos -> card_preciofinal
         pesofacturado()
@@ -439,6 +465,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
         $("#sobre_peso_kg").val(sobrePesoKg);
         $("#costo_extendida").val(costoCoberturaExtendida);
         
+        $("#dimension_excedida").val(dataRow.dimension_excedida);
+        $("#peso_excedido").val(dataRow.peso_excedido);
+        $("#pza_no_convencional").val(dataRow.pza_no_convencional);
         
         
         var iteracionClone = 0
@@ -564,14 +593,18 @@ function direccionesPorEmpresa(idSucursa){
         
         /* remind that 'data' is the response of the AjaxController */
         }).done(function( response) {
-            console.log("done");
-            //console.log(response.data);
+            console.log("done direccionesPorEmpresa");
+            console.log(response.data.values(0).toArray()[0]);
            
             $('#cliente').empty();
             
             $.each(response.data,function(key, empresa) {
+                $("#cp_d").val(response.data.values(0).toArray()[0].cp);
+
                 $("#cliente").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
-              });   
+            });
+
+               
             
         
         }).fail( function( data,jqXHR, textStatus, errorThrown ) {
@@ -663,4 +696,40 @@ $('#checkManual').change(function() {
     }
 });
 
+function costoExtraDhlPorEmpresa(row, data){
+    
+    console.log( "costoExtraDhlPorEmpresa")
+    row.dimension_excedida = 0
+    row.peso_excedido = 0
+    row.pza_no_convencional = 0
 
+    if (row.nombre === "DHL") {
+        pesofacturado()
+        
+        
+        var costoDimensionExcedidaDhl = 0
+        if (esDimensionExcedidaDhl) {
+            costoDimensionExcedidaDhl = data.dimension_excedida
+            row.dimension_excedida = data.dimension_excedida
+        }
+
+        var costoPesoExcedidoDhl = 0
+        if (esPesoExcedidoDhl) {
+            costoPesoExcedidoDhl = data.peso_excedido
+            row.peso_excedido = data.peso_excedido
+        }
+
+        var costoPzaNoConvencionalDhl = 0
+        if (esPzaNoConvencionalDhl) {
+            costoPzaNoConvencionalDhl = data.pza_no_convencional
+            row.pza_no_convencional = data.pza_no_convencional
+        }
+
+        costoExtraDHL = costoDimensionExcedidaDhl + costoPesoExcedidoDhl + costoPzaNoConvencionalDhl
+        row.costoExtraDHL = costoExtraDHL
+
+        return costoExtraDHL
+    } 
+    row.costoExtraDHL = 0
+    return 0;
+}
