@@ -1,3 +1,5 @@
+
+
 <div class="col-sm-5 ">
     <div>
         <span class="tx-18 mb-3 ">ORIGEN</span> 
@@ -9,7 +11,7 @@
 			<span class="input-group-text" id="basic-addon1"> Nombre <span class="tx-danger">*</span></span>
 		</div>
 		{!! Form::select('sucursal'
-			, $sucursal
+			, array()
 			,'MEX'
 			,['class' 		=> 'form-control select2'
 				,'placeholder'	=> 'Seleccionar'
@@ -20,6 +22,8 @@
 			]);
 		!!}
 	</div>
+
+	
 </div>
 <div class="input-group mb-3">
 	<div class="input-group-prepend">

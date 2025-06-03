@@ -34,11 +34,21 @@
         @else
             @include('cotizaciones.forma.sucursal_readonly')
         @endif 
-        
-        <div>
+
+        <label class="custom-switch">
+            ¿Deseas obtener guia Termica?
+            <input type="checkbox" name="custom-switch-checkbox" id="custom-switch-checkbox" class="custom-switch-input" >
+            <span class="custom-switch-indicator"></span>
+            <span class="custom-switch-description">Si, deseo obtener guia termica</span>
+        </label>
+        <br></br>
+
+        <div >
             <a href="{{ route('cotizaciones.index') }}" class="btn badge-dark" >Cancelar</a>
             <button type="submit" class="btn btn-primary ml-3" id="btnEnviar">Crear Guia</button>
-        </div>    
+
+        </div>       
+       
     </div>
     
     <div class="col-lg-12 col-xl-4 col-md-4">

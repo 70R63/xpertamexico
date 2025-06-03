@@ -10,6 +10,9 @@ use App\Models\API\Sucursal as SucursalApi;
 use App\Models\API\Cliente as ClienteApi;
 
 use Log;
+use Carbon\Carbon;
+
+use Illuminate\Validation\ValidationException;
 
 class DireccionController extends ApiController
 {
@@ -18,22 +21,32 @@ class DireccionController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($tipo)
+    public function index($tipo,Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
-        Log::debug($tipo);
+        $numeroDeSolicitud = Carbon::now()->timestamp;
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud INICIANDO----------------- }");
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud, $tipo");
+
+        $data = $request->toArray();
+        Log::debug(print_r(count($data),true));
+
 
         try {
+
+            if (count($data) <=0 ) {
+                throw ValidationException::withMessages(array("Favor de validar tu Identificador de empresa"));    
+            }
+            
 
             switch ($tipo) {
                 case 'destinatario':
                     //Destino
-                    $tabla = Cliente::get()->toArray();
+                    $tabla = Cliente::where("empresa_id",$data['empresa_id'])->get()->toArray();
                     break;
 
                 case 'remitente':
                     //Origen
-                    $tabla = Sucursal::get()->toArray();
+                    $tabla = Sucursal::where("empresa_id",$data['empresa_id'])->get()->toArray();
                     break;
                 
                 default:
@@ -52,11 +65,16 @@ class DireccionController extends ApiController
 
             $success['mensaje'] = "Asignacion exitosa";
 
-            return $this->successResponse($tabla, 'User login successfully.');
+            return $this->successResponse($tabla, "$tipo Solicitud Exitosa");
 
         } catch(\Illuminate\Database\QueryException $e){ 
             Log::info(__CLASS__." ".__FUNCTION__." QueryException");
             Log::debug($e->getMessage()); 
+            $mensaje = $e->getMessage();
+
+        } catch (ValidationException $e) {
+            Log::info(__CLASS__." ".__FUNCTION__.__LINE__." sd=$numeroDeSolicitud, ValidationException");
+            Log::debug(print_r($e->getMessage(),true));
             $mensaje = $e->getMessage();
 
         } catch (\Exception $e) {

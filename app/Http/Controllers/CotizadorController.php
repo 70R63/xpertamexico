@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCotizadorRequest;
 use Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 use App\Models\Cotizador;
@@ -34,6 +35,7 @@ class CotizadorController extends Controller
      */
     public function index()
     {
+        $numeroDeSolicitud = Carbon::now()->timestamp;
         try {
             Log::info(__CLASS__." ".__FUNCTION__);    
 
@@ -41,8 +43,10 @@ class CotizadorController extends Controller
 
             $cliente = Cliente::orderby('contacto')->pluck('contacto','id');
 
+            $empresas = Empresa::orderby('nombre')->pluck('nombre','id');
+
             return view(self::DASH_v 
-                    ,compact( "sucursal", "cliente")
+                    ,compact( "empresas")
                 );
 
         } catch (Exception $e) {

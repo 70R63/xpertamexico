@@ -355,7 +355,7 @@ $("#cotizar").click(function(e) {
                     data.responseJSON.message,
                     "error"
                   )
-
+                location.reload();
 
             }).always(function() {
                 console.log( "complete" );
@@ -512,12 +512,11 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
 
 $("#sucursal").change(function() {
     var idSucursal = $('#sucursal').val();
+    var empresa_id = $('#empresasCmb').val();
+
     console.log("sucursal "+idSucursal)
     obtenerCP(idSucursal, "Sucursal");
-
-    direccionesPorEmpresa(idSucursal)
-   
-            
+           
 }); 
 
 $("#cliente").change(function() {
@@ -579,34 +578,43 @@ function obtenerClientes() {
 }
 
 
-function direccionesPorEmpresa(idSucursa){
+function direccionesPorEmpresa(tipo, empresa_id=1){
     console.log( "direccionesPorEmpresa" );
 
     $.ajax({
         /* Usar el route  */
         //url: route('api.cp.colonias'), 
-        url: route('api.direcciones.tipo', [idSucursa]),
+        url: route('api.direcciones.tipo', [tipo]),
         type: 'GET',
         /* send the csrf-token and the input to the controller */
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        
+        data: "empresa_id="+empresa_id
         
         /* remind that 'data' is the response of the AjaxController */
         }).done(function( response) {
             console.log("done direccionesPorEmpresa");
             console.log(response.data.values(0).toArray()[0]);
            
-            $('#cliente').empty();
+            if (tipo === "remitente") {
+                $('#sucursal').empty();
             
-            $.each(response.data,function(key, empresa) {
-                $("#cp_d").val(response.data.values(0).toArray()[0].cp);
+                $.each(response.data,function(key, empresa) {
+                    $("#cp").val(response.data.values(0).toArray()[0].cp);
 
-                $("#cliente").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
-            });
+                    $("#sucursal").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
+                }); 
 
-               
+            } else {
+                $('#cliente').empty();
             
-        
+                $.each(response.data,function(key, empresa) {
+                    $("#cp_d").val(response.data.values(0).toArray()[0].cp);
+
+                    $("#cliente").append('<option selector='+key+' value="'+empresa.id+'" >'+empresa.nombre+'</option>');
+                });    
+            }
+            
+      
         }).fail( function( data,jqXHR, textStatus, errorThrown ) {
             console.log( "fail" );
             console.log(textStatus);
@@ -617,7 +625,6 @@ function direccionesPorEmpresa(idSucursa){
                 "error"
               );
             
-
         }).always(function() {
             console.log( "complete" );
     });
@@ -733,3 +740,19 @@ function costoExtraDhlPorEmpresa(row, data){
     row.costoExtraDHL = 0
     return 0;
 }
+
+//cjhs - 20250602
+$("#empresasCmb").change(function() {
+    var empresa_id = $('#empresasCmb').val();
+    console.log("empresa_id "+empresa_id)
+    
+    direccionesPorEmpresa("remitente", empresa_id)
+    direccionesPorEmpresa("destinatario", empresa_id)
+               
+}); 
+
+
+$(document).ready(function() {
+
+
+});

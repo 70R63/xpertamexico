@@ -3,6 +3,7 @@
 
 @include('cotizaciones.dashboard.header')
 <!--Row-->
+
 <div class="row row-sm">
     <div class="col-lg-12">
         <div class="card custom-card mg-b-20">
@@ -14,6 +15,7 @@
                             Seccion para la creacion de una guia con diferentes metodos automatica, semi manual y manual 
                         </span>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -40,13 +42,35 @@
     <div class="col-sm-12 col-md-6 col-lg-6 col-xl-7">
         <div class="card custom-card">
             <div class="card-body">
+
+                <div class="row">       
+                    <div class="input-group mb-3 ">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"> Selecciona una Empresa: <span class="tx-danger">*</span></span>
+                        </div>
+                        {!! Form::select('empresasCmb'
+                            , $empresas
+                            ,'MEX'
+                            ,['class'       => 'form-control select2'
+                                ,'placeholder'  => 'Seleccionar'
+                                ,'required' => 'true'
+                                ,'name'     => 'empresasCmb'
+                                ,'id'       => 'empresasCmb'
+
+                            ]);
+                        !!}
+                    </div>   
+
+                </div>
                 <div class="row mt-2">
                     <div class="col-sm-2 my-auto border-right text-centerd-flex no-block align-items-center">
                          @include('cotizaciones.forma.check_manual')
                     </div>
 
+
                     
                     <div class="col-sm-5 my-auto text-sm-center">
+                        
                         @include('cotizaciones.forma.origen')
                         
                     </div>
