@@ -19,7 +19,7 @@ class ClienteController extends ApiController
      */
     public function clientes(Request $request)
     {
-        Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
         Log::debug(print_r($request->all(),true));
         try {
 
@@ -29,8 +29,7 @@ class ClienteController extends ApiController
             $resultado = Empresa::whereIN('id',$empresas)
                     ->get()->toArray();
            
-            //Log::debug(print_r($resultado,true));
-            //$resultado = array();
+            
             $mensaje = "ok";
             return $this->successResponse($resultado, $mensaje);    
 

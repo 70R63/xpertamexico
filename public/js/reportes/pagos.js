@@ -1,8 +1,9 @@
 $(document).ready(function() {
     console.log("document ready reportes pagos")
-    // empresa.js   
-    obtenerEmpresaId();
+    
     if ($('#tablaReportePagosAjax').length) {
+        // empresa.js   
+        obtenerEmpresaId();
         console.log("document ready tablaReportePagosAjax")
         tablaReportePagos()  
         

@@ -158,7 +158,7 @@ function obtenerEmpresaId() {
             
 
         }).always(function() {
-            console.log( "complete" );
+            console.log( "complete obtenerEmpresaId" );
         });
 
 }

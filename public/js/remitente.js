@@ -14,7 +14,7 @@ function remitenteTabla(){
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         
     }).done(function( response) {
-        console.log(response.data)
+        console.log("remitente"+response.data.length)
         table = $('#remitenteTabla').DataTable({
                 "oLanguage": {
                     "sEmptyTable": "No se puede mostrar los registros"

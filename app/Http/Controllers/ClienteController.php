@@ -28,9 +28,9 @@ class ClienteController extends Controller
     public function index()
     {
         try {
-            Log::info(__CLASS__." ".__FUNCTION__);    
-            $tabla = Cliente::get();
-
+            //la tabla se carga via ajax
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);    
+            $tabla = array();
             
             return view(self::DASH_v 
                     ,compact("tabla")

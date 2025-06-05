@@ -28,25 +28,33 @@ class DireccionController extends ApiController
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud, $tipo");
 
         $data = $request->toArray();
-        Log::debug(print_r(count($data),true));
-
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud ".print_r($data,true));
 
         try {
-
-            if (count($data) <=0 ) {
-                throw ValidationException::withMessages(array("Favor de validar tu Identificador de empresa"));    
-            }
-            
 
             switch ($tipo) {
                 case 'destinatario':
                     //Destino
-                    $tabla = Cliente::where("empresa_id",$data['empresa_id'])->get()->toArray();
+                    if ( count($data) <=0 ) {
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud");
+                        $tabla = Cliente::get()->toArray();
+                    } else {
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud");
+                        $tabla = Cliente::where("empresa_id",$data['empresa_id'])->get()->toArray();
+                    }
+                    
                     break;
 
                 case 'remitente':
                     //Origen
-                    $tabla = Sucursal::where("empresa_id",$data['empresa_id'])->get()->toArray();
+                    if ( count($data) <=0 ) {
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud");
+                        $tabla = Sucursal::get()->toArray();
+                    } else {
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." sd=$numeroDeSolicitud");
+                        $tabla = Sucursal::where("empresa_id",$data['empresa_id'])->get()->toArray();
+                    }
+                    
                     break;
                 
                 default:
@@ -57,14 +65,14 @@ class DireccionController extends ApiController
                     $tabla = ClienteApi::where('empresa_id',$sucursal[0]['empresa_id'])
                         ->orderBy('nombre')
                         ->get()->toArray();
-                    Log::debug(print_r($tabla,true));
+                   
                     // code...
                     break;
             }
 
 
             $success['mensaje'] = "Asignacion exitosa";
-
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
             return $this->successResponse($tabla, "$tipo Solicitud Exitosa");
 
         } catch(\Illuminate\Database\QueryException $e){ 
