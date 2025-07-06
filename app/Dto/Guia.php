@@ -104,6 +104,7 @@ class Guia {
 
 		$empresaId = (isset(auth()->user()->empresa_id) ) ? auth()->user()->empresa_id : $request['empresa_id'] ;
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($request,true) );
 		$this->insert = array('usuario' => $usuario
 				,'empresa_id' 	=> $empresaId
 				,'ltd_id' 	=> $request['ltd_id']

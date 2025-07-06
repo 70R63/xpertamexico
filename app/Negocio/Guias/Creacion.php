@@ -61,7 +61,8 @@ class Creacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $guiaDTO = new GuiaDTO();
 
-
+        $data['documento']= "documento";
+        $data['tracking_number']= "tracking_number";
         $guiaDTO->parseoFedex($data, $canal);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $this->insert = $guiaDTO->getInsert();

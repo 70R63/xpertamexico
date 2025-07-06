@@ -77,11 +77,13 @@ class FedexDTO
 				,"companyName"	=> $this->quitar_acentos($request['nombre'])
 				) 
 			);
+
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$direccion = sprintf("%s %s %s,%s",$request['direccion'],$request['no_int'],$request['no_ext'],$request['direccion2'] );
 		$streetLines = str_split($this->quitar_acentos($direccion),35);
 
 		//Validacion temporal Entidad Federativa
+		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$request['entidad_federativa']);
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		if (strlen($request['entidad_federativa']) ===2 ){
 			Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -127,6 +129,7 @@ class FedexDTO
 		$shipper = new Shipper(array('contact' => $contactShipper, 'address' => $addressShipper ));
 
 		$recipients = New Recipients(array('contact' => $contactRecipients, 'address' => $addressRecipients ));
+		
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 		$declaredValueWeight = array('declaredValue' => new DeclaredValue(["amount"=>$request['valor_envio']])
                 ,'weight' => $weight

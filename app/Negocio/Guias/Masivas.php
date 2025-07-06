@@ -71,10 +71,9 @@ class Masivas {
         $insertMasiva = array();
         $numeroDeSolicitud = Carbon::now()->timestamp;
         
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $nameZip = sprintf("zip/%s-%s-%s.zip",$date->format('Ymd-His'),auth()->user()->name, $numeroDeSolicitud);
         $nameZip = str_replace('    ', '', $nameZip);
-        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$nameZip);
         $zip = new ZipArchive();
         $zip->open($nameZip, ZipArchive::CREATE);
         
