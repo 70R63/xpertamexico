@@ -92,13 +92,13 @@ class Masivas {
                 $cliente = new Cliente();
                 $cliente->validaCliente($data);
                 if ( !$cliente->getExiste() ) {
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Cliente no existe");
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeRegistros - Cliente no existe");
             
                     $cliente->insertSemiManual($data);
                 }
                 $data['cliente_id']=$cliente->getId();
 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 $remitente = new Sucursal();
                 $remitente->existe($data);
                 
@@ -109,33 +109,31 @@ class Masivas {
                 $data['sucursal_id']=$remitente->getId();
                 $data['sucursal'] = $data['sucursal_id'];
                 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 $data = $this->valoresCotizacion($data);
 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 $this->tarifa($data);
 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $$$$$$$$$$$$$$$$$$$$$$$$$$");
-                Log::debug(print_r($this->tarifa,true));
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ".print_r($this->tarifa,true));
 
                 $data['tarifa_id']=$this->tarifa['id'];
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $$$$$$$$$$$$$$$$$$$$$$$$$$");
                 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 $data = $this->calculoPrecio($data);
 
                 
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 $empresas[]=2;
                 $data['pesos'][]=$data['peso'];
                 $data['largos'][]=$data['largo'];
                 $data['anchos'][]=$data['ancho'];
                 $data['altos'][]=$data['alto'];
                 
-                Log::debug(print_r($data,true));
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros -".print_r($data,true));
                 switch ($data['ltd_id']) {
                     case 1:
-                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                        Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                         
                         $nCreacion = new nCreacion();
 
@@ -176,7 +174,7 @@ class Masivas {
                 $nombrePdf = sprintf("%s_%s_%s_%s_%s.pdf",$timestamp,$data['nombre'],$data['nombre_d'],$nombreLTD, $data['id'] );
 
                 $nombrePdf = str_replace(' ', '', $nombrePdf);
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 Log::debug("../public/storage/".$this->documentoGuia);
                 $zip->addFile("../public/storage/".$this->documentoGuia,$nombrePdf);
                 
@@ -201,11 +199,11 @@ class Masivas {
                 $numeroDeFallos++;
             }
             
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            Log::debug(print_r($data,true));
-            Log::debug(print_r($data["id"],true));
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
+            Log::debug(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ".print_r($data,true));
+            
             $this->reporteFalloCsvAgregarRegistro($data['id'],$mensaje);
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
                 
         } //fin While
         // Close ZipArchive

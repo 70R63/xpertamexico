@@ -26,9 +26,9 @@ class LoginController extends ApiController
         $minutos = $request->minutos;
 
         $empresa_id = explode('_',$corporativoCadena)[0];
-        Log::debug($corporativoCadena);
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$corporativoCadena);
         Log::debug($empresa_id);
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        
         if ( ($minutos > 10080 )) {
             
             return $this->sendError('Time exceeded.', ['error'=>'El valor maximo en minutos es 10080'], 409);
@@ -41,7 +41,7 @@ class LoginController extends ApiController
 
         
         if ( !($xApiKey === md5($corporativoCadena) )) {
-            
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$xApiKey);
             return $this->sendError('Unauthorized.', ['error'=>'Corporativo no Autorizado'], 403);
         }
   

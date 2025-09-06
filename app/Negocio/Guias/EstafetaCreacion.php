@@ -160,12 +160,12 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 	
     	$data = $this->perseoCotizacion($data);
-    	//Log::debug(print_r($data,true));
+    	
     	$data = $this->tarifas($data);
         
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-	    //$data = $this->tarifas($data);
+	    
 	   
         $data = $this->cotizacion($data);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -175,9 +175,8 @@ Class EstafetaCreacion {
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $cotizaciones = $this->resumenCotizacion($data);
-        
-        //Log::debug($data);
-        
+                
+       
         $trackingNumber = "";
         $systemInformation = array("id"=>"AP01",
             "name"=>"AP01",
@@ -186,8 +185,8 @@ Class EstafetaCreacion {
         $data['labelDefinition']['serviceConfiguration']['quantityOfLabels'] = 1;
         $data['contenido'] = $data['labelDefinition']['wayBillDocument']['content'];
 
-	Log::debug("Se intancia el Singlento Estafeta");
-	$tipo = 1;
+    	Log::debug("Se intancia el Singlento Estafeta");
+    	$tipo = 1;
         $sEstafeta = new Estafeta($data['empresa_id'], $data["esManual"] ,$tipo);
 
         Log::debug(__CLASS__." ".__FUNCTION__." "." sEstafeta -> envio()");
@@ -222,12 +221,12 @@ Class EstafetaCreacion {
         
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //Log::debug($data);
+        //Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));
         $id = Guia::create($data)->id;
         $this->notices[] ="Exito";
         $this->notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ID Guia $id");
         $data = $this->validaPaquete($data, $id);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
@@ -621,6 +620,7 @@ Class EstafetaCreacion {
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data['costo_seguro'] = ($data['valor_envio']*$data['seguro'])/100;
+        $data['seguro'] = $data['costo_seguro'];
 
         $data['peso_bascula'] = $data['peso'];
         $data['peso_dimensional'] = ($data['alto']*$data['ancho']*$data['largo'])/5000;
