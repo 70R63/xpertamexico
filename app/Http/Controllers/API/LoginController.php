@@ -11,12 +11,18 @@ use App\Http\Controllers\API\ApiController;
 use Carbon\Carbon;
 
 use Log;
+use Monolog\Logger;
+#use Illuminate\Support\Facades\Log;
 
 class LoginController extends ApiController
 {
     public function login(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        $data = $request->all();
+        $data['numeroDeSolicitud'] = Carbon::now()->timestamp;
+        Log::channel('general')->info(("LINE ".__LINE__." CLASS ".__CLASS__." FUNCION ".__FUNCTION__), ["data"=>$data]);
+        #Log::channel('general')->debug('Proceso de pago iniciado');
 
         $xApiKey = $request->header("x-api-key");
         $corporativo = $request->header("corporativo");

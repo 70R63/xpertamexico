@@ -70,6 +70,22 @@ return [
             'days' => 7,
         ],
 
+        'general' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel-general.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 7,
+            'formatter' => \App\Logging\CustomLogFormatter::class,
+        ],
+
+        'rastreo' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel-rastreo.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 7,
+            'formatter' => \App\Logging\CustomLogFormatter::class,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

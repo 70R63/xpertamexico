@@ -72,6 +72,7 @@ class EstafetaController extends ApiController
                     throw ValidationException::withMessages(array("Favor de validar tu body"));
             $data['ltd_id'] = 2;
             $data['esManual']="API";
+            $data['numero_solicitud'] = Carbon::now()->timestamp;
            
             $servicio = $request->route()->parameter('servicio');
             
@@ -193,9 +194,9 @@ class EstafetaController extends ApiController
                     throw ValidationException::withMessages(array("Favor de validar tu body"));
             $data['ltd_id'] = 2;
             $data['esManual']="API";
-           
+            $data['numero_solicitud'] = Carbon::now()->timestamp;
             $servicio = $request->route()->parameter('servicios');
-            //$ltd = $request->route()->parameter('ltds');
+            
             $formatoImpresion = $request->route()->parameter('formatoImpresion');
             
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -239,18 +240,18 @@ class EstafetaController extends ApiController
 
             $objetoGeneral = null;
             
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$data['numero_solicitud']);
             $data['ltd_id']= 2;
             $nEstafetaCreacion = new nEstafetaCreacion();
             $nEstafetaCreacion->parseoApi($data);
             $objetoGeneral = $nEstafetaCreacion;
 
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$data['numero_solicitud']);
             return $this->successResponse( $objetoGeneral->getResponse(), $objetoGeneral->getNotices());
 
 
         } catch (ValidationException $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__.__LINE__." ValidationException");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$data['numero_solicitud']." ValidationException");
             Log::debug(print_r($ex->getMessage(),true));
             return $this->sendError("ValidationException",$ex->getMessage(), "400");
         

@@ -139,7 +139,7 @@ Class EstafetaCreacion {
 
     public function parseoApi(array $data){
         Log::debug(__CLASS__." ".__FUNCTION__." "." parseoApi");
-        $data['numero_solicitud'] = Carbon::now()->timestamp;
+        
         Log::debug($data);
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -169,9 +169,7 @@ Class EstafetaCreacion {
 	   
         $data = $this->cotizacion($data);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::debug($data);
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        $this->saldo($data);    
+        Log::debug($data);  
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $cotizaciones = $this->resumenCotizacion($data);
@@ -219,6 +217,8 @@ Class EstafetaCreacion {
 
         $data['canal']= $data['esManual'];
         
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Se descuenta el Saldo");
+        $this->saldo($data);  
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         //Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));

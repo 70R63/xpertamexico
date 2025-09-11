@@ -48,7 +48,7 @@ class AccesosApi extends ApiController
             if(!isset($request->token))
                 return $this->sendError("Error", array("El token es neceserio"), 401);
             
-            //Log::debug(print_r(base64_decode($request->token),true));
+            Log::debug(print_r(base64_decode($request->token),true));
             $tokenDecodificado =  base64_decode($request->token);
             [$id, $token] = explode('|',$tokenDecodificado, 2);
             

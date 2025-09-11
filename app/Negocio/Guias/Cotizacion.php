@@ -24,6 +24,8 @@ use App\Models\Cliente;
 use App\Negocio\Fedex_tarifas;
 use App\Negocio\Saldos\Saldos;
 
+use Illuminate\Validation\ValidationException;
+
 class Cotizacion {
 
     private $mensaje = array();
@@ -79,7 +81,18 @@ class Cotizacion {
         $tabla = array();
         foreach ($empresasLtd as $ltdId => $clasificacion) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." LTD $ltdId => clasificacion $clasificacion ------------------------------------");
-                        
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." VALIDANDO CP_D= ".$request['cp_d']);
+
+            if (!is_numeric($request['cp_d'])) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." CP no valido");
+                $mensaje[] = sprintf("CP='%s' no valido ", $request['cp_d']);
+                throw ValidationException::withMessages($mensaje);
+            }
+            
+            
+            
+
             $tablaTmp = array();
 
             $servicioIds = Tarifa::select('servicio_id')
@@ -535,7 +548,7 @@ class Cotizacion {
         }
        
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ". print_r($empresa,true));
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ". print_r($empresa,true));
 
         $this->tipoPagoId = $empresa->tipo_pago_id;
 
