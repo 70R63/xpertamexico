@@ -40,12 +40,11 @@ class CotizacionController extends BaseController
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $tabla = $nCotizacion->getTabla();
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Revision de tabla");
-        Log::debug(print_r($tabla,true));
         $success['data'] = $tabla;
         $success['saldo'] = $nCotizacion->getSaldo();
         $success['tipoPagoId'] = $nCotizacion->getTipoPagoId();
         $success['empresaObj'] = $nCotizacion->getEmpresaObj();
+        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         Log::debug(print_r($success,true));
         return $this->successResponse($success, 'Cotizacion exitosa.');

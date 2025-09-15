@@ -34,6 +34,7 @@ class Cotizacion {
     private $saldo = 0;
     private $tipoPagoId = 0;
     private $empresaObj = array();
+    private $costosAdicionales = array();
 
      /**
      * Metodo base, Genera la logica para las cotizacion
@@ -90,9 +91,6 @@ class Cotizacion {
                 throw ValidationException::withMessages($mensaje);
             }
             
-            
-            
-
             $tablaTmp = array();
 
             $servicioIds = Tarifa::select('servicio_id')
@@ -109,16 +107,16 @@ class Cotizacion {
             }
 
             switch ($clasificacion) {
-                case "1": //FLAT
+                case 1: //FLAT
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 1 = FLAT");
                     switch ($ltdId) {
                         case "1":
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd 1 = FEDEX");
 
                             $servicioIds = Tarifa::select('servicio_id')
-                            ->where("ltds_id", $ltdId)
-                            ->where("empresa_id", $empresa_id)
-                            ->distinct()->get()->pluck('servicio_id')->toArray();
+                                ->where("ltds_id", $ltdId)
+                                ->where("empresa_id", $empresa_id)
+                                ->distinct()->get()->pluck('servicio_id')->toArray();
 
                             $tablaTmp = array();
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ServiciosID");
@@ -132,7 +130,7 @@ class Cotizacion {
                                 $zona = Tarifa::fedexZona($request['cp'],$request['cp_d']);
 
                                 if ($zona ===0) {
-                                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." NO SE CUENTA CON ZONA PARA COTIZAR");
+                                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." NO SE CUENTA CON ZONA PARA COTIZAR");
                                     continue;
                                 }
                                 
@@ -145,20 +143,21 @@ class Cotizacion {
                                     $costoZona = $query->max("costo");
                                     
                                 }
-                                Log::debug(print_r("-----------------------------",true));
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." COSTO ZONA");
                                 Log::debug(print_r($costoZona,true));
 
                                 $tablaTmp = $query->where("costo","like","%".$costoZona."%")
                                     ->get()->toArray()
                                     ;
-                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-                                Log::debug(print_r($tablaTmp,true));
 
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($tablaTmp,true));
                                 foreach ($tablaTmp as $key => $value) {
                                     $value['zona']=$zona;
+                                    $value =  $this->cargosAdicionales($ltdId, $request, $value);
                                     $tabla[] = array_merge($tabla, $value);
+
                                 }
-                                
+
                                        
                             }
                             //FIN foreach ($servicioIds as $key => $value) {
@@ -190,7 +189,7 @@ class Cotizacion {
                     }
                     //Fin switch ($ltdId) 
                 break;
-                case "2"://RANGO
+                case 2://RANGO
                     Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Clasificacion 2 = RANGO");
 
                     $servicioIds = Tarifa::select('servicio_id')
@@ -216,8 +215,9 @@ class Cotizacion {
 
                                 foreach ($tablaTmp as $key => $value) {
                                     $tablaTmp[$key]['zona'] = "NA";
+                                    $tablaTmp[$key]= $this->cargosAdicionales($ltdId, $request, $value);
                                 }
-
+                                
                                 $tabla = array_merge($tabla, $tablaTmp);
                                            
                             }
@@ -526,14 +526,33 @@ class Cotizacion {
 
                         $fedexTarifas = new Fedex_tarifas();
                         $fedexTarifas->zona($request, $servicioIds,$empresa_id,$ltdId);
-                        $tabla = array_merge($tabla, $fedexTarifas->getTarifa());
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+                        $tablaTmp = $fedexTarifas->getTarifa();
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($tablaTmp,true));
+                        foreach ($tablaTmp as $key => $value) {
+                            $value =  $this->cargosAdicionales($ltdId, $request, $value);
+
+                            $tabla[] = array_merge($tabla, $value);
+
+                        }
+
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
                     break;
                 default:
                     Log::debug("No se seleccion niguna clasificacion");
+
+
             }//fin Switch
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+
+            
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." fIN DEL CICLO EMPRESALTD");
+            log::debug(print_r ($tabla,true));
+
             $this->tabla = $tabla;
+
+            
         }//fin foreach ($empresasLtd as $ltdId => $clasificacion) {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -547,14 +566,13 @@ class Cotizacion {
             $empresa = Empresa::select("tipo_pago_id","dimension_excedida", "peso_excedido", "pza_no_convencional")->where("id", $empresa_id)->firstOrFail();
         }
        
-
-        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ". print_r($empresa,true));
-
         $this->tipoPagoId = $empresa->tipo_pago_id;
 
         $this->empresaObj['dimension_excedida'] = $empresa->dimension_excedida;
         $this->empresaObj['peso_excedido'] = $empresa->peso_excedido;
         $this->empresaObj['pza_no_convencional'] = $empresa->pza_no_convencional;
+
+
     }// fin public function base ($guiaId){
 
 
@@ -661,6 +679,102 @@ class Cotizacion {
         return $data;
     } //fin calculoPrecio
 
+
+    /**
+     * Seccion para regla de Negocio en tema de cargos adicionales por LTD
+     * Los cargos pueden ser tan variados como las LTD lo definan 
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2025 XpertaMexico
+     * @package App\Negocio\Guias
+     * @api
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion cargosAdicionales
+     * 
+     * @throws
+     *
+     * @param array $data arreglo base que contendra todas las llaves para la cotizacion
+     * 
+     * @var int 
+     * 
+     * 
+     * @return array $data
+     */
+
+    public function cargosAdicionales($ltdId, $data,$tabla){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+
+
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ---------------------------------");
+        $piezas = $data['piezas'];
+        $servicioId = $tabla['servicio_id'];
+        
+        $cargoAdicionalDimensional = 0;
+        $cargoAdicionalPeso = 0;
+        $cargoAdicionalDimensionalBandera = false;
+        $cargoAdicionalPesoBandera = false;
+
+
+        switch ($ltdId) {
+            case 1:
+                
+                //DIMENSIONAL
+                $dimensionalCmMaximo = 121;  
+                for ($i=0; $i < $piezas; $i++) { 
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." -----------------DIMENSIONAL ----------------");
+                    
+
+                    if( $data['largo'][$i] > $dimensionalCmMaximo || $data['ancho'][$i] > $dimensionalCmMaximo || $data['alto'][$i] > $dimensionalCmMaximo ) {
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." -----------------DIMENSIONAL MAXIMO 121 CM ----------------");
+                        $cargoAdicionalDimensionalBandera = true;
+
+                        switch ($servicioId) {
+                            case '1':
+                                $cargoAdicionalDimensional = 160;
+                                break;
+                            case '2':
+                                $cargoAdicionalDimensional = 332;
+                                break;
+                            
+                            default:
+                                // code...
+                                break;
+                        }
+
+
+                    }
+                }
+
+
+                //PESO
+                $pesoMaximo = 31.5;  
+                for ($i=0; $i < $piezas; $i++) { 
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." -----------------PESO ----------------");
+                    Log::debug(print_r($data['peso'][$i],true));
+                    
+                    if( $data['peso'][$i] > $pesoMaximo  ) {
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." -----------------PESO MAXIMO 31.5 kg ----------------");
+                        $cargoAdicionalPesoBandera = true;
+                        $cargoAdicionalPeso = 140;
+
+                    }
+                }
+
+                break;
+            
+            default:
+                // code...
+                break;
+        }
+        
+        $tabla['costo_adicional_dimension']= $cargoAdicionalDimensional;
+        $tabla['costo_adicional_peso']= $cargoAdicionalPeso;
+        return $tabla;
+        
+    }//private function cargosAdicionales()
+
     public function getMensaje ()
     {
         return $this->mensaje;
@@ -685,6 +799,12 @@ class Cotizacion {
     {
         return $this->empresaObj;
     }
+
+    public function getCostosAdicionales()
+    {
+        return $this->costosAdicionales;
+    }
+
 
     
 

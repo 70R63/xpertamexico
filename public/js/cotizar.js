@@ -14,6 +14,7 @@ var saldoMinimo = 90;
 var esDimensionExcedidaDhl = false
 var esPesoExcedidoDhl = false
 var esPzaNoConvencionalDhl = false
+var costosAdicionales = 0;
 
 function pesoDimensionalyBascula(){
 
@@ -122,11 +123,13 @@ function costoSeguroValidar(seguro){
 
 function preciofinal(dataRow){
     //Variable Global;
+
     piezas = $('#piezas').val();
     peso = $('#pesoFacturado').val();
     costoCoberturaExtendida = 0;
     costoPesoExtra = 0;
-
+    //console.log(dataRow)
+    
     costoSeguroValidar(dataRow.seguro);
 
     if (peso > dataRow.kg_fin) {
@@ -142,7 +145,8 @@ function preciofinal(dataRow){
         console.log(costoCoberturaExtendida);
     } 
 
-    return dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida + dataRow.costoExtraDHL;
+    precioTotalSinIva = parseFloat(dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida + costosAdicionales ).toFixed(2);
+    return parseFloat(precioTotalSinIva)
 }
 
 function fechaTentativa(row){
@@ -332,9 +336,9 @@ $("#cotizar").click(function(e) {
                                 return '$ '+costoSeguroValidar(row.seguro);   
                             } 
                         },
-                        { "data": "costoExtraDhlPorEmpresa" 
+                        { "data": "otros" 
                             ,render: function (data, type, row, meta) {
-                                return '$ '+costoExtraDhlPorEmpresa(row,response.data.empresaObj);   
+                                return '$ '+costoAdicional(row,response.data.empresaObj);   
                             }
                         },
                         { "data": "costo_total"
@@ -386,6 +390,8 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
     } else {
 
         var dataRow = table.row(this).data(); 
+
+        costoAdicional(dataRow ,dataRow)
 
         console.log(dataRow);
         //Valores de la cotizacion de la Forma Cotizacion
@@ -703,17 +709,21 @@ $('#checkManual').change(function() {
     }
 });
 
-function costoExtraDhlPorEmpresa(row, data){
+function costoAdicional(row, data){
     
-    console.log( "costoExtraDhlPorEmpresa")
+    console.log( "Costos Adicionales")
+    console.log(row)
+    
     row.dimension_excedida = 0
     row.peso_excedido = 0
     row.pza_no_convencional = 0
+    //variable global
+    costosAdicionales= 0
+    
 
-    if (row.nombre === "DHL") {
-        pesofacturado()
-        
-        
+    switch (row.nombre) {
+      case "DHL":
+        pesofacturado()  
         var costoDimensionExcedidaDhl = 0
         if (esDimensionExcedidaDhl) {
             costoDimensionExcedidaDhl = data.dimension_excedida
@@ -733,12 +743,23 @@ function costoExtraDhlPorEmpresa(row, data){
         }
 
         costoExtraDHL = costoDimensionExcedidaDhl + costoPesoExcedidoDhl + costoPzaNoConvencionalDhl
-        row.costoExtraDHL = costoExtraDHL
+        costosAdicionales = costoExtraDHL
 
-        return costoExtraDHL
-    } 
-    row.costoExtraDHL = 0
-    return 0;
+        break;
+      case "FEDEX":
+        console.log("FEDEX ---------------")
+
+        costosAdicionales = row.costo_adicional_dimension + row.costo_adicional_peso;
+        
+        break;
+      // ... more cases
+      default:
+        costosAdicionales = 0
+        
+    }
+
+    costosAdicionales = parseFloat(costosAdicionales) 
+    return costosAdicionales;
 }
 
 //cjhs - 20250602
