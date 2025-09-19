@@ -391,11 +391,11 @@ class GuiaController extends Controller
                 
 
                 if ( isset($responseContenido->code) ) {
-                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 ");
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." code 131 ");
                     $mensaje= array($responseContenido->description);
 
                 } else {
-                    Log::debug(__CLASS__." ".__FUNCTION__." code 131 else");
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." code 131 else");
                     
                     $mensaje = array($responseContenido->error);                    
     

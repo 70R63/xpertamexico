@@ -112,7 +112,7 @@ function pesofacturado(){
 function costoSeguroValidar(seguro){
     costoSeguro = 0;
     valorEnvio = 0;
-    console.log("costoSeguroValidar "+seguro)
+    
     
     if ($('#checkSeguro').is(":checked")) {
         valorEnvio = $("#valor_envio").val();
@@ -128,7 +128,6 @@ function preciofinal(dataRow){
     peso = $('#pesoFacturado').val();
     costoCoberturaExtendida = 0;
     costoPesoExtra = 0;
-    //console.log(dataRow)
     
     costoSeguroValidar(dataRow.seguro);
 
@@ -138,7 +137,6 @@ function preciofinal(dataRow){
         costoKgExtra = dataRow.kg_extra;
     }
 
-    console.log(dataRow.extendida_cobertura);
     var textAreaExtendida = dataRow.extendida_cobertura.toUpperCase()
     if ( textAreaExtendida == "SI"){
         costoCoberturaExtendida = dataRow.extendida
@@ -266,7 +264,7 @@ $("#cotizar").click(function(e) {
 
     var form = $('#cotizacionesForm').parsley().refresh();
     var action = $('#cotizacionesForm').attr("action"); 
-    console.log(action)
+   
     saldoNegativo = false;
     if ( form.validate() ){
         $.ajax({
@@ -280,7 +278,7 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
-                console.log(response.data.empresaObj);
+                //console.log(response.data.empresaObj);
 
                 validaSaldo(response)
 
@@ -379,6 +377,8 @@ table = $('#cotizacionAjax').DataTable({
 
 $('#cotizacionAjax tbody').on('click', 'tr', function () {
    
+   var todoOk = true; 
+   var todoOkMensaje = "Consulta a tu Administrador"; 
 
     if (saldoNegativo) {
         swal(
@@ -393,7 +393,6 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
 
         costoAdicional(dataRow ,dataRow)
 
-        console.log(dataRow);
         //Valores de la cotizacion de la Forma Cotizacion
         var sucursal_id = $('#sucursal').val();
         var cliente_id = $('#cliente').val();
@@ -508,8 +507,40 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
         $("#anchos").val(anchos);
         $("#altos").val(altos);
 
+        switch (ltd_nombre) {
+            case "FEDEX":
 
-        $("#myModal").modal("show");
+                if (servicioNombre === "Terrestre" || servicioNombre === "Dia Sig.") {
+                    fedexMaximaDimension = (parseFloat(largos) + parseFloat(2*anchos) + parseFloat(2*altos)).toFixed(1);
+                    console.info("FEDEX DIMENSIONAL")
+                    console.info( largos + " "+ (2 * anchos)  + " "+ (2* altos) )
+                    console.info(fedexMaximaDimension)
+                    if ( fedexMaximaDimension > 330 ) {
+                        todoOk = false;
+                        todoOkMensaje = "Las dimensiones exceden el limite permitido de 330 cm"
+                    }
+
+                }
+
+                
+
+            break;
+            // ... more cases
+            default:
+                console.info("DEFAULT DIMENSIONAL")
+        }
+
+        if ( todoOk ) {
+            $("#myModal").modal("show");
+        } else {
+            swal(
+                "Error!",
+                todoOkMensaje,
+                "error"
+            );
+
+        }
+        
 
     }
     
@@ -599,7 +630,6 @@ function direccionesPorEmpresa(tipo, empresa_id=1){
         /* remind that 'data' is the response of the AjaxController */
         }).done(function( response) {
             console.log("done direccionesPorEmpresa");
-            console.log(response.data.values(0).toArray()[0]);
            
             if (tipo === "remitente") {
                 $('#sucursal').empty();
@@ -710,9 +740,6 @@ $('#checkManual').change(function() {
 });
 
 function costoAdicional(row, data){
-    
-    console.log( "Costos Adicionales")
-    console.log(row)
     
     row.dimension_excedida = 0
     row.peso_excedido = 0
