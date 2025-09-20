@@ -58,6 +58,7 @@ class Cotizacion {
         } else {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $empresa_id = $request['empresa_id'];
+            $servicio_id = $request['servicio_id'];
             $empresasLtdQuery = EmpresaLtdApi::where('empresa_id',$empresa_id);
         }
 
@@ -197,7 +198,7 @@ class Cotizacion {
                         ->where("empresa_id", $empresa_id)
                         ->distinct()->get()->pluck('servicio_id')->toArray();
 
-                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Serviciosd cliente");
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Servicios de cliente");
                     Log::debug(print_r($servicioIds,true));
 
                     switch ($ltdId) {
@@ -229,9 +230,16 @@ class Cotizacion {
                             $tablaTmp = array();
 
                             $query = Tarifa::base($empresa_id, $request['cp_d'], $ltdId);
+                            
+                            if ($canal === "API") {
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ESTAFETA API SERVICIO");
+                                $tablaTmp = $query->where("servicio_id", $servicio_id);
+                            } 
+
+
                             $tablaTmp = $query->where( 'kg_ini', "<=", $request['pesoFacturado'] )
-                            ->where('kg_fin', ">=", $request['pesoFacturado'] )
-                            ->get()->toArray()
+                                ->where('kg_fin', ">=", $request['pesoFacturado'] )
+                                ->get()->toArray()
                             ;
                 
                             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");

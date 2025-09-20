@@ -139,9 +139,9 @@ Class EstafetaCreacion {
 
     public function parseoApi(array $data){
         Log::debug(__CLASS__." ".__FUNCTION__." "." parseoApi");
-        
-        Log::debug($data);
 
+       
+        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->validaUsuario($data);
 
@@ -154,15 +154,19 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->ltdTipoServicio($data);
 
+         
+
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->validaLtdCobertura($data);      
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        
 	
     	$data = $this->perseoCotizacion($data);
     	
     	$data = $this->tarifas($data);
         
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 	    
