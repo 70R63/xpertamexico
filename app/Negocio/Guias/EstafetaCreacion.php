@@ -140,8 +140,6 @@ Class EstafetaCreacion {
     public function parseoApi(array $data){
         Log::debug(__CLASS__." ".__FUNCTION__." "." parseoApi");
 
-       
-        
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data = $this->validaUsuario($data);
 
@@ -160,20 +158,17 @@ Class EstafetaCreacion {
         $data = $this->validaLtdCobertura($data);      
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        
-	
+
+	    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));
     	$data = $this->perseoCotizacion($data);
     	
     	$data = $this->tarifas($data);
         
-        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));
+       
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-	    
-	   
         $data = $this->cotizacion($data);
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        Log::debug($data);  
+
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $cotizaciones = $this->resumenCotizacion($data);
@@ -225,7 +220,7 @@ Class EstafetaCreacion {
         $this->saldo($data);  
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-        //Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($data,true));
+        
         $id = Guia::create($data)->id;
         $this->notices[] ="Exito";
         $this->notices[] = sprintf("El registro de la solicitud se genero con exito con el ID %s ", $id);
@@ -633,11 +628,10 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         $data['pesoFacturado'] = ($data['peso_bascula'] > $data['peso_dimensional']) ? ceil($data['peso_bascula']) : ceil($data['peso_dimensional']) ;
 
-
         //caclulo extendida 
         $data['costo_extendida'] = 0;
         if ($data['extendida'] === 'SI') {
-            $data['costo_extendida']=$data['exceso_dimension'];
+            $data['costo_extendida']= $data['costo_ae'];
         }
 
 
@@ -697,8 +691,6 @@ Class EstafetaCreacion {
 
                 $serviceConfiguration = $data['labelDefinition']['serviceConfiguration'];
 
-
-            
                 if($serviceConfiguration['isInsurance']){
                     $data['valor_envio'] = $serviceConfiguration['insurance']['declaredValue'];
                 }

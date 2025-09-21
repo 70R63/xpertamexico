@@ -94,7 +94,7 @@ class Cotizacion {
             
             $tablaTmp = array();
 
-            $servicioIds = Tarifa::select('servicio_id')
+            $servicioIds1 = Tarifa::select('servicio_id')
                             ->where("ltds_id", $ltdId)
                             ->where("empresa_id", $empresa_id)
                             ->distinct()->get()->pluck('servicio_id')->toArray();
@@ -233,7 +233,7 @@ class Cotizacion {
                             
                             if ($canal === "API") {
                                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ESTAFETA API SERVICIO");
-                                $tablaTmp = $query->where("servicio_id", $servicio_id);
+                                $query = $query->where("servicio_id", $servicio_id);
                             } 
 
 
@@ -243,7 +243,7 @@ class Cotizacion {
                             ;
                 
                             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Validando Query Rango");
-                            Log::debug(print_r($tablaTmp,true));
+                            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($tablaTmp,true));
 
                                     
                             if (empty($tablaTmp)) {
@@ -268,7 +268,7 @@ class Cotizacion {
                                 //fin foreach ($servicioIds as $key => $value) {
                     
                             } else {
-                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tabla con resultado no se busca ultimo rango ");
+                                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Tabla con resultado, no se busca ultimo rango ");
                             }
 
                             foreach ($tablaTmp as $key => $value) {

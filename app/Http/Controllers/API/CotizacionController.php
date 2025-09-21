@@ -167,7 +167,6 @@ class CotizacionController extends BaseController
                     $data['ltd_id']= 1;
 
                     $nCreacion = new nCreacion();
-                    //$nCreacion->cotizadorPorServicio($data, $servicio);
                     $nCreacion->soloCotizacion($data, $servicio);
                     $objetoGeneral = $nCreacion;
                     break;

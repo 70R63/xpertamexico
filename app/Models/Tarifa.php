@@ -47,7 +47,7 @@ class Tarifa extends Model
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
 
-        $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre' )
+        $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega', 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre', 'tarifas.extendida as costo_ae' )
         ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
         ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
         ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
@@ -109,7 +109,7 @@ class Tarifa extends Model
     {
 
         return $query->select('tarifas.*', 'ltds.nombre','servicios.nombre as servicios_nombre','servicios.tiempo_entrega'
-            , 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre')
+            , 'ltd_coberturas.extendida as extendida_cobertura','ltd_coberturas.ocurre', 'tarifas.extendida as costo_ae')
                 ->join('ltds', 'tarifas.ltds_id', '=', 'ltds.id')
                 ->join('servicios','servicios.id', '=', 'tarifas.servicio_id')
                 ->join('ltd_coberturas','ltd_coberturas.ltd_id', '=', 'tarifas.ltds_id')
