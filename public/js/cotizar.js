@@ -15,6 +15,7 @@ var esDimensionExcedidaDhl = false
 var esPesoExcedidoDhl = false
 var esPzaNoConvencionalDhl = false
 var costosAdicionales = 0;
+var empresaObj = null;
 
 function pesoDimensionalyBascula(){
 
@@ -143,6 +144,7 @@ function preciofinal(dataRow){
         console.log(costoCoberturaExtendida);
     } 
 
+    console.log("CA " + costosAdicionales)
     precioTotalSinIva = parseFloat(dataRow.costo+ costoPesoExtra + costoSeguro + costoCoberturaExtendida + costosAdicionales ).toFixed(2);
     return parseFloat(precioTotalSinIva)
 }
@@ -278,7 +280,8 @@ $("#cotizar").click(function(e) {
             /* remind that 'data' is the response of the AjaxController */
             }).done(function( response) {
                 console.log("done");
-                //console.log(response.data.empresaObj);
+
+                empresaObj = response.data.empresaObj;
 
                 validaSaldo(response)
 
@@ -391,7 +394,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
 
         var dataRow = table.row(this).data(); 
 
-        costoAdicional(dataRow ,dataRow)
+        costoAdicional(dataRow ,empresaObj)
 
         //Valores de la cotizacion de la Forma Cotizacion
         var sucursal_id = $('#sucursal').val();
@@ -667,8 +670,6 @@ function direccionesPorEmpresa(tipo, empresa_id=1){
     
 }
 
-
-
 $("#addRow").click(function () {
     console.log('AddRow')
     var piezas = $("#piezas").val()  
@@ -741,15 +742,22 @@ $('#checkManual').change(function() {
 
 function costoAdicional(row, data){
     
+
+    console.info(row)
+    console.info(data)
+
+
     row.dimension_excedida = 0
     row.peso_excedido = 0
     row.pza_no_convencional = 0
+    
     //variable global
     costosAdicionales= 0
     
 
     switch (row.nombre) {
       case "DHL":
+        console.log("LTD 4 ---------------")
         pesofacturado()  
         var costoDimensionExcedidaDhl = 0
         if (esDimensionExcedidaDhl) {
@@ -771,16 +779,18 @@ function costoAdicional(row, data){
 
         costoExtraDHL = costoDimensionExcedidaDhl + costoPesoExcedidoDhl + costoPzaNoConvencionalDhl
         costosAdicionales = costoExtraDHL
+        console.log( "funcion costoAdicional " + costosAdicionales)
 
         break;
       case "FEDEX":
-        console.log("FEDEX ---------------")
+        console.log("LTD 1 ---------------")
 
         costosAdicionales = row.costo_adicional_dimension + row.costo_adicional_peso;
         
         break;
       // ... more cases
       default:
+        console.log("LTD 0 ---------------")
         costosAdicionales = 0
         
     }

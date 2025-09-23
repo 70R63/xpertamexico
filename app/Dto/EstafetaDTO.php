@@ -112,7 +112,7 @@ class EstafetaDTO
             
             ;
 
-        Log::debug(($this->ltdTipoServicio)); 
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." LtdTipoServicio ".print_r($this->ltdTipoServicio,true)); 
 
         if ( !isset($this->ltdTipoServicio->client_id)) {
             Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__);
