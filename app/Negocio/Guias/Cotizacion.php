@@ -359,6 +359,7 @@ class Cotizacion {
                         $tablaTmp = $query->where("costo","like","%".$costoZona."%")->get()->toArray();
                         foreach ($tablaTmp as $key => $value) {
                             $tablaTmp[$key]['zona'] = "NA";
+                            $tablaTmp[$key]= $this->cargosAdicionales($ltdId, $request, $value);
                         }
                         $tabla = array_merge($tabla, $tablaTmp);
                     };
