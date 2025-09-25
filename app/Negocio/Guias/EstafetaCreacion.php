@@ -410,7 +410,7 @@ Class EstafetaCreacion {
     	$cotizacion = $nCotizacion->getTabla();
 
     	if (count($cotizacion) <1) {
-    		throw ValidationException::withMessages(array("No cuenta con tarifas."));
+    		throw ValidationException::withMessages(array("No se cuenta con Garantia."));
     	}
 
         unset($cotizacion[0]['extendida']);
