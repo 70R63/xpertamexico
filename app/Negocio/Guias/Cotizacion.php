@@ -94,7 +94,7 @@ class Cotizacion {
             
             $tablaTmp = array();
 
-            $servicioIds1 = Tarifa::select('servicio_id')
+            $servicioIds = Tarifa::select('servicio_id')
                             ->where("ltds_id", $ltdId)
                             ->where("empresa_id", $empresa_id)
                             ->distinct()->get()->pluck('servicio_id')->toArray();
@@ -174,8 +174,9 @@ class Cotizacion {
                             foreach ($tablaTmp as $key => $value) {
                                 $tablaTmp[$key]['zona'] = "NA";
                             }
-                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+                            
                             $tabla = array_merge($tabla, $tablaTmp);
+                            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($tabla,true));
                         break;
                         default:
                             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ltd default");
