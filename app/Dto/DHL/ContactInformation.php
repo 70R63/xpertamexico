@@ -17,7 +17,7 @@ class ContactInformation extends DataTransferObject {
 	public $fullName = "";
 
 	#[String]
-	public $email = "receiver@email.com";
+	public $email = "operaciones@xpertamexico.com";
 
 	
 }

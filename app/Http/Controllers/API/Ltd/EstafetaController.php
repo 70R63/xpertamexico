@@ -14,6 +14,9 @@ use App\Negocio\Guias\EstafetaCreacion as nEstafetaCreacion;
 use App\Negocio\Guias\EstafetaRastreo as nEstafetaRastreo;
 
 
+use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
+
+
  /**
      * Controlador para la API, para usar el modelo de Negocio.
      * 
@@ -224,8 +227,6 @@ class EstafetaController extends ApiController
                
             }
 
-
-
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             switch ($formatoImpresion) {
                 case 'termica':
@@ -282,7 +283,12 @@ class EstafetaController extends ApiController
             $response = $ex->getResponse()->getBody()->getContents();
             Log::debug(print_r($response,true));
             Log::debug(print_r(json_decode($response),true));
-            return $this->sendError("ServerException",$ex->getMessage(), "400");            
+            return $this->sendError("ServerException",$ex->getMessage(), "400");
+
+        } catch (GuzzleConnectException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." GuzzleConnectException ".$ex->getMessage() );
+            Log::debug(print_r($ex,true));
+            return $this->sendError("Connect Exception","No se pudo contactar al LTD, intente nuevamente", "503");                
 
         } catch (\ErrorException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
@@ -298,6 +304,7 @@ class EstafetaController extends ApiController
         } catch (\Exception $e) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
             Log::debug($e->getMessage());
+            Log::debug($e);
             return $this->sendError("Exception","Favor de validar con tu proveedor", "400");
         }
     }//fin function
