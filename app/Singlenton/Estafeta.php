@@ -402,7 +402,7 @@ class Estafeta {
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
             ,'Accept'    => 'application/json'
-            ,'apiKey'   => "l7ad055a77ba744e2ba399f08f0e899f15"//$this->keyId 
+            ,'apiKey'   => $this->keyId 
         ];
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($headers));
@@ -418,8 +418,9 @@ class Estafeta {
             ,'body'     => json_encode($body)
         ]);
 
-        
-        $this->resultado = json_decode($response->getBody()->getContents());
+        $tmp = json_decode($response->getBody()->getContents());
+
+        $this->resultado = $tmp->frequencies[0];
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($this->resultado));
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
