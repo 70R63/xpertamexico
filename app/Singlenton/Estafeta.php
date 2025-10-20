@@ -17,6 +17,7 @@ use App\Models\EmpresaEmpresas;
 class Estafeta {
 
     private static $instance;
+    private $numeroSolicitud;
 
     private $token;
     private $baseUri;
@@ -37,11 +38,11 @@ class Estafeta {
     private $ultimaFecha = "1999-12-31 23:59:59";
     private $pickupFecha;
 
-    public function __construct( $empresa_id= 1, $plataforma = 'WEB',int $recursoId = 1){
+    public function __construct( $empresa_id= 1, $plataforma = 'WEB',int $recursoId = 1, $numeroSolicitud=1){
 
         Log::info(__CLASS__." ".__FUNCTION__);
         $this->baseUri = Config('ltd.estafeta.base_uri');
-        
+        $this->numeroSolicitud = $numeroSolicitud;
         
         $this->credenciales( $empresa_id, $plataforma, $recursoId );
 
@@ -365,6 +366,63 @@ class Estafeta {
 
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINAL");
+    }
+
+
+    /**
+     * Valida la cobertura que el ltd otorga, proceso en tiempo real
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2025 XpertaMexico
+     * @package App\Negocio\Guias
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion frecuencia
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $
+     * @var array $
+     * 
+     * 
+     * @return void, se usara getter para los detos que se requiera
+     */
+
+
+    public function frecuencia($body ){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
+
+        $client = new Client(['base_uri' => $this->baseUri]);
+        $authorization = sprintf("Bearer %s",$this->token);
+
+        $headers = [
+            'Authorization' => $authorization
+            ,'Content-Type' => 'application/json'
+            ,'Accept'    => 'application/json'
+            ,'apiKey'   => "l7ad055a77ba744e2ba399f08f0e899f15"//$this->keyId 
+        ];
+        
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($headers));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
+        
+        $uri = sprintf("%sv1/coverage/myp",$this->baseUri);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".$uri);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($body));
+        
+        $response = $client->request('POST', $uri, [
+            'headers'   => $headers
+            ,'body'     => json_encode($body)
+        ]);
+
+        
+        $this->resultado = json_decode($response->getBody()->getContents());
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($this->resultado));
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
     }
 
     public function setToken($value){

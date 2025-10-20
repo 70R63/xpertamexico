@@ -29,8 +29,16 @@ use App\Dto\Guia as GuiaDTO;
 
 Class EstafetaCreacion {
 
+    public $numeroSolicitud;
 	private $response;
     private $cotizaciones;
+    private $notices;
+
+
+    public function __construct(int $numeroSolicitud = 1) {
+        $this->numeroSolicitud = $numeroSolicitud;
+        
+    }
 	
 	/**
      * Se busca obtener las tarifas de FEDEX basado en el KG .
@@ -656,7 +664,7 @@ Class EstafetaCreacion {
     }
 
 
-     /**
+    /**
      * Valida la existencia del remitente (sucursal)
      * 
      * @author Javier Hernandez
@@ -874,6 +882,64 @@ Class EstafetaCreacion {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
         return $resumen;
         
+    }
+
+
+    /**
+     * Valida la cobertura que el ltd otorga, proceso en tiempo real
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2025 XpertaMexico
+     * @package App\Negocio\Guias
+     * 
+     * @version 1.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion frecuencia
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $
+     * @var array $
+     * 
+     * 
+     * @return void, se usara getter para los detos que se requiera
+     */
+
+    public function frecuencia($data){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
+
+        $tipo = 1;
+        $sEstafeta = new Estafeta($data['empresa_id'], $data["esManual"] ,$tipo, $this->numeroSolicitud);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($data));
+
+        $body= [
+            'frequencies' => [
+                [
+                    'origins' => [
+                        [
+                            'postalCode' => $data['cp_origen']
+                        ]
+                    ],
+                    'destinations' => [
+                        [
+                            'postalCode' => $data['cp_destino']  
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $sEstafeta -> frecuencia($body);
+
+
+        $this->response = $sEstafeta->getResultado();
+        $this->notices = "Consulta exitosa";
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
+
     }
 
     public function getResponse(){

@@ -312,7 +312,7 @@ Route::name('api.v1.')->group(function () {
 });
 
 
-Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
+Route::middleware(['throttle:20,1','AccesosApi'])->group(function(){
     Route::name('api.v1.')->group(function () {
     Route::group(['prefix'=>'v1/'], function(){
 
@@ -342,8 +342,14 @@ Route::middleware(['throttle:50,1','AccesosApi'])->group(function(){
 
                     Route::controller(EstafetaController::class)->group(function(){
                         Route::post('guia/{formatoImpresion?}', 'creacion')->name("guia");
+
                     });
                 });
+                Route::controller(EstafetaController::class)->group(function(){
+                    Route::get('frecuencia/{cp_origen}/{cp_destino}', 'frecuencia')->name("frecuencia");
+
+                });
+
             });
 
 
