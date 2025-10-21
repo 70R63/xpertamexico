@@ -346,7 +346,7 @@ Route::middleware(['throttle:20,1','AccesosApi'])->group(function(){
                     });
                 });
                 Route::controller(EstafetaController::class)->group(function(){
-                    Route::get('frecuencia/{cp_origen}/{cp_destino}', 'frecuencia')->name("frecuencia");
+                    Route::post('frecuencia/{cp_origen}/{cp_destino}', 'frecuencia')->name("frecuencia");
 
                 });
 

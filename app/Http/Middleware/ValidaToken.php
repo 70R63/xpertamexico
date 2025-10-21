@@ -32,20 +32,11 @@ class ValidaToken extends ApiController
             $env = \Dotenv\Dotenv::createArrayBacked(base_path())->load();
             $corporativoCadena = isset($env[$corporativo]) ? $env[$corporativo] : "sin corporativo";
 
-            /*
-            $empresa_id = explode('_',$corporativoCadena)[0];
-            Log::debug($corporativoCadena);
-            Log::debug($empresa_id);
-
-            if ( !($xApiKey === md5($corporativoCadena) )) {
-            
-                return $this->sendError('Unauthorized.', ['error'=>'Corporativo no Autorizado'], 403);
-            }
-            */
+          
             if(!isset($request->token))
                 return $this->sendError("Error", array("El token es neceserio"), 401);
             
-            //Log::debug(print_r(base64_decode($request->token),true));
+            
             $tokenDecodificado =  base64_decode($request->token);
             [$id, $token] = explode('|',$tokenDecodificado, 2);
             
