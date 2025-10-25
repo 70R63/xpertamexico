@@ -40,8 +40,7 @@ class Reportes_ventas extends Model
         } else {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $empresaId = auth()->user()->empresa_id;
-            $empresas = EmpresaEmpresas::where('id',$empresaId)->pluck('empresa_id')->toArray();
-            Log::debug(print_r($empresas,true));    
+            $empresas = EmpresaEmpresas::where('id',$empresaId)->pluck('empresa_id')->toArray();   
             $query->whereIN('empresa_id', $empresas);
         }
        

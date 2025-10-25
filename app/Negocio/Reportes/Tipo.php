@@ -98,8 +98,11 @@ class Tipo
         $contador = 0;
         foreach ($reporteVentas as $venta) {
 
-            $subtotal = $venta['costo_base']+$venta['costo_kg_extra']+$venta['costo_extendida']+$venta['seguro']+$venta['servicio_premium']
-                +$venta['multipieza'];
+            //COSTO EXCESO DIMENSION Y/0 VOL IRREGULAR
+            $excesoDimensionVolIrregularCosto =  $venta['dimension_excedida_costo'] + $venta['peso_excedido_costo'] +$venta['pza_no_convencional_costo'];
+
+            $subtotal = $venta['costo_base']+$venta['costo_kg_extra']+$venta['costo_extendida']+$venta['seguro']+$venta['servicio_premium'] + $venta['multipieza'] + $excesoDimensionVolIrregularCosto;
+
 
             fputcsv($handle, [
                 $venta['id'],
@@ -133,7 +136,7 @@ class Tipo
                 ,$venta['costo_base']
                 ,$venta['costo_kg_extra']
                 ,$venta['costo_extendida']
-                ,0
+                ,$excesoDimensionVolIrregularCosto
                 ,$venta['servicio_premium']
                 ,$venta['multipieza']
                 ,$venta['seguro']

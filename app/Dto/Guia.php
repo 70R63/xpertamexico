@@ -418,6 +418,9 @@ class Guia {
 				$pesoBascula = $request['peso_bascula'];
 				$sobrePesoKg = $request['sobre_peso_kg'];
 				$costoExtendida	= $request['costo_extendida'];
+				$dimensionExcedidaCosto	= $request['dimension_excedida'];
+				$pesoExcedidoCosto	= $request['peso_excedido'];
+				$pzaNoConvencionalCosto	= $request['pza_no_convencional'];
 
 
 				
@@ -484,6 +487,10 @@ class Guia {
 				,'peso_bascula'	=>	$pesoBascula
 				,'sobre_peso_kg'	=>	$sobrePesoKg
 				,'costo_extendida'	=> $costoExtendida
+				,'dimension_excedida_costo'=> $dimensionExcedidaCosto
+				,'peso_excedido_costo' => $pesoExcedidoCosto
+				,'pza_no_convencional_costo' => $pzaNoConvencionalCosto
+
  			);
 
 		Log::info(print_r($this->insert,true));

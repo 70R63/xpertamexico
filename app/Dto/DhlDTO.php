@@ -105,14 +105,23 @@ class DhlDTO
         $addressLineArray = str_split($addressLine1Full,44);
         $addressLine1_d = $addressLineArray[0];
         $addressLine2_d = sprintf("Col. %s",$request["colonia_d"]); 
+
         if (count($addressLineArray) === 2){
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $addressLine2 = sprintf("%s Col. %s",$addressLineArray[1],$request["colonia_d"] ); 
         }     
 
-      
-        $referencia_d = str_split($request["direccion2_d"],44)[0];
-        $referencia_d = ( strlen($referencia_d) > 0 ) ? $referencia_d : "Sin referencia" ;
+        $referenciaDArray = str_split($request["direccion2_d"],44);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__.print_r( count($referenciaDArray),true));
+        
+        if ( count($referenciaDArray) > 0) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $referencia_d = $referenciaDArray[0];
+        } else {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+            $referencia_d = "Sin referencia" ;
+        }
+        
 
     	$postalAddress = new PostalAddress(
                 array("cityName"    => $request["ciudad_d"]
