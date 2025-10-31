@@ -63,10 +63,11 @@ class CotizadorController extends Controller
     public function create(Request $request)
     {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
+        $numeroDeSolicitud = Carbon::now()->timestamp;
         try {
 
             $objeto = $request->all();           
-            Log::debug(print_r($objeto,true));
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud ".print_r($objeto,true));
             $cliente=array();
             $sucursal= array();
             $empresaId = 0;

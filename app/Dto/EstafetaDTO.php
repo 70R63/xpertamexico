@@ -105,6 +105,10 @@ class EstafetaDTO
     public function parser(array $data, $canal = 'API', array $empresas){
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO");
 
+        
+
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__.json_encode($empresas));
+
         $this->ltdTipoServicio = LtdTipoServicio::where('service_id',$data['servicio_id'])
             ->where('ltd_id',2)->whereIN('empresa_id',$empresas)
             ->where('estatus',1)
@@ -133,7 +137,7 @@ class EstafetaDTO
             $labelDefinition = new labelDefinition([
                 'wayBillDocument'   => $this->wayBillDocument($data)
                 ,'itemDescription'  => $this->itemDescription($data)
-                ,'serviceConfiguration'=> $this->serviceConfiguration($data, $empresas)
+                ,'serviceConfiguration'=> $this->serviceConfiguration($data)
                 ,'location'         => $this->locationLabel($data)
                 ]
             );
@@ -196,7 +200,7 @@ class EstafetaDTO
     }
 
 
-    private function serviceConfiguration($data, $empresas){
+    private function serviceConfiguration($data, $empresas = array()){
         Log::debug(__CLASS__." ".__FUNCTION__." serviceConfiguration INICIO -----------------");
         
         $serviceConfiguration = new ServiceConfiguration();

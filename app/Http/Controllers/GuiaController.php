@@ -38,6 +38,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 
 
 use App\Negocio\Guia as nGuia;
@@ -287,17 +288,19 @@ class GuiaController extends Controller
      */
     private function estafeta($request){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." estafeta iniciando ----------------------------");
+        $numeroDeSolicitud = Carbon::now()->timestamp;
         $mensaje = array();
         try {
 
+            //dd($request->all());
             $requestInicial = $request->except(['_token']);
             $empresa_id = auth()->user()->empresa_id;
             $plataforma = 'WEB';
-            
+            //$empresa_id = $requestInicial['empresa_id'];
      
             $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
             
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Singlento Estafeta ");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Singlento Estafeta $numeroDeSolicitud");
             $sEstafeta = new sEstafeta($empresa_id,$plataforma );
 
             $dto = new EstafetaDTO();
@@ -307,11 +310,13 @@ class GuiaController extends Controller
             $sEstafeta -> envio($body);
             $resultado = $sEstafeta->getResultado();
 
-            Log::debug(print_r($sEstafeta->getTrackingNumber() ,true));
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Singlento Estafeta $numeroDeSolicitud ".print_r($sEstafeta->getTrackingNumber() ,true));
+           
 
             $trackingNumbers = explode("|", $sEstafeta->getTrackingNumber());
-            Log::debug(print_r($trackingNumbers ,true));            
             
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Singlento Estafeta $numeroDeSolicitud ".json_encode($trackingNumbers));
 
             $carbon = Carbon::now();
             $unique = md5( (string)$carbon);
@@ -368,6 +373,12 @@ class GuiaController extends Controller
             Log::debug(__CLASS__." ".__FUNCTION__." INDEX_r");
             return \Redirect::route(self::INDEX_r) -> withSuccess ($notices);
 
+        } catch (ValidationException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__.__LINE__." ValidationException $numeroDeSolicitud");
+            Log::debug(print_r($ex->getMessage(),true));
+
+            $mensaje = array("ValidationException - ".print_r($ex->getMessage(),true));
+            
          } catch (\Spatie\DataTransferObject\DataTransferObjectError $ex) {
             Log::info(__CLASS__." ".__FUNCTION__." DataTransferObjectError");
             Log::debug(print_r($ex->getMessage(),true));
@@ -433,7 +444,7 @@ class GuiaController extends Controller
             $mensaje= $e->getMessage();
         }
 
-        Log::info(__CLASS__." ".__FUNCTION__." Finaliza ---------------------------- ");
+        Log::info(__CLASS__." ".__FUNCTION__.__LINE__." $numeroDeSolicitud Finaliza ---------------------------- ");
 
         return back()
                 ->with('dangers',$mensaje)
