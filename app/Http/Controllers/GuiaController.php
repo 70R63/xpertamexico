@@ -294,9 +294,9 @@ class GuiaController extends Controller
 
             //dd($request->all());
             $requestInicial = $request->except(['_token']);
-            $empresa_id = auth()->user()->empresa_id;
+            //$empresa_id = auth()->user()->empresa_id;
             $plataforma = 'WEB';
-            //$empresa_id = $requestInicial['empresa_id'];
+            $empresa_id = $requestInicial['empresa_id'];
      
             $empresas = EmpresaEmpresas::where('empresa_id',$empresa_id)->pluck('id')->toArray();
             
