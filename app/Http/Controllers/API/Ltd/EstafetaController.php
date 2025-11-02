@@ -41,6 +41,12 @@ use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 
 class EstafetaController extends ApiController
 {
+
+    public function __construct()
+    {
+        // Constructor method for initialization
+        $this->numeroSolicitud = Carbon::now()->timestamp;; 
+    }
     
      /**
      * Se busca obtener las tarifas de FEDEX basado en el KG .
@@ -410,24 +416,25 @@ class EstafetaController extends ApiController
     
 
     /**
-     * Se busca obtener las tarifas de FEDEX basado en el KG .
+     * Se busca obtener las frecuncias de coberturra oara stafeta .
      * 
      * @author Javier Hernandez
-     * @copyright 2022-2023 XpertaMexico
-     * @package App\Http\Controllers\API\Ltd
+     * @copyright 2022-2025 XpertaMexico
+     * @package App\Http\Controllers\API\Ltd\EstafetaController
      * @api
+     * @ajax
      * 
      * @version 1.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion cotizacionDEV
+     * @since 1.0.0 Primera version de la funcion frecuencia
      * 
-     * @throws
+     * @throws ValidationException
      *
-     * @param  Illuminate\Http\Request  $request Recibe la paticion del cliente
+     * @param  Illuminate\Http\Request  $request Recibe la peticion del cliente
      * 
      * @var array $data Se convierte el Json de la peticion a array
-     * @var class $nCreacion Clase para el desarrollo del caso de uso 
-     * @var array $response Usado para obteenr la respues del servcvio REST de ESTAFETA
+     * @var array $request  
+     * @var array $response Usado para obtener la respuesta del servcvio REST de ESTAFETA
      * 
      * 
      * @return json Objeto con la respuesta de exito o fallo 
@@ -436,19 +443,32 @@ class EstafetaController extends ApiController
     public function frecuencia(Request $request){
         try{
 
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-             $data =$request->all();
-                if(empty($data))
-                    throw ValidationException::withMessages(array("Favor de validar tu body"));
-            
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-".$this->numeroSolicitud);
+            $data =$request->all();
+
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-".json_encode($data));    
+
+             if ( !isset($data['token']) ) {
+                Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-$this->numeroSolicitud-");
+                $empresaId = auth()->user()->empresa_id;
+                $data['empresa_id']= $empresaId;
+            }
+
+            /*if(empty($data))
+                throw ValidationException::withMessages(array("Favor de validar tu body"));
+        */
+            //$numeroSolicitud = Carbon::now()->timestamp;
+            $data['numero_solicitud'] = $this->numeroSolicitud;
             $data['ltd_id'] = 2;
             $data['esManual']="API";
-            $data['numero_solicitud'] = Carbon::now()->timestamp;
+            
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-$this->numeroSolicitud-".count($data));  
+            
+            
             $data['cp_origen'] = $request->route()->parameter('cp_origen');
             $data['cp_destino'] =$request->route()->parameter('cp_destino');
             
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$data['numero_solicitud']);
-
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-$this->numeroSolicitud");
             $nEstafetaCreacion = new nEstafetaCreacion($data['numero_solicitud']);
             $nEstafetaCreacion->frecuencia($data);
             
@@ -457,9 +477,11 @@ class EstafetaController extends ApiController
 
 
         } catch (ValidationException $ex) {
-            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$data['numero_solicitud']." ValidationException");
-            Log::debug(print_r($ex->getMessage(),true));
-            return $this->sendError("ValidationException",$ex->getMessage(), "400");
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-$this->numeroSolicitud");
+            $mensaje = $ex->getMessage();
+            Log::info(__CLASS__."-".__FUNCTION__."-".__LINE__."-$this->numeroSolicitud-$mensaje");
+            
+            return $this->sendError("ValidationException",$mensaje, "400");
         
         } catch (ModelNotFoundException $ex) {
             Log::info(__CLASS__." ".__FUNCTION__.__LINE__." ModelNotFoundException");

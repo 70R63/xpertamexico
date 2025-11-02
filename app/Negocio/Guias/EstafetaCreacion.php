@@ -900,8 +900,8 @@ Class EstafetaCreacion {
      *
      * @param array $data Informacion general de la peticion
      * 
-     * @var array $
-     * @var array $
+     * @var $response
+     * @var $notices
      * 
      * 
      * @return void, se usara getter para los detos que se requiera

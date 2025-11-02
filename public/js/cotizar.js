@@ -382,6 +382,9 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
    
    var todoOk = true; 
    var todoOkMensaje = "Consulta a tu Administrador"; 
+   let objFrecuencia = {}
+
+   let mensajeSwalTitulo = "Error!"
 
     if (saldoNegativo) {
         swal(
@@ -391,6 +394,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
           ) 
 
     } else {
+        
 
         var dataRow = table.row(this).data(); 
 
@@ -510,6 +514,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
         $("#anchos").val(anchos);
         $("#altos").val(altos);
 
+        console.debug( ltd_nombre )
         switch (ltd_nombre) {
             case "FEDEX":
 
@@ -524,20 +529,50 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
                     }
 
                 }
+            break;
+                
+            case "ESTAFETA":
+                mensajeSwalTitulo = ltd_nombre
+                
+                console.debug("CASOS ESTAFETA")
+                objFrecuencia = frecuenciaLtd(cp, cp_d)
+
+                console.debug( objFrecuencia )
+                
+                if (objFrecuencia.origin === null){
+                    console.debug( "origin es null" )
+                    todoOk = false
+
+                }
+
+                if (objFrecuencia.destinations === null){
+                    console.debug( "destinations es null" )
+                } else {
+                    if (objFrecuencia.destinations[0].result.code != 0){
+                        todoOk = false
+                        todoOkMensaje = objFrecuencia.destinations[0].result.description
+                    }    
+                }
+
+                if (objFrecuencia.origin[0].result.code != 0){
+                    todoOk = false
+                    todoOkMensaje = objFrecuencia.origin[0].result.description
+                }
 
                 
-
+                
+                
             break;
-            // ... more cases
+            
             default:
-                console.info("DEFAULT DIMENSIONAL")
+                console.info("DEFAULT CASOS LTD")
         }
 
         if ( todoOk ) {
             $("#myModal").modal("show");
         } else {
             swal(
-                "Error!",
+                mensajeSwalTitulo,
                 todoOkMensaje,
                 "error"
             );
@@ -741,11 +776,6 @@ $('#checkManual').change(function() {
 });
 
 function costoAdicional(row, data){
-    
-
-    console.info(row)
-    console.info(data)
-
 
     row.dimension_excedida = 0
     row.peso_excedido = 0
@@ -809,8 +839,46 @@ $("#empresasCmb").change(function() {
                
 }); 
 
+//CJHS - 20251031
+function  frecuenciaLtd(cp, cp_d){
+    console.debug("fercuencia")
+    let data = null
+    $.ajax({
+        /* Usar el route  */
+        //url: route('api.cp.colonias'), 
+        url: route('ajax.v1.ltds.estafeta.frecuencia', [cp ,cp_d]),
+        type: 'GET',
+        /* send the csrf-token and the input to the controller */
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        //data: "empresa_id="+empresa_id
+        async : false,
+        
+        /* remind that 'data' is the response of the AjaxController */
+        }).done(function( response) {
+            console.debug( "done frecuenciaLtd" );
+            console.debug( response.data );
+            data = response.data 
+           
+        }).fail( function( data,jqXHR, textStatus, errorThrown ) {
+            console.log( "fail" );
+            console.log(textStatus);
+            
+            swal(
+                "Error!",
+                data.responseJSON.message,
+                "error"
+              );
+            
+        }).always(function() {
+            console.debug( "complete" );
+    });
+    
+   return data
+
+}//fin frecuenciaLtd
 
 $(document).ready(function() {
+
 
 
 });

@@ -132,6 +132,29 @@ Route::name('api')->group(function () {
 
 //MIDDLEWARE PARA AJAX DESDE WEB
 Route::middleware(['throttle:100,1','auth'])->group(function () {
+
+    Route::group(['prefix'=>'ajax/', 'as'=>'ajax.'], function(){
+        //AJAX ltd/estafeta/
+        Route::group(['prefix'=>'v1/', 'as'=>'v1.'], function(){
+
+            Route::group(['prefix'=>'ltds', 'as'=>'ltds.'], function(){
+                Route::group(['prefix'=>'estafeta/', 'as'=>'estafeta.'], function(){
+                    // frecuencia/frecuencia/{cp_origen}/{cp_destino}
+                    Route::controller(EstafetaController::class)->group(function(){
+                        Route::get('frecuencia/{cp_origen}/{cp_destino}', 'frecuencia')->name("frecuencia");
+
+                    });
+
+                });
+
+            });
+ 
+
+        });
+
+    });
+        
+
     Route::name('api.')->group(function () {
         //Carga los metodos basicos index, store, update , etc
         Route::apiResource('cotizaciones', CotizacionController::class);
@@ -200,10 +223,6 @@ Route::middleware(['throttle:100,1','auth'])->group(function () {
             });
 
         });
-
-
-
-
 
 
     });
