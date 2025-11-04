@@ -52,9 +52,12 @@ class Dhl {
 
         $client = new Client(['base_uri' => $this->baseUri]);
 	
-	Log::debug(print_r($body,true));	
+	    Log::debug(print_r($body,true));	
         $bodyJson = json_encode($body);
         Log::debug(print_r($bodyJson,true));
+        Log::debug(print_r($this->baseUri,true));
+        Log::debug(json_encode($headers));
+        Log::debug($servicio);
 
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
         return $client->request($metodo,$servicio , [

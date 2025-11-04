@@ -119,7 +119,7 @@ class DhlDTO
             $referencia_d = $referenciaDArray[0];
         } else {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $referencia_d = "Sin referencia" ;
+            $referencia_d = "Sin referencia en destino" ;
         }
         
 
