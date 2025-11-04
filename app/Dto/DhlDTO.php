@@ -116,7 +116,7 @@ class DhlDTO
         
         if ( count($referenciaDArray) > 0) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
-            $referencia_d = $referenciaDArray[0];
+            $referencia_d =  strlen($referenciaDArray[0]) > 2  ? $referenciaDArray[0] : "Sin referencia en destino"
         } else {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
             $referencia_d = "Sin referencia en destino" ;
