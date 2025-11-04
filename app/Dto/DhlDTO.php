@@ -112,7 +112,7 @@ class DhlDTO
         }     
 
         $referenciaDArray = str_split($request["direccion2_d"],44);
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__.print_r( count($referenciaDArray),true));
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__."-".print_r( ($referenciaDArray),true));
         
         if ( count($referenciaDArray) > 0) {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
