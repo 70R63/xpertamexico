@@ -153,6 +153,9 @@ class Masivas {
                         
                         break;
                     case 4:
+                        Log::debug(__CLASS__."-".__FUNCTION__."-".__LINE__." NR-$numeroDeRegistros ");
+                        Log::debug(__CLASS__."-".__FUNCTION__."-".__LINE__.print_r($data,true));
+
                         $this->dhl($data,$empresa_id, $numeroDeSolicitud);
                         
                         break;
@@ -405,7 +408,7 @@ class Masivas {
             $carbon->settings(['toStringFormat' => 'Y-m-d-H-i-s.u']);
             $unique = md5( (string)$carbon);
             $namePdf = sprintf("%s-doc-%s-%s.pdf",(string)$carbon,$key,$unique);
-            
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $namePdf");
             Storage::disk('public')->put($namePdf,base64_decode( $value->content ));
             $this->documentoGuia = $namePdf;
             
@@ -631,6 +634,11 @@ class Masivas {
         //Valida area extendida
         if ( $this->tarifa['extendida_cobertura'] === "SI"){
             $data['costo_extendida'] = $this->tarifa['extendida'];
+            /*
+            $data['dimension_excedida'] = $this->tarifa['extendida'];
+            $data['peso_excedido'] = 0;
+            $data['pza_no_convencional'] = 0;
+            */
             
         }
         $data['subPrecio'] = $data['costo_base']+$data['costo_kg_extra']+$data['costo_seguro'] + $data['costo_extendida'];

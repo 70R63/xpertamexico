@@ -50,7 +50,7 @@ class Estafeta {
                 'client_id' => $this->keyId,
                 'client_secret' => $this->secret,
                 'grant_type' => 'client_credentials'
-                ,'scope' => 'execute'
+                ,'scope' => 'https://graph.microsoft.com/.default'
             ];
 
         $sesion = LtdSesion::where('ltd_id', Config('ltd.estafeta.id') )
@@ -67,15 +67,14 @@ class Estafeta {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Seccion Else");
             
             $client = new Client(['base_uri' => Config('ltd.estafeta.token_uri') ]);
-            $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
-
+            
             Log::debug( Config('ltd.estafeta.token_uri') );
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." formParams");
             Log::debug(print_r($formParams,true));
 
-            $response = $client->request('POST', 'auth/oauth/v2/token',
+            $response = $client->request('POST', 'oauth2/v2.0/token',
                 ['form_params' => $formParams
-                , 'headers'     => $headers]
+                ]
             );
 
             if ($response->getStatusCode() == "200"){
@@ -88,10 +87,11 @@ class Estafeta {
                     ,'ltd_id'   => Config('ltd.estafeta.id')
                     ,'token'    => $this->token
                     ,'servicio'    => $recursoId
-                    ,'expira_en'=> Carbon::now()->addMinutes(1380)
+                    ,'expira_en'=> Carbon::now()->addMinutes(59)
                      );
                 Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." insert token");
-                Log::debug(print_r($insert,true));
+                Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__." ".json_encode($insert));
+                
                 $id = LtdSesion::create($insert)->id;
                 Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
             } else {
@@ -136,7 +136,8 @@ class Estafeta {
 
     /**
      * Store a newly created resource in storage.
-     *
+     * Se cambia de version para token en estafeta
+     * @version 1.2
      * @param  array  $body
      * @return \Illuminate\Http\Response
      */
@@ -144,29 +145,39 @@ class Estafeta {
     public function envio($body,$plataforma= "WEB", $formatoImpresion = "FILE_PDF"){
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIO ------------------");
         
+        
         $client = new Client(['base_uri' => $this->baseUri]);
-        $authorization = sprintf("Bearer %s",$this->token);
+        
+        $authorization = sprintf("%s",$this->token);
 
         $headers = [
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
-            ,'Accept'    => 'application/json'
-            ,'apiKey'   => $this->keyId 
+            ,'Cache-Control'    => 'no-cache'
+            ,'apiKey'   => "e1500660b363447f900b2478e4f29155" 
         ];
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
         Log::debug(print_r(json_encode($body),true));
 
-        
-        $uri = sprintf("%sv1/wayBills?outputType=%s&outputGroup=REQUEST&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI",$this->baseUri,$formatoImpresion);
 
-        Log::debug(print_r("Armando Peticion $formatoImpresion",true));
+        $uri = sprintf("labelrest/v1/wayBills?outputGroup=REQUEST&outputType=%s&responseMode=SYNC_INLINE&printingTemplate=NORMAL_TIPO7_ZEBRAORI",$formatoImpresion);
+  
+        $formParams = [
+            'outputGroup'   => 'REQUEST',
+            'outputType'     => $formatoImpresion,
+            'responseMode'    => 'SYNC_INLINE',
+            'printingTemplate' => 'NORMAL_TIPO7_ZEBRAORI'
+            ];
+
+
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__.print_r(" Armando Peticion $uri",true) );
         $response = $client->request('POST', $uri, [
-            'headers'   => $headers
-            ,'body'     => json_encode($body)
+            'headers'     => $headers
+            ,'body'       => json_encode($body)
         ]);
 
-        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." resultado");
         $this->resultado = json_decode($response->getBody()->getContents());
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
@@ -373,10 +384,10 @@ class Estafeta {
      * Valida la cobertura que el ltd otorga, proceso en tiempo real
      * 
      * @author Javier Hernandez
-     * @copyright 2022-2025 XpertaMexico
+     * @copyright 2022-2026 XpertaMexico
      * @package App\Negocio\Guias
      * 
-     * @version 1.0.0
+     * @version 1.0.1
      * 
      * @since 1.0.0 Primera version de la funcion frecuencia
      * 
@@ -409,7 +420,7 @@ class Estafeta {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
         
-        $uri = sprintf("%sv1/coverage/myp",$this->baseUri);
+        $uri = sprintf("%stest/v1/coverage/btk",$this->baseUri);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".$uri);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($body));
         

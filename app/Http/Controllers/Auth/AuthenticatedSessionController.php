@@ -33,11 +33,12 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
 
-        Log::debug("store Login");
+        Log::debug(__FILE__." ".__LINE__." "."store Login");
+        Log::debug(__FILE__." ".__LINE__." ".print_r(auth()->user(),true));
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        
         $empresa = Empresa::findOrFail(auth()->user()->empresa_id);
         $request->session()->put('empresa_nombre', $empresa->nombre);
     

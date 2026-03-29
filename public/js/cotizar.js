@@ -531,7 +531,7 @@ $('#cotizacionAjax tbody').on('click', 'tr', function () {
                 }
             break;
                 
-            case "ESTAFETA_MEXICANA":
+            case "ESTAFETA_MEXICANA1":
                 mensajeSwalTitulo = ltd_nombre
                 
                 console.debug("CASOS ESTAFETA")

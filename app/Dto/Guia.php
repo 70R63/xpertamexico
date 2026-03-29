@@ -384,7 +384,7 @@ class Guia {
 
 	public function parseoDhl($request, $singleton, $canal = "API", $namePdf= "sinnombre.pdf"){
 		Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO ".$canal);
-
+		Log::info( print_r( $request,true));
 		$zona = "NA";
 		$costoBase = 0;
 		$costoKgExtra = 0;

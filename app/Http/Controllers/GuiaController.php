@@ -28,6 +28,7 @@ use App\Singlenton\Fedex;
 use App\Singlenton\Redpack;
 use App\Singlenton\Dhl as sDhl;
 
+use \Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Log;
@@ -395,30 +396,50 @@ class GuiaController extends Controller
         } catch (\GuzzleHttp\Exception\RequestException $re) {
             Log::info(__CLASS__." ".__FUNCTION__." RequestException INICIO ------------------");
             $response = ($re->getResponse());
-            $responseContenido = json_decode($response->getBody()->getContents());    
-            Log::debug(print_r($responseContenido,true));
-            if (is_object($responseContenido)) {
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." is_object ");
+
+            switch ($response->getStatusCode()) {
+                case '500':
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." Es irrecuperable ");
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r( (string) $response->getBody(),true));
+                    $tmp = "LTD - Error irrecuperable, Favor de Validar con el Administrador";
+                    $mensaje= array($tmp);    
+                    break;
+                case '401':
+                    $responseContenido = json_decode($response->getBody()->getContents());
+                    $mensaje = array("LTD - Sin autorizacion,Favor de Validar con el Administrador "); 
+                    break;
                 
-
-                if ( isset($responseContenido->code) ) {
-                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." code 131 ");
-                    $mensaje= array($responseContenido->description);
-
-                } else {
-                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." code 131 else");
+                default:
+                    $responseContenido = json_decode($response->getBody()->getContents());    
+                
+                    Log::debug(print_r( $response->getStatusCode(),true));
                     
-                    $mensaje = array($responseContenido->error);                    
-    
-                }
-                 
-            } else{
-               
-                foreach ($responseContenido as $key => $value) {
-                    $mensaje = array("desc$key"=> $value->description);                   
-                }
+                    Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." responsecontenido ");
+                    if (is_object($responseContenido)) {
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." is_object ");
+                        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r( $responseContenido,true));
 
-            }
+                        if ( isset($responseContenido->code) ) {
+                            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." code 131 ");
+                            $mensaje= array($responseContenido->description);
+
+                        } else {
+                            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." code 131 else");
+                            
+                            $mensaje = array($responseContenido->error);                    
+            
+                        }
+                        
+                    } else {
+                    
+                        foreach ($responseContenido as $key => $value) {
+                            $mensaje = array("desc$key"=> $value->description);                   
+                        }
+
+                    }
+                    break;
+            }            
+            
             Log::info(__CLASS__." ".__FUNCTION__." RequestException FIN ------------------");
 
         } catch (\GuzzleHttp\Exception\ClientException $ex) {
@@ -439,7 +460,7 @@ class GuiaController extends Controller
             $mensaje= array($ex->errorInfo[2], "Tracking ".$insert['tracking_number'], "Contactar a su proveedor para el registro");
 
         } catch (Exception $e) {
-            Log::info(__CLASS__." ".__FUNCTION__." "."Exception");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
             Log::debug( $e->getMessage() );
             $mensaje= $e->getMessage();
         }
