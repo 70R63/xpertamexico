@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement('DROP VIEW IF EXISTS  ');
+        DB::statement("DROP VIEW IF EXISTS reportes_repesajes");
 
         DB::statement("
           CREATE 

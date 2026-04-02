@@ -38,6 +38,9 @@ class Estafeta {
     private $ultimaFecha = "1999-12-31 23:59:59";
     private $pickupFecha;
 
+    private $apikeyFrequency;
+    private $apikeyLabel;
+
     public function __construct( $empresa_id= 1, $plataforma = 'WEB',int $recursoId = 1, $numeroSolicitud=1){
 
         Log::info(__CLASS__." ".__FUNCTION__);
@@ -154,7 +157,7 @@ class Estafeta {
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
             ,'Cache-Control'    => 'no-cache'
-            ,'apiKey'   => "e1500660b363447f900b2478e4f29155" 
+            ,'apiKey'   => $this->apikeyLabel //"e1500660b363447f900b2478e4f29155" 
         ];
         
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." body");
@@ -327,8 +330,10 @@ class Estafeta {
     /**
      * Se busca obtener credenciales y datos sencibles de Estafeta basado en Clientes Globales.
      *
-     * @param  
-     * @return 
+     * @author Javier Hernandez <javier.hernandez.negocio21@gmail.com>
+     * @param int $empresa_id Id de la empresa .
+     * 
+     * @return void
      */
 
     private function credenciales($empresa_id, $plataforma="WEB", $recursoId=1){
@@ -366,14 +371,16 @@ class Estafeta {
         }
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." asignar credenciales");
-        Log::debug( print_r($credenciales,true));
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($credenciales,true) );
         $this->keyId = $credenciales[0]['key_id'];
         $this->secret = $credenciales[0]['secret'];
         $this->clientID = $credenciales[0]['client_id'];
         $this->customerNumber = $credenciales[0]['customer_number'];
         $this->user = $credenciales[0]['user'];
         $this->passwd = $credenciales[0]['passwd'];
-
+        
+        $this->apikeyFrequency = $credenciales[0]['apikey_frequency'];
+        $this->apikeyLabel = $credenciales[0]['apikey_label'];
 
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINAL");
@@ -407,19 +414,16 @@ class Estafeta {
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
 
         $client = new Client(['base_uri' => $this->baseUri]);
-        $authorization = sprintf("Bearer %s",$this->token);
+        $authorization = sprintf("%s",$this->token);
 
         $headers = [
             'Authorization' => $authorization
             ,'Content-Type' => 'application/json'
-            ,'Accept'    => 'application/json'
-            ,'apiKey'   => $this->keyId 
+            ,'apiKey'   => $this->apikeyFrequency 
         ];
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($headers));
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
-        
         $uri = sprintf("%stest/v1/coverage/btk",$this->baseUri);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".$uri);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($body));
