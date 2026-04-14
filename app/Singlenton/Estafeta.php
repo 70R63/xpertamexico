@@ -40,6 +40,7 @@ class Estafeta {
 
     private $apikeyFrequency;
     private $apikeyLabel;
+    private $apikeyRastreo;
 
     public function __construct( $empresa_id= 1, $plataforma = 'WEB',int $recursoId = 1, $numeroSolicitud=1){
 
@@ -381,6 +382,7 @@ class Estafeta {
         
         $this->apikeyFrequency = $credenciales[0]['apikey_frequency'];
         $this->apikeyLabel = $credenciales[0]['apikey_label'];
+        $this->apikeyRastreo = $credenciales[0]['apikey_rastreo'];
 
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINAL");
@@ -440,6 +442,66 @@ class Estafeta {
 
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud);
     }
+
+    /**
+     * API de peticon de rastreo para Estafeta Version 2
+     * Uso de API REST cambio aplicado el 202604 
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2026 XpertaMexico
+     * @package App\Singlenton
+     * 
+     * @version 2.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion rastreo
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $
+     * @var array $
+     * 
+     * 
+     * @return void, se usara getter para los detos que se requiera
+     */
+
+    public function rastreov2( $trackingNumber, $numeroDeSolicitud) {
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud INICIO ------------------");
+        
+        
+        $client = new Client(['base_uri' => $this->baseUri]);
+        
+        $authorization = sprintf("%s",$this->token);
+
+        $headers = [
+            'Authorization' => $authorization
+            ,'Cache-Control'    => 'no-cache'
+            ,'apiKey'   => $this->apikeyRastreo 
+            ,'RequestPickupOrder' => '{"customerCode":"8541467","orders":[{ "code":"5015897424595600503215"}]}'
+        ];
+        
+        
+        $uri = sprintf("miestafetaservices/rest/pickuporders/pickupOrders?isSearchByOrder=false");
+
+        Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__.print_r(" Armando Peticion $uri",true) );
+        $response = $client->request('GET', $uri, [
+            'headers'     => $headers
+
+        ]);
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." resultado");
+        $this->resultado = json_decode($response->getBody()->getContents());
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud- ".print_r($this->resultado,true) );
+        $this->documento = "Sin valor"; //$this->resultado->data;
+
+        $this->trackingNumber = $trackingNumber; //""$this->resultado->labelPetitionResult->result->description;
+        Log::info(__CLASS__." ".__FUNCTION__." $numeroDeSolicitud- FIN ------------------");
+
+        $this->exiteSeguimiento = false;
+    }
+
 
     public function setToken($value){
         $this->token = $value;

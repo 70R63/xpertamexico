@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Negocio\Guias\Repesaje as nRepesaje;
 use App\Negocio\Guias\Rastreo as nRastreo;
 use App\Negocio\Saldos\Saldos as nSaldos;
+use App\Negocio\Guias\EstafetaRastreo as nEstafetaRastreo;
 
 use App\Singlenton\Estafeta ; //PRODUCTION
 use App\Singlenton\Fedex as sFedex ; //PRODUCTION
@@ -44,10 +45,17 @@ use App\Models\LtdTipoServicio;
  */
 class GuiaController extends Controller
 {
-
     private $codeHttp = 500;
     private $error = "Error general";
     private $mensaje = array("Error inesperado consulte con su proveedor");
+    private $numeroDeSolicitud =1;
+    
+    function __construct(){
+        $this->numeroDeSolicitud = Carbon::now()->timestamp;
+    }
+
+
+    
     /**
      * Login api
      *
@@ -588,6 +596,7 @@ class GuiaController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
+
     private function rastreoEstafeta(bool $automatico = false, $paridad=2){
         Log::info(__CLASS__." ".__FUNCTION__." INICIANDO-----------------");
         
@@ -851,6 +860,88 @@ class GuiaController extends Controller
         }
     }//fin function
     
+    
+     /**
+     * API de peticon de rastreo para Estafeta Version 2
+     * Uso de API REST cambio aplicado el 202604 
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2026 XpertaMexico
+     * @package App\Singlenton
+     * 
+     * @version 2.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion rastreo
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $
+     * 
+     * 
+     * @return void, se usara getter para los detos que se requiera
+     */
+
+    public function rastreoEstafetav2($paridad = 2){
+        Log::info(__CLASS__." ".__FUNCTION__." $this->numeroDeSolicitud - INICIANDO-----------------");
+        $tiempoTranscurrido = Carbon::now();
+        $codeHttp = 404;
+        try {
+
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $this->numeroDeSolicitud - $paridad");
+            $rastreoPeticionesID = Rastreo_peticion::create( array("ltd_id"=>Config('ltd.estafeta.id')) )->id;
+
+            $nEstafetaRastreo = new nEstafetaRastreo();
+            $nEstafetaRastreo->rastreoEstafetav2(true, $paridad, $this->numeroDeSolicitud);
+            
+            Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." $this->numeroDeSolicitud - $paridad ".Carbon::now()->toDateTimeString());
+            
+            Rastreo_peticion::where('id',$rastreoPeticionesID)
+                ->update(array("peticion_fin"=>Carbon::now()->toDateTimeString() 
+                        ,"completado"=>true) 
+                    );
+            
+            $tabla= array();
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $this->numeroDeSolicitud Ejecucion ".$tiempoTranscurrido->diffForHumans());
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $this->numeroDeSolicitud - FINALIZANDO-----------------");
+            return $this->successResponse($tabla, 'successfully.');
+            
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            Log::info(__CLASS__." ".__FUNCTION__." "."QueryException");
+            Log::debug($ex->getMessage()); 
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+
+        } catch (\ErrorException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ErrorException");
+            Log::debug(print_r($ex,true));
+            $this->error = "ErrorException";
+            $this->mensaje =$ex->getMessage();
+            
+
+        } catch (\HttpException $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." HttpException");
+            $resultado = $ex;
+
+            $this->error = "HttpException";
+            $this->mensaje =$ex->getMessage();
+        } catch (\Exception $ex) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception");
+            Log::debug(print_r($ex,true));
+            $this->error = "Exception";
+            $this->mensaje =$ex->getMessage();
+        }
+
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Ejecucion ".$tiempoTranscurrido->diffForHumans());
+        return $this->sendError($this->error,$this->mensaje, $codeHttp);
+    }//fin reastreo, Global para actualizar el esatus de las guias
+
+
+
 
 
 }
+
+
+

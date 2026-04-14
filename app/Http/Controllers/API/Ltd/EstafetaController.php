@@ -454,10 +454,6 @@ class EstafetaController extends ApiController
                 $data['empresa_id']= $empresaId;
             }
 
-            /*if(empty($data))
-                throw ValidationException::withMessages(array("Favor de validar tu body"));
-        */
-            //$numeroSolicitud = Carbon::now()->timestamp;
             $data['numero_solicitud'] = $this->numeroSolicitud;
             $data['ltd_id'] = 2;
             $data['esManual']="API";

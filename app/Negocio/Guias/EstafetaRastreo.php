@@ -130,28 +130,155 @@ Class EstafetaRastreo {
     }
 
     /**
-     * Se realiza el ajuste al saldo cuando el peso rastreo es mayor al peso facturado de
-     * la cotizacion.
+     * API de peticon de rastreo para Estafeta Version 2
+     * Uso de API REST cambio aplicado el 202604 
      * 
      * @author Javier Hernandez
-     * @copyright 2022-2024 XpertaMexico
-     * @package App\Negocio\Guias
-     * @api
+     * @copyright 2022-2026 XpertaMexico
+     * @package App\Singlenton
      * 
-     * @version 1.0.0
+     * @version 2.0.0
      * 
-     * @since 1.0.0 Primera version de la funcion recotizacionPorRastreo
+     * @since 1.0.0 Primera version de la funcion rastreo
      * 
      * @throws
      *
-     * @param  Illuminate\Http\Request  $request Recibe la paticion del cliente
+     * @param array $data Informacion general de la peticion
      * 
-     * @var array $data Se convierte el Json de la peticion a array
+     * @var array $
      * 
-     * @return json Objeto con la respuesta de exito o fallo 
+     * 
+     * @return void, se usara getter para los detos que se requiera
+     */
+    public function rastreoEstafetav2(bool $automatico = false, $paridad=2, $numeroDeSolicitud=1){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud  INICIANDO-----------------" );
+        
+        $guia = array();
+        $plataforma = "AUTOMATICO";
+        $servicioID = 2;
+        
+        if ($automatico){
+            $empresaId = 2;
+        }else{
+            $empresaId = auth()->user()->empresa_id;    
+        }
+        Log::info(__CLASS__." ".__FUNCTION__." empresaId $empresaId");
+
+        $guias = $this->consultaGuiaRastreoV2( Config('ltd.estafeta.id'), $empresaId,$paridad);
+        $sEstafeta = sEstafeta::getInstance($empresaId,$plataforma, $servicioID);
+
+        $guiaCantidad = count($guias);
+        $i = 0;
+        foreach ($guias as $key => $value) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud ----------".++$i."/$guiaCantidad ----------");
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud valores de guia ".print_r($value,true));
+            $guia_id = $value['id'];
+            try{
+                $sEstafeta->rastreoV2($value['tracking_number'], $numeroDeSolicitud);
+                $update = array();
+                $updateSaldo = array();
+                if ($sEstafeta->getExiteSeguimiento()) {   
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud Valida seguimiento");
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud Obtener Valores Singlento");
+                    $paquete = $sEstafeta->getPaquete();
+                    $ultimaFecha =  $sEstafeta->getUltimaFecha();
+                    $rastreoEstatus = Config('ltd.estafeta.rastreoEstatus')[$sEstafeta->getLatestStatusDetail()];
+                    $quienRecibio = $sEstafeta->getQuienRecibio();
+                    $pickupFecha = $sEstafeta->getPickupFecha();
+                    
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud- Calular Repesaje");
+                    $nRepesaje = new nRepesaje();
+                    $nRepesaje->calcularPrecio($guia_id, $paquete, $value);
+                    $precioRastreo = $nRepesaje->getPrecioRastreo();
+                    $esRepesaje = $nRepesaje->getEsRepesaje();
+
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud- armando update");
+                    $nRastreo = new nRastreo();
+                    $nRastreo->parseoUpdate($ultimaFecha, $rastreoEstatus,$quienRecibio,$pickupFecha , $precioRastreo, $paquete, $esRepesaje);
+                    $update = $nRastreo->getUpdate();
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".print_r($update,true));
+
+                    $affectedRows = GuiaAPI::where("id", $guia_id)
+                            ->update($update);
+
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud- guiaId =$guia_id,  affectedRows -> $affectedRows");
+                    
+
+                    if ($esRepesaje==='SI') {
+                        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." $numeroDeSolicitud- Actualizando Saldo");
+                        $update['importe'] = -($precioRastreo-$value['precio']);
+                        $nSaldos = new nSaldos();
+                        $nSaldos->calcular($update);
+
+                    }
+                    
+
+                }else{
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Sin seguimiento");
+                }
+            }  catch (\Exception $ex) {
+                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." Exception :". $ex->getMessage());
+                Log::debug(print_r($ex,true));
+                
+            }
+            
+            
+        } // fin foreach ($tabla as $key => $value)
+        
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." FINALIZANDO-----------------");
+    }// Fin rastreoEstafetav2
+
+
+    /**
+     * AFuncion para consultar guias con estatus [creada, recolectada, transito ], 
+     * basado en el flujo automatico
+     * 
+     * @author Javier Hernandez
+     * @copyright 2022-2026 XpertaMexico
+     * @package App\Singlenton
+     * 
+     * @version 2.0.0
+     * 
+     * @since 1.0.0 Primera version de la funcion rastreo
+     * 
+     * @throws
+     *
+     * @param array $data Informacion general de la peticion
+     * 
+     * @var array $
+     * 
+     * 
+     * @return void, se usara getter para los detos que se requiera
      */
 
-    public function recotizacionPorRastreo(array $data){
+    private function consultaGuiaRastreoV2(int $ltdId, int $empresaId = 1, $paridad=2 ){
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." INICIANDO-----------------");
 
+
+        $guias = GuiaAPI::select('id','ltd_id', 'tracking_number', 'precio','empresa_id', 'peso', 'tarifa_id',  'servicio_id')
+            ->where('ltd_id',$ltdId)            
+		    ->whereNotIn('rastreo_estatus',array(4,7))
+		    ->whereNotIn('empresa_id',array(307))
+		    ->where('created_at', '>', now()->subDays(90)->endOfDay())
+		    ->where('created_at', '<', now()->subDays(2)->endOfDay())
+            //->offset(0)->limit(100)
+            ->orderBy('id', 'DESC')
+            //->whereIn("guias.id", array(88141,88423) )
+                    
+                    ;
+
+        if ($paridad != 2) {
+            Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." paridad=$paridad");
+            $guias->whereRaw(" mod(id,2) = $paridad");
+        }
+
+        $guias = $guias->get()->toArray();
+
+        Log::info("Total de guias revisar ".count($guias));
+        Log::info(__CLASS__." ".__FUNCTION__." FINALIZANDO-----------------");
+        return $guias;
     }
 }
