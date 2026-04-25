@@ -418,9 +418,9 @@ class Guia {
 				$pesoBascula = $request['peso_bascula'];
 				$sobrePesoKg = $request['sobre_peso_kg'];
 				$costoExtendida	= $request['costo_extendida'];
-				$dimensionExcedidaCosto	= $request['dimension_excedida'];
-				$pesoExcedidoCosto	= $request['peso_excedido'];
-				$pzaNoConvencionalCosto	= $request['pza_no_convencional'];
+				$dimensionExcedidaCosto	= isset( $request['dimension_excedida'] ) ? $request['dimension_excedida'] : "0.0"   ;
+				$pesoExcedidoCosto	= isset( $request['peso_excedido'] ) ? $request['peso_excedido'] : "0.0"   ; 
+				$pzaNoConvencionalCosto	= isset( $request['pza_no_convencional'] ) ? $request['pza_no_convencional'] : "0.0" ; 
 
 
 				
