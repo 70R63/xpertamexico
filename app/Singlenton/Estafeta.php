@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Config;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Http;
+use \Exception;
 
 #CLASES DE NEGOCIO 
 use App\Models\LtdSesion;
@@ -76,31 +77,37 @@ class Estafeta {
             Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." formParams");
             Log::debug(print_r($formParams,true));
 
-            $response = $client->request('POST', 'oauth2/v2.0/token',
-                ['form_params' => $formParams
-                ]
-            );
+            try {
+                $response = $client->request('POST', 'oauth2/v2.0/token',
+                    ['form_params' => $formParams
+                    ]
+                );
 
-            if ($response->getStatusCode() == "200"){
-                Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." StatusCode 200");
-                $json = json_decode($response->getBody()->getContents());
+                if ($response->getStatusCode() == "200"){
+                    Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." StatusCode 200");
+                    $json = json_decode($response->getBody()->getContents());
 
-                $this->token = $json->access_token;
+                    $this->token = $json->access_token;
 
-                $insert = array('empresa_id' => $empresa_id
-                    ,'ltd_id'   => Config('ltd.estafeta.id')
-                    ,'token'    => $this->token
-                    ,'servicio'    => $recursoId
-                    ,'expira_en'=> Carbon::now()->addMinutes(59)
-                     );
-                Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." insert token");
-                Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__." ".json_encode($insert));
-                
-                $id = LtdSesion::create($insert)->id;
-                Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
-            } else {
-                Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." ");
+                    $insert = array('empresa_id' => $empresa_id
+                        ,'ltd_id'   => Config('ltd.estafeta.id')
+                        ,'token'    => $this->token
+                        ,'servicio'    => $recursoId
+                        ,'expira_en'=> Carbon::now()->addMinutes(59)
+                        );
+                    Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." insert token");
+                    Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__." ".json_encode($insert));
+                    
+                    $id = LtdSesion::create($insert)->id;
+                    Log::info(__CLASS__." ".__FUNCTION__." ID LTD SESION $id");
+                } else {
+                    Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." ");
+                }
+            } catch (Exception $e) {
+                Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__." ".print_r( $e->getMessage() ) );
             }
+
+            
             
         }
         
