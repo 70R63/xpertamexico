@@ -104,7 +104,7 @@ class Estafeta {
                     Log::info(__CLASS__." ".__FUNCTION__."".__LINE__." ");
                 }
             } catch (Exception $e) {
-                Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__." ".print_r( $e->getMessage() ) );
+                Log::debug(__CLASS__." ".__FUNCTION__."".__LINE__." ".print_r( $e->getMessage(),true ) );
             }
 
             
