@@ -433,7 +433,7 @@ class Estafeta {
         
         Log::debug(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($headers));
 
-        $uri = sprintf("%sv1/coverage/btk",$this->baseUri);
+        $uri = sprintf("%sv1/coverage/myp",$this->baseUri);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".$uri);
         Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." ".$this->numeroSolicitud." ".json_encode($body));
         
