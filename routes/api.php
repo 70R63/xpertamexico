@@ -349,7 +349,7 @@ Route::middleware(['throttle:20,1','AccesosApi'])->group(function(){
                         ,function(){
 
                  Route::controller(CotizacionController::class)->group(function(){
-                    Route::get('cotizaciones', 'cotizaciones')->name('cotizaciones');
+                    Route::post('cotizaciones', 'cotizaciones')->name('cotizaciones');
                 });
 
 

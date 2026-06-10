@@ -215,7 +215,7 @@ Class EstafetaCreacion {
         $data['documento'] = $namePdf;
         Storage::disk('public')->put($namePdf,base64_decode($sEstafeta->documento));
 
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__. " ". print_r($data,true));
         unset($data['identification']);
         unset($data['systemInformation']);
         unset($data['id']);
@@ -796,7 +796,7 @@ Class EstafetaCreacion {
      */
 
     public function saldo($data){
-        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__);
+        Log::info(__CLASS__." ".__FUNCTION__." ".__LINE__." empresa: ".print_r($data['empresa_id'],true));
         $saldo = new nSaldos();
         $monto = $saldo-> porEmpresa($data['empresa_id']);
 
